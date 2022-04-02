@@ -944,6 +944,13 @@ namespace ryujin
         span<semaphore> signal;
     };
 
+    struct texture
+    {
+        image img;
+        image_view view;
+        image_sampler sampler;
+    };
+
     constexpr bool operator==(const buffer& lhs, const buffer& rhs) noexcept
     {
         return lhs.buffer == rhs.buffer;
