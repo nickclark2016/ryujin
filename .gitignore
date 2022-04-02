@@ -1,0 +1,14 @@
+# IDE Files
+.vs/
+.vscode/
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.sln
+
+# Outputs
+bin/
+bin-int/
+
+# SPIR-V Binaries
+*.spv 
