@@ -18,6 +18,8 @@ namespace ryujin
         void focusCallback(GLFWwindow*, int);
         void closeCallback(GLFWwindow*);
         void resizeCallback(GLFWwindow*, int, int);
+        void iconifyCallback(GLFWwindow*, int);
+        void maximizeCallback(GLFWwindow*, int);
     } // namespace detail
 
     class render_manager;
@@ -55,6 +57,9 @@ namespace ryujin
         void on_focus(const std::function<void(bool)>& fn);
         void on_close(const std::function<void()>& fn);
         void on_resize(const std::function<void(std::uint32_t, std::uint32_t)>& fn);
+        void on_iconify(const std::function<void()>& fn);
+        void on_restore(const std::function<void()>& fn);
+        void on_maximize(const std::function<void()>& fn);
 
     private:
         GLFWwindow* _native;
@@ -69,9 +74,18 @@ namespace ryujin
         GLFWwindowsizefun _resizeCb;
         vector<std::function<void(std::uint32_t, std::uint32_t)>> _userResizeCallbacks;
 
+        GLFWwindowiconifyfun _iconifyCb;
+        GLFWwindowmaximizefun _maximizeCb;
+
+        vector<std::function<void()>> _userIconifyCallbacks;
+        vector<std::function<void()>> _userRestoreCallbacks;
+        vector<std::function<void()>> _userMaximizeCallbacks;
+
         friend void detail::focusCallback(GLFWwindow*, int);
         friend void detail::closeCallback(GLFWwindow*);
         friend void detail::resizeCallback(GLFWwindow*, int, int);
+        friend void detail::iconifyCallback(GLFWwindow*, int);
+        friend void detail::maximizeCallback(GLFWwindow*, int);
         
         friend class render_manager;
     };

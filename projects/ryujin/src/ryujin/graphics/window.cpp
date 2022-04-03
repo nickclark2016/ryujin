@@ -41,6 +41,48 @@ namespace ryujin
 				cb(static_cast<std::uint32_t>(width), static_cast<std::uint32_t>(height));
 			}
 		}
+
+		void iconifyCallback(GLFWwindow* win, int minimized)
+		{
+			window* userWin = reinterpret_cast<window*>(glfwGetWindowUserPointer(win));
+			const bool isIconified = minimized == GLFW_TRUE;
+
+			if (isIconified)
+			{
+				for (auto& cb : userWin->_userIconifyCallbacks)
+				{
+					cb();
+				}
+			}
+			else
+			{
+				for (auto& cb : userWin->_userRestoreCallbacks)
+				{
+					cb();
+				}
+			}
+		}
+
+		void maximizeCallback(GLFWwindow* win, int maximized)
+		{
+			window* userWin = reinterpret_cast<window*>(glfwGetWindowUserPointer(win));
+			const bool isMaximized = maximized == GLFW_TRUE;
+
+			if (isMaximized)
+			{
+				for (auto& cb : userWin->_userMaximizeCallbacks)
+				{
+					cb();
+				}
+			}
+			else
+			{
+				for (auto& cb : userWin->_userRestoreCallbacks)
+				{
+					cb();
+				}
+			}
+		}
 	}
 
 	result<std::unique_ptr<window>, window::error_code> window::create(const window::create_info& info) noexcept
@@ -54,7 +96,6 @@ namespace ryujin
 		}
 
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 		GLFWwindow* nativeWindowHandle = glfwCreateWindow(static_cast<int>(info.width), static_cast<int>(info.height), info.name.c_str(), nullptr, nullptr);
 		if (nativeWindowHandle == nullptr)
 		{
@@ -68,6 +109,8 @@ namespace ryujin
 		glfwSetWindowFocusCallback(win->_native, detail::focusCallback);
 		glfwSetWindowCloseCallback(win->_native, detail::closeCallback);
 		glfwSetWindowSizeCallback(win->_native, detail::resizeCallback);
+		glfwSetWindowIconifyCallback(win->_native, detail::iconifyCallback);
+		glfwSetWindowMaximizeCallback(win->_native, detail::maximizeCallback);
 
 		return result_type::from_success(std::move(win));
 	}
@@ -133,5 +176,20 @@ namespace ryujin
 	void window::on_resize(const std::function<void(std::uint32_t, std::uint32_t)>& fn)
 	{
 		_userResizeCallbacks.push_back(fn);
+	}
+
+	void window::on_iconify(const std::function<void()>& fn)
+	{
+		_userIconifyCallbacks.push_back(fn);
+	}
+
+	void window::on_restore(const std::function<void()>& fn)
+	{
+		_userRestoreCallbacks.push_back(fn);
+	}
+
+	void window::on_maximize(const std::function<void()>& fn)
+	{
+		_userMaximizeCallbacks.push_back(fn);
 	}
 }

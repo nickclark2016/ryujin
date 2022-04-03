@@ -12,6 +12,7 @@
 #include <vma/vk_mem_alloc.h>
 
 #include <array>
+#include <atomic>
 #include <deque>
 #include <functional>
 #include <memory>
@@ -269,6 +270,7 @@ namespace ryujin
             DEVICE_QUEUE_ACQUISITION_FAILURE,
             SWAPCHAIN_INITIALIZATION_FAILURE,
             SWAPCHAIN_IMAGE_ACQUISITION_FAILURE,
+            PRESENT_FAILURE,
             RESOURCE_ALLOCATION_FAILURE,
             RESOURCE_ALLOCATION_FROM_POOL_FAILURE,
             OUT_OF_MEMORY,
@@ -315,6 +317,7 @@ namespace ryujin
         void release(const descriptor_pool pool);
         void release(const descriptor_set_layout layout);
         void release(const frame_buffer fbo);
+        void release(const image_view view);
 
         void reset(const descriptor_pool pool);
 
@@ -331,6 +334,7 @@ namespace ryujin
 
         error_code create_surface();
         error_code create_swapchain();
+        error_code recreate_swapchain();
         error_code fetch_queues();
         error_code build_resources_per_frame_in_flight();
         error_code build_staging_buffers();
@@ -389,6 +393,8 @@ namespace ryujin
         inline_linear_allocator<256 * 1024> _inlineScratchBuffer;
 
         detail::render_pipeline _renderer;
+
+        std::atomic_bool _isMinimized = false;
 
         inline VkAllocationCallbacks* get_allocation_callbacks()
         {

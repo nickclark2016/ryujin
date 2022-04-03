@@ -145,12 +145,22 @@ namespace ryujin
 
     render_manager::error_code render_manager::pre_render()
     {
+        if (_isMinimized)
+        {
+            return error_code::NO_ERROR;
+        }
+
         _renderer.pre_render();
         return error_code::NO_ERROR;
     }
 
     render_manager::error_code render_manager::render()
     {
+        if (_isMinimized)
+        {
+            return error_code::NO_ERROR;
+        }
+
         _funcs.waitForFences(1, &(get_current_frame_resources().renderFence), VK_TRUE, UINT64_MAX);
         _funcs.resetFences(1, &(get_current_frame_resources().renderFence));
 
@@ -183,7 +193,7 @@ namespace ryujin
         const auto imageAcquireResult = _funcs.acquireNextImage2KHR(&imageAcquireInfo, &_swapchainImageIndex);
         if (imageAcquireResult == VK_ERROR_OUT_OF_DATE_KHR)
         {
-            // try to rebuild the swapchain
+            return recreate_swapchain();
         }
         else if (imageAcquireResult != VK_SUCCESS)
         {
@@ -210,6 +220,16 @@ namespace ryujin
         };
 
         const auto presentResult = _funcs.queuePresentKHR(_present, &presentInfo);
+        if (presentResult == VK_ERROR_OUT_OF_DATE_KHR || presentResult == VK_SUBOPTIMAL_KHR)
+        {
+            recreate_swapchain();
+        }
+        else if (presentResult != VK_SUCCESS)
+        {
+            spdlog::error("Presentation to swapchain failed.");
+            return error_code::PRESENT_FAILURE;
+        }
+        
 
         _currentFrame = (_currentFrame + 1) % _framesInFlight;
 
@@ -1217,6 +1237,21 @@ namespace ryujin
         }
     }
 
+    void render_manager::release(const image_view view)
+    {
+        auto it = std::find(_imageViews.begin(), _imageViews.end(), view);
+        if (it != _imageViews.end())
+        {
+            _imageViews.erase(it);
+
+            // add to deletion queue
+            const auto dtor = [this, view]() {
+                _funcs.destroyImageView(view, get_allocation_callbacks());
+            };
+            get_current_frame_resources().dtorQueue.push_deletor(dtor);
+        }
+    }
+
     void render_manager::release(const frame_buffer fbo)
     {
         auto it = std::find(_frameBuffers.begin(), _frameBuffers.end(), fbo);
@@ -1312,6 +1347,12 @@ namespace ryujin
     render_manager::render_manager(const std::unique_ptr<window>& win, vkb::Instance instance, vkb::Device device, VmaAllocator allocator, const bool nameObjects)
         : _win(win), _instance(instance), _device(device), _allocator(allocator), _funcs(device.make_table()), _nameObjects(nameObjects), _descriptorLayoutCache(*this)
     {
+        auto setMinimized = [this]() { spdlog::info("Render manager notifying minimized."); _isMinimized = true; };
+        auto setVisible = [this]() { spdlog::info("Render manager notifying not minimized."); _isMinimized = false; };
+
+        _win->on_iconify(setMinimized);
+        _win->on_maximize(setVisible);
+        _win->on_restore(setVisible);
     }
 
     render_manager::error_code render_manager::create_surface()
@@ -1377,6 +1418,28 @@ namespace ryujin
         }
 
         return error_code::NO_ERROR;
+    }
+
+    render_manager::error_code render_manager::recreate_swapchain()
+    {
+        spdlog::debug("Recreating swapchain.");
+        _funcs.deviceWaitIdle();
+
+        for (const auto image : _swapchainImages)
+        {
+            release(image);
+        }
+        _swapchainImages.clear();
+
+        for (auto& resources : _resourcesPerFrameInFlight)
+        {
+            resources.dtorQueue.flush();
+            resources.descriptorAllocator.reset();
+        }
+
+        vkb::destroy_swapchain(_swapchain);
+
+        return create_swapchain();
     }
 
     render_manager::error_code render_manager::build_staging_buffers()
@@ -1451,21 +1514,21 @@ namespace ryujin
         VkCommandPoolCreateInfo graphicsCommandPoolInfo = {
             VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
             nullptr,
-            VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
+            0u,
             _device.get_queue_index(vkb::QueueType::graphics).value()
         };
 
         VkCommandPoolCreateInfo transferCommandPoolInfo = {
             VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
             nullptr,
-            VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
+            0u,
             _device.get_queue_index(vkb::QueueType::transfer).value()
         };
 
         VkCommandPoolCreateInfo computeCommandPoolInfo = {
             VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
             nullptr,
-            VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
+            0u,
             _device.get_queue_index(vkb::QueueType::compute).value()
         };
 
