@@ -39,6 +39,10 @@ project ('Sandbox')
         'zlib'
     })
 
+    defines ({
+        'GLFW_DLL'
+    })
+
     filter ({ 'configurations:Debug' })
         optimize ('Off')
         symbols ('On')

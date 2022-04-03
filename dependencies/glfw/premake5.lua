@@ -1,13 +1,11 @@
 project ('glfw')
-    kind ('StaticLib')
+    kind ('SharedLib')
     language ('C')
     cdialect ('C11')
     targetname ('glfw')
 
     targetdir (binaries)
     objdir (intermediate)
-
-    architecture ('x64')
 
     files ({
         'include/GLFW/glfw3.h',
@@ -19,6 +17,10 @@ project ('glfw')
         'src/monitor.c',
         'src/vulkan.c',
         'src/window.c'
+    })
+
+    defines ({
+        '_GLFW_BUILD_DLL'
     })
 
     filter ({ 'system:windows' })
@@ -62,6 +64,8 @@ project ('glfw')
             '_GLFW_X11',
             'BUILD_SHARED_LIBS'
         })
+
+        pic ('On')
 
     filter ()
 
