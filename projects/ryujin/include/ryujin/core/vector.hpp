@@ -47,7 +47,7 @@ namespace ryujin
         constexpr static_vector();
         constexpr static_vector(const static_vector& other);
         constexpr static_vector(static_vector&& other) noexcept;
-        constexpr ~static_vector() = default;
+        ~static_vector() = default;
 
         constexpr static_vector& operator=(const static_vector& rhs);
         constexpr static_vector& operator=(static_vector&& rhs) noexcept;
@@ -91,43 +91,43 @@ namespace ryujin
     };
 
     template<typename Type, typename Allocator>
-    inline vector<Type, Allocator>::template iterator vector<Type, Allocator>::begin() noexcept
+    inline typename vector<Type, Allocator>::iterator vector<Type, Allocator>::begin() noexcept
     {
         return this->data();
     }
     
     template<typename Type, typename Allocator>
-    inline vector<Type, Allocator>::template iterator vector<Type, Allocator>::begin() const noexcept
+    inline typename vector<Type, Allocator>::iterator vector<Type, Allocator>::begin() const noexcept
     {
         return this->data();
     }
     
     template<typename Type, typename Allocator>
-    inline vector<Type, Allocator>::template const_iterator vector<Type, Allocator>::cbegin() const noexcept
+    inline typename vector<Type, Allocator>::const_iterator vector<Type, Allocator>::cbegin() const noexcept
     {
         return this->data();
     }
     
     template<typename Type, typename Allocator>
-    inline vector<Type, Allocator>::template iterator vector<Type, Allocator>::end() noexcept
+    inline typename vector<Type, Allocator>::iterator vector<Type, Allocator>::end() noexcept
     {
         return this->data() + this->size();
     }
     
     template<typename Type, typename Allocator>
-    inline vector<Type, Allocator>::template iterator vector<Type, Allocator>::end() const noexcept
+    inline typename vector<Type, Allocator>::iterator vector<Type, Allocator>::end() const noexcept
     {
         return this->data() + this->size();
     }
     
     template<typename Type, typename Allocator>
-    inline vector<Type, Allocator>::template const_iterator vector<Type, Allocator>::cend() const noexcept
+    inline typename vector<Type, Allocator>::const_iterator vector<Type, Allocator>::cend() const noexcept
     {
         return this->data() + this->size();
     }
     
     template<typename Type, typename Allocator>
-    inline vector<Type, Allocator>::template iterator vector<Type, Allocator>::erase(iterator it)
+    inline typename vector<Type, Allocator>::iterator vector<Type, Allocator>::erase(iterator it)
     {
         const auto idx = it - begin();
         const auto res = std::vector<Type, Allocator>::erase(std::vector<Type, Allocator>::begin() + idx);
@@ -135,7 +135,7 @@ namespace ryujin
     }
     
     template<typename Type, typename Allocator>
-    inline vector<Type, Allocator>::template iterator vector<Type, Allocator>::erase(iterator start, iterator stop)
+    inline typename vector<Type, Allocator>::iterator vector<Type, Allocator>::erase(iterator start, iterator stop)
     {
         const auto startIdx = start - begin();
         const auto stopIdx = stop - begin();

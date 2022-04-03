@@ -4,10 +4,16 @@
 #include <ryujin/core/files.hpp>
 #include <ryujin/core/span.hpp>
 
+#include <string.h>
+
 #include <png.h>
 
 #undef APIENTRY
 #include <spdlog/spdlog.h>
+
+#ifdef _RYUJIN_LINUX
+#include <byteswap.h>
+#endif
 
 namespace ryujin::assets
 {
@@ -27,7 +33,11 @@ namespace ryujin::assets
         }
         reader* ptr = reinterpret_cast<reader*>(ioPtr);
 
+#ifdef _RYUJIN_WINDOWS
         memcpy_s(outBytes, bytesToRead, ptr->bytes.data() + ptr->index, std::min(bytesToRead, ptr->bytes.length()));
+#else
+        memcpy(outBytes, ptr->bytes.data() + ptr->index, std::min(bytesToRead, ptr->bytes.length()));
+#endif
 
         ptr->index += bytesToRead;
     }
@@ -67,7 +77,11 @@ namespace ryujin::assets
             {
                 auto ptr = level.bytes.data() + i;
                 auto sPtr = reinterpret_cast<unsigned short*>(ptr);
+#ifdef _RYUJIN_WINDOWS
                 auto swapped = _byteswap_ushort(*sPtr);
+#else
+                auto swapped = __bswap_16(*sPtr);
+#endif
                 auto swappedPtr = reinterpret_cast<std::byte*>(&swapped);
                 level.bytes[i + 0] = swappedPtr[0];
                 level.bytes[i + 1] = swappedPtr[1];

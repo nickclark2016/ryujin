@@ -1,6 +1,8 @@
 #ifndef sparse_set_hpp__
 #define sparse_set_hpp__
 
+#include "entity.hpp"
+
 #include <cstddef>
 #include <memory>
 #include <vector>
@@ -43,7 +45,7 @@ namespace ryujin
         std::size_t _page(const type& tp) const noexcept;
         std::size_t _offset(const type& tp) const noexcept;
 
-        static constexpr type _tombstone = entity_traits<EntityType::type>::from_type(~EntityType::type(0));
+        static constexpr type _tombstone = entity_traits<typename EntityType::type>::from_type(~(typename EntityType::type)(0));
     };
 
     template <typename EntityType, std::size_t PageSize>
@@ -160,7 +162,7 @@ namespace ryujin
         if (page[sparseOffset] == _tombstone)
         {
             // Value is not in the set
-            page[sparseOffset] = entity_traits<EntityType::type>::from_type(static_cast<EntityType::type>(_packed.size()));
+            page[sparseOffset] = entity_traits<typename EntityType::type>::from_type(static_cast<typename EntityType::type>(_packed.size()));
             _packed.push_back(tp);
         }
     }
@@ -183,7 +185,7 @@ namespace ryujin
                 _packed[packedIndex] = back;
                 _packed.pop_back();
 
-                const auto toMove = entity_traits<EntityType::type>::from_type(packedIndex);
+                const auto toMove = entity_traits<typename EntityType::type>::from_type(packedIndex);
                 _sparse[_page(toMove)][_offset(toMove)] = toMove;
             }
         }

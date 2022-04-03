@@ -1,7 +1,6 @@
 project ('ryujin')
     kind ('StaticLib')
     language ('C++')
-    cppdialect ('C++20')
 
     targetdir (binaries)
     objdir (intermediate)
@@ -40,11 +39,24 @@ project ('ryujin')
 
     filter ({ 'configurations:Debug' })
         optimize ('Off')
+        symbols ('On')
+        defines ({
+            '_DEBUG'
+        })
 
     filter ({ 'configurations:Release' })
         optimize ('Speed')
 
-    filter ()
+    filter ({ 'system:windows' })
+        cppdialect ('C++20')
+        defines ({ '_RYUJIN_WINDOWS' })
+
+    filter ({ 'system:linux' })
+        cppdialect ('C++2a')
+        defines ({ '_RYUJIN_LINUX' })
+        -- linkgroups ('On')
+
+    filter ({})
     
     dataDirectory = path.join(binaries, "data")
     projectDataDirectory = path.join("%{root}", "projects", "ryujin", "data")
@@ -55,6 +67,14 @@ project ('ryujin')
 
         postbuildcommands({
             "%{postBuildBatchFile} %{projectDataDirectory} %{dataDirectory} %{cfg.buildcfg}"
+        })
+
+    filter ({ 'system:linux' })
+
+        postBuildBatchFile = path.join("%{root}", "projects", "ryujin", "postbuildcmds.sh")
+
+        postbuildcommands({
+            "sh %{postBuildBatchFile} %{projectDataDirectory} %{dataDirectory} %{cfg.buildcfg}"
         })
 
     filter ()

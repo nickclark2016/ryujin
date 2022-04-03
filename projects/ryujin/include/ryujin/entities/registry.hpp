@@ -245,7 +245,7 @@ namespace ryujin
     {
     public:
         using entity_type = Type;
-        using entity_type_traits = entity_traits<Type::template type>;
+        using entity_type_traits = entity_traits<typename Type::type>;
 
         base_registry();
         base_registry(const base_registry&) = delete;
@@ -289,7 +289,7 @@ namespace ryujin
 
     private:
         static constexpr std::size_t _poolSize = 1024;
-        static constexpr entity_type _tombstone = entity_traits<entity_type::type>::from_type(~entity_type::type(0));
+        static constexpr entity_type _tombstone = entity_traits<typename entity_type::type>::from_type(~(typename entity_type::type)(0));
 
         vector<detail::pool> _pools;
         vector<entity_type> _entities;
@@ -324,7 +324,7 @@ namespace ryujin
     template <typename T>
     inline entity_handle<Type>& entity_handle<Type>::assign(const T& t)
     {
-        _registry->assign(*this, t);
+        _registry->template assign(*this, t);
         return *this;
     }
 
@@ -332,7 +332,7 @@ namespace ryujin
     template <typename T>
     inline entity_handle<Type>& entity_handle<Type>::assign_or_replace(const T& t)
     {
-        _registry->assign_or_replace(*this, t);
+        _registry->template assign_or_replace(*this, t);
         return *this;
     }
 
@@ -340,7 +340,7 @@ namespace ryujin
     template <typename T>
     inline entity_handle<Type>& entity_handle<Type>::remove()
     {
-        _registry->remove<T>(*this);
+        _registry->template remove<T>(*this);
         return *this;
     }
 
@@ -348,7 +348,7 @@ namespace ryujin
     template <typename T>
     inline entity_handle<Type>& entity_handle<Type>::replace(const T& t)
     {
-        _registry->replace(*this, t);
+        _registry->template replace(*this, t);
         return *this;
     }
 
@@ -356,7 +356,7 @@ namespace ryujin
     template <typename T>
     inline bool entity_handle<Type>::contains() const
     {
-        return _registry->contains<T>(*this);
+        return _registry->template contains<T>(*this);
     }
 
     template <typename Type>
@@ -594,9 +594,9 @@ namespace ryujin
     }
     
     template <typename Type>
-    inline base_registry<Type>::template entity_type base_registry<Type>::_allocateNewIdentifier()
+    inline typename base_registry<Type>::entity_type base_registry<Type>::_allocateNewIdentifier()
     {
-        const auto identifier = static_cast<entity_type_traits::identifier_type>(_entities.size());
+        const auto identifier = static_cast<typename entity_type_traits::identifier_type>(_entities.size());
         const auto generation = 0;
         entity_type e{ identifier, generation };
         _entities.push_back(e);
@@ -604,7 +604,7 @@ namespace ryujin
     }
     
     template <typename Type>
-    inline base_registry<Type>::template entity_type base_registry<Type>::_recycleExistingIdentifier()
+    inline typename base_registry<Type>::entity_type base_registry<Type>::_recycleExistingIdentifier()
     {
         const auto identifier = _freeListHead.identifier;
         const auto version = _entities[identifier].version;
@@ -644,7 +644,7 @@ namespace ryujin
             }
             else
             {
-                while (!_registry->contains<Ts...>(_registry->at(_index)) || _index >= _nextFreeIndex)
+                while (!_registry->template contains<Ts...>(_registry->at(_index)) || _index >= _nextFreeIndex)
                 {
                     if (_index == _nextFreeIndex)
                     {
@@ -672,13 +672,13 @@ namespace ryujin
         }
         
         template<typename EntityType, typename ...Ts>
-        inline entity_view_iterator<EntityType, Ts...>::template value_type entity_view_iterator<EntityType, Ts...>::operator*()
+        inline typename entity_view_iterator<EntityType, Ts...>::value_type entity_view_iterator<EntityType, Ts...>::operator*()
         {
             return _registry->at(_index);
         }
         
         template<typename EntityType, typename ...Ts>
-        inline entity_view_iterator<EntityType, Ts...>::template value_type entity_view_iterator<EntityType, Ts...>::operator*() const
+        inline typename entity_view_iterator<EntityType, Ts...>::value_type entity_view_iterator<EntityType, Ts...>::operator*() const
         {
             return _registry->at(_index);
         }
@@ -713,7 +713,7 @@ namespace ryujin
                     return entity_view_iterator<EntityType, ComponentTypes...>(_registry, index, nextFree);
                 }
 
-                while ((index != _registry->_entities.size() && index >= nextFree) || !_registry->contains<ComponentTypes...>(_registry->at(index)))
+                while ((index != _registry->_entities.size() && index >= nextFree) || !_registry->template contains<ComponentTypes...>(_registry->at(index)))
                 {
                     if (index == nextFree)
                     {
@@ -751,7 +751,7 @@ namespace ryujin
             }
             else
             {
-                while ((index != _registry->_entities.size() && index >= nextFree) || !_registry->contains<ComponentTypes...>(_registry->at(index)))
+                while ((index != _registry->_entities.size() && index >= nextFree) || !_registry->template contains<ComponentTypes...>(_registry->at(index)))
                 {
                     if (index == nextFree)
                     {
@@ -789,7 +789,7 @@ namespace ryujin
             }
             else
             {
-                while ((index != _registry->_entities.size() && index >= nextFree) || !_registry->contains<ComponentTypes...>(_registry->at(index)))
+                while ((index != _registry->_entities.size() && index >= nextFree) || !_registry->template contains<ComponentTypes...>(_registry->at(index)))
                 {
                     if (index == nextFree)
                     {

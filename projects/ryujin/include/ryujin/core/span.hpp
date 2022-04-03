@@ -1,6 +1,8 @@
 #ifndef span_hpp__
 #define span_hpp__
 
+#include "as.hpp"
+
 #include <cstddef>
 #include <optional>
 
@@ -49,7 +51,7 @@ namespace ryujin
     
     template<typename T>
     inline constexpr span<T>::span()
-        : span<T>((T*)nullptr, 0ull)
+        : span<T>((T*)nullptr, as<std::size_t>(0))
     {
     }
 
@@ -69,7 +71,7 @@ namespace ryujin
 
     template<typename T>
     inline constexpr span<T>::span(const T& value)
-        : _ptr(&value), _length(1)
+        : _ptr(&value), _length(as<std::size_t>(1))
     {
     }
 

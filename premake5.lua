@@ -4,13 +4,17 @@ workspace ('ryujin')
         'Release'
     })
 
-    platforms ({ 'x86', 'x64' })
-
     filter ({ 'configurations:Debug' })
         runtime ('Debug')
     
     filter ({ 'configurations:Release' })
         runtime ('Release')
+
+    filter ({ 'system:windows' })
+        platforms ({ 'x86', 'x64' })
+    
+    filter ({ 'system:linux' })
+        platforms ({ 'x64' })
 
     filter ({})
     

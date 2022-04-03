@@ -1,7 +1,6 @@
 project ('vk-bootstrap')
     kind ('StaticLib')
     language ('C++')
-    cppdialect ('C++20')
 
     targetdir (binaries)
     objdir (intermediate)
@@ -19,6 +18,10 @@ project ('vk-bootstrap')
     filter ({ 'system:windows' })
        systemversion ('latest')
        staticruntime ('Off')
+       cppdialect ('C++20')
+
+    filter ({ 'system:linux' })
+        cppdialect ('C++2a')
 
     filter ({})
 

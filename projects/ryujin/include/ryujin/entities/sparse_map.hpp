@@ -1,6 +1,8 @@
 #ifndef sparse_map_hpp__
 #define sparse_map_hpp__
 
+#include "entity.hpp"
+
 #include <cstddef>
 #include <memory>
 #include <utility>
@@ -14,7 +16,6 @@ namespace ryujin
     public:
         using key_type = EntityType;
         using value_type = ValueType;
-        using sparse_page_type = key_type[];
 
         bool empty() const noexcept;
         std::size_t size() const noexcept;
@@ -53,7 +54,7 @@ namespace ryujin
         std::vector<EntityType> _packed;
         std::vector<ValueType> _values;
 
-        static constexpr EntityType _tombstone = entity_traits<EntityType::type>::from_type(~EntityType::type(0));
+        static constexpr EntityType _tombstone = entity_traits<typename EntityType::type>::from_type(~(typename EntityType::type)(0));
     };
     
     template<typename EntityType, typename ValueType, std::size_t PageSize>
@@ -103,7 +104,7 @@ namespace ryujin
     }
 
     template<typename EntityType, typename ValueType, std::size_t PageSize>
-    inline sparse_map<EntityType, ValueType, PageSize>::template value_type& sparse_map<EntityType, ValueType, PageSize>::get(const key_type& key)
+    inline typename sparse_map<EntityType, ValueType, PageSize>::value_type& sparse_map<EntityType, ValueType, PageSize>::get(const key_type& key)
     {
         const auto page = _page(key);
         const auto offset = _offset(key);
@@ -113,7 +114,7 @@ namespace ryujin
     }
 
     template<typename EntityType, typename ValueType, std::size_t PageSize>
-    inline const sparse_map<EntityType, ValueType, PageSize>::template value_type& sparse_map<EntityType, ValueType, PageSize>::get(const key_type& key) const
+    inline const typename sparse_map<EntityType, ValueType, PageSize>::value_type& sparse_map<EntityType, ValueType, PageSize>::get(const key_type& key) const
     {
         const auto page = _page(key);
         const auto offset = _offset(key);
@@ -176,7 +177,7 @@ namespace ryujin
         if (page[sparseOffset] == _tombstone)
         {
             // Value is not in the map
-            page[sparseOffset] = EntityType{ static_cast<entity_traits<EntityType::type>::identifier_type>(_packed.size()), 0 };
+            page[sparseOffset] = EntityType{ static_cast<entity_traits<typename EntityType::type>::identifier_type>(_packed.size()), 0 };
             _packed.push_back(key);
             _values.push_back(value);
         }
@@ -204,7 +205,7 @@ namespace ryujin
                 _values[packedIndex] = valueBack;
                 _values.pop_back();
 
-                const auto toMove = entity_traits<EntityType::type>::from_type(packedIndex);
+                const auto toMove = entity_traits<typename EntityType::type>::from_type(packedIndex);
                 _sparse[_page(toMove)][_offset(toMove)] = toMove;
             }
         }
@@ -238,7 +239,7 @@ namespace ryujin
                 _values[packedIndex] = valueBack;
                 _values.pop_back();
 
-                const auto toMove = entity_traits<entity_traits<EntityType::type>::identifier_type>::from_type(packedIndex);
+                const auto toMove = entity_traits<typename entity_traits<typename EntityType::type>::identifier_type>::from_type(packedIndex);
                 _sparse[_page(toMove)][_offset(toMove)] = toMove;
             }
         }

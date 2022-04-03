@@ -5,6 +5,8 @@
 *.vcxproj.filters
 *.vcxproj.user
 *.sln
+Makefile
+*.mak
 
 # Outputs
 bin/

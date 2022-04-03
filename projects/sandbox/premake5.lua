@@ -22,18 +22,41 @@ project ('Sandbox')
     })
 
     dependson ({
-        'ryujin'
+        'glfw',
+        'libpng',
+        'vma',
+        'ryujin',
+        'vk-bootstrap',
+        'zlib'
     })
 
     links ({
+        'glfw',
+        'libpng',
+        'vma',
         'ryujin',
+        'vk-bootstrap',
         'zlib'
     })
 
     filter ({ 'configurations:Debug' })
         optimize ('Off')
+        symbols ('On')
 
     filter ({ 'configurations:Release' })
         optimize ('Speed')
+
+
+    filter ({ 'system:windows' })
+        cppdialect ('C++20')
+
+    filter ({ 'system:linux' })
+        cppdialect ('C++2a')
+        linkgroups ('On')
+        links ({
+            'dl',
+            'X11',
+            'pthread'
+        })
 
     filter ()

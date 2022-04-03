@@ -1,7 +1,6 @@
 project ('zlib')
     kind ('SharedLib')
     language ('C++')
-    cppdialect ('C++20')
 
     targetdir (binaries)
     objdir (intermediate)
@@ -26,6 +25,10 @@ project ('zlib')
 
     filter ({ 'system:windows' })
         systemversion ('latest')
+        cppdialect ('C++20')
+
+    filter ({ 'system:linux' })
+        cppdialect ('C++2a')
 
     filter ({ 'configurations:Debug' })
         runtime ('Debug')

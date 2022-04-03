@@ -1,7 +1,6 @@
 project ('googletest')
     kind ('StaticLib')
     language ('C++')
-    cppdialect ('C++20')
 
     targetdir (binaries)
     objdir (intermediate)
@@ -20,6 +19,10 @@ project ('googletest')
 
     filter ({ 'system:windows' })
         systemversion ('latest')
+        cppdialect ('C++20')
+
+    filter ({ 'system:linux' })
+        cppdialect ('C++2a')
 
     filter ({ 'configurations:Debug' })
         runtime ('Debug')

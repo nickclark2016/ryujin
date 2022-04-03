@@ -47,8 +47,8 @@ namespace ryujin
             auto bufs = std::get_if<span<descriptor_buffer_info>>(&info.info);
             auto imgs = std::get_if<span<descriptor_image_info>>(&info.info);
 
-            auto bufInfos = allocator.typed_allocate<VkDescriptorBufferInfo>(bufs ? bufs->length() : 0);
-            auto imgInfos = allocator.typed_allocate<VkDescriptorImageInfo>(imgs ? imgs->length() : 0);
+            auto bufInfos = allocator.template typed_allocate<VkDescriptorBufferInfo>(bufs ? bufs->length() : 0);
+            auto imgInfos = allocator.template typed_allocate<VkDescriptorImageInfo>(imgs ? imgs->length() : 0);
 
             if (bufInfos == nullptr && imgInfos == nullptr)
             {
@@ -266,9 +266,9 @@ namespace ryujin
         };
 
         const VmaAllocationCreateInfo ainfo = {
-            (allocInfo.hostSequentialWriteAccess ? VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT : 0ul)
-                | (allocInfo.hostRandomAccess ? VMA_ALLOCATION_CREATE_HOST_ACCESS_RANDOM_BIT : 0ul)
-                | (allocInfo.persistentlyMapped ? VMA_ALLOCATION_CREATE_MAPPED_BIT : 0ul),
+            as<VmaAllocationCreateFlags>((allocInfo.hostSequentialWriteAccess ? VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT : 0u)
+                | (allocInfo.hostRandomAccess ? VMA_ALLOCATION_CREATE_HOST_ACCESS_RANDOM_BIT : 0u)
+                | (allocInfo.persistentlyMapped ? VMA_ALLOCATION_CREATE_MAPPED_BIT : 0u)),
             to_vma(allocInfo.usage),
             to_vulkan(allocInfo.required),
             to_vulkan(allocInfo.preferred),
@@ -383,7 +383,7 @@ namespace ryujin
         const VkFenceCreateInfo cinfo = {
             .sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
             .pNext = VK_NULL_HANDLE,
-            .flags = info.signaled ? VK_FENCE_CREATE_SIGNALED_BIT : 0ul
+            .flags = as<VkFenceCreateFlags>(info.signaled ? VK_FENCE_CREATE_SIGNALED_BIT : 0ul)
         };
 
         fence f = {};
@@ -521,8 +521,8 @@ namespace ryujin
         };
 
         const VmaAllocationCreateInfo ainfo = {
-            (allocInfo.hostSequentialWriteAccess ? VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT : 0ul)
-                | (allocInfo.hostRandomAccess ? VMA_ALLOCATION_CREATE_HOST_ACCESS_RANDOM_BIT : 0ul),
+            as<VmaAllocationCreateFlags>((allocInfo.hostSequentialWriteAccess ? VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT : 0ul)
+                | (allocInfo.hostRandomAccess ? VMA_ALLOCATION_CREATE_HOST_ACCESS_RANDOM_BIT : 0ul)),
             to_vma(allocInfo.usage),
             to_vulkan(allocInfo.required),
             to_vulkan(allocInfo.preferred),
@@ -1125,8 +1125,11 @@ namespace ryujin
             .range = bytes
         };
 
+#ifdef _RYUJIN_WINDOWS
         memcpy_s(reinterpret_cast<char*>(region.buf.info.pMappedData) + region.offset, bytes, data, bytes);
-
+#else
+        memcpy(reinterpret_cast<char*>(region.buf.info.pMappedData) + region.offset, data, bytes);
+#endif
         _stagingBuffers[0].offset += bytes;
 
         return result<buffer_region, error_code>::from_success(region);
@@ -1834,8 +1837,12 @@ namespace ryujin
 
         descriptor_layout_cache_entry key = {};
         key.count = as<std::uint32_t>(info.bindings.length());
-        memcpy_s(key.bindings.data(), key.bindings.size() * sizeof(descriptor_set_layout_binding), info.bindings.data(), info.bindings.length() * sizeof(descriptor_set_layout_binding));
 
+#ifdef _RYUJIN_WINDOWS
+        memcpy_s(key.bindings.data(), key.bindings.size() * sizeof(descriptor_set_layout_binding), info.bindings.data(), info.bindings.length() * sizeof(descriptor_set_layout_binding));
+#else
+        memcpy(key.bindings.data(), info.bindings.data(), info.bindings.length() * sizeof(descriptor_set_layout_binding));
+#endif
         const auto it = _cache.find(key);
         if (it == _cache.end())
         {

@@ -29,7 +29,7 @@ namespace ryujin
 
 	void blit_pass::record(graphics_command_list& commands)
 	{
-		const render_pass_attachment_begin_info attachments = { .views = span(&_imageTarget, 1) };
+		const render_pass_attachment_begin_info attachments = { .views = span(_imageTarget) };
 		const clear_value swapchainClear = { .color = { .float32 = { 1.0f, 0, 0, 1 } } };
 		const clear_value clears[] = { swapchainClear };
 

@@ -31,4 +31,15 @@ project ('ryujin-test')
     filter ({ 'configurations:Release' })
         optimize ('Speed')
 
+
+    filter ({ 'system:windows' })
+        cppdialect ('C++20')
+
+    filter ({ 'system:linux' })
+        cppdialect ('C++2a')
+        links ({
+            'pthread'
+        })
+
+
     filter ()
