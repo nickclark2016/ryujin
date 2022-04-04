@@ -1437,9 +1437,58 @@ namespace ryujin
             resources.descriptorAllocator.reset();
         }
 
+        vkb::SwapchainBuilder swapchainBuilder(_device, _surface);
+        if (_swapchain.swapchain)
+        {
+            spdlog::debug("Found old swapchain to construct with.");
+            swapchainBuilder.set_old_swapchain(_swapchain);
+        }
+
+        const auto swapchainResult = swapchainBuilder.build();
+        if (!swapchainResult)
+        {
+            return error_code::SWAPCHAIN_INITIALIZATION_FAILURE;
+        }
+
         vkb::destroy_swapchain(_swapchain);
 
-        return create_swapchain();
+        auto swapchain = swapchainResult.value();
+        const auto imageResults = swapchain.get_images();
+        if (imageResults)
+        {
+            _swapchain = swapchain;
+            _swapchainImages.reserve(imageResults->size());
+            for (auto image : *imageResults)
+            {
+                const image_view_usage use = { image_usage::COLOR_ATTACHMENT };
+                const image_view_create_info cinfo = {
+                    use,
+                    { image, nullptr, { } },
+                    image_view_type::TYPE_2D,
+                    as<data_format>(_swapchain.image_format),
+                    {
+                        image_aspect::COLOR,
+                        0,
+                        1,
+                        0,
+                        1
+                    }
+                };
+
+                auto viewResult = create(cinfo);
+                if (!viewResult)
+                {
+                    return error_code::SWAPCHAIN_INITIALIZATION_FAILURE;
+                }
+                _swapchainImages.push_back(viewResult.success());
+            }
+        }
+        else
+        {
+            return error_code::SWAPCHAIN_INITIALIZATION_FAILURE;
+        }
+
+        return error_code::NO_ERROR;
     }
 
     render_manager::error_code render_manager::build_staging_buffers()
