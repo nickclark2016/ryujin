@@ -1,6 +1,7 @@
 #ifndef render_manager_hpp__
 #define render_manager_hpp__
 
+#include "renderable.hpp"
 #include "types.hpp"
 #include "window.hpp"
 
@@ -91,6 +92,7 @@ namespace ryujin
         ~transfer_command_list() = default;
 
         void copy(const buffer& src, const buffer& dst, const span<buffer_copy_regions>& regions);
+        void copy(const buffer& src, const image& dst, const image_layout layout, const span<buffer_image_copy_regions>& regions);
 
     private:
         transfer_command_list(VkCommandBuffer cmdBuffer, const vkb::DispatchTable& fns, VkQueue target);
@@ -310,16 +312,21 @@ namespace ryujin
         result<shader_module, error_code> create(const shader_module_create_info& info);
 
         result<descriptor_set, error_code> allocate_transient(const descriptor_set_layout& layout);
-        result<buffer_region, error_code> write_to_staging_buffer(void* data, const std::size_t bytes);
+
+        result<buffer_region, error_code> write_to_staging_buffer(const void* data, const std::size_t bytes);
+        void reset_staging_buffer();
 
         void write(const span<descriptor_write_info>& infos);
 
         void release(const descriptor_pool pool);
         void release(const descriptor_set_layout layout);
+        void release(const fence f);
         void release(const frame_buffer fbo);
+        void release(const image img);
         void release(const image_view view);
 
         void reset(const descriptor_pool pool);
+        void reset(const fence f);
 
         graphics_command_list next_graphics_command_list();
         transfer_command_list next_transfer_command_list();
@@ -327,6 +334,8 @@ namespace ryujin
         semaphore swapchain_image_ready_signal() const noexcept;
         semaphore render_complete_signal() const noexcept;
         fence flight_complete_fence() const noexcept;
+
+        renderable_manager& renderables() noexcept;
 
         void wait(const fence& f);
     private:
@@ -395,6 +404,8 @@ namespace ryujin
         detail::render_pipeline _renderer;
 
         std::atomic_bool _isMinimized = false;
+
+        renderable_manager _renderables;
 
         inline VkAllocationCallbacks* get_allocation_callbacks()
         {

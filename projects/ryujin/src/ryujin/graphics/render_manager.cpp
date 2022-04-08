@@ -413,6 +413,8 @@ namespace ryujin
             return result<fence, error_code>::from_error(error_code::RESOURCE_ALLOCATION_FAILURE);
         }
 
+        _fences.push_back(f);
+
         return result<fence, error_code>::from_success(f);
     }
 
@@ -1131,7 +1133,7 @@ namespace ryujin
         return result<descriptor_set, error_code>::from_error(error_code::RESOURCE_ALLOCATION_FROM_POOL_FAILURE);
     }
 
-    result<buffer_region, render_manager::error_code> render_manager::write_to_staging_buffer(void* data, const std::size_t bytes)
+    result<buffer_region, render_manager::error_code> render_manager::write_to_staging_buffer(const void* data, const std::size_t bytes)
     {
         auto stagingBuffer = _stagingBuffers[0];
         if (stagingBuffer.offset + bytes > stagingBuffer.size)
@@ -1153,6 +1155,14 @@ namespace ryujin
         _stagingBuffers[0].offset += bytes;
 
         return result<buffer_region, error_code>::from_success(region);
+    }
+
+    void render_manager::reset_staging_buffer()
+    {
+        for (auto& buf : _stagingBuffers)
+        {
+            buf.offset = 0;
+        }
     }
 
     void render_manager::write(const span<descriptor_write_info>& infos)
@@ -1237,6 +1247,21 @@ namespace ryujin
         }
     }
 
+    void render_manager::release(const fence f)
+    {
+        auto it = std::find(_fences.begin(), _fences.end(), f);
+        if (it != _fences.end())
+        {
+            _fences.erase(it);
+
+            // add to deletion queue
+            const auto dtor = [this, f]() {
+                _funcs.destroyFence(f, get_allocation_callbacks());
+            };
+            get_current_frame_resources().dtorQueue.push_deletor(dtor);
+        }
+    }
+
     void render_manager::release(const image_view view)
     {
         auto it = std::find(_imageViews.begin(), _imageViews.end(), view);
@@ -1247,6 +1272,21 @@ namespace ryujin
             // add to deletion queue
             const auto dtor = [this, view]() {
                 _funcs.destroyImageView(view, get_allocation_callbacks());
+            };
+            get_current_frame_resources().dtorQueue.push_deletor(dtor);
+        }
+    }
+
+    void render_manager::release(const image img)
+    {
+        auto it = std::find(_images.begin(), _images.end(), img);
+        if (it != _images.end())
+        {
+            _images.erase(it);
+
+            // add to deletion queue
+            const auto dtor = [this, img]() {
+                vmaDestroyImage(_allocator, img.image, img.allocation);
             };
             get_current_frame_resources().dtorQueue.push_deletor(dtor);
         }
@@ -1270,6 +1310,11 @@ namespace ryujin
     void render_manager::reset(const descriptor_pool pool)
     {
         _funcs.resetDescriptorPool(pool, 0);
+    }
+
+    void render_manager::reset(const fence f)
+    {
+        _funcs.resetFences(1, &f);
     }
 
     graphics_command_list render_manager::next_graphics_command_list()
@@ -1318,7 +1363,7 @@ namespace ryujin
             transferCachedPool.buffers.push_back(buf);
         }
 
-        transfer_command_list commands(transferCachedPool.buffers[transferCachedPool.fetchIndex], _funcs, _graphics);
+        transfer_command_list commands(transferCachedPool.buffers[transferCachedPool.fetchIndex], _funcs, _transfer);
         ++transferCachedPool.fetchIndex;
 
         return commands;
@@ -1339,13 +1384,19 @@ namespace ryujin
         return get_current_frame_resources().renderFence;
     }
 
+    renderable_manager& render_manager::renderables() noexcept
+    {
+        return _renderables;
+    }
+
     void render_manager::wait(const fence& f)
     {
         _funcs.waitForFences(1, &f, VK_TRUE, UINT64_MAX);
     }
 
     render_manager::render_manager(const std::unique_ptr<window>& win, vkb::Instance instance, vkb::Device device, VmaAllocator allocator, const bool nameObjects)
-        : _win(win), _instance(instance), _device(device), _allocator(allocator), _funcs(device.make_table()), _nameObjects(nameObjects), _descriptorLayoutCache(*this)
+        : _win(win), _instance(instance), _device(device), _allocator(allocator), _funcs(device.make_table()), _nameObjects(nameObjects), _descriptorLayoutCache(*this),
+            _renderables(this)
     {
         auto setMinimized = [this]() { spdlog::info("Render manager notifying minimized."); _isMinimized = true; };
         auto setVisible = [this]() { spdlog::info("Render manager notifying not minimized."); _isMinimized = false; };
@@ -1894,6 +1945,11 @@ namespace ryujin
             _funcs.cmdCopyBuffer(_buffer, src.buffer, dst.buffer, as<std::uint32_t>(count), copies + copied);
             copied += count;
         }
+    }
+
+    void transfer_command_list::copy(const buffer& src, const image& dst, const image_layout layout, const span<buffer_image_copy_regions>& regions)
+    {
+        spdlog::warn("copy buffer -> image not implemented");
     }
 
     transfer_command_list::transfer_command_list(VkCommandBuffer cmdBuffer, const vkb::DispatchTable& fns, VkQueue target)

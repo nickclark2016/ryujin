@@ -932,6 +932,28 @@ namespace ryujin
         std::size_t size;
     };
 
+    struct image_subresource_layers
+    {
+        image_aspect aspect;
+        std::uint32_t mipLevel;
+        std::uint32_t baseArrayLayer;
+        std::uint32_t layerCount;
+    };
+
+    struct buffer_image_copy_regions
+    {
+        std::size_t bufferOffset;
+        std::size_t rowLength;
+        std::size_t imageHeight;
+        image_subresource_layers subresource;
+        std::int32_t x;
+        std::int32_t y;
+        std::int32_t z;
+        std::uint32_t width;
+        std::uint32_t height;
+        std::uint32_t depth;
+    };
+
     struct wait_info
     {
         semaphore sem;

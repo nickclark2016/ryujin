@@ -68,6 +68,13 @@ namespace ryujin
 
         std::barrier initSync(2);
 
+        // invoke pre-system initialization logic
+        app->pre_init(*this);
+
+        // initialize systems
+        _renderer->on_init(*this);
+
+        // start game logic
         _gameLogic = std::thread([this, &app, &initSync]() {
             app->on_load(*this);
             initSync.arrive_and_wait();
@@ -84,8 +91,6 @@ namespace ryujin
         });
 
         initSync.arrive_and_wait();
-
-        _renderer->on_init(*this);
 
         while (_isRunning.load())
         {

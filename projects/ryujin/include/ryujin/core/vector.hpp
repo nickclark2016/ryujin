@@ -39,6 +39,8 @@ namespace ryujin
             INDEX_OUT_OF_BOUNDS
         };
 
+        using pointer = Type*;
+        using const_pointer = const Type*;
         using iterator = Type*;
         using const_iterator = const Type*;
         using reference = Type&;
@@ -52,21 +54,15 @@ namespace ryujin
         constexpr static_vector& operator=(const static_vector& rhs);
         constexpr static_vector& operator=(static_vector&& rhs) noexcept;
 
-        constexpr std::size_t size() const noexcept;
-        constexpr std::size_t capacity() const noexcept;
-        constexpr bool empty() const noexcept;
-
         constexpr result<iterator, error_code> push_back(const Type& value);
         constexpr result<iterator, error_code> push_back(Type&& value) noexcept;
-
-        constexpr error_code pop_back() noexcept;
-        
         constexpr result<iterator, error_code> insert(const_iterator position, const Type& value);
         constexpr result<iterator, error_code> insert(const_iterator position, Type&& value) noexcept;
 
         template <typename It>
         constexpr result<iterator, error_code> insert(const_iterator position, It start, It end) noexcept;
         
+        constexpr error_code pop_back() noexcept;
         constexpr result<iterator, error_code> erase(const_iterator position);
         constexpr result<iterator, error_code> erase(const_iterator start, const_iterator end);
         constexpr void clear();
@@ -79,8 +75,14 @@ namespace ryujin
         constexpr iterator end() const noexcept;
         constexpr const_iterator cend() const noexcept;
 
-        constexpr reference operator[](const std::size_t idx);
-        constexpr const_reference operator[](const std::size_t idx) const;
+        constexpr reference operator[](const std::size_t idx) noexcept;
+        constexpr const_reference operator[](const std::size_t idx) const noexcept;
+        constexpr pointer data() noexcept;
+        constexpr const_pointer data() const noexcept;
+
+        constexpr std::size_t size() const noexcept;
+        constexpr std::size_t capacity() const noexcept;
+        constexpr bool empty() const noexcept;
 
     private:
         Type _data[Capacity];
@@ -422,15 +424,27 @@ namespace ryujin
     }
 
     template<typename Type, std::size_t Capacity>
-    inline constexpr static_vector<Type, Capacity>::reference static_vector<Type, Capacity>::operator[](const std::size_t idx)
+    inline constexpr static_vector<Type, Capacity>::reference static_vector<Type, Capacity>::operator[](const std::size_t idx) noexcept
     {
         return _data[idx];
     }
 
     template<typename Type, std::size_t Capacity>
-    inline constexpr static_vector<Type, Capacity>::const_reference static_vector<Type, Capacity>::operator[](const std::size_t idx) const
+    inline constexpr static_vector<Type, Capacity>::const_reference static_vector<Type, Capacity>::operator[](const std::size_t idx) const noexcept
     {
         return _data[idx];
+    }
+
+    template<typename Type, std::size_t Capacity>
+    inline constexpr static_vector<Type, Capacity>::pointer static_vector<Type, Capacity>::data() noexcept
+    {
+        return _data;
+    }
+    
+    template<typename Type, std::size_t Capacity>
+    inline constexpr static_vector<Type, Capacity>::const_pointer static_vector<Type, Capacity>::data() const noexcept
+    {
+        return _data;
     }
     
     template<typename Type, std::size_t Capacity>

@@ -213,6 +213,7 @@ namespace ryujin::assets
                 png_destroy_read_struct(&pngPtr, &infoPtr, nullptr);
                 return nullptr;
             }
+            componentCount = 4;
             break;
         }
         default:
@@ -222,7 +223,12 @@ namespace ryujin::assets
         }
 
         png_destroy_read_struct(&pngPtr, &infoPtr, nullptr);
-        texture_asset* asset = new texture_asset({ { level } }, componentCount, type);
+        texture_asset* asset = new texture_asset({ { level } }, componentCount, type, texture_asset::channel_swizzle{
+            .first = texture_asset::channel::RED,
+            .second = texture_asset::channel::GREEN,
+            .third = texture_asset::channel::BLUE,
+            .fourth = texture_asset::channel::ALPHA
+        });
 
         return asset;
     }

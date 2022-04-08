@@ -10,7 +10,7 @@ public:
     {
     }
 
-    void on_load(engine_context& ctx) override
+    void pre_init(engine_context& ctx) override
     {
         window::create_info winInfo =
         {
@@ -20,7 +20,16 @@ public:
         };
 
         ctx.add_window(winInfo);
-        ctx.get_assets().load_texture("data/textures/logo512.png");
+    }
+
+    void on_load(engine_context& ctx) override
+    {
+        auto tex = ctx.get_assets().load_texture("data/textures/logo512.png");
+
+        auto& manager = ctx.get_render_system().get_render_manager(0);
+        auto& renderables = manager->renderables();
+
+        auto logoAsset = renderables.load_texture("logo", *tex);
     }
 
     void on_exit(engine_context& ctx) override

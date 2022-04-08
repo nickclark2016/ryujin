@@ -24,6 +24,7 @@ namespace ryujin
     {
     public:
         virtual ~base_application() = default;
+        virtual void pre_init(engine_context& ctx) = 0;
         virtual void on_load(engine_context& ctx) = 0;
         virtual void on_exit(engine_context& ctx) = 0;
         virtual void on_frame(engine_context& ctx) = 0;
