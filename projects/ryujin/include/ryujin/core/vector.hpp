@@ -16,11 +16,11 @@ namespace ryujin
         using const_iterator = const Type*;
 
         iterator begin() noexcept;
-        iterator begin() const noexcept;
+        const_iterator begin() const noexcept;
         const_iterator cbegin() const noexcept;
 
         iterator end() noexcept;
-        iterator end() const noexcept;
+        const_iterator end() const noexcept;
         const_iterator cend() const noexcept;
 
         iterator erase(iterator it);
@@ -68,11 +68,11 @@ namespace ryujin
         constexpr void clear();
 
         constexpr iterator begin() noexcept;
-        constexpr iterator begin() const noexcept;
+        constexpr const_iterator begin() const noexcept;
         constexpr const_iterator cbegin() const noexcept;
 
         constexpr iterator end() noexcept;
-        constexpr iterator end() const noexcept;
+        constexpr const_iterator end() const noexcept;
         constexpr const_iterator cend() const noexcept;
 
         constexpr reference operator[](const std::size_t idx) noexcept;
@@ -99,7 +99,7 @@ namespace ryujin
     }
     
     template<typename Type, typename Allocator>
-    inline typename vector<Type, Allocator>::iterator vector<Type, Allocator>::begin() const noexcept
+    inline typename vector<Type, Allocator>::const_iterator vector<Type, Allocator>::begin() const noexcept
     {
         return this->data();
     }
@@ -117,7 +117,7 @@ namespace ryujin
     }
     
     template<typename Type, typename Allocator>
-    inline typename vector<Type, Allocator>::iterator vector<Type, Allocator>::end() const noexcept
+    inline typename vector<Type, Allocator>::const_iterator vector<Type, Allocator>::end() const noexcept
     {
         return this->data() + this->size();
     }
@@ -394,7 +394,7 @@ namespace ryujin
     }
 
     template<typename Type, std::size_t Capacity>
-    inline constexpr static_vector<Type, Capacity>::iterator static_vector<Type, Capacity>::begin() const noexcept
+    inline constexpr static_vector<Type, Capacity>::const_iterator static_vector<Type, Capacity>::begin() const noexcept
     {
         return &_data[0];
     }
@@ -412,7 +412,7 @@ namespace ryujin
     }
 
     template<typename Type, std::size_t Capacity>
-    inline constexpr static_vector<Type, Capacity>::iterator static_vector<Type, Capacity>::end() const noexcept
+    inline constexpr static_vector<Type, Capacity>::const_iterator static_vector<Type, Capacity>::end() const noexcept
     {
         return _data + _size;
     }

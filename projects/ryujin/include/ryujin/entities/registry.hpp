@@ -159,6 +159,12 @@ namespace ryujin
         entity_handle& assign_or_replace(const T& t);
 
         template <typename T>
+        T& get() const noexcept;
+
+        template <typename T>
+        T* try_get() const noexcept;
+
+        template <typename T>
         entity_handle& remove();
 
         template <typename T>
@@ -272,6 +278,12 @@ namespace ryujin
         bool contains(const entity_handle<Type>& handle) const;
 
         template <typename T>
+        T& get(const entity_handle<Type>& handle) const noexcept;
+
+        template <typename T>
+        T* try_get(const entity_handle<Type>& handle) const noexcept;
+
+        template <typename T>
         void remove(entity_handle<Type>& handle);
 
         template <typename T>
@@ -358,6 +370,21 @@ namespace ryujin
     {
         return _registry->template contains<T>(*this);
     }
+
+    template <typename Type>
+    template <typename T>
+    inline T& entity_handle<Type>::get() const noexcept
+    {
+        return _registry->template get<T>(*this);
+    }
+
+    template <typename Type>
+    template <typename T>
+    inline T* entity_handle<Type>::try_get() const noexcept
+    {
+        return _registry->template try_get<T>(*this);
+    }
+
 
     template <typename Type>
     inline base_registry<Type>::base_registry()
@@ -526,6 +553,39 @@ namespace ryujin
             }
         }
         return false;
+    }
+
+    template <typename Type>
+    template <typename T>
+    T& base_registry<Type>::get(const entity_handle<Type>& handle) const noexcept
+    {
+        static const auto typeId = detail::component_identifier_utility::fetch_identifier<T>();
+        T* result = nullptr;
+        if (typeId < _pools.size())
+        {
+            const detail::pool& pool = _pools[typeId];
+            sparse_map<entity_type, T, _poolSize>* sparseMap = reinterpret_cast<sparse_map<entity_type, T, _poolSize>*>(pool.sparse_map);
+            result = &sparseMap->get(handle.handle());
+        }
+        return *result;
+    }
+
+    template <typename Type>
+    template <typename T>
+    T* base_registry<Type>::try_get(const entity_handle<Type>& handle) const noexcept
+    {
+        static const auto typeId = detail::component_identifier_utility::fetch_identifier<T>();
+        T* result = nullptr;
+        if (typeId < _pools.size())
+        {
+            const detail::pool& pool = _pools[typeId];
+            sparse_map<entity_type, T, _poolSize>* sparseMap = reinterpret_cast<sparse_map<entity_type, T, _poolSize>*>(pool.sparse_map);
+            if (sparseMap->contains(handle.handle()))
+            {
+                result = &sparseMap->get(handle.handle());
+            }
+        }
+        return result;
     }
 
     template <typename Type>

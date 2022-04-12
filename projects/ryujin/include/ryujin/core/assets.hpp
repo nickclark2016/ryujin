@@ -3,6 +3,10 @@
 
 #include "vector.hpp"
 
+#include "../math/vec2.hpp"
+#include "../math/vec3.hpp"
+#include "../math/vec4.hpp"
+
 #include <cstddef>
 #include <cstdint>
 #include <filesystem>
@@ -70,6 +74,20 @@ namespace ryujin
 
     private:
         std::unordered_map<std::string, std::unique_ptr<texture_asset>> _textures;
+    };
+
+    struct vertex
+    {
+        vec3<float> position;
+        vec3<float> normal;
+        vec4<float> tangent;
+        vec2<float> texCoord;
+    };
+
+    struct mesh
+    {
+        vector<vertex> vertices;
+        vector<std::uint32_t> indices;
     };
 }
 

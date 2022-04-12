@@ -8,8 +8,8 @@
 
 namespace ryujin
 {
-    renderable_manager::renderable_manager(render_manager* manager)
-        : _manager(manager)
+    renderable_manager::renderable_manager(render_manager* manager, registry* reg)
+        : _registry(reg), _manager(manager)
     {
         const sampler_create_info info = {
             .min = filter::LINEAR,
@@ -216,6 +216,7 @@ namespace ryujin
         };
 
         _manager->release(waitFence);
+        _manager->reset_staging_buffer();
         
         auto key = _textures.insert(tex);
         _textureNameLut[name] = key;
@@ -241,5 +242,75 @@ namespace ryujin
             return *tex;
         }
         return std::nullopt;
+    }
+
+    renderable_mesh renderable_manager::load_mesh(const std::string& name, const mesh& m)
+    {
+        renderable_mesh mesh
+        {
+            .bufferGroupId = as<std::uint32_t>(_bakedBufferGroups.size()),
+            .vertexOffset = as<std::uint32_t>(_activeMeshGroup.positions.size()),
+            .indexOffset = as<std::uint32_t>(_activeMeshGroup.indices.size()),
+            .indexCount = as<std::uint32_t>(m.indices.size())
+        };
+
+        auto requestedVerts = _activeMeshGroup.positions.size() + m.vertices.size();
+        auto requestedIndices = _activeMeshGroup.indices.size() + m.indices.size();
+        _activeMeshGroup.positions.reserve(requestedVerts);
+        _activeMeshGroup.interleavedValues.reserve(requestedVerts);
+        _activeMeshGroup.indices.reserve(requestedIndices);
+
+        for (const auto& vertex : m.vertices)
+        {
+            mesh_group::position_t positionAttrib = {
+                .x = vertex.position.x,
+                .y = vertex.position.y,
+                .z = vertex.position.z
+            };
+
+            mesh_group::interleaved_t interleavedAttribs = {
+                .texcoord0 = {
+                    .u = vertex.texCoord.u,
+                    .v = vertex.texCoord.v
+                },
+                .normal = {
+                    .x = vertex.normal.x,
+                    .y = vertex.normal.y,
+                    .z = vertex.normal.z
+                },
+                .tangent = {
+                    .x = vertex.tangent.x,
+                    .y = vertex.tangent.y,
+                    .z = vertex.tangent.z,
+                    .w = vertex.tangent.w
+                }
+            };
+
+            _activeMeshGroup.positions.push_back(positionAttrib);
+            _activeMeshGroup.interleavedValues.push_back(interleavedAttribs);
+        }
+
+        for (const auto index : m.indices)
+        {
+            _activeMeshGroup.indices.push_back(index);
+        }
+
+        return mesh;
+    }
+
+    void build_meshes()
+    {
+
+    }
+
+    void renderable_manager::register_entity(entity_type ent)
+    {
+        entity_handle e(ent, _registry);
+        auto renderable = e.try_get<renderable_component>();
+        if (renderable)
+        {
+            auto mesh = renderable->mesh;
+            _entities[mesh].push_back(ent);
+        }
     }
 }

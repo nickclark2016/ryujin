@@ -181,7 +181,7 @@ namespace ryujin
 	{
 		for (auto& [name, win] : ctx.get_windows())
 		{
-			auto managerResult = render_manager::create(win, _instance, _device, _allocator, _shouldNameObjects);
+			auto managerResult = render_manager::create(win, _instance, _device, _allocator, _shouldNameObjects, ctx.get_registry());
 
 			if (managerResult)
 			{

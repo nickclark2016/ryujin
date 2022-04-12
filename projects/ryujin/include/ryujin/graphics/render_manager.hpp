@@ -279,7 +279,7 @@ namespace ryujin
             ILLEGAL_ARGUMENT
         };
 
-        static result<std::unique_ptr<render_manager>, error_code> create(const std::unique_ptr<window>& win, vkb::Instance instance, vkb::Device device, VmaAllocator allocator, const bool nameObjects);
+        static result<std::unique_ptr<render_manager>, error_code> create(const std::unique_ptr<window>& win, vkb::Instance instance, vkb::Device device, VmaAllocator allocator, const bool nameObjects, registry& reg);
 
         render_manager(const render_manager&) = delete;
         render_manager(render_manager&&) noexcept = delete;
@@ -339,7 +339,7 @@ namespace ryujin
 
         void wait(const fence& f);
     private:
-        render_manager(const std::unique_ptr<window>& win, vkb::Instance instance, vkb::Device device, VmaAllocator allocator, const bool nameObjects);
+        render_manager(const std::unique_ptr<window>& win, vkb::Instance instance, vkb::Device device, VmaAllocator allocator, const bool nameObjects, registry* reg);
 
         error_code create_surface();
         error_code create_swapchain();

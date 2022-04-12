@@ -27,6 +27,19 @@ namespace ryujin
         return lhs.index != rhs.index || lhs.generation != rhs.generation;
     }
 
+    struct slot_map_key_hash
+    {
+        constexpr std::size_t operator()(const slot_map_key& k) const noexcept;
+    };
+
+    inline constexpr std::size_t slot_map_key_hash::operator()(const slot_map_key& k) const noexcept
+    {
+        std::size_t hash = 7;
+        hash = 31 * hash + k.index;
+        hash = 31 * hash + k.generation;
+        return hash;
+    }
+
     template <typename T, typename KeyAllocator = std::allocator<slot_map_key>, typename ValueAllocator = std::allocator<T>, typename IndexAllocator = std::allocator<std::uint32_t>>
     class slot_map
     {

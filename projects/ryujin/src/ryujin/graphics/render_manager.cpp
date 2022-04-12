@@ -97,11 +97,11 @@ namespace ryujin
         }
     }
 
-    result<std::unique_ptr<render_manager>, render_manager::error_code> render_manager::create(const std::unique_ptr<window>& win, vkb::Instance instance, vkb::Device device, VmaAllocator allocator, const bool nameObjects)
+    result<std::unique_ptr<render_manager>, render_manager::error_code> render_manager::create(const std::unique_ptr<window>& win, vkb::Instance instance, vkb::Device device, VmaAllocator allocator, const bool nameObjects, registry& reg)
     {
         using result_type = result<std::unique_ptr<render_manager>, error_code>;
 
-        std::unique_ptr<render_manager> manager(new render_manager(win, instance, device, allocator, nameObjects));
+        std::unique_ptr<render_manager> manager(new render_manager(win, instance, device, allocator, nameObjects, &reg));
 
         const auto surfaceResult = manager->create_surface();
         if (surfaceResult != error_code::NO_ERROR)
@@ -1394,9 +1394,9 @@ namespace ryujin
         _funcs.waitForFences(1, &f, VK_TRUE, UINT64_MAX);
     }
 
-    render_manager::render_manager(const std::unique_ptr<window>& win, vkb::Instance instance, vkb::Device device, VmaAllocator allocator, const bool nameObjects)
+    render_manager::render_manager(const std::unique_ptr<window>& win, vkb::Instance instance, vkb::Device device, VmaAllocator allocator, const bool nameObjects, registry* reg)
         : _win(win), _instance(instance), _device(device), _allocator(allocator), _funcs(device.make_table()), _nameObjects(nameObjects), _descriptorLayoutCache(*this),
-            _renderables(this)
+            _renderables(this, reg)
     {
         auto setMinimized = [this]() { spdlog::info("Render manager notifying minimized."); _isMinimized = true; };
         auto setVisible = [this]() { spdlog::info("Render manager notifying not minimized."); _isMinimized = false; };
