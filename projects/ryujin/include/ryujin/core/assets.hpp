@@ -3,6 +3,8 @@
 
 #include "vector.hpp"
 
+#include "../math/mat4.hpp"
+#include "../math/quat.hpp"
 #include "../math/vec2.hpp"
 #include "../math/vec3.hpp"
 #include "../math/vec4.hpp"
@@ -65,17 +67,6 @@ namespace ryujin
         channel_swizzle _swizzle;
     };
 
-    class asset_manager
-    {
-    public:
-        const texture_asset* load_texture(const std::filesystem::path& path, const bool reload = false);
-
-        const std::unordered_map<std::string, std::unique_ptr<texture_asset>>& textures() const noexcept;
-
-    private:
-        std::unordered_map<std::string, std::unique_ptr<texture_asset>> _textures;
-    };
-
     struct vertex
     {
         vec3<float> position;
@@ -88,6 +79,49 @@ namespace ryujin
     {
         vector<vertex> vertices;
         vector<std::uint32_t> indices;
+    };
+
+    enum class alpha_mode
+    {
+        OPAQUE
+    };
+
+    struct material_asset
+    {
+        std::string name;
+        texture_asset* baseColorTexture;
+        texture_asset* normalTexture;
+        texture_asset* occlusionTexture;
+        texture_asset* emissiveTexture;
+        texture_asset* metallicRoughness;
+        alpha_mode alpha;
+    };
+
+    class model_asset
+    {
+    public:
+        const mesh& get_mesh() const;
+
+    private:
+        std::string _name;
+        mesh _mesh;
+        material_asset _material;
+        mat4<float> _transform;
+        vec3<float> _translation;
+        vec3<float> _scale;
+        quat<float> _rotation;
+        vector<std::unique_ptr<model_asset>> _children;
+    };
+
+    class asset_manager
+    {
+    public:
+        const texture_asset* load_texture(const std::filesystem::path& path, const bool reload = false);
+
+        const std::unordered_map<std::string, std::unique_ptr<texture_asset>>& textures() const noexcept;
+
+    private:
+        std::unordered_map<std::string, std::unique_ptr<texture_asset>> _textures;
     };
 }
 

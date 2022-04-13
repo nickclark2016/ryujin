@@ -318,12 +318,13 @@ namespace ryujin
 
         void write(const span<descriptor_write_info>& infos);
 
-        void release(const descriptor_pool pool);
-        void release(const descriptor_set_layout layout);
-        void release(const fence f);
-        void release(const frame_buffer fbo);
-        void release(const image img);
-        void release(const image_view view);
+        void release(const buffer buf, const bool immediate = false);
+        void release(const descriptor_pool pool, const bool immediate = false);
+        void release(const descriptor_set_layout layout, const bool immediate = false);
+        void release(const fence f, const bool immediate = false);
+        void release(const frame_buffer fbo, const bool immediate = false);
+        void release(const image img, const bool immediate = false);
+        void release(const image_view view, const bool immediate = false);
 
         void reset(const descriptor_pool pool);
         void reset(const fence f);

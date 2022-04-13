@@ -13,21 +13,21 @@ namespace ryujin
     {
         union
         {
-            float data[2];
+            T data[2];
             struct
             {
-                float r;
-                float g;
+                T r;
+                T g;
             };
             struct
             {
-                float x;
-                float y;
+                T x;
+                T y;
             };
             struct
             {
-                float u;
-                float v;
+                T u;
+                T v;
             };
         };
 
@@ -154,7 +154,7 @@ namespace ryujin
     }
 
     template <numeric T>
-    inline constexpr vec2<T> operator*(const float scalar, const vec2<T>& rhs) noexcept
+    inline constexpr vec2<T> operator*(const T scalar, const vec2<T>& rhs) noexcept
     {
         const vec2<T> result = { scalar * rhs[0], scalar * rhs[1] };
         return result;

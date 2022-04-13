@@ -65,6 +65,12 @@ namespace ryujin
     template <typename T>
     mat4(const T, const T, const T, const T, const T, const T, const T, const T, const T, const T, const T, const T, const T, const T, const T, const T) -> mat4<T>;
 
+    template <typename T>
+    mat4(const mat4<T>&) -> mat4<T>;
+
+    template <typename T>
+    mat4(mat4<T>&&) -> mat4<T>;
+
     // Implementation
 
     template<numeric T>

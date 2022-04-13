@@ -998,6 +998,11 @@ namespace ryujin
         return as<access_type>(as<std::uint32_t>(lhs) | as<std::uint32_t>(rhs));
     }
 
+    constexpr buffer_usage operator|(const buffer_usage lhs, const buffer_usage rhs)
+    {
+        return as<buffer_usage>(as<std::uint32_t>(lhs) | as<std::uint32_t>(rhs));
+    }
+
     constexpr image_aspect operator|(const image_aspect lhs, const image_aspect rhs)
     {
         return as<image_aspect>(as<std::uint32_t>(lhs) | as<std::uint32_t>(rhs));

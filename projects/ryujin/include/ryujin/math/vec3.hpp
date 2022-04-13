@@ -1,6 +1,8 @@
 #ifndef vec3_hpp__
 #define vec3_hpp__
 
+#include "math_utils.hpp"
+
 #include "../core/concepts.hpp"
 
 #include <cstddef>
@@ -13,18 +15,18 @@ namespace ryujin
     {
         union
         {
-            float data[4];
+            T data[4];
             struct
             {
-                float r;
-                float g;
-                float b;
+                T r;
+                T g;
+                T b;
             };
             struct
             {
-                float x;
-                float y;
-                float z;
+                T x;
+                T y;
+                T z;
             };
         };
 
@@ -155,7 +157,7 @@ namespace ryujin
     }
 
     template <numeric T>
-    inline constexpr vec3<T> operator*(const float scalar, const vec3<T>& rhs) noexcept
+    inline constexpr vec3<T> operator*(const T scalar, const vec3<T>& rhs) noexcept
     {
         const vec3<T> result = { scalar * rhs[0], scalar * rhs[1], scalar * rhs[2] };
         return result;
@@ -166,6 +168,20 @@ namespace ryujin
     {
         const vec3<T> result = { lhs[0] / rhs[0], lhs[1] / rhs[1], lhs[2] / rhs[2] };
         return result;
+    }
+
+    template <numeric T>
+    inline constexpr T norm(const vec3<T>& v)
+    {
+        const T magSquared = v.x * v.x + v.y * v.y + v.z * v.z;
+        return fast_inv_sqrt(magSquared);
+    }
+
+    template <numeric T>
+    inline constexpr vec3<T> normalize(const vec3<T>& v)
+    {
+        const auto mag = norm(v);
+        return v / mag;
     }
 }
 

@@ -298,9 +298,137 @@ namespace ryujin
         return mesh;
     }
 
-    void build_meshes()
+    void renderable_manager::build_meshes()
     {
+        // build staging buffer
+        const std::size_t positionsSize = sizeof(mesh_group::position_t) * _activeMeshGroup.positions.size();
+        const std::size_t interleavedSize = sizeof(mesh_group::interleaved_t) * _activeMeshGroup.interleavedValues.size();
+        const std::size_t indicesSize = sizeof(std::uint32_t) * _activeMeshGroup.indices.size();
+        const buffer_create_info stagingInfo = {
+            .size = (positionsSize + interleavedSize + indicesSize),
+            .usage = buffer_usage::TRANSFER_SRC
+        };
 
+        const allocation_create_info stagingAllocInfo = {
+            .required = memory_property::HOST_COHERENT | memory_property::HOST_VISIBLE,
+            .preferred = as<memory_property>(0),
+            .usage = memory_usage::PREFER_HOST,
+            .hostSequentialWriteAccess = false,
+            .hostRandomAccess = true,
+            .persistentlyMapped = true
+        };
+
+        const auto stagingResult = _manager->create(stagingInfo, stagingAllocInfo);
+        if (!stagingResult)
+        {
+            spdlog::error("Failed to create staging buffer of size {}.", stagingInfo.size);
+            return;
+        }
+
+        const auto stagingBuffer = *stagingResult;
+        std::byte* gpuBufferAddr = reinterpret_cast<std::byte*>(stagingBuffer.info.pMappedData);
+#ifdef _RYUJIN_WINDOWS
+        memcpy_s(gpuBufferAddr, positionsSize, _activeMeshGroup.positions.data(), positionsSize);
+        memcpy_s(gpuBufferAddr + positionsSize, interleavedSize, _activeMeshGroup.interleavedValues.data(), interleavedSize);
+        memcpy_s(gpuBufferAddr + positionsSize + interleavedSize, indicesSize, _activeMeshGroup.indices.data(), indicesSize);
+#else
+        memcpy(gpuBufferAddr, _activeMeshGroup.positions.data(), positionsSize);
+        memcpy(gpuBufferAddr + positionsSize, _activeMeshGroup.interleavedValues.data(), interleavedSize);
+        memcpy(gpuBufferAddr + positionsSize + interleavedSize, _activeMeshGroup.indices.data(), indicesSize);
+#endif
+
+        // build vertex and index buffers
+        const buffer_create_info positionBufferCreateInfo = {
+            .size = positionsSize,
+            .usage = buffer_usage::TRANSFER_DST | buffer_usage::VERTEX
+        };
+
+        const buffer_create_info interleavedBufferCreateInfo = {
+            .size = interleavedSize,
+            .usage = buffer_usage::TRANSFER_DST | buffer_usage::VERTEX
+        };
+
+        const buffer_create_info indexBufferCreateInfo = {
+            .size = interleavedSize,
+            .usage = buffer_usage::TRANSFER_DST | buffer_usage::INDEX
+        };
+
+        const allocation_create_info gpuAllocInfo = {
+            .required = memory_property::DEVICE_LOCAL,
+            .preferred = as<memory_property>(0),
+            .usage = memory_usage::PREFER_DEVICE,
+            .hostSequentialWriteAccess = false,
+            .hostRandomAccess = false,
+            .persistentlyMapped = false
+        };
+
+        const auto positionsBufferResult = _manager->create(positionBufferCreateInfo, gpuAllocInfo);
+        if (!positionsBufferResult)
+        {
+            spdlog::error("Failed to create vertex buffer for positions.");
+            return;
+        }
+
+        const auto interleavedBufferResult = _manager->create(interleavedBufferCreateInfo, gpuAllocInfo);
+        if (!interleavedBufferResult)
+        {
+            spdlog::error("Failed to create vertex buffer for interleaved attributes.");
+            _manager->release(*positionsBufferResult);
+            return;
+        }
+
+        const auto indexBufferResult = _manager->create(indexBufferCreateInfo, gpuAllocInfo);
+        if (!indexBufferResult)
+        {
+            spdlog::error("Failed to create index buffer.");
+            _manager->release(*interleavedBufferResult);
+            _manager->release(*positionsBufferResult);
+            return;
+        }
+
+        auto& positionsBuffer = *positionsBufferResult;
+        auto& interleavedBuffer = *interleavedBufferResult;
+        auto& indexBuffer = *indexBufferResult;
+
+        buffer_copy_regions positionRegion = {
+            .srcOffset = 0,
+            .dstOffset = 0,
+            .size = positionsSize
+        };
+
+        buffer_copy_regions interleavedRegion = {
+            .srcOffset = positionsSize,
+            .dstOffset = 0,
+            .size = interleavedSize
+        };
+
+        buffer_copy_regions indexRegion = {
+            .srcOffset = positionsSize + interleavedSize,
+            .dstOffset = 0,
+            .size = indicesSize
+        };
+
+        auto transfer = _manager->next_transfer_command_list();
+        transfer.begin();
+        transfer.copy(stagingBuffer, positionsBuffer, span(positionRegion));
+        transfer.copy(stagingBuffer, interleavedBuffer, span(interleavedRegion));
+        transfer.copy(stagingBuffer, indexBuffer, span(indexRegion));
+        transfer.end();
+        
+        const fence_create_info syncInfo = {
+            .signaled = false
+        };
+
+        const auto syncFence = *_manager->create(syncInfo);
+
+        transfer.submit({
+            .wait = {},
+            .signal = {}
+        }, syncFence);
+
+        _manager->wait(syncFence);
+        _manager->release(stagingBuffer, true);
+        _manager->release(syncFence, true);
     }
 
     void renderable_manager::register_entity(entity_type ent)

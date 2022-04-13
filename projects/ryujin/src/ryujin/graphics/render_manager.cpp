@@ -1217,7 +1217,29 @@ namespace ryujin
         return result<descriptor_set, error_code>::from_success(set);
     }
 
-    void render_manager::release(const descriptor_pool pool)
+    void render_manager::release(const buffer buf, const bool immediate)
+    {
+        auto it = std::find(_buffers.begin(), _buffers.end(), buf);
+        if (it != _buffers.end())
+        {
+            _buffers.erase(it);
+
+            // add to deletion queue
+            const auto dtor = [this, buf]() {
+                vmaDestroyBuffer(_allocator, buf.buffer, buf.allocation);
+            };
+            if (immediate)
+            {
+                dtor();
+            }
+            else
+            {
+                get_current_frame_resources().dtorQueue.push_deletor(dtor);
+            }
+        }
+    }
+
+    void render_manager::release(const descriptor_pool pool, const bool immediate)
     {
         auto it = std::find(_descriptorPools.begin(), _descriptorPools.end(), pool);
         if (it != _descriptorPools.end())
@@ -1228,11 +1250,18 @@ namespace ryujin
             const auto dtor = [this, pool]() {
                 _funcs.destroyDescriptorPool(pool, get_allocation_callbacks());
             };
-            get_current_frame_resources().dtorQueue.push_deletor(dtor);
+            if (immediate)
+            {
+                dtor();
+            }
+            else
+            {
+                get_current_frame_resources().dtorQueue.push_deletor(dtor);
+            }
         }
     }
 
-    void render_manager::release(const descriptor_set_layout layout)
+    void render_manager::release(const descriptor_set_layout layout, const bool immediate)
     {
         auto it = std::find(_descriptorLayouts.begin(), _descriptorLayouts.end(), layout);
         if (it != _descriptorLayouts.end())
@@ -1243,11 +1272,18 @@ namespace ryujin
             const auto dtor = [this, layout]() {
                 _funcs.destroyDescriptorSetLayout(layout, get_allocation_callbacks());
             };
-            get_current_frame_resources().dtorQueue.push_deletor(dtor);
+            if (immediate)
+            {
+                dtor();
+            }
+            else
+            {
+                get_current_frame_resources().dtorQueue.push_deletor(dtor);
+            }
         }
     }
 
-    void render_manager::release(const fence f)
+    void render_manager::release(const fence f, const bool immediate)
     {
         auto it = std::find(_fences.begin(), _fences.end(), f);
         if (it != _fences.end())
@@ -1258,11 +1294,18 @@ namespace ryujin
             const auto dtor = [this, f]() {
                 _funcs.destroyFence(f, get_allocation_callbacks());
             };
-            get_current_frame_resources().dtorQueue.push_deletor(dtor);
+            if (immediate)
+            {
+                dtor();
+            }
+            else
+            {
+                get_current_frame_resources().dtorQueue.push_deletor(dtor);
+            }
         }
     }
 
-    void render_manager::release(const image_view view)
+    void render_manager::release(const image_view view, const bool immediate)
     {
         auto it = std::find(_imageViews.begin(), _imageViews.end(), view);
         if (it != _imageViews.end())
@@ -1273,11 +1316,18 @@ namespace ryujin
             const auto dtor = [this, view]() {
                 _funcs.destroyImageView(view, get_allocation_callbacks());
             };
-            get_current_frame_resources().dtorQueue.push_deletor(dtor);
+            if (immediate)
+            {
+                dtor();
+            }
+            else
+            {
+                get_current_frame_resources().dtorQueue.push_deletor(dtor);
+            }
         }
     }
 
-    void render_manager::release(const image img)
+    void render_manager::release(const image img, const bool immediate)
     {
         auto it = std::find(_images.begin(), _images.end(), img);
         if (it != _images.end())
@@ -1288,11 +1338,18 @@ namespace ryujin
             const auto dtor = [this, img]() {
                 vmaDestroyImage(_allocator, img.image, img.allocation);
             };
-            get_current_frame_resources().dtorQueue.push_deletor(dtor);
+            if (immediate)
+            {
+                dtor();
+            }
+            else
+            {
+                get_current_frame_resources().dtorQueue.push_deletor(dtor);
+            }
         }
     }
 
-    void render_manager::release(const frame_buffer fbo)
+    void render_manager::release(const frame_buffer fbo, const bool immediate)
     {
         auto it = std::find(_frameBuffers.begin(), _frameBuffers.end(), fbo);
         if (it != _frameBuffers.end())
@@ -1303,7 +1360,14 @@ namespace ryujin
             const auto dtor = [this, fbo]() {
                 _funcs.destroyFramebuffer(fbo, get_allocation_callbacks());
             };
-            get_current_frame_resources().dtorQueue.push_deletor(dtor);
+            if (immediate)
+            {
+                dtor();
+            }
+            else
+            {
+                get_current_frame_resources().dtorQueue.push_deletor(dtor);
+            }
         }
     }
 
