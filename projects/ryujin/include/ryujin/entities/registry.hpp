@@ -7,6 +7,7 @@
 #include "function_table.hpp"
 #include "sparse_set.hpp"
 #include "sparse_map.hpp"
+#include "transform_component.hpp"
 
 #include "../core/vector.hpp"
 
@@ -430,7 +431,9 @@ namespace ryujin
     {
         entity_type entity = _freeListHead == _tombstone ? _allocateNewIdentifier() : _recycleExistingIdentifier();
         ++_active;
-        return entity_handle(entity, this);
+        auto handle = entity_handle(entity, this);
+        assign<transform_component>(handle, {});
+        return handle;
     }
     
     template <typename Type>

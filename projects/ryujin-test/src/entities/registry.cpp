@@ -21,6 +21,8 @@ TEST(Registry, AllocateSingle)
 	auto entity = reg.allocate();
 	ASSERT_EQ(reg.active(), 1);
 	ASSERT_GE(reg.capacity(), 1u);
+
+	ASSERT_TRUE(entity.contains<ryujin::transform_component>());
 }
 
 TEST(Registry, AllocateSingleThenDeallocate)
