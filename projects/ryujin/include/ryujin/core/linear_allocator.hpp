@@ -80,6 +80,10 @@ namespace ryujin
     template <typename T>
     inline T* linear_allocator::typed_allocate(const std::size_t count)
     {
+        if (count == 0)
+        {
+            return nullptr;
+        }
         static constexpr auto alignment = alignof(T);
         const std::size_t sz = count * sizeof(T);
         auto bufferSize = _length - _offset;

@@ -65,9 +65,25 @@ namespace ryujin
     {
     }
 
+    slot_map_key model_asset::get_mesh_group() const
+    {
+        return _mesh;
+    }
+
     const std::string& model_asset::name() const
     {
         return _name;
+    }
+
+    void model_asset::add_child(model_asset& child)
+    {
+        _children.push_back(&child);
+        child._parent = this;
+    }
+
+    model_asset::model_asset(const std::string& name, const slot_map_key mesh, mat4<float> transform, vec3<float> translate, quat<float> rotate, vec3<float> scale)
+        : _name(name), _mesh(mesh), _transform(transform), _translation(translate), _scale(scale), _rotation(rotate)
+    {
     }
 
     const texture_asset* asset_manager::load_texture(const std::filesystem::path& path, const bool reload)

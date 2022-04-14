@@ -53,15 +53,20 @@ namespace ryujin
         void end();
         void submit(const submit_info& info, const fence f = nullptr);
 
+        void barrier(pipeline_stage src, pipeline_stage dst, const span<memory_barrier>& memBarriers, const span<buffer_memory_barrier>& bufMemBarriers, const span<image_memory_barrier>& imgMemBarriers);
+
         operator bool() const noexcept;
+
+        std::uint32_t queue_index() const noexcept;
     protected:
-        command_list(VkCommandBuffer cmdBuffer, const vkb::DispatchTable& fns, VkQueue target);
+        command_list(VkCommandBuffer cmdBuffer, vkb::DispatchTable& fns, VkQueue target, std::uint32_t queueIndex);
 
         friend class render_manager;
 
         VkCommandBuffer _buffer = VK_NULL_HANDLE;
-        const vkb::DispatchTable& _funcs;
+        vkb::DispatchTable* _funcs;
         VkQueue _target = VK_NULL_HANDLE;
+        std::uint32_t _queueIndex = 0;
     };
 
     class graphics_command_list : public command_list
@@ -81,7 +86,7 @@ namespace ryujin
         void set_scissors(const span<scissor_region>& scissors);
 
     private:
-        graphics_command_list(VkCommandBuffer cmdBuffer, const vkb::DispatchTable& fns, VkQueue target);
+        graphics_command_list(VkCommandBuffer cmdBuffer, vkb::DispatchTable& fns, VkQueue target, std::uint32_t queueIndex);
 
         friend class render_manager;
     };
@@ -95,7 +100,7 @@ namespace ryujin
         void copy(const buffer& src, const image& dst, const image_layout layout, const span<buffer_image_copy_regions>& regions);
 
     private:
-        transfer_command_list(VkCommandBuffer cmdBuffer, const vkb::DispatchTable& fns, VkQueue target);
+        transfer_command_list(VkCommandBuffer cmdBuffer, vkb::DispatchTable& fns, VkQueue target, std::uint32_t queueIndex);
 
         friend class render_manager;
     };
@@ -232,6 +237,8 @@ namespace ryujin
             VkCommandPool pool = VK_NULL_HANDLE;
             vector<VkCommandBuffer> buffers;
             std::int32_t fetchIndex = 0;
+            VkQueue queue;
+            std::uint32_t queueIndex;
         };
 
         struct DeletionQueue
@@ -363,7 +370,7 @@ namespace ryujin
         VmaAllocator _allocator;
         const bool _nameObjects;
 
-        const vkb::DispatchTable _funcs = {};
+        vkb::DispatchTable _funcs = {};
         VkSurfaceKHR _surface = VK_NULL_HANDLE;
         vkb::Swapchain _swapchain = {};
 

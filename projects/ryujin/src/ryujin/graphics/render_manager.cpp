@@ -1401,7 +1401,7 @@ namespace ryujin
             graphicsCachedPool.buffers.push_back(buf);
         }
 
-        graphics_command_list commands(graphicsCachedPool.buffers[graphicsCachedPool.fetchIndex], _funcs, _graphics);
+        graphics_command_list commands(graphicsCachedPool.buffers[graphicsCachedPool.fetchIndex], _funcs, graphicsCachedPool.queue, graphicsCachedPool.queueIndex);
         ++graphicsCachedPool.fetchIndex;
 
         return commands;
@@ -1427,7 +1427,7 @@ namespace ryujin
             transferCachedPool.buffers.push_back(buf);
         }
 
-        transfer_command_list commands(transferCachedPool.buffers[transferCachedPool.fetchIndex], _funcs, _transfer);
+        transfer_command_list commands(transferCachedPool.buffers[transferCachedPool.fetchIndex], _funcs, transferCachedPool.queue, transferCachedPool.queueIndex);
         ++transferCachedPool.fetchIndex;
 
         return commands;
@@ -1724,17 +1724,23 @@ namespace ryujin
                 {
                     computeCmdPool,
                     {},
-                    0
+                    0,
+                    _compute,
+                    computeCommandPoolInfo.queueFamilyIndex
                 },
                 {
                     graphicsCmdPool,
                     {},
-                    0
+                    0,
+                    _graphics,
+                    graphicsCommandPoolInfo.queueFamilyIndex
                 },
                 {
                     transferCmdPool,
                     {},
-                    0
+                    0,
+                    _transfer,
+                    transferCommandPoolInfo.queueFamilyIndex
                 },
                 descriptor_allocator(this),
                 {}
@@ -1854,12 +1860,12 @@ namespace ryujin
             VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT,
             nullptr
         };
-        _funcs.beginCommandBuffer(_buffer, &info);
+        _funcs->beginCommandBuffer(_buffer, &info);
     }
 
     void command_list::end()
     {
-        _funcs.endCommandBuffer(_buffer);
+        _funcs->endCommandBuffer(_buffer);
     }
 
     void command_list::submit(const submit_info& info, const fence f)
@@ -1890,7 +1896,69 @@ namespace ryujin
         i.pWaitSemaphores = waitSemaphores;
         i.pWaitDstStageMask = waitStages;
 
-        _funcs.queueSubmit(_target, 1, &i, f);
+        _funcs->queueSubmit(_target, 1, &i, f);
+    }
+
+    void command_list::barrier(pipeline_stage src, pipeline_stage dst, const span<memory_barrier>& memBarriers, const span<buffer_memory_barrier>& bufMemBarriers, const span<image_memory_barrier>& imgMemBarriers)
+    {       
+        const auto memBarrierSz = sizeof(VkMemoryBarrier) * memBarriers.length();
+        const auto bufMemBarrierSz = sizeof(VkBufferMemoryBarrier) * bufMemBarriers.length();
+        const auto imgMemBarrierSz = sizeof(VkImageMemoryBarrier) * imgMemBarriers.length();
+        const auto allocSize = memBarrierSz + bufMemBarrierSz + imgMemBarrierSz;
+
+        linear_allocator allocator(allocSize);
+        VkMemoryBarrier* vkMemBarriers = allocator.typed_allocate<VkMemoryBarrier>(memBarriers.length());
+        VkBufferMemoryBarrier* vkBufMemBarriers = allocator.typed_allocate<VkBufferMemoryBarrier>(bufMemBarriers.length());
+        VkImageMemoryBarrier* vkImgMemBarriers = allocator.typed_allocate<VkImageMemoryBarrier>(imgMemBarriers.length());
+
+        for (std::size_t i = 0; i < memBarriers.length(); ++i)
+        {
+            vkMemBarriers[i] = {
+                .sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER,
+                .pNext = nullptr,
+                .srcAccessMask = to_vulkan(memBarriers[i].src),
+                .dstAccessMask = to_vulkan(memBarriers[i].dst)
+            };
+        }
+
+        for (std::size_t i = 0; i < bufMemBarriers.length(); ++i)
+        {
+            vkBufMemBarriers[i] = {
+                .sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER,
+                .pNext = nullptr,
+                .srcAccessMask = to_vulkan(bufMemBarriers[i].src),
+                .dstAccessMask = to_vulkan(bufMemBarriers[i].dst),
+                .srcQueueFamilyIndex = bufMemBarriers[i].srcQueue,
+                .dstQueueFamilyIndex = bufMemBarriers[i].dstQueue,
+                .buffer = bufMemBarriers[i].buf.buffer,
+                .offset = bufMemBarriers[i].offset,
+                .size = bufMemBarriers[i].size
+            };
+        }
+
+        for (std::size_t i = 0; i < imgMemBarriers.length(); ++i)
+        {
+            vkImgMemBarriers[i] = {
+                .sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
+                .pNext = nullptr,
+                .srcAccessMask = to_vulkan(imgMemBarriers[i].src),
+                .dstAccessMask = to_vulkan(imgMemBarriers[i].dst),
+                .oldLayout = to_vulkan(imgMemBarriers[i].oldLayout),
+                .newLayout = to_vulkan(imgMemBarriers[i].newLayout),
+                .srcQueueFamilyIndex = imgMemBarriers[i].srcQueue,
+                .dstQueueFamilyIndex = imgMemBarriers[i].dstQueue,
+                .image = imgMemBarriers[i].img.image,
+                .subresourceRange = {
+                    .aspectMask = to_vulkan(imgMemBarriers[i].range.aspect),
+                    .baseMipLevel = imgMemBarriers[i].range.baseMipLevel,
+                    .levelCount = imgMemBarriers[i].range.mipLevelCount,
+                    .baseArrayLayer = imgMemBarriers[i].range.baseLayer,
+                    .layerCount = imgMemBarriers[i].range.layerCount
+                }
+            };
+        }
+
+        _funcs->cmdPipelineBarrier(_buffer, to_vulkan(src), to_vulkan(dst), 0, as<std::uint32_t>(memBarriers.length()), vkMemBarriers, as<std::uint32_t>(bufMemBarriers.length()), vkBufMemBarriers, as<std::uint32_t>(imgMemBarriers.length()), vkImgMemBarriers);
     }
 
     command_list::operator bool() const noexcept
@@ -1898,8 +1966,13 @@ namespace ryujin
         return _buffer != nullptr;
     }
 
-    command_list::command_list(VkCommandBuffer cmdBuffer, const vkb::DispatchTable& fns, VkQueue target)
-        : _buffer(cmdBuffer), _funcs(fns), _target(target)
+    std::uint32_t command_list::queue_index() const noexcept
+    {
+        return _queueIndex;
+    }
+
+    command_list::command_list(VkCommandBuffer cmdBuffer, vkb::DispatchTable& fns, VkQueue target, std::uint32_t queueIndex)
+        : _buffer(cmdBuffer), _funcs(&fns), _target(target), _queueIndex(queueIndex)
     {
     }
 
@@ -1924,27 +1997,27 @@ namespace ryujin
             begin.clearValues.data()
         };
 
-        _funcs.cmdBeginRenderPass(_buffer, &rpBegin, VK_SUBPASS_CONTENTS_INLINE);
+        _funcs->cmdBeginRenderPass(_buffer, &rpBegin, VK_SUBPASS_CONTENTS_INLINE);
     }
 
     void graphics_command_list::end_render_pass()
     {
-        _funcs.cmdEndRenderPass(_buffer);
+        _funcs->cmdEndRenderPass(_buffer);
     }
 
     void graphics_command_list::draw_arrays(const std::uint32_t count, const std::uint32_t instances, const std::uint32_t firstVertex, const std::uint32_t firstInstance)
     {
-        _funcs.cmdDraw(_buffer, count, instances, firstVertex, firstInstance);
+        _funcs->cmdDraw(_buffer, count, instances, firstVertex, firstInstance);
     }
 
     void graphics_command_list::bind_graphics_pipeline(const pipeline& pipeline)
     {
-        _funcs.cmdBindPipeline(_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
+        _funcs->cmdBindPipeline(_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
     }
 
     void graphics_command_list::bind_graphics_descriptor_sets(const pipeline_layout& layout, const span<descriptor_set>& sets, const std::uint32_t firstSet, const span<std::uint32_t>& offsets)
     {
-        _funcs.cmdBindDescriptorSets(_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, layout, firstSet, as<std::uint32_t>(sets.length()), sets.data(), as<std::uint32_t>(offsets.length()), offsets.data());
+        _funcs->cmdBindDescriptorSets(_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, layout, firstSet, as<std::uint32_t>(sets.length()), sets.data(), as<std::uint32_t>(offsets.length()), offsets.data());
     }
 
     void graphics_command_list::set_viewports(const span<viewport>& viewports)
@@ -1963,7 +2036,7 @@ namespace ryujin
             };
         }
         
-        _funcs.cmdSetViewport(_buffer, 0, as<std::uint32_t>(viewports.length()), vps);
+        _funcs->cmdSetViewport(_buffer, 0, as<std::uint32_t>(viewports.length()), vps);
     }
 
     void graphics_command_list::set_scissors(const span<scissor_region>& scissors)
@@ -1978,11 +2051,11 @@ namespace ryujin
             };
         }
 
-        _funcs.cmdSetScissor(_buffer, 0, as<std::uint32_t>(scissors.length()), srs);
+        _funcs->cmdSetScissor(_buffer, 0, as<std::uint32_t>(scissors.length()), srs);
     }
 
-    graphics_command_list::graphics_command_list(VkCommandBuffer cmdBuffer, const vkb::DispatchTable& fns, VkQueue target)
-        : command_list(cmdBuffer, fns, target)
+    graphics_command_list::graphics_command_list(VkCommandBuffer cmdBuffer, vkb::DispatchTable& fns, VkQueue target, std::uint32_t queueIndex)
+        : command_list(cmdBuffer, fns, target, queueIndex)
     {
     }
 
@@ -2006,18 +2079,55 @@ namespace ryujin
                 };
             }
 
-            _funcs.cmdCopyBuffer(_buffer, src.buffer, dst.buffer, as<std::uint32_t>(count), copies + copied);
+            _funcs->cmdCopyBuffer(_buffer, src.buffer, dst.buffer, as<std::uint32_t>(count), copies + copied);
             copied += count;
         }
     }
 
     void transfer_command_list::copy(const buffer& src, const image& dst, const image_layout layout, const span<buffer_image_copy_regions>& regions)
     {
-        spdlog::warn("copy buffer -> image not implemented");
+        static constexpr std::size_t max = 16;
+        VkBufferImageCopy copies[max] = {};
+
+        std::size_t copied = 0;
+
+        for (std::size_t i = 0; i < regions.length(); i += max)
+        {
+            std::size_t count = std::min(regions.length() - copied, max);
+
+            for (std::size_t j = 0; j < count; ++j)
+            {
+                auto& region = regions[copied + j];
+                copies[j] = {
+                    .bufferOffset = region.bufferOffset,
+                    .bufferRowLength = as<std::uint32_t>(region.rowLength),
+                    .bufferImageHeight = as<std::uint32_t>(region.imageHeight),
+                    .imageSubresource = {
+                        .aspectMask = to_vulkan(region.subresource.aspect),
+                        .mipLevel = region.subresource.mipLevel,
+                        .baseArrayLayer = region.subresource.baseArrayLayer,
+                        .layerCount = region.subresource.layerCount
+                    },
+                    .imageOffset = {
+                        .x = region.x,
+                        .y = region.y,
+                        .z = region.z
+                    },
+                    .imageExtent = {
+                        .width = region.width,
+                        .height = region.height,
+                        .depth = region.depth
+                    }
+                };
+            }
+
+            _funcs->cmdCopyBufferToImage(_buffer, src.buffer, dst.image, to_vulkan(layout), as<std::uint32_t>(count), copies + copied);
+            copied += count;
+        }
     }
 
-    transfer_command_list::transfer_command_list(VkCommandBuffer cmdBuffer, const vkb::DispatchTable& fns, VkQueue target)
-        : command_list(cmdBuffer, fns, target)
+    transfer_command_list::transfer_command_list(VkCommandBuffer cmdBuffer, vkb::DispatchTable& fns, VkQueue target, std::uint32_t queueIndex)
+        : command_list(cmdBuffer, fns, target, queueIndex)
     {
     }
 

@@ -65,7 +65,7 @@ namespace ryujin
         const T s = std::sin(angle);
 
         const vec3<T> axis = normalize(v);
-        const vec3<T> temp = (as<T>(1) - c) axis;
+        const vec3<T> temp = (as<T>(1) - c) * axis;
 
         mat4<T> mat;
         
@@ -120,6 +120,88 @@ namespace ryujin
     inline constexpr mat4<T> scale(const vec3<T>& v)
     {
         return scale(mat4(as<T>(1)), v);
+    }
+
+    template <numeric T>
+    inline constexpr mat4<T> transform(const vec3<T>& translation, const quat<T>& rotation, const vec3<T>& scale)
+    {
+        // transformation = translation * rotation * scale
+        // TODO: figure out how to do rotate(scaling, rotation)
+        auto scaling = ryujin::scale(scale);
+        auto rotating = as_mat4(rotation);
+        auto sr = rotating * scaling;
+        auto translated = translate(rotating, translation);
+        return translated;
+    }
+
+    template <numeric T>
+    inline constexpr bool decompose(const mat4<T>& transformationMatrix, vec3<T>& translate, quat<T> rotation, vec3<T>& scale)
+    {
+        auto local = transformationMatrix;
+
+        // Matrix normalization
+        if (local[3][3] == 0)
+        {
+            return false;
+        }
+
+        for (std::size_t i = 0; i < 4; ++i)
+        {
+            for (std::size_t j = 0; j < 4; ++j)
+            {
+                local[i][j] /= local[3][3];
+            }
+        }
+
+        // solve for translation and remove
+        vec4 translation = local[3];
+        translate.x = translation.x;
+        translate.y = translation.y;
+        translate.z = translation.z;
+        local[3] = vec4(as<T>(0), as<T>(0), as<T>(0), translation.w);
+
+        // solve for scale
+        vec3<float> row[3];
+        for (std::size_t i = 0; i < 3; ++i)
+        {
+            for (std::size_t j = 0; j < 3; ++j)
+            {
+                row[i][j] = local[i][j];
+            }
+        }
+
+        scale.x = norm(row[0]); // x scale is the length of the first row
+        scale.y = norm(row[1]);
+        scale.z = norm(row[2]);
+
+        T root, trace = row[0].x + row[1].y + row[2].z;
+        if (trace > as<T>(0))
+        {
+            root = std::sqrt(trace + as<T>(1));
+            rotation.w = as<T>(0.5) * root;
+            root = as<T>(0.5) / root;
+            rotation.x = root * (row[1].z - row[2].y);
+            rotation.y = root * (row[2].x - row[0].z);
+            rotation.z = root * (row[0].y - row[1].x);
+        }
+        else
+        {
+            constexpr std::size_t next[3] = { 1, 2, 0 };
+            std::size_t i = 0;
+            if (row[1].y > row[0].x) i = 1;
+            if (row[2].z > row[i][i]) i = 2;
+            std::size_t j = next[i];
+            std::size_t k = next[j];
+
+            root = std::sqrt(row[i][i] - row[j][j] - row[k][k] + as<T>(1));
+            rotation[i + 1] = as<T>(0.5) * root;
+            root = as<T>(0.5) / root;
+            rotation[j + 1] = root * (row[i][j] + row[j][i]);
+            rotation[k + 1] = root * (row[i][k] + row[k][i]);
+            rotation.w = root * (row[j][k] - row[k][j]);
+        }
+
+        return true;
     }
 }
 

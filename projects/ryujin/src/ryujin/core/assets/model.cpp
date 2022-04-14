@@ -1,6 +1,8 @@
 #include "model.hpp"
 
+#include <ryujin/core/as.hpp>
 #include <ryujin/core/assets.hpp>
+#include <ryujin/math/transformations.hpp>
 
 #include <tinygltf/tiny_gltf.h>
 
@@ -354,7 +356,51 @@ namespace ryujin::assets
 
             for (auto node : gltfModel.nodes)
             {
+                const auto meshIndex = node.mesh;
                 
+                const std::string name = node.name;
+                const slot_map_key meshKey = meshIndex < 0 ? slot_map<mesh_group>::invalid : meshKeys[meshIndex];
+
+                vec3 translate = node.translation.empty() ? vec3(0.0f) : (as<float>(node.translation[0]), as<float>(node.translation[1]), as<float>(node.translation[2]));
+                vec3 scale = node.scale.empty() ? vec3(1.0f) : (as<float>(node.scale[0]), as<float>(node.scale[1]), as<float>(node.scale[2]));
+                quat rotate = node.rotation.empty() ? quat<float>() : (as<float>(node.rotation[3]), as<float>(node.rotation[0]), as<float>(node.rotation[1]), as<float>(node.rotation[2]));
+                mat4 transform = node.matrix.empty() ? mat4(1.0f) : mat4(
+                    vec4(as<float>(node.matrix[0]), as<float>(node.matrix[1]), as<float>(node.matrix[2]), as<float>(node.matrix[3])),
+                    vec4(as<float>(node.matrix[4]), as<float>(node.matrix[1]), as<float>(node.matrix[2]), as<float>(node.matrix[3])),
+                    vec4(as<float>(node.matrix[8]), as<float>(node.matrix[1]), as<float>(node.matrix[2]), as<float>(node.matrix[3])),
+                    vec4(as<float>(node.matrix[12]), as<float>(node.matrix[1]), as<float>(node.matrix[2]), as<float>(node.matrix[3]))
+                );
+
+                // if translate/scale/rotate was provided, compute transform
+                if (node.matrix.empty())
+                {
+                    transform = ryujin::transform(translate, rotate, scale);
+                }
+                // if transform was provided, compute translate/scale/rotate
+                else
+                {
+                    const auto result = ryujin::decompose(transform, translate, rotate, scale);
+                    if (!result)
+                    {
+                        spdlog::warn("Failed to decompose transformation of model {} in file {}", name, path);
+                    }
+                }
+
+                auto asset = std::make_unique<model_asset>(name, meshKey, transform, translate, rotate, scale);
+                models.push_back(std::move(asset));
+            }
+
+            for (std::size_t i = 0; i < gltfModel.nodes.size(); ++i)
+            {
+                auto& node = gltfModel.nodes[i];
+
+                auto& parent = models[i];
+
+                for (auto childNode : node.children)
+                {
+                    auto& child = models[childNode];
+                    parent->add_child(*child);
+                }
             }
         }
         

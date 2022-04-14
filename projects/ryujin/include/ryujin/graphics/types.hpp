@@ -966,6 +966,39 @@ namespace ryujin
         span<semaphore> signal;
     };
 
+    struct memory_barrier
+    {
+        access_type src;
+        access_type dst;
+    };
+
+    struct buffer_memory_barrier
+    {
+        access_type src;
+        access_type dst;
+
+        uint32_t srcQueue;
+        uint32_t dstQueue;
+
+        buffer buf;
+        std::size_t offset;
+        std::size_t size;
+    };
+
+    struct image_memory_barrier
+    {
+        access_type src;
+        access_type dst;
+        image_layout oldLayout;
+        image_layout newLayout;
+
+        uint32_t srcQueue;
+        uint32_t dstQueue;
+
+        image img;
+        image_subresource_range range;
+    };
+
     struct texture
     {
         image img;

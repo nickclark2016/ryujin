@@ -131,6 +131,32 @@ namespace ryujin
         fence_create_info fenceInfo = {};
         fence waitFence = *_manager->create(fenceInfo);
 
+        image_memory_barrier transitionFlags = {
+            .src = access_type::NONE,
+            .dst = access_type::TRANSFER_WRITE,
+            .oldLayout = image_layout::UNDEFINED,
+            .newLayout = image_layout::TRANSFER_DST_OPTIMAL,
+            .srcQueue = cmdList.queue_index(),
+            .dstQueue = cmdList.queue_index(),
+            .img = *imageResult,
+            .range = {
+                .aspect = image_aspect::COLOR,
+                .baseMipLevel = 0,
+                .mipLevelCount = mipCount,
+                .baseLayer = 0,
+                .layerCount = 1,
+            }
+        };
+
+        cmdList.begin();
+        cmdList.barrier(pipeline_stage::TOP_OF_PIPE, pipeline_stage::TRANSFER, {}, {}, span(transitionFlags));
+        cmdList.end();
+        cmdList.submit({}, waitFence);
+        _manager->wait(waitFence);
+        _manager->reset(waitFence);
+
+        cmdList = _manager->next_transfer_command_list();
+
         for (std::uint32_t i = 0; i < mipCount; ++i)
         {
             const auto& mip = asset.get_mip_level(i);
@@ -146,7 +172,13 @@ namespace ryujin
                         .mipLevel = i,
                         .baseArrayLayer = 0,
                         .layerCount = 1
-                    }
+                    },
+                    .x = 0,
+                    .y = 0,
+                    .z = 0,
+                    .width = mip->width,
+                    .height = mip->height,
+                    .depth = 1
                 };
 
                 mipsToCopy.push_back(region);
@@ -172,6 +204,7 @@ namespace ryujin
                 _manager->wait(waitFence);
                 _manager->reset(waitFence);
                 mipsToCopy.clear();
+                cmdList = _manager->next_transfer_command_list();
 
                 _manager->reset_staging_buffer();
                 imgWriteInfo = _manager->write_to_staging_buffer(mip->bytes.data(), mip->bytes.size());
@@ -185,7 +218,13 @@ namespace ryujin
                             .mipLevel = i,
                             .baseArrayLayer = 0,
                             .layerCount = 1
-                        }
+                        },
+                        .x = 0,
+                        .y = 0,
+                        .z = 0,
+                        .width = mip->width,
+                        .height = mip->height,
+                        .depth = 1
                     };
 
                     mipsToCopy.push_back(region);
@@ -201,13 +240,37 @@ namespace ryujin
             
         }
 
+        transitionFlags = {
+            .src = access_type::TRANSFER_WRITE,
+            .dst = access_type::MEMORY_READ,
+            .oldLayout = image_layout::TRANSFER_DST_OPTIMAL,
+            .newLayout = image_layout::SHADER_READ_ONLY_OPTIMAL,
+            .srcQueue = cmdList.queue_index(),
+            .dstQueue = cmdList.queue_index(),
+            .img = *imageResult,
+            .range = {
+                .aspect = image_aspect::COLOR,
+                .baseMipLevel = 0,
+                .mipLevelCount = mipCount,
+                .baseLayer = 0,
+                .layerCount = 1,
+            }
+        };
+
         cmdList.begin();
-        cmdList.copy(activeBuffer, *imageResult, image_layout::UNDEFINED, span(mipsToCopy.data(), mipsToCopy.size()));
+        if (!mipsToCopy.empty())
+        {
+            cmdList.copy(activeBuffer, *imageResult, image_layout::TRANSFER_DST_OPTIMAL, span(mipsToCopy.data(), mipsToCopy.size()));
+        }
+        cmdList.barrier(pipeline_stage::TRANSFER, pipeline_stage::BOTTOM_OF_PIPE, {}, {}, {
+            transitionFlags
+        });
         cmdList.end();
         cmdList.submit({}, waitFence);
         _manager->wait(waitFence);
         _manager->reset(waitFence);
         mipsToCopy.clear();
+        cmdList = _manager->next_transfer_command_list();
 
         const texture tex = {
             .img = *imageResult,

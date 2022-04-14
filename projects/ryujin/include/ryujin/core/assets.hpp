@@ -111,9 +111,12 @@ namespace ryujin
     class model_asset
     {
     public:
-        const mesh_group& get_mesh_group() const;
+        slot_map_key get_mesh_group() const;
         const std::string& name() const;
 
+        void add_child(model_asset& child);
+
+        model_asset(const std::string& name, const slot_map_key mesh, mat4<float> transform, vec3<float> translate, quat<float> rotate, vec3<float> scale);
     private:
         std::string _name;
         slot_map_key _mesh = slot_map<mesh_group>::invalid;
