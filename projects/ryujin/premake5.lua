@@ -14,8 +14,9 @@ project ('ryujin')
     includedirs ({
         'include/',
         "%{IncludeDir.glfw}",
-        "%{IncludeDir.libpng}",
         "%{IncludeDir.spdlog}",
+        "%{IncludeDir.stb}",
+        "%{IncludeDir.tinygltf}",
         "%{IncludeDir.vkbootstrap}",
         "%{IncludeDir.vulkan}",
         "%{IncludeDir.vma}"
@@ -23,16 +24,16 @@ project ('ryujin')
 
     links ({
         'glfw',
-        'libpng',
         'spdlog',
+        'stb',
         'vk-bootstrap',
         'vma'
     })
 
     dependson ({
         'glfw',
-        'libpng',
         'spdlog',
+        'stb',
         'vk-bootstrap',
         'vma'
     })

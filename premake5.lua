@@ -26,11 +26,11 @@ workspace ('ryujin')
     group ('3rd Party Dependencies')
     include ('dependencies/glfw')
     include ('dependencies/googletest')
-    include ('dependencies/libpng')
     include ('dependencies/spdlog')
+    include ('dependencies/stb')
+    include ('dependencies/tinygltf')
     include ('dependencies/vk-bootstrap')
     include ('dependencies/vulkanmemoryallocator')
-    include ('dependencies/zlib')
     group ('')
 
     group ('Engine')
@@ -47,9 +47,10 @@ workspace ('ryujin')
 
     IncludeDir["gtest"] = "%{root}/dependencies/googletest/include"
     IncludeDir["glfw"] = "%{root}/dependencies/glfw/include"
-    IncludeDir["libpng"] = "%{root}/dependencies/libpng/include"
+    IncludeDir["json"] = "%{root}/dependencies/json/include"
     IncludeDir["spdlog"] = "%{root}/dependencies/spdlog/include"
+    IncludeDir["tinygltf"] = "%{root}/dependencies/tinygltf/include"
     IncludeDir["vkbootstrap"] = "%{root}/dependencies/vk-bootstrap/include"
     IncludeDir["vulkan"] = "%{root}/dependencies/vulkan/include"
     IncludeDir["vma"] = "%{root}/dependencies/vulkanmemoryallocator/include"
-    IncludeDir["zlib"] = "%{root}/dependencies/zlib/include"
+    IncludeDir["stb"] = "%{root}/dependencies/stb/include"

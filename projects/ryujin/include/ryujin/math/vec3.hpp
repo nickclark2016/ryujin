@@ -174,14 +174,14 @@ namespace ryujin
     inline constexpr T norm(const vec3<T>& v)
     {
         const T magSquared = v.x * v.x + v.y * v.y + v.z * v.z;
-        return fast_inv_sqrt(magSquared);
+        return std::sqrt(magSquared);
     }
 
     template <numeric T>
     inline constexpr vec3<T> normalize(const vec3<T>& v)
     {
-        const auto mag = norm(v);
-        return v / mag;
+        const T magSquared = v.x * v.x + v.y * v.y + v.z * v.z;
+        return fast_inv_sqrt(magSquared) * v;
     }
 }
 

@@ -1,6 +1,7 @@
 #ifndef asset_hpp__
 #define asset_hpp__
 
+#include "slot_map.hpp"
 #include "vector.hpp"
 
 #include "../math/mat4.hpp"
@@ -32,6 +33,7 @@ namespace ryujin
             GREEN,
             BLUE,
             ALPHA,
+            EXPONENT,
             EMPTY
         };
 
@@ -75,53 +77,68 @@ namespace ryujin
         vec2<float> texCoord;
     };
 
-    struct mesh
-    {
-        vector<vertex> vertices;
-        vector<std::uint32_t> indices;
-    };
-
     enum class alpha_mode
     {
-        OPAQUE
+        OPAQUE,
+        BLENDED
     };
 
     struct material_asset
     {
         std::string name;
-        texture_asset* baseColorTexture;
-        texture_asset* normalTexture;
-        texture_asset* occlusionTexture;
-        texture_asset* emissiveTexture;
-        texture_asset* metallicRoughness;
+        const texture_asset* baseColorTexture;
+        const texture_asset* normalTexture;
+        const texture_asset* occlusionTexture;
+        const texture_asset* emissiveTexture;
+        const texture_asset* metallicRoughness;
         alpha_mode alpha;
+    };
+
+    struct mesh
+    {
+        vector<vertex> vertices;
+        vector<std::uint32_t> indices;
+        std::string name;
+        const material_asset* material;
+    };
+
+    struct mesh_group
+    {
+        std::uint32_t id;
+        vector<mesh> meshes;
     };
 
     class model_asset
     {
     public:
-        const mesh& get_mesh() const;
+        const mesh_group& get_mesh_group() const;
+        const std::string& name() const;
 
     private:
         std::string _name;
-        mesh _mesh;
-        material_asset _material;
+        slot_map_key _mesh = slot_map<mesh_group>::invalid;
         mat4<float> _transform;
         vec3<float> _translation;
         vec3<float> _scale;
         quat<float> _rotation;
-        vector<std::unique_ptr<model_asset>> _children;
+        vector<model_asset*> _children;
+        model_asset* _parent = nullptr;
     };
 
     class asset_manager
     {
     public:
         const texture_asset* load_texture(const std::filesystem::path& path, const bool reload = false);
+        const model_asset* load_model(const std::filesystem::path& path, const bool reload = false);
+        const material_asset* load_material(const std::string& name, material_asset material);
 
-        const std::unordered_map<std::string, std::unique_ptr<texture_asset>>& textures() const noexcept;
-
+        const slot_map_key load_mesh_group(const mesh_group& group);
     private:
         std::unordered_map<std::string, std::unique_ptr<texture_asset>> _textures;
+        std::unordered_map<std::string, std::unique_ptr<model_asset>> _models;
+        std::unordered_map<std::string, std::unique_ptr<material_asset>> _materials;
+        
+        slot_map<mesh_group> _meshes;
     };
 }
 

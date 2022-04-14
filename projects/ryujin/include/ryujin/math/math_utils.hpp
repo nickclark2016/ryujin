@@ -14,7 +14,7 @@ namespace ryujin
     {
         if constexpr (std::is_same_v<T, float> && !std::is_constant_evaluated())
         {
-            // Quake 3 Fast Square Root
+            // Quake 3 Fast Inversion Square Root
             long i;
             float x2, y;
             const float threeHalfs = 1.5f;
@@ -22,7 +22,7 @@ namespace ryujin
             x2 = value * 0.5;
             y = value;
             i = *reinterpret_cast<long*>(&y);
-            i = 0x5f3759df - (i >> 1)
+            i = 0x5f3759df - (i >> 1);
             y = *reinterpret_cast<float*>(&i);
             y = y * (threeHalfs - (x2 * y * y));
             return as<T>(y);

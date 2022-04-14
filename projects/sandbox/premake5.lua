@@ -23,20 +23,20 @@ project ('Sandbox')
 
     dependson ({
         'glfw',
-        'libpng',
         'vma',
+        'stb',
         'ryujin',
-        'vk-bootstrap',
-        'zlib'
+        'tinygltf',
+        'vk-bootstrap'
     })
 
     links ({
         'glfw',
-        'libpng',
         'vma',
-        'ryujin',
+        'stb',
+        'tinygltf',
         'vk-bootstrap',
-        'zlib'
+        'ryujin',
     })
 
     defines ({
