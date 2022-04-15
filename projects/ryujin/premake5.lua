@@ -72,10 +72,10 @@ project ('ryujin')
 
     filter ({ 'system:linux' })
 
-        postBuildBatchFile = path.join("%{root}", "projects", "ryujin", "postbuildcmds.sh")
+        postBuildShellFile = path.join("%{root}", "projects", "ryujin", "postbuildcmds.sh")
 
         postbuildcommands({
-            "sh %{postBuildBatchFile} %{projectDataDirectory} %{dataDirectory} %{cfg.buildcfg}"
+            "sh %{postBuildShellFile} %{projectDataDirectory} %{dataDirectory} %{cfg.buildcfg}"
         })
 
     filter ()

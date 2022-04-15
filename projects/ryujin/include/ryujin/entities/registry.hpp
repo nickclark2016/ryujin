@@ -348,7 +348,7 @@ namespace ryujin
     template <typename T>
     inline entity_handle<Type>& entity_handle<Type>::assign(const T& t)
     {
-        _registry->template assign(*this, t);
+        _registry->assign(*this, t);
         return *this;
     }
 

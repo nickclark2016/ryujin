@@ -61,7 +61,7 @@ namespace ryujin
         std::atomic_bool _isRunning;
         std::binary_semaphore _rendererComplete;
         std::binary_semaphore _gameLogicComplete;
-        std::thread _gameLogic;
+        std::thread _renderLogic;
     };
 }
 

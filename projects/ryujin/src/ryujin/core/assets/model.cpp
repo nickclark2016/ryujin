@@ -11,6 +11,8 @@
 
 #include <utility>
 
+#undef OPAQUE
+
 namespace ryujin::assets
 {
     static constexpr auto GLB_EXT = ".glb";

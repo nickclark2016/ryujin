@@ -25,6 +25,7 @@ public:
     void on_load(engine_context& ctx) override
     {
         auto tex = ctx.get_assets().load_texture("data/textures/logo512.png");
+        auto cube = ctx.get_assets().load_model("data/models/cube/Cube.gltf");
 
         auto& manager = ctx.get_render_system().get_render_manager(0);
         auto& renderables = manager->renderables();

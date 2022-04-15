@@ -71,36 +71,37 @@ namespace ryujin
         // invoke pre-system initialization logic
         app->pre_init(*this);
 
-        // initialize systems
-        _renderer->on_init(*this);
+        _renderLogic = std::thread([this, &initSync]() {
+                // initialize systems
+                _renderer->on_init(*this);
 
-        // start game logic
-        _gameLogic = std::thread([this, &app, &initSync]() {
-            app->on_load(*this);
-            initSync.arrive_and_wait();
+                initSync.arrive_and_wait();
 
-            while (!_windows.empty()) {
-                _rendererComplete.acquire();
-                input::poll();
-
-                app->on_frame(*this);
-                _gameLogicComplete.release();
-            }
-
-            _isRunning.store(false);
-        });
+                while (_isRunning.load())
+                {
+                    _gameLogicComplete.acquire();
+                    _renderer->on_prerender(*this);
+                    _rendererComplete.release();
+                    _renderer->on_render(*this);
+                }
+            });
 
         initSync.arrive_and_wait();
+        // initialization complete
 
-        while (_isRunning.load())
-        {
-            _gameLogicComplete.acquire();
-            _renderer->on_prerender(*this);
-            _rendererComplete.release();
-            _renderer->on_render(*this);
+        app->on_load(*this);
+
+        while (!_windows.empty()) {
+            _rendererComplete.acquire();
+            input::poll();
+
+            app->on_frame(*this);
+            _gameLogicComplete.release();
         }
 
-        _gameLogic.join();
+        _isRunning.store(false);
+
+        _renderLogic.join();
 
         app->on_exit(*this);
     }
