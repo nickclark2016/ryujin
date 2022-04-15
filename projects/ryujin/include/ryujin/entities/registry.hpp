@@ -247,6 +247,16 @@ namespace ryujin
         const entity_handle<EntityType> entity;
     };
 
+    template <typename ComponentType, typename EntityType>
+    struct component_replace_event
+    {
+        component_replace_event(const entity_handle<EntityType> entity)
+            : entity(entity)
+        {}
+
+        const entity_handle<EntityType> entity;
+    };
+
     template <typename Type>
     class base_registry
     {
@@ -507,9 +517,11 @@ namespace ryujin
         auto entity = handle.handle();
         detail::pool& pool = _pools[typeId];
         sparse_map<entity_type, T, _poolSize>* sparseMap = reinterpret_cast<sparse_map<entity_type, T, _poolSize>*>(pool.sparse_map);
-        sparseMap->insert(entity, value);
-
-        _events.emit<component_add_event<T, Type>>(value, handle);
+        const auto inserted = sparseMap->insert(entity, value);
+        if (inserted)
+        {
+            _events.emit<component_add_event<T, Type>>(value, handle);
+        }
     }
 
     template <typename Type>
@@ -534,7 +546,15 @@ namespace ryujin
         auto entity = handle.handle();
         detail::pool& pool = _pools[typeId];
         sparse_map<entity_type, T, _poolSize>* sparseMap = reinterpret_cast<sparse_map<entity_type, T, _poolSize>*>(pool.sparse_map);
-        sparseMap->insert_or_replace(entity, value);
+        const auto replaced = sparseMap->insert_or_replace(entity, value);
+        if (replaced)
+        {
+            _events.emit<component_replace_event<T, Type>>(handle);
+        }
+        else
+        {
+            _events.emit<component_add_event<T, Type>>(value, handle);
+        }
     }
 
     template <typename Type>
@@ -601,7 +621,11 @@ namespace ryujin
         {
             detail::pool& pool = _pools[typeId];
             sparse_map<entity_type, T, _poolSize>* sparseMap = reinterpret_cast<sparse_map<entity_type, T, _poolSize>*>(pool.sparse_map);
-            sparseMap->remove(handle.handle());
+            const auto removed = sparseMap->remove(handle.handle());
+            if (removed)
+            {
+                _events.emit<component_remove_event<T, Type>>(handle);
+            }
         }
     }
 
@@ -614,7 +638,11 @@ namespace ryujin
         {
             detail::pool& pool = _pools[typeId];
             sparse_map<entity_type, T, _poolSize>* sparseMap = reinterpret_cast<sparse_map<entity_type, T, _poolSize>*>(pool.sparse_map);
-            sparseMap->replace(handle.handle(), value);
+            const auto replaced = sparseMap->replace(handle.handle(), value);
+            if (replaced)
+            {
+                _events.emit<component_replace_event<T, Type>>(handle);
+            }
         }
     }
 

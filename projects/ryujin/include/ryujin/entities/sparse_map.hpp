@@ -30,11 +30,11 @@ namespace ryujin
         void reserve(const std::size_t count);
         
         void clear();
-        void insert(const key_type& key, const value_type& value);
-        void remove(const key_type& key);
-        void remove(const key_type& key, const value_type& value);
-        void replace(const key_type& key, const value_type& value);
-        void insert_or_replace(const key_type& key, const value_type& value);
+        bool insert(const key_type& key, const value_type& value);
+        bool remove(const key_type& key);
+        bool remove(const key_type& key, const value_type& value);
+        bool replace(const key_type& key, const value_type& value);
+        bool insert_or_replace(const key_type& key, const value_type& value); // true on replace, false on insert
 
         auto value_begin() noexcept;
         auto value_begin() const noexcept;
@@ -158,7 +158,7 @@ namespace ryujin
     }
     
     template<typename EntityType, typename ValueType, std::size_t PageSize>
-    inline void sparse_map<EntityType, ValueType, PageSize>::insert(const key_type& key, const value_type& value)
+    inline bool sparse_map<EntityType, ValueType, PageSize>::insert(const key_type& key, const value_type& value)
     {
         const auto sparsePage = _page(key);
         const auto sparseOffset = _offset(key);
@@ -180,11 +180,13 @@ namespace ryujin
             page[sparseOffset] = EntityType{ static_cast<entity_traits<typename EntityType::type>::identifier_type>(_packed.size()), 0 };
             _packed.push_back(key);
             _values.push_back(value);
+            return true;
         }
+        return false;
     }
     
     template<typename EntityType, typename ValueType, std::size_t PageSize>
-    inline void sparse_map<EntityType, ValueType, PageSize>::remove(const key_type& key)
+    inline bool sparse_map<EntityType, ValueType, PageSize>::remove(const key_type& key)
     {
         const auto sparsePage = _page(key);
         const auto sparseOffset = _offset(key);
@@ -207,12 +209,15 @@ namespace ryujin
 
                 const auto toMove = entity_traits<typename EntityType::type>::from_type(packedIndex);
                 _sparse[_page(toMove)][_offset(toMove)] = toMove;
+
+                return true;
             }
         }
+        return false;
     }
     
     template<typename EntityType, typename ValueType, std::size_t PageSize>
-    inline void sparse_map<EntityType, ValueType, PageSize>::remove(const key_type& key, const value_type& value)
+    inline bool sparse_map<EntityType, ValueType, PageSize>::remove(const key_type& key, const value_type& value)
     {
         const auto sparsePage = _page(key);
         const auto sparseOffset = _offset(key);
@@ -226,7 +231,7 @@ namespace ryujin
 
                 if (_values[packedIndex] != value)
                 {
-                    return;
+                    return false;
                 }
 
                 _sparse[sparsePage][sparseOffset] = _tombstone;
@@ -241,12 +246,15 @@ namespace ryujin
 
                 const auto toMove = entity_traits<typename entity_traits<typename EntityType::type>::identifier_type>::from_type(packedIndex);
                 _sparse[_page(toMove)][_offset(toMove)] = toMove;
+
+                return true;
             }
         }
+        return false;
     }
 
     template<typename EntityType, typename ValueType, std::size_t PageSize>
-    inline void sparse_map<EntityType, ValueType, PageSize>::replace(const key_type& key, const value_type& value)
+    inline bool sparse_map<EntityType, ValueType, PageSize>::replace(const key_type& key, const value_type& value)
     {
         const auto sparsePage = _page(key);
         const auto sparseOffset = _offset(key);
@@ -266,11 +274,13 @@ namespace ryujin
         {
             auto trampoline = page[sparseOffset];
             _values[trampoline.identifier] = value;
+            return true;
         }
+        return false;
     }
 
     template<typename EntityType, typename ValueType, std::size_t PageSize>
-    inline void sparse_map<EntityType, ValueType, PageSize>::insert_or_replace(const key_type& key, const value_type& value)
+    inline bool sparse_map<EntityType, ValueType, PageSize>::insert_or_replace(const key_type& key, const value_type& value)
     {
         const auto sparsePage = _page(key);
         const auto sparseOffset = _offset(key);
@@ -292,11 +302,13 @@ namespace ryujin
             page[sparseOffset] = EntityType{ static_cast<EntityType::identifier_type>(_packed.size()), 0 };
             _packed.push_back(key);
             _values.push_back(value);
+            return false;
         }
         else
         {
             auto trampoline = page[sparseOffset];
             _values[trampoline.identifier] = value;
+            return true;
         }
     }
 

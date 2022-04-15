@@ -46,8 +46,13 @@ namespace ryujin
             unregister_entity(e.entity.handle());
         };
 
+        const std::function renderableReplacedCallback = [this](const component_replace_event<renderable_component, registry::entity_type>& e) {
+            update_entity(e.entity.handle());
+        };
+
         reg->events().subscribe(renderableAddedCallback);
         reg->events().subscribe(renderableRemovedCallback);
+        reg->events().subscribe(renderableReplacedCallback);
     }
 
     slot_map_key renderable_manager::load_texture(const std::string& name, const texture_asset& asset)
@@ -529,6 +534,16 @@ namespace ryujin
             {
                 ents.erase(it);
             }
+            else
+            {
+                spdlog::warn("Failed to remove previous entity from mesh list. Not sure how we got here.");
+            }
         }
+    }
+
+    void renderable_manager::update_entity(entity_type ent)
+    {
+        unregister_entity(ent);
+        register_entity(ent);
     }
 }
