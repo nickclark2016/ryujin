@@ -298,6 +298,7 @@ namespace ryujin
         template <typename ... Ts>
         auto entity_view() noexcept;
 
+        auto& events() noexcept;
         auto& events() const noexcept;
 
     private:
@@ -648,6 +649,12 @@ namespace ryujin
     {
         detail::entity_view_iterable<Type, Ts...> iterable(this);
         return iterable;
+    }
+
+    template<typename Type>
+    inline auto& base_registry<Type>::events() noexcept
+    {
+        return _events;
     }
 
     template<typename Type>

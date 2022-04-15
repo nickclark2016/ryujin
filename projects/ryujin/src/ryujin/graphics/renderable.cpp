@@ -37,6 +37,17 @@ namespace ryujin
         {
             spdlog::error("Failed to create default texture sampler.");
         }
+
+        const std::function renderableAddedCallback = [this](const component_add_event<renderable_component, registry::entity_type>& e) {
+            register_entity(e.entity.handle());
+        };
+
+        const std::function renderableRemovedCallback = [this](const component_remove_event<renderable_component, registry::entity_type>& e) {
+            unregister_entity(e.entity.handle());
+        };
+
+        reg->events().subscribe(renderableAddedCallback);
+        reg->events().subscribe(renderableRemovedCallback);
     }
 
     slot_map_key renderable_manager::load_texture(const std::string& name, const texture_asset& asset)
@@ -502,6 +513,22 @@ namespace ryujin
         {
             auto mesh = renderable->mesh;
             _entities[mesh].push_back(ent);
+        }
+    }
+
+    void renderable_manager::unregister_entity(entity_type ent)
+    {
+        entity_handle e(ent, _registry);
+        auto renderable = e.try_get<renderable_component>();
+        if (renderable)
+        {
+            auto mesh = renderable->mesh;
+            auto& ents = _entities[mesh];
+            auto it = std::find(ents.begin(), ents.end(), ent);
+            if (it != ents.end())
+            {
+                ents.erase(it);
+            }
         }
     }
 }
