@@ -5,6 +5,7 @@
 #include <ryujin/core/as.hpp>
 #include <ryujin/core/linear_allocator.hpp>
 #include <ryujin/graphics/render_manager.hpp>
+#include <ryujin/graphics/pipelines/simple_render_pipeline.hpp>
 
 #undef APIENTRY
 #include <spdlog/spdlog.h>
@@ -133,8 +134,6 @@ namespace ryujin
             return result_type::from_error(buildingBufferResults);
         }
 
-        manager->_renderer.set_render_manager(manager.get());
-
         return result_type::from_success(std::move(manager));
     }
 
@@ -145,18 +144,18 @@ namespace ryujin
 
     render_manager::error_code render_manager::pre_render()
     {
-        if (_isMinimized)
+        if (_isMinimized || _renderer.get() == nullptr)
         {
             return error_code::NO_ERROR;
         }
 
-        _renderer.pre_render();
+        _renderer->pre_render();
         return error_code::NO_ERROR;
     }
 
     render_manager::error_code render_manager::render()
     {
-        if (_isMinimized)
+        if (_isMinimized || _renderer.get() == nullptr)
         {
             return error_code::NO_ERROR;
         }
@@ -204,7 +203,7 @@ namespace ryujin
         get_current_frame_resources().dtorQueue.flush();
         get_current_frame_resources().descriptorAllocator.reset();
 
-        _renderer.render();
+        _renderer->render();
 
         auto submitSignal = render_complete_signal();
 
@@ -229,7 +228,6 @@ namespace ryujin
             spdlog::error("Presentation to swapchain failed.");
             return error_code::PRESENT_FAILURE;
         }
-        
 
         _currentFrame = (_currentFrame + 1) % _framesInFlight;
 
@@ -268,6 +266,16 @@ namespace ryujin
     std::uint32_t render_manager::get_swapchain_height() const noexcept
     {
         return _swapchain.extent.height;
+    }
+
+    std::uint32_t render_manager::get_frame_in_flight() const noexcept
+    {
+        return _currentFrame;
+    }
+
+    std::uint32_t render_manager::get_frames_in_flight() const noexcept
+    {
+        return _framesInFlight;
     }
 
     result<buffer, render_manager::error_code> render_manager::create(const buffer_create_info& bufferInfo, const allocation_create_info& allocInfo)
@@ -1162,6 +1170,7 @@ namespace ryujin
         for (auto& buf : _stagingBuffers)
         {
             buf.offset = 0;
+            memset(buf.buf.info.pMappedData, 0, buf.size);
         }
     }
 
@@ -1629,12 +1638,11 @@ namespace ryujin
             return error_code::RESOURCE_ALLOCATION_FAILURE;
         }
 
-
-        _stagingBuffers[0] = {
+        _stagingBuffers.push_back(staging_buffer_alloc_info{
             .buf = *allocationResult,
             .offset = 0,
             .size = cinfo.size
-        };
+        });
 
         return error_code::NO_ERROR;
     }
@@ -2018,6 +2026,38 @@ namespace ryujin
     void graphics_command_list::bind_graphics_descriptor_sets(const pipeline_layout& layout, const span<descriptor_set>& sets, const std::uint32_t firstSet, const span<std::uint32_t>& offsets)
     {
         _funcs->cmdBindDescriptorSets(_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, layout, firstSet, as<std::uint32_t>(sets.length()), sets.data(), as<std::uint32_t>(offsets.length()), offsets.data());
+    }
+
+    void graphics_command_list::bind_index_buffer(const buffer& buf, const std::size_t offset)
+    {
+        _funcs->cmdBindIndexBuffer(_buffer, buf.buffer, offset, VK_INDEX_TYPE_UINT32);
+    }
+
+    void graphics_command_list::bind_vertex_buffers(const std::size_t first, const span<buffer>& buffers, const span<std::size_t>& offsets)
+    {
+        constexpr std::size_t MAX_BINDINGS = 16;
+        VkBuffer bindings[MAX_BINDINGS] = { VK_NULL_HANDLE };
+        std::size_t bindingOffsets[MAX_BINDINGS] = { 0 };
+
+        for (std::size_t i = 0; i < buffers.length(); ++i)
+        {
+            bindings[i] = buffers[i].buffer;
+        }
+
+        if (offsets.length())
+        {
+            for (std::size_t i = 0; i < offsets.length(); ++i)
+            {
+                bindingOffsets[i] = offsets[i];
+            }
+        }
+
+        _funcs->cmdBindVertexBuffers(_buffer, as<std::uint32_t>(first), as<std::uint32_t>(buffers.length()), bindings, bindingOffsets);
+    }
+
+    void graphics_command_list::draw_indexed_indirect(const buffer& indirect, const std::size_t indirectOffset, const buffer& count, const std::size_t countOffset, const std::size_t maxDrawCount, const std::size_t stride)
+    {
+        _funcs->cmdDrawIndexedIndirectCount(_buffer, indirect.buffer, indirectOffset, count.buffer, countOffset, as<std::uint32_t>(maxDrawCount), as<std::uint32_t>(stride));
     }
 
     void graphics_command_list::set_viewports(const span<viewport>& viewports)

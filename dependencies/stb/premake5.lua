@@ -20,6 +20,9 @@ project ('stb')
         systemversion ('latest')
         staticruntime ('Off')
         cppdialect ('C++20')
+        defines({
+            '_CRT_SECURE_NO_WARNINGS'
+        })
 
     filter ({ 'system:linux' })
         cppdialect ('C++2a')

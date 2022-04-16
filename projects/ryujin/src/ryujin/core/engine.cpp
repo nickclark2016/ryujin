@@ -74,6 +74,8 @@ namespace ryujin
         _renderLogic = std::thread([this, &initSync]() {
                 // initialize systems
                 _renderer->on_init(*this);
+                auto illegalTextureAsset = get_assets().load_texture("data/textures/invalid_texture.png");
+                _renderer->get_render_manager(0)->renderables().load_texture("internal_illegal_texture", *illegalTextureAsset);
 
                 initSync.arrive_and_wait();
 

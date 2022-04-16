@@ -23,14 +23,14 @@ for f in $(find $input_dir -name '*.vert' -or -name '*.vs' -or \
         if [ "$build_cfg" = "release" ]; then
             glslc "$f" -o "$f.spv" -O
         else
-            glslc "$f" -o "$f.spv" -O
+            glslc "$f" -o "$f.spv"
         fi
     fi
 done
 
 cp -r "$input_dir/." $output_dir
 
-for f in $(find $input_dir -name '*.vert' -or -name '*.vs' -or \
+for f in $(find $output_dir -name '*.vert' -or -name '*.vs' -or \
             -name '*.tcs' -or -name '*.tesc' -or -name '*.tes' -or \
             -name '*.tese' -or -name '*.geom' -or -name '*.gs' -or \
             -name '*.frag' -or -name '.fs' -or -name '*.comp' -or \

@@ -49,3 +49,24 @@ FOR /F "delims=" %%a IN ('dir "%input_dir%" /b /s') DO (
         DEL "%%a"
     )
 )
+
+:: Delete shader source from bin data
+FOR /F "delims=" %%a IN ('dir "%output_dir%" /b /s') DO (
+    FOR %%G IN (.vert,
+                .vs,
+                .tcs,
+                .tesc,
+                .tes,
+                .tese,
+                .geom,
+                .gs,
+                .frag,
+                .fs,
+                .comp,
+                .cs,
+                .glsl) DO (
+                    IF /I "%%~xa"=="%%~G" (
+                        DEL "%%~a"
+                    )
+                )
+)

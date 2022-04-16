@@ -137,6 +137,7 @@ namespace ryujin
         }
 
         spdlog::info("Successfully loaded {} as model asset. Inserting into model asset cache.", key);
+        auto res = assets[0].get();
         for (auto& asset : assets)
         {
             auto name = asset->name();
@@ -153,7 +154,7 @@ namespace ryujin
             _models[insertionKey] = std::move(asset);
         }
 
-        return assets[0].get();
+        return res;
     }
 
     const material_asset* asset_manager::load_material(const std::string& name, material_asset material)
@@ -174,5 +175,10 @@ namespace ryujin
     const slot_map_key asset_manager::load_mesh_group(const mesh_group& group)
     {
         return _meshes.insert(group);
+    }
+    
+    mesh_group* asset_manager::get_mesh_group(const slot_map_key& key) noexcept
+    {
+        return _meshes.try_get(key);
     }
 }

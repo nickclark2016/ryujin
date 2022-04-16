@@ -1,5 +1,7 @@
 #include <ryujin/core/engine.hpp>
 #include <ryujin/graphics/render_system.hpp>
+#include <ryujin/graphics/pipelines/pbr_render_pipeline.hpp>
+#include <ryujin/math/transformations.hpp>
 
 using namespace ryujin;
 
@@ -24,13 +26,32 @@ public:
 
     void on_load(engine_context& ctx) override
     {
-        auto tex = ctx.get_assets().load_texture("data/textures/logo512.png");
         auto cube = ctx.get_assets().load_model("data/models/cube/Cube.gltf");
 
         auto& manager = ctx.get_render_system().get_render_manager(0);
+        manager->use_render_pipeline<pbr_render_pipeline>();
+
         auto& renderables = manager->renderables();
 
-        auto logoAsset = renderables.load_texture("logo", *tex);
+        // auto logoAsset = renderables.load_texture("logo", *tex);
+
+        auto& cubeMeshGroup = ctx.get_assets().get_mesh_group(cube->get_mesh_group())->meshes[0];
+        auto cubeMesh = renderables.load_mesh("cube_mesh", cubeMeshGroup);
+        auto cubeMaterial = renderables.load_material("cube_material", *cubeMeshGroup.material);
+        
+        renderable_component cubeRenderableComponent
+        {
+            .material = cubeMaterial,
+            .mesh = cubeMesh,
+        };
+
+        renderables.build_meshes();
+
+        mat4 transformation = transform(vec3(0.0f, 0.0f, 1.0f), quat<float>(), vec3(0.5f));
+
+        auto entity = ctx.get_registry().allocate();
+        entity.assign(cubeRenderableComponent);
+        entity.get<transform_component>().matrix = transformation;
     }
 
     void on_exit(engine_context& ctx) override

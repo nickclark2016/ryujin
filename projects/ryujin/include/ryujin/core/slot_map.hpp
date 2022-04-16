@@ -46,13 +46,23 @@ namespace ryujin
     public:
         slot_map_key insert(const T& value);
 
-        T* try_get(const slot_map_key& k);
+        T* try_get(const slot_map_key& k) noexcept;
+        const T* try_get(const slot_map_key& k) const noexcept;
+        std::size_t index_of(const slot_map_key& k) const noexcept;
 
         bool erase(const slot_map_key& k);
         void clear();
 
         std::size_t size() const noexcept;
         std::size_t capacity() const noexcept;
+
+        auto begin() noexcept;
+        const auto begin() const noexcept;
+        const auto cbegin() const noexcept;
+
+        auto end() noexcept;
+        const auto end() const noexcept;
+        const auto cend() const noexcept;
 
         static constexpr slot_map_key invalid = { .index = std::numeric_limits<std::uint32_t>::max(), .generation = std::numeric_limits<std::uint32_t>::max() };
 
@@ -100,7 +110,7 @@ namespace ryujin
     }
 
     template<typename T, typename KeyAllocator, typename ValueAllocator, typename IndexAllocator>
-    inline T* slot_map<T, KeyAllocator, ValueAllocator, IndexAllocator>::try_get(const slot_map_key& k)
+    inline T* slot_map<T, KeyAllocator, ValueAllocator, IndexAllocator>::try_get(const slot_map_key& k) noexcept
     {
         const auto trampoline = _keys[k.index];
         if (k.generation == trampoline.generation)
@@ -108,6 +118,32 @@ namespace ryujin
             return _values.data() + trampoline.index;
         }
         return nullptr;
+    }
+
+    template<typename T, typename KeyAllocator, typename ValueAllocator, typename IndexAllocator>
+    inline const T* slot_map<T, KeyAllocator, ValueAllocator, IndexAllocator>::try_get(const slot_map_key& k) const noexcept
+    {
+        const auto trampoline = _keys[k.index];
+        if (k.generation == trampoline.generation)
+        {
+            return _values.data() + trampoline.index;
+        }
+        return nullptr;
+    }
+
+    template<typename T, typename KeyAllocator, typename ValueAllocator, typename IndexAllocator>
+    inline std::size_t slot_map<T, KeyAllocator, ValueAllocator, IndexAllocator>::index_of(const slot_map_key& k)  const noexcept
+    {
+        if (k == invalid)
+        {
+            return ~as<std::size_t>(0);
+        }
+        const auto trampoline = _keys[k.index];
+        if (k.generation == trampoline.generation)
+        {
+            return trampoline.index;
+        }
+        return ~as<std::size_t>(0);
     }
 
 
@@ -191,6 +227,42 @@ namespace ryujin
         }
 
         return true;
+    }
+
+    template<typename T, typename KeyAllocator, typename ValueAllocator, typename IndexAllocator>
+    auto slot_map<T, KeyAllocator, ValueAllocator, IndexAllocator>::begin() noexcept
+    {
+        return _values.begin();
+    }
+
+    template<typename T, typename KeyAllocator, typename ValueAllocator, typename IndexAllocator>
+    const auto slot_map<T, KeyAllocator, ValueAllocator, IndexAllocator>::begin() const noexcept
+    {
+        return _values.begin();
+    }
+
+    template<typename T, typename KeyAllocator, typename ValueAllocator, typename IndexAllocator>
+    const auto slot_map<T, KeyAllocator, ValueAllocator, IndexAllocator>::cbegin() const noexcept
+    {
+        return _values.cbegin();
+    }
+
+    template<typename T, typename KeyAllocator, typename ValueAllocator, typename IndexAllocator>
+    auto slot_map<T, KeyAllocator, ValueAllocator, IndexAllocator>::end() noexcept
+    {
+        return _values.end();
+    }
+
+    template<typename T, typename KeyAllocator, typename ValueAllocator, typename IndexAllocator>
+    const auto slot_map<T, KeyAllocator, ValueAllocator, IndexAllocator>::end() const noexcept
+    {
+        return _values.end();
+    }
+
+    template<typename T, typename KeyAllocator, typename ValueAllocator, typename IndexAllocator>
+    const auto slot_map<T, KeyAllocator, ValueAllocator, IndexAllocator>::cend() const noexcept
+    {
+        return _values.cend();
     }
 }
 

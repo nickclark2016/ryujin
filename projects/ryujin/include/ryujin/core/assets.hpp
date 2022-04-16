@@ -136,6 +136,9 @@ namespace ryujin
         const material_asset* load_material(const std::string& name, material_asset material);
 
         const slot_map_key load_mesh_group(const mesh_group& group);
+        mesh_group* get_mesh_group(const slot_map_key& key) noexcept;
+
+
     private:
         std::unordered_map<std::string, std::unique_ptr<texture_asset>> _textures;
         std::unordered_map<std::string, std::unique_ptr<model_asset>> _models;

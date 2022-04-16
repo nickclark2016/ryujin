@@ -427,6 +427,7 @@ namespace ryujin
 
     enum class memory_property : std::uint32_t
     {
+        NONE = 0x0,
         DEVICE_LOCAL = 0x01,
         HOST_VISIBLE = 0x02,
         HOST_COHERENT = 0x04,
@@ -1049,6 +1050,11 @@ namespace ryujin
     constexpr pipeline_stage operator|(const pipeline_stage lhs, const pipeline_stage rhs)
     {
         return as<pipeline_stage>(as<std::uint32_t>(lhs) | as<std::uint32_t>(rhs));
+    }
+
+    constexpr shader_stage operator|(const shader_stage lhs, const shader_stage rhs)
+    {
+        return as<shader_stage>(as<std::uint32_t>(lhs) | as<std::uint32_t>(rhs));
     }
 
     constexpr cull_mode operator|(const cull_mode lhs, const cull_mode rhs)

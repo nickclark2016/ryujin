@@ -161,6 +161,8 @@ namespace ryujin::assets
                         auto& buffer = gltfModel.buffers[bufferView.buffer];
                         auto data = buffer.data.data();
 
+                        m.indices.resize(accessor.count);
+
                         if (accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT)
                         {
                             for (std::size_t i = 0; i < accessor.count; ++i)
@@ -182,9 +184,16 @@ namespace ryujin::assets
                                 m.indices[i] = *start;
                             }
                         }
-                        else
+                        else if(accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT)
                         {
+                            for (std::size_t i = 0; i < accessor.count; ++i)
+                            {
+                                auto dataOffset = bufferView.byteOffset + accessor.byteOffset + i * accessor.ByteStride(bufferView);
+                                auto rawStart = data + dataOffset;
+                                unsigned short* start = reinterpret_cast<unsigned short*>(rawStart);
 
+                                m.indices[i] = *start;
+                            }
                         }
                     }
 
@@ -247,7 +256,7 @@ namespace ryujin::assets
                         auto& buffer = gltfModel.buffers[bufferView.buffer];
                         auto data = buffer.data.data();
 
-                        if (accessor.type == TINYGLTF_COMPONENT_TYPE_FLOAT)
+                        if (accessor.componentType == TINYGLTF_COMPONENT_TYPE_FLOAT)
                         {
                             for (std::size_t i = 0; i < accessor.count; ++i)
                             {
@@ -261,7 +270,7 @@ namespace ryujin::assets
                                 v.texCoord.y = start[1];
                             }
                         }
-                        else if (accessor.type == TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE)
+                        else if (accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE)
                         {
                             for (std::size_t i = 0; i < accessor.count; ++i)
                             {
@@ -275,7 +284,7 @@ namespace ryujin::assets
                                 v.texCoord.y = as<float>(start[1]) / as<float>(UINT8_MAX);
                             }
                         }
-                        else if (accessor.type == TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT)
+                        else if (accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT)
                         {
                             for (std::size_t i = 0; i < accessor.count; ++i)
                             {
@@ -368,9 +377,9 @@ namespace ryujin::assets
                 quat rotate = node.rotation.empty() ? quat<float>() : (as<float>(node.rotation[3]), as<float>(node.rotation[0]), as<float>(node.rotation[1]), as<float>(node.rotation[2]));
                 mat4 transform = node.matrix.empty() ? mat4(1.0f) : mat4(
                     vec4(as<float>(node.matrix[0]), as<float>(node.matrix[1]), as<float>(node.matrix[2]), as<float>(node.matrix[3])),
-                    vec4(as<float>(node.matrix[4]), as<float>(node.matrix[1]), as<float>(node.matrix[2]), as<float>(node.matrix[3])),
-                    vec4(as<float>(node.matrix[8]), as<float>(node.matrix[1]), as<float>(node.matrix[2]), as<float>(node.matrix[3])),
-                    vec4(as<float>(node.matrix[12]), as<float>(node.matrix[1]), as<float>(node.matrix[2]), as<float>(node.matrix[3]))
+                    vec4(as<float>(node.matrix[4]), as<float>(node.matrix[5]), as<float>(node.matrix[6]), as<float>(node.matrix[7])),
+                    vec4(as<float>(node.matrix[8]), as<float>(node.matrix[9]), as<float>(node.matrix[10]), as<float>(node.matrix[11])),
+                    vec4(as<float>(node.matrix[12]), as<float>(node.matrix[13]), as<float>(node.matrix[14]), as<float>(node.matrix[15]))
                 );
 
                 // if translate/scale/rotate was provided, compute transform

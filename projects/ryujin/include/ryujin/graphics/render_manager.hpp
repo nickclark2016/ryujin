@@ -5,6 +5,8 @@
 #include "types.hpp"
 #include "window.hpp"
 
+#include "pipelines/base_render_pipeline.hpp"
+
 #include "../core/linear_allocator.hpp"
 #include "../core/vector.hpp"
 #include "../core/span.hpp"
@@ -20,20 +22,6 @@
 #include <optional>
 #include <unordered_map>
 
-#if defined (RYUJIN_USE_SIMPLE_RENDER_PIPELINE)
-#include "pipelines/simple_render_pipeline.hpp"
-namespace ryujin::detail
-{
-    using render_pipeline = simple_render_pipeline;
-}
-#else
-#include "pipelines/simple_render_pipeline.hpp"
-namespace ryujin::detail
-{
-    using render_pipeline = simple_render_pipeline;
-}
-#endif
-
 namespace ryujin
 {
     struct buffer_region
@@ -42,6 +30,9 @@ namespace ryujin
         std::size_t offset;
         std::size_t range;
     };
+
+    template <typename T>
+    concept render_pipeline_type = std::is_base_of_v<base_render_pipeline, T> && std::is_default_constructible_v<T>;
 
     class render_manager;
 
@@ -79,8 +70,11 @@ namespace ryujin
 
         void bind_graphics_pipeline(const pipeline& pipeline);
         void bind_graphics_descriptor_sets(const pipeline_layout& layout, const span<descriptor_set>& sets, const std::uint32_t firstSet = 0, const span<std::uint32_t>& offsets = {});
+        void bind_index_buffer(const buffer& buf, const std::size_t offset = 0);
+        void bind_vertex_buffers(const std::size_t first, const span<buffer>& buffers, const span<std::size_t>& offsets = {});
 
         void draw_arrays(const std::uint32_t count, const std::uint32_t instances = 1, const std::uint32_t firstVertex = 0, const std::uint32_t firstInstance = 0);
+        void draw_indexed_indirect(const buffer& indirect, const std::size_t indirectOffset, const buffer& count, const std::size_t countOffset, const std::size_t maxDrawCount, const std::size_t stride);
 
         void set_viewports(const span<viewport>& viewports);
         void set_scissors(const span<scissor_region>& scissors);
@@ -304,6 +298,8 @@ namespace ryujin
         data_format get_swapchain_format() const noexcept;
         std::uint32_t get_swapchain_width() const noexcept;
         std::uint32_t get_swapchain_height() const noexcept;
+        std::uint32_t get_frame_in_flight() const noexcept;
+        std::uint32_t get_frames_in_flight() const noexcept;
 
         result<buffer, error_code> create(const buffer_create_info& bufferInfo, const allocation_create_info& allocInfo);
         result<descriptor_pool, error_code> create(const descriptor_pool_create_info& info);
@@ -344,6 +340,9 @@ namespace ryujin
         fence flight_complete_fence() const noexcept;
 
         renderable_manager& renderables() noexcept;
+        
+        template <render_pipeline_type T>
+        void use_render_pipeline();
 
         void wait(const fence& f);
     private:
@@ -409,7 +408,7 @@ namespace ryujin
 
         inline_linear_allocator<256 * 1024> _inlineScratchBuffer;
 
-        detail::render_pipeline _renderer;
+        std::unique_ptr<base_render_pipeline> _renderer;
 
         std::atomic_bool _isMinimized = false;
 
@@ -430,6 +429,13 @@ namespace ryujin
             return _resourcesPerFrameInFlight[_currentFrame];
         }
     };
+    
+    template<render_pipeline_type T>
+    inline void render_manager::use_render_pipeline()
+    {
+        _renderer = std::unique_ptr<base_render_pipeline>(new T());
+        _renderer->set_render_manager(this);
+    }
 }
 
 #endif // render_manager_hpp__

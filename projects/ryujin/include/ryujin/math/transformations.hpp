@@ -47,7 +47,7 @@ namespace ryujin
     inline constexpr mat4<T> translate(const mat4<T>& m, const vec3<T>& v)
     {
         mat4 res(m);
-        res[3] = v[0] * m[0] + v[1] * m[1] + v[2] * m[2] + v[3] * m[3];
+        res[3] = v[0] * m[0] + v[1] * m[1] + v[2] * m[2] + as<T>(1) * m[3];
         return res;
     }
 
@@ -127,11 +127,10 @@ namespace ryujin
     {
         // transformation = translation * rotation * scale
         // TODO: figure out how to do rotate(scaling, rotation)
+        auto translated = translate(translation);
         auto scaling = ryujin::scale(scale);
         auto rotating = as_mat4(rotation);
-        auto sr = rotating * scaling;
-        auto translated = translate(rotating, translation);
-        return translated;
+        return translated * rotating * scaling;
     }
 
     template <numeric T>

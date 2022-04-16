@@ -98,6 +98,7 @@ namespace ryujin
 		VkPhysicalDeviceVulkan12Features feats12 = {};
 		feats12.imagelessFramebuffer = VK_TRUE; // needed for framebuffers without images created ahead of time
 		feats12.separateDepthStencilLayouts = VK_TRUE; // needed for depth only buffers
+		feats12.drawIndirectCount = VK_TRUE; // needed to make frames go brrrt
 
 		vkb::PhysicalDeviceSelector deviceSelector{ _instance };
 		deviceSelector.prefer_gpu_device_type(vkb::PreferredDeviceType::discrete)

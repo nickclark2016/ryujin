@@ -8,6 +8,8 @@ namespace ryujin
     class base_render_pipeline
     {
     public:
+        virtual ~base_render_pipeline() = default;
+
         inline void set_render_manager(render_manager* manager)
         {
             _manager = manager;

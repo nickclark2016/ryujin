@@ -74,7 +74,7 @@ namespace ryujin
                 spdlog::error("Unknown texture asset format {} with {} channels.", as<std::uint32_t>(dataType), channels);
                 return decltype(_textures)::invalid;
             }
-            fmt = data_format::R8G8B8A8_UINT;
+            fmt = data_format::R8G8B8A8_SRGB;
             bpp = 4;
             break;
         case texture_asset::data_type::USHORT:
@@ -83,7 +83,7 @@ namespace ryujin
                 spdlog::error("Unknown texture asset format {} with {} channels.", as<std::uint32_t>(dataType), channels);
                 return decltype(_textures)::invalid;
             }
-            fmt = data_format::R16G16B16A16_UINT;
+            fmt = data_format::R16G16B16A16_SFLOAT;
             bpp = 8;
             break;
         default:
@@ -323,7 +323,32 @@ namespace ryujin
         return std::nullopt;
     }
 
-    renderable_mesh renderable_manager::load_mesh(const std::string& name, const mesh& m)
+    slot_map_key renderable_manager::load_material(const std::string& name, const material_asset& asset)
+    {
+        const auto base = asset.baseColorTexture;
+        const auto normal = asset.normalTexture;
+        const auto metalRough = asset.metallicRoughness;
+        const auto emissive = asset.emissiveTexture;
+        const auto occlusion = asset.occlusionTexture;
+
+        const auto baseTex = base ? load_texture(fmt::v8::format("{}_{}", name, "base"), *base) : decltype(_textures)::invalid;
+        const auto normalTex = normal ? load_texture(fmt::v8::format("{}_{}", name, "normal"), *normal) : decltype(_textures)::invalid;
+        const auto metalRoughTex = metalRough ? load_texture(fmt::v8::format("{}_{}", name, "metalRough"), *metalRough) : decltype(_textures)::invalid;
+        const auto emissiveTex = emissive ? load_texture(fmt::v8::format("{}_{}", name, "emissive"), *emissive) : decltype(_textures)::invalid;
+        const auto occlusionTex = occlusion ? load_texture(fmt::v8::format("{}_{}", name, "occlusion"), *occlusion) : decltype(_textures)::invalid;
+
+        material mat = {
+            .albedo = baseTex,
+            .normal = normalTex,
+            .metallicRoughness = metalRoughTex,
+            .emissive = emissiveTex,
+            .ao = occlusionTex
+        };
+
+        return _materials.insert(mat);
+    }
+
+    slot_map_key renderable_manager::load_mesh(const std::string& name, const mesh& m)
     {
         renderable_mesh mesh
         {
@@ -374,7 +399,7 @@ namespace ryujin
             _activeMeshGroup.indices.push_back(index);
         }
 
-        return mesh;
+        return _meshes.insert(mesh);
     }
 
     void renderable_manager::build_meshes()
@@ -508,6 +533,119 @@ namespace ryujin
         _manager->wait(syncFence);
         _manager->release(stagingBuffer, true);
         _manager->release(syncFence, true);
+
+        spdlog::info("Mesh building successful. Built positions buffer ({}), interleaved components buffer ({}), and indices buffer ({}).", _activeMeshGroup.positions.size(), _activeMeshGroup.interleavedValues.size(), _activeMeshGroup.indices.size());
+        spdlog::info("Clearing active mesh build group.");
+
+        const buffer_group bufGroup = {
+            .positions = positionsBuffer,
+            .interleaved = interleavedBuffer,
+            .indices = indexBuffer
+        };
+        
+        _bakedBufferGroups.push_back(bufGroup);
+
+        _activeMeshGroup.clear();
+    }
+    
+    std::size_t renderable_manager::write_instances(buffer& buf, const std::size_t offset)
+    {
+        std::size_t instance = 0;
+        auto instances = reinterpret_cast<gpu_instance_data*>(buf.info.pMappedData) + offset;
+        for (const auto& [meshGroupId, meshMapping] : _entities)
+        {
+            for (const auto& [key, ents] : meshMapping)
+            {
+                for (const auto& ent : ents)
+                {
+                    entity_handle handle(ent, _registry);
+                    auto tx = handle.get<transform_component>();
+                    auto matHandle = handle.get<renderable_component>().material;
+                    auto mat = _materials.index_of(matHandle);
+                    instances[instance].transform = tx.matrix;
+                    instances[instance].material = as<std::uint32_t>(mat);
+                    ++instance;
+                }
+            }
+        }
+        return instance;
+    }
+
+    std::size_t renderable_manager::write_materials(buffer& buf, const std::size_t offset)
+    {
+        // TODO: figure out some way to do this only when a new material is added or a 
+        std::size_t materialId = 0;
+        auto materials = reinterpret_cast<gpu_material_data*>(buf.info.pMappedData) + offset;
+
+        for (const auto& material : _materials)
+        {
+            const auto albedo = material.albedo;
+            const auto normal = material.normal;
+            const auto metalRough = material.metallicRoughness;
+            const auto emissive = material.emissive;
+            const auto ao = material.ao;
+
+            const gpu_material_data data = {
+                .albedo = as<std::uint32_t>(_textures.index_of(albedo)),
+                .normal = as<std::uint32_t>(_textures.index_of(normal)),
+                .metallicRoughness = as<std::uint32_t>(_textures.index_of(metalRough)),
+                .emissive = as<std::uint32_t>(_textures.index_of(emissive)),
+                .ambientOcclusion = as<std::uint32_t>(_textures.index_of(ao))
+            };
+
+            materials[materialId++] = data;
+        }
+        return materialId;
+    }
+
+    std::size_t renderable_manager::write_draw_calls(buffer& indirectBuffer, buffer& drawCountBuffer, const std::size_t offset)
+    {
+        // TODO: figure out some way to only do this when we change the mapping
+        std::uint32_t firstInstance = 0;
+        std::uint32_t meshGroupsWritten = 0;
+
+        for (const auto& [meshGroupId, meshMapping] : _entities)
+        {
+            std::uint32_t drawCallCount = 0;
+
+            for (const auto& [key, ents] : meshMapping)
+            {
+                auto mesh = _meshes.try_get(key);
+                gpu_indirect_call call = {
+                    .indexCount = mesh->indexCount,
+                    .instanceCount = as<std::uint32_t>(ents.size()),
+                    .firstIndex = mesh->indexOffset,
+                    .vertexOffset = as<std::int32_t>(mesh->vertexOffset),
+                    .firstInstance = firstInstance
+                };
+
+                auto mapped = reinterpret_cast<gpu_indirect_call*>(indirectBuffer.info.pMappedData) + offset + drawCallCount;
+                *mapped = call;
+
+                firstInstance += as<std::uint32_t>(ents.size());
+                ++drawCallCount;
+            }
+            auto mapped = reinterpret_cast<std::uint32_t*>(drawCountBuffer.info.pMappedData) + offset + meshGroupsWritten;
+            *mapped = as<std::uint32_t>(meshMapping.size());
+            ++meshGroupsWritten;
+        }
+        spdlog::trace("Writing {} mesh groups to indirect commands.", meshGroupsWritten);
+        return meshGroupsWritten;
+    }
+
+    std::size_t renderable_manager::write_textures(texture* buf, std::size_t offset)
+    {
+        std::size_t textureId = 0;
+        for (auto& tex : _textures)
+        {
+            buf[textureId++] = tex;
+        }
+        return textureId;
+    }
+
+    const renderable_manager::buffer_group& renderable_manager::get_buffer_group(const std::size_t idx) const noexcept
+    {
+        return _bakedBufferGroups[idx];
     }
 
     void renderable_manager::register_entity(entity_type ent)
@@ -517,7 +655,8 @@ namespace ryujin
         if (renderable)
         {
             auto mesh = renderable->mesh;
-            _entities[mesh].push_back(ent);
+            auto group = _meshes.try_get(mesh);
+            _entities[group->bufferGroupId][mesh].push_back(ent);
         }
     }
 
@@ -528,7 +667,8 @@ namespace ryujin
         if (renderable)
         {
             auto mesh = renderable->mesh;
-            auto& ents = _entities[mesh];
+            auto group = _meshes.try_get(mesh);
+            auto& ents = _entities[group->bufferGroupId][mesh];
             auto it = std::find(ents.begin(), ents.end(), ent);
             if (it != ents.end())
             {
@@ -546,4 +686,12 @@ namespace ryujin
         unregister_entity(ent);
         register_entity(ent);
     }
+
+    void renderable_manager::mesh_group::clear()
+    {
+        positions.clear();
+        interleavedValues.clear();
+        indices.clear();
+    }
+
 }
