@@ -83,18 +83,19 @@ namespace ryujin
         std::unique_ptr<blit_pass> _blit;
         std::unique_ptr<opaque_pbr_pass> _opaque;
 
-        buffer _indirectCommands;
-        buffer _indirectCount;
-        buffer _materials;
-        buffer _instanceData;
-        buffer _cameraData;
-        buffer _sceneData;
+        buffer _indirectCommands = {};
+        buffer _indirectCount = {};
+        buffer _materials = {};
+        buffer _instanceData = {};
+        buffer _cameraData = {};
+        buffer _sceneData = {};
         vector<texture> _textures;
-        texture _invalidTexture;
-        std::size_t _textureCount = 0;
+        texture _invalidTexture = {};
         std::size_t _numBufferGroupsToDraw = 0;
 
         vector<descriptor_image_info> _textureWriteScratchBuffer;
+
+        scene_data _hostSceneData = {};
     };
 }
 

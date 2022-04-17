@@ -1,6 +1,7 @@
 #include <ryujin/graphics/pipelines/pbr_render_pipeline.hpp>
 
 #include <ryujin/graphics/render_manager.hpp>
+#include <ryujin/math/transformations.hpp>
 
 namespace ryujin
 {
@@ -12,13 +13,15 @@ namespace ryujin
         _numBufferGroupsToDraw = renderables.write_draw_calls(_indirectCommands, _indirectCount, frameInFlight * _maxDrawCalls);
         renderables.write_materials(_materials, frameInFlight * _maxMaterials);
         renderables.write_instances(_instanceData, frameInFlight * _maxInstances);
-        _textureCount = renderables.write_textures(_textures.data(), frameInFlight * _maxTextures);
+        _hostSceneData.texturesLoaded = as<std::uint32_t>(renderables.write_textures(_textures.data(), frameInFlight * _maxTextures));
+
+        auto projection = perspective(16.0f / 9.0f, 90.0f, 0.01f, 1000.0f);
 
         // Build scene data
         scene_camera cam = {
             .view = mat4(1.0f),
-            .proj = mat4(1.0f),
-            .viewProj = mat4(1.0f),
+            .proj = projection,
+            .viewProj = projection,
             .position = vec3(0.0f),
             .orientation = vec3(0.0f)
         };
@@ -26,12 +29,8 @@ namespace ryujin
         auto camPtr = reinterpret_cast<scene_camera*>(_cameraData.info.pMappedData) + frameInFlight;
         *camPtr = cam;
 
-        scene_data scene = {
-            .texturesLoaded = as<std::uint32_t>(_textureCount)
-        };
-
         auto scenePtr = reinterpret_cast<scene_data*>(_sceneData.info.pMappedData) + frameInFlight;
-        *scenePtr = scene;
+        *scenePtr = _hostSceneData;
     }
 
     void pbr_render_pipeline::render()
@@ -125,7 +124,7 @@ namespace ryujin
         };
 
         _textureWriteScratchBuffer.clear();
-        for (std::size_t i = 0; i < _textureCount; ++i)
+        for (std::size_t i = 0; i < _hostSceneData.texturesLoaded; ++i)
         {
             auto& tex = _textures[i];
             const descriptor_image_info info = {
@@ -136,7 +135,7 @@ namespace ryujin
             _textureWriteScratchBuffer.push_back(info);
         }
 
-        for (std::size_t i = _textureCount; i < _maxTextures; ++i)
+        for (std::size_t i = _hostSceneData.texturesLoaded; i < _maxTextures; ++i)
         {
             const descriptor_image_info info = {
                 .view = _invalidTexture.view,

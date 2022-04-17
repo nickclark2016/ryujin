@@ -73,7 +73,7 @@ namespace ryujin
     template <numeric T>
     inline constexpr quat<T>::quat(const vec3<T>& euler)
     {
-        const vec3<T> half = euler * as<T>(0.5);
+        const vec3<T> half = as<T>(0.5) * euler;
         const vec3<T> c(std::cos(half.x), std::cos(half.y), std::cos(half.z));
         const vec3<T> s(std::sin(half.x), std::sin(half.y), std::sin(half.z));
 

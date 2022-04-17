@@ -12,14 +12,14 @@ namespace ryujin
     template <numeric T>
     inline constexpr T fast_inv_sqrt(T value) noexcept
     {
-        if constexpr (std::is_same_v<T, float> && !std::is_constant_evaluated())
+        if constexpr (std::is_same_v<T, float>)
         {
             // Quake 3 Fast Inversion Square Root
             long i;
             float x2, y;
             const float threeHalfs = 1.5f;
 
-            x2 = value * 0.5;
+            x2 = value * 0.5f;
             y = value;
             i = *reinterpret_cast<long*>(&y);
             i = 0x5f3759df - (i >> 1);

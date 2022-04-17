@@ -9,8 +9,19 @@
 #include "../core/as.hpp"
 #include "../core/concepts.hpp"
 
+#include <cassert>
+
 namespace ryujin
 {
+    template <numeric T>
+    constexpr vec3<T> front = vec3<T>(as<T>(0), as<T>(0), as<T>(1));
+
+    template <numeric T>
+    constexpr vec3<T> up = vec3<T>(as<T>(0), as<T>(1), as<T>(0));
+
+    template <numeric T>
+    constexpr vec3<T> right = vec3<T>(as<T>(1), as<T>(0), as<T>(0));
+
     template <numeric T>
     inline constexpr mat4<T> as_mat4(const quat<T>& q)
     {
@@ -61,30 +72,29 @@ namespace ryujin
     inline constexpr mat4<T> rotate(const mat4<T>& m, const T& angle, const vec3<T>& v)
     {
         const T a = angle;
-        const T c = std::cos(angle);
-        const T s = std::sin(angle);
+        const T c = cos(a);
+        const T s = sin(a);
 
-        const vec3<T> axis = normalize(v);
-        const vec3<T> temp = (as<T>(1) - c) * axis;
+        vec3<T> axis(normalize(v));
+        vec3<T> temp((as<T>(1) - c) * axis);
 
-        mat4<T> mat;
-        
-        mat[0][0] = c * temp[0] * axis[0];
-        mat[0][1] = temp[0] * axis[1] + s * axis[2];
-        mat[0][2] = temp[0] * axis[2] - s * axis[1];
+        mat4<T> rot;
+        rot[0][0] = c + temp[0] * axis[0];
+        rot[0][1] = temp[0] * axis[1] + s * axis[2];
+        rot[0][2] = temp[0] * axis[2] - s * axis[1];
 
-        mat[1][0] = temp[1] * axis[0] - s * axis[2];
-        mat[1][1] = c + temp[1] * axis[1];
-        mat[1][2] = temp[1] * axis[2] + s * axis[0];
+        rot[1][0] = temp[1] * axis[0] - s * axis[2];
+        rot[1][1] = c + temp[1] * axis[1];
+        rot[1][2] = temp[1] * axis[2] + s * axis[0];
 
-        mat[2][0] = temp[2] * axis[0] + s * axis[1];
-        mat[2][1] = temp[2] * axis[1] - s * axis[0];
-        mat[2][2] = c + temp[2] * axis[2];
+        rot[2][0] = temp[2] * axis[0] + s * axis[1];
+        rot[2][1] = temp[2] * axis[1] - s * axis[0];
+        rot[2][2] = c + temp[2] * axis[2];
 
         mat4<T> res;
-        res[0] = m[0] * mat[0][0] + m[1] * mat[0][1] + m[2] * mat[0][2];
-        res[1] = m[0] * mat[1][0] + m[1] * mat[1][1] + m[2] * mat[1][2];
-        res[2] = m[0] * mat[2][0] + m[1] * mat[2][1] + m[2] * mat[2][2];
+        res[0] = m[0] * rot[0][0] + m[1] * rot[0][1] + m[2] * rot[0][2];
+        res[1] = m[0] * rot[1][0] + m[1] * rot[1][1] + m[2] * rot[1][2];
+        res[2] = m[0] * rot[2][0] + m[1] * rot[2][1] + m[2] * rot[2][2];
         res[3] = m[3];
 
         return res;
@@ -126,11 +136,22 @@ namespace ryujin
     inline constexpr mat4<T> transform(const vec3<T>& translation, const quat<T>& rotation, const vec3<T>& scale)
     {
         // transformation = translation * rotation * scale
-        // TODO: figure out how to do rotate(scaling, rotation)
-        auto translated = translate(translation);
-        auto scaling = ryujin::scale(scale);
-        auto rotating = as_mat4(rotation);
-        return translated * rotating * scaling;
+        const auto translating = translate(translation);
+        const auto scaling = ryujin::scale(scale);
+        const auto rotating = as_mat4(rotation);
+        return translating * rotating * scaling;
+    }
+
+    template <numeric T>
+    inline constexpr mat4<T> transform(const vec3<T>& translation, const vec3<T>& rotation, const vec3<T>& scale)
+    {
+        // transformation = translation * rotation * scale
+        const auto translating = translate(translation);
+        auto tr = rotate(translating, rotation.x, right<T>);
+        tr = rotate(tr, rotation.y, up<T>);
+        tr = rotate(tr, rotation.z, front<T>);
+        const auto scaling = ryujin::scale(tr, scale);
+        return scaling;
     }
 
     template <numeric T>
@@ -201,6 +222,28 @@ namespace ryujin
         }
 
         return true;
+    }
+
+    template <numeric T>
+    inline constexpr mat4<T> perspective(const T aspect, const T fov, const T near, const T far)
+    {
+        assert(near < far && "Near plane distance must be less than far plane distance");
+        // 1 / (aspect * tan(fov / 2))  0                       0                               0
+        // 0                            1 / tan(fov / 2)        0                               0
+        // 0                            0                       (-near - far) / (near - far)    (2 * near * far) / (near - far)
+        // 0                            0                       1                               0
+        const T tanFov2 = as<T>(std::tan(fov / as<T>(2)));
+        const T invTanFov2 = as<T>(1) / tanFov2;
+        const T invAspectTanFov2 = invTanFov2 * (as<T>(1) / aspect);
+        const T nearMinusFar = near - far;
+
+        const T zero = as<T>(0);
+
+        const vec4<T> col0(invAspectTanFov2, zero, zero, zero);
+        const vec4<T> col1(zero, invTanFov2, zero, zero);
+        const vec4<T> col2(zero, zero, (-near - far) / nearMinusFar, as<T>(1));
+        const vec4<T> col3(zero, zero, (as<T>(2) * near * far) / nearMinusFar, zero);
+        return mat4(col0, col1, col2, col3);
     }
 }
 
