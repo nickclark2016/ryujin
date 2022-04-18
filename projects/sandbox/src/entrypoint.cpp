@@ -86,7 +86,7 @@ public:
         cameraEntity.assign(camera_component{
             .near = 0.01f,
             .far = 1000.0f,
-            .verticalFov = 90.0f,
+            .fov = 90.0f,
             .target = offscreen,
             .order = 1,
             .active = true

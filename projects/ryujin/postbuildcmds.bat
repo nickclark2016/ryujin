@@ -12,6 +12,10 @@ IF NOT EXIST %output_dir% (
     MD %output_dir
 )
 
+IF NOT EXIST %input_dir% (
+    EXIT 0
+)
+
 :: Execute glslc on each
 FOR /F "delims=" %%a IN ('dir "%input_dir%" /b /s') DO (
     FOR %%G IN (.vert,

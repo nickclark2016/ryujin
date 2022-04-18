@@ -29,7 +29,7 @@ namespace ryujin
             const auto& cameraData = camera.get<camera_component>();
             const auto& cameraTransform = camera.get<transform_component>();
 
-            auto projection = perspective(16.0f / 9.0f, cameraData.verticalFov, cameraData.near, cameraData.far);
+            auto projection = perspective(16.0f / 9.0f, cameraData.fov, cameraData.near, cameraData.far);
         
             camPtr[i] = {
                 .view = mat4(1.0f),
