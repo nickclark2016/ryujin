@@ -1,4 +1,5 @@
 #include <ryujin/core/engine.hpp>
+#include <ryujin/graphics/camera_component.hpp>
 #include <ryujin/graphics/render_system.hpp>
 #include <ryujin/graphics/pipelines/pbr_render_pipeline.hpp>
 #include <ryujin/math/transformations.hpp>
@@ -23,6 +24,8 @@ public:
 
         ctx.add_window(winInfo);
     }
+
+    slot_map_key offscreen;
 
     void on_load(engine_context& ctx) override
     {
@@ -72,16 +75,49 @@ public:
         auto entity4 = ctx.get_registry().allocate();
         entity4.assign(cubeRenderableComponent);
         entity4.get<transform_component>().matrix = transformation4;
+
+        offscreen = manager->get_render_pipeline()->add_render_target({
+                .width = 1024,
+                .height = 1024,
+                .name = "offscreen_pbr_target"
+            });
+
+        auto cameraEntity = ctx.get_registry().allocate();
+        cameraEntity.assign(camera_component{
+            .near = 0.01f,
+            .far = 1000.0f,
+            .verticalFov = 90.0f,
+            .target = offscreen,
+            .order = 1,
+            .active = true
+        });
     }
+
+    int frame = 0;
+    int framesUntilSwitch = 100;
 
     void on_exit(engine_context& ctx) override
     {
 
     }
 
-    void on_frame(engine_context& ctx) override
+    void on_render(engine_context& ctx) override
     {
 
+    }
+
+    void post_render(engine_context& ctx) override
+    {
+        if (frame++ == framesUntilSwitch)
+        {
+            auto& manager = ctx.get_render_system().get_render_manager(0);
+            manager->get_render_pipeline()->remove_render_target(offscreen);
+        }
+    }
+
+    void on_frame(engine_context& ctx) override
+    {
+        
     }
 };
 

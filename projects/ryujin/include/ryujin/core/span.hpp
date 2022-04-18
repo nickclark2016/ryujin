@@ -22,7 +22,7 @@ namespace ryujin
         constexpr span(const std::optional<T>& opt);
 
         template <std::size_t N>
-        constexpr span(const T(&d)[N]);;
+        constexpr span(const T(&d)[N]);
 
         span& operator=(const span& rhs);
         span& operator=(span&& rhs) noexcept;

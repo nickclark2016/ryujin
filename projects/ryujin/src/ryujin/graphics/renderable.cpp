@@ -1,6 +1,7 @@
 #include <ryujin/graphics/renderable.hpp>
 
 #include <ryujin/core/as.hpp>
+#include <ryujin/graphics/camera_component.hpp>
 #include <ryujin/graphics/render_manager.hpp>
 
 #undef APIENTRY
@@ -53,6 +54,17 @@ namespace ryujin
         reg->events().subscribe(renderableAddedCallback);
         reg->events().subscribe(renderableRemovedCallback);
         reg->events().subscribe(renderableReplacedCallback);
+
+        const std::function cameraCreatedCallback = [this](const component_add_event<camera_component, registry::entity_type>& e) {
+            register_camera(e.entity.handle());
+        };
+
+        const std::function cameraDestroyedCallback = [this](const component_remove_event<camera_component, registry::entity_type>& e) {
+            unregister_camera(e.entity.handle());
+        };
+
+        reg->events().subscribe(cameraCreatedCallback);
+        reg->events().subscribe(cameraDestroyedCallback);
     }
 
     slot_map_key renderable_manager::load_texture(const std::string& name, const texture_asset& asset)
@@ -303,6 +315,18 @@ namespace ryujin
         return key;
     }
 
+    slot_map_key renderable_manager::load_texture(const std::string& name, const image img, const image_view view)
+    {
+        const texture tex = {
+            .img = img,
+            .view = view,
+            .sampler = _defaultSampler
+        };
+        auto key = _textures.insert(tex);
+        _textureNameLut[name] = key;
+        return key;
+    }
+
     std::optional<texture> renderable_manager::try_fetch_texture(const std::string& name)
     {
         auto it = _textureNameLut.find(name);
@@ -323,6 +347,17 @@ namespace ryujin
         return std::nullopt;
     }
 
+    void renderable_manager::unload_texture(const slot_map_key& key)
+    {
+        auto tex = try_fetch_texture(key);
+        if (tex)
+        {
+            _textures.erase(key);
+            _manager->release(tex->img);
+            _manager->release(tex->view);
+        }
+    }
+
     slot_map_key renderable_manager::load_material(const std::string& name, const material_asset& asset)
     {
         const auto base = asset.baseColorTexture;
@@ -337,7 +372,7 @@ namespace ryujin
         const auto emissiveTex = emissive ? load_texture(fmt::v8::format("{}_{}", name, "emissive"), *emissive) : decltype(_textures)::invalid;
         const auto occlusionTex = occlusion ? load_texture(fmt::v8::format("{}_{}", name, "occlusion"), *occlusion) : decltype(_textures)::invalid;
 
-        material mat = {
+        const material mat = {
             .albedo = baseTex,
             .normal = normalTex,
             .metallicRoughness = metalRoughTex,
@@ -648,6 +683,32 @@ namespace ryujin
         return _bakedBufferGroups[idx];
     }
 
+    entity_handle<registry::entity_type> renderable_manager::main_camera() noexcept
+    {
+        auto cameraEntityView = _registry->entity_view<camera_component>();
+        for (const auto& e : cameraEntityView)
+        {
+            return e;
+        }
+        return _registry->invalid();
+    }
+
+    void renderable_manager::get_active_cameras(vector<entity_handle<entity_type>>& entities)
+    {
+        for (const auto& [order, handles] : _cameras)
+        {
+            for (auto& handle : handles)
+            {
+                entity_handle e(handle, _registry);
+                auto& cam = e.get<camera_component>();
+                if (cam.active)
+                {
+                    entities.push_back(e);
+                }
+            }
+        }
+    }
+
     void renderable_manager::register_entity(entity_type ent)
     {
         entity_handle e(ent, _registry);
@@ -685,6 +746,31 @@ namespace ryujin
     {
         unregister_entity(ent);
         register_entity(ent);
+    }
+
+    void renderable_manager::register_camera(entity_type ent)
+    {
+        entity_handle e(ent, _registry);
+        auto camera = e.try_get<camera_component>();
+        if (camera)
+        {
+            _cameras[camera->order].push_back(ent);
+        }
+    }
+
+    void renderable_manager::unregister_camera(entity_type ent)
+    {
+        entity_handle e(ent, _registry);
+        auto camera = e.try_get<camera_component>();
+        if (camera)
+        {
+            auto& cams = _cameras[camera->order];
+            auto it = std::find(cams.begin(), cams.end(), ent);
+            if (it != cams.end())
+            {
+                cams.erase(it);
+            }
+        }
     }
 
     void renderable_manager::mesh_group::clear()

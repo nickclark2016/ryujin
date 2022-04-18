@@ -15,19 +15,23 @@ namespace ryujin
 			const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
 			void* pUserData) {
 
-			if (messageSeverity == VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT)
+			if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT)
 			{
 				spdlog::error("Vulkan Validation Message: {}", pCallbackData->pMessage);
 			}
-			else if (messageSeverity == VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
+			else if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
 			{
 				spdlog::warn("Vulkan Validation Message: {}", pCallbackData->pMessage);
 			}
-			else if (messageSeverity == VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT)
+			else if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT)
 			{
 				spdlog::info("Vulkan Validation Message: {}", pCallbackData->pMessage);
 			}
-			else if (messageSeverity == VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT)
+			else if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT)
+			{
+				spdlog::debug("Vulkan Validation Message: {}", pCallbackData->pMessage);
+			}
+			else
 			{
 				spdlog::debug("Vulkan Validation Message: {}", pCallbackData->pMessage);
 			}
@@ -196,19 +200,33 @@ namespace ryujin
 		}
 	}
 
-	void render_system::on_prerender(engine_context& ctx)
+	void render_system::render_prework(engine_context& ctx)
 	{
+		// Pre-rendering work on main thread
 		for (auto& pipeline : _managers)
 		{
 			pipeline->pre_render();
 		}
 	}
 	
+	void render_system::on_pre_render(engine_context& ctx)
+	{
+		// TODO: Pre-rendering work, on render thread
+	}
+
 	void render_system::on_render(engine_context& ctx)
 	{
 		for (auto& pipeline : _managers)
 		{
 			pipeline->render();
+		}
+	}
+
+	void render_system::on_post_render(engine_context& ctx)
+	{
+		for (auto& pipeline : _managers)
+		{
+			pipeline->end_frame();
 		}
 	}
 

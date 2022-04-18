@@ -1,15 +1,19 @@
 #ifndef camera_component_hpp__
 #define camera_component_hpp__
 
+#include "../core/slot_map.hpp"
 #include "../math/vec3.hpp"
 
 namespace ryujin
 {
     struct camera_component
     {
-        vec3<float> position;
-        vec3<float> direction;
-        vec3<float> up;
+        float near;
+        float far;
+        float verticalFov;
+        slot_map_key target = invalid_slot_map_key;
+        std::uint32_t order; // higher == later render
+        bool active;
     };
 }
 

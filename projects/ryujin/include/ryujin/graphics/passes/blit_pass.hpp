@@ -16,7 +16,7 @@ namespace ryujin
         void set_input_texture(image_view view);
         void set_output_texture(image_view view, const std::uint32_t width, const std::uint32_t height);
 
-        void record(graphics_command_list& commands);
+        void record(graphics_command_list& commands, const bool draw = true);
 
     private:
         void build_render_pass();

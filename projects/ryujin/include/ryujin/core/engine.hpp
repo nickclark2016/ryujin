@@ -28,6 +28,9 @@ namespace ryujin
         virtual void on_load(engine_context& ctx) = 0;
         virtual void on_exit(engine_context& ctx) = 0;
         virtual void on_frame(engine_context& ctx) = 0;
+
+        virtual void post_render(engine_context& ctx) = 0;
+        virtual void on_render(engine_context& ctx) = 0;
     };
 
     class engine_context

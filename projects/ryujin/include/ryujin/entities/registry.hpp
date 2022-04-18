@@ -311,6 +311,8 @@ namespace ryujin
         auto& events() noexcept;
         auto& events() const noexcept;
 
+        entity_handle<Type> invalid() noexcept;
+
     private:
         static constexpr std::size_t _poolSize = 1024;
         static constexpr entity_type _tombstone = entity_traits<typename entity_type::type>::from_type(~(typename entity_type::type)(0));
@@ -689,6 +691,12 @@ namespace ryujin
     inline auto& base_registry<Type>::events() const noexcept
     {
         return _events;
+    }
+
+    template<typename Type>
+    inline entity_handle<Type> base_registry<Type>::invalid() noexcept
+    {
+        return entity_handle<Type>(_tombstone, this);
     }
     
     template <typename Type>

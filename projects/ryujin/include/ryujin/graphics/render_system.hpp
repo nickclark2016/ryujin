@@ -23,8 +23,11 @@ namespace ryujin
         ~render_system();
 
         void on_init(engine_context& ctx);
-        void on_prerender(engine_context& ctx);
+        void render_prework(engine_context& ctx);
+
+        void on_pre_render(engine_context& ctx);
         void on_render(engine_context& ctx);
+        void on_post_render(engine_context& ctx);
 
         std::unique_ptr<render_manager>& get_render_manager(std::size_t idx) noexcept;
         std::size_t render_manager_count() const noexcept;

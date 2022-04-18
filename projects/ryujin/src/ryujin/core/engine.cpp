@@ -71,7 +71,7 @@ namespace ryujin
         // invoke pre-system initialization logic
         app->pre_init(*this);
 
-        _renderLogic = std::thread([this, &initSync]() {
+        _renderLogic = std::thread([this, &app, &initSync]() {
                 // initialize systems
                 _renderer->on_init(*this);
                 auto illegalTextureAsset = get_assets().load_texture("data/textures/invalid_texture.png");
@@ -82,9 +82,13 @@ namespace ryujin
                 while (_isRunning.load())
                 {
                     _gameLogicComplete.acquire();
-                    _renderer->on_prerender(*this);
+                    _renderer->render_prework(*this);
                     _rendererComplete.release();
+                    _renderer->on_pre_render(*this);
+                    app->on_render(*this);
                     _renderer->on_render(*this);
+                    app->post_render(*this);
+                    _renderer->on_post_render(*this);
                 }
             });
 

@@ -8,8 +8,10 @@
 #include "../core/vector.hpp"
 #include "../entities/registry.hpp"
 
+#include <map>
 #include <memory>
 #include <optional>
+#include <unordered_map>
 
 namespace ryujin
 {
@@ -67,6 +69,8 @@ namespace ryujin
     class renderable_manager
     {
     public:
+        using entity_type = typename registry::entity_type;
+
         struct buffer_group
         {
             buffer positions;
@@ -76,8 +80,10 @@ namespace ryujin
 
         explicit renderable_manager(render_manager* manager, registry* reg);
         slot_map_key load_texture(const std::string& name, const texture_asset& asset);
+        slot_map_key load_texture(const std::string& name, const image img, const image_view view);
         std::optional<texture> try_fetch_texture(const std::string& name);
         std::optional<texture> try_fetch_texture(const slot_map_key& key);
+        void unload_texture(const slot_map_key& key);
 
         slot_map_key load_material(const std::string& name, const material_asset& asset);
 
@@ -91,12 +97,19 @@ namespace ryujin
 
         const buffer_group& get_buffer_group(const std::size_t idx) const noexcept;
 
-    private:
-        using entity_type = typename registry::entity_type;
+        entity_handle<registry::entity_type> main_camera() noexcept;
 
+        void get_active_cameras(vector<entity_handle<entity_type>>& entities);
+
+        // TODO: Reference count textures used in materials, unload texture on reference count decrement to zero
+
+    private:
         void register_entity(entity_type ent);
         void unregister_entity(entity_type ent);
         void update_entity(entity_type ent);
+
+        void register_camera(entity_type ent);
+        void unregister_camera(entity_type ent);
         
         registry* _registry;
         render_manager* _manager;
@@ -132,8 +145,10 @@ namespace ryujin
 
         image_sampler _defaultSampler = {};
 
-        // mesh -> vector of entities with that mesh
+        // mesh group id -> collection of meshes -> vector of entities with that mesh
         std::unordered_map<std::uint32_t, std::unordered_map<slot_map_key, vector<entity_type>, slot_map_key_hash>> _entities;
+
+        std::map<std::uint32_t, vector<entity_type>> _cameras;
     };
 }
 

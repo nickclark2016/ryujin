@@ -153,6 +153,11 @@ namespace ryujin
         return error_code::NO_ERROR;
     }
 
+    render_manager::error_code render_manager::start_frame()
+    {
+       return error_code::NO_ERROR;
+    }
+
     render_manager::error_code render_manager::render()
     {
         if (_isMinimized || _renderer.get() == nullptr)
@@ -229,6 +234,11 @@ namespace ryujin
             return error_code::PRESENT_FAILURE;
         }
 
+        return error_code::NO_ERROR;
+    }
+
+    render_manager::error_code render_manager::end_frame()
+    {
         _currentFrame = (_currentFrame + 1) % _framesInFlight;
 
         return error_code::NO_ERROR;
@@ -1465,6 +1475,11 @@ namespace ryujin
     void render_manager::wait(const fence& f)
     {
         _funcs.waitForFences(1, &f, VK_TRUE, UINT64_MAX);
+    }
+
+    std::unique_ptr<base_render_pipeline>& render_manager::get_render_pipeline() noexcept
+    {
+        return _renderer;
     }
 
     render_manager::render_manager(const std::unique_ptr<window>& win, vkb::Instance instance, vkb::Device device, VmaAllocator allocator, const bool nameObjects, registry* reg)

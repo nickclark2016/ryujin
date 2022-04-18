@@ -290,7 +290,10 @@ namespace ryujin
         render_manager& operator=(render_manager&&) noexcept = delete;
 
         error_code pre_render();
+
+        error_code start_frame();
         error_code render();
+        error_code end_frame();
 
         std::uint32_t get_swapchain_image_count() const noexcept;
         result<image_view, error_code> get_swapchain_image(const std::uint32_t index) const noexcept;
@@ -343,6 +346,8 @@ namespace ryujin
         
         template <render_pipeline_type T>
         void use_render_pipeline();
+
+        std::unique_ptr<base_render_pipeline>& get_render_pipeline() noexcept;
 
         void wait(const fence& f);
     private:

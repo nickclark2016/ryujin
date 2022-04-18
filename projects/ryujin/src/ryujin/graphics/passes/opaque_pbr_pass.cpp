@@ -147,6 +147,7 @@ namespace ryujin
         };
 
         const vertex_input_attribute vertexAttribs[] = { positionAttrib, texCoord0Attrib, normalAttrib, tangentAttrib };
+        const dynamic_pipeline_state dynStatesEnabled[] = { dynamic_pipeline_state::VIEWPORT, dynamic_pipeline_state::SCISSOR };
 
         const graphics_pipeline_create_info pipelineInfo = {
 			.stages = span(stages),
@@ -185,7 +186,7 @@ namespace ryujin
 				.attachments = span(colorBlends),
 				.blendConstants = { 1.0f, 1.0f, 1.0f, 1.0f }
 			},
-			.dynamicStates = {},
+			.dynamicStates = span(dynStatesEnabled),
 			.layout = _layout,
 			.pass = pass,
 			.subpass = 0

@@ -1,5 +1,6 @@
 #include <ryujin/graphics/pipelines/pbr_render_pipeline.hpp>
 
+#include <ryujin/graphics/camera_component.hpp>
 #include <ryujin/graphics/render_manager.hpp>
 #include <ryujin/math/transformations.hpp>
 
@@ -15,19 +16,29 @@ namespace ryujin
         renderables.write_instances(_instanceData, frameInFlight * _maxInstances);
         _hostSceneData.texturesLoaded = as<std::uint32_t>(renderables.write_textures(_textures.data(), frameInFlight * _maxTextures));
 
-        auto projection = perspective(16.0f / 9.0f, 90.0f, 0.01f, 1000.0f);
+        _activeCams.clear();
+        renderables.get_active_cameras(_activeCams);
 
-        // Build scene data
-        scene_camera cam = {
-            .view = mat4(1.0f),
-            .proj = projection,
-            .viewProj = projection,
-            .position = vec3(0.0f),
-            .orientation = vec3(0.0f)
-        };
+        assert(_activeCams.size() <= _maxCameras && "Too many active cameras defined.");
+        assert(_activeCams.size() > 0 && "No active cameras defined.");
 
-        auto camPtr = reinterpret_cast<scene_camera*>(_cameraData.info.pMappedData) + frameInFlight;
-        *camPtr = cam;
+        auto camPtr = reinterpret_cast<scene_camera*>(_cameraData.info.pMappedData) + frameInFlight * _maxCameras;
+        for (std::size_t i = 0; i < _activeCams.size(); ++i)
+        {
+            auto camera = _activeCams[i];
+            const auto& cameraData = camera.get<camera_component>();
+            const auto& cameraTransform = camera.get<transform_component>();
+
+            auto projection = perspective(16.0f / 9.0f, cameraData.verticalFov, cameraData.near, cameraData.far);
+        
+            camPtr[i] = {
+                .view = mat4(1.0f),
+                .proj = projection,
+                .viewProj = projection,
+                .position = cameraTransform.position,
+                .orientation = euler(cameraTransform.rotation)
+            };
+        }
 
         auto scenePtr = reinterpret_cast<scene_data*>(_sceneData.info.pMappedData) + frameInFlight;
         *scenePtr = _hostSceneData;
@@ -35,141 +46,188 @@ namespace ryujin
 
     void pbr_render_pipeline::render()
     {
-        clear_value clears[] = {
-			{
-				.color = {
-					.float32 = {
-						1.0f, 1.0f, 0.0f, 1.0f
-					}
-				}
-			},
-			{
-				.depthStencil = {
-					.depth = 1.0f
-				}
-			}
-		};
-
-        render_pass_begin_info beginInfo = {
-			.attachmentBegin = std::nullopt,
-			.pass = _scenePass,
-			.buffer = _sceneRenderTarget,
-			.x = 0,
-			.y = 0,
-			.width = _targetWidth,
-			.height = _targetHeight,
-			.clearValues = clears
-		};
-
-        auto sceneDescriptor = get_render_manager()->allocate_transient(_sceneWideLayout);
-        auto drawableDescriptor = get_render_manager()->allocate_transient(_drawableLayout);
-        assert(*sceneDescriptor && *drawableDescriptor);
-
-        auto frameInFlight = get_render_manager()->get_frame_in_flight();
-
-        const descriptor_buffer_info cameraBufferInfo = {
-                .buf = _cameraData,
-                .offset = frameInFlight * sizeof(scene_camera),
-                .length = sizeof(scene_camera)
-        };
-
-        const descriptor_write_info camera = {
-            .set = *sceneDescriptor,
-            .type = descriptor_type::UNIFORM_BUFFER,
-            .binding = 0,
-            .element = 0,
-            .info = span(cameraBufferInfo)
-        };
-
-        const descriptor_buffer_info sceneBufferInfo = {
-            .buf = _sceneData,
-            .offset = frameInFlight * sizeof(scene_data),
-            .length = sizeof(scene_data)
-        };
-
-        const descriptor_write_info scene = {
-            .set = *sceneDescriptor,
-            .type = descriptor_type::STORAGE_BUFFER,
-            .binding = 1,
-            .element = 0,
-            .info = span(sceneBufferInfo)
-        };
-
-        const descriptor_buffer_info instanceBufferInfo = {
-            .buf = _instanceData,
-            .offset = frameInFlight * _maxInstances * sizeof(gpu_instance_data),
-            .length = _maxInstances * sizeof(gpu_instance_data)
-        };
-
-        const descriptor_write_info instances = {
-            .set = *drawableDescriptor,
-            .type = descriptor_type::DYNAMIC_STORAGE_BUFFER,
-            .binding = 0,
-            .element = 0,
-            .info = span(instanceBufferInfo)
-        };
-
-        const descriptor_buffer_info materialBufferInfo = {
-            .buf = _materials,
-            .offset = frameInFlight * _maxMaterials * sizeof(gpu_material_data),
-            .length = _maxMaterials * sizeof(gpu_material_data)
-        };
-
-        const descriptor_write_info materials = {
-            .set = *drawableDescriptor,
-            .type = descriptor_type::DYNAMIC_STORAGE_BUFFER,
-            .binding = 1,
-            .element = 0,
-            .info = span(materialBufferInfo)
-        };
-
-        _textureWriteScratchBuffer.clear();
-        for (std::size_t i = 0; i < _hostSceneData.texturesLoaded; ++i)
-        {
-            auto& tex = _textures[i];
-            const descriptor_image_info info = {
-                .view = tex.view,
-                .sam = tex.sampler,
-                .layout = image_layout::SHADER_READ_ONLY_OPTIMAL
-            };
-            _textureWriteScratchBuffer.push_back(info);
-        }
-
-        for (std::size_t i = _hostSceneData.texturesLoaded; i < _maxTextures; ++i)
-        {
-            const descriptor_image_info info = {
-                .view = _invalidTexture.view,
-                .sam = _invalidTexture.sampler,
-                .layout = image_layout::SHADER_READ_ONLY_OPTIMAL
-            };
-            _textureWriteScratchBuffer.push_back(info);
-        }
-
-        const descriptor_write_info textures = {
-            .set = *drawableDescriptor,
-            .type = descriptor_type::COMBINED_IMAGE_SAMPLER,
-            .binding = 2,
-            .element = 0,
-            .info = span(_textureWriteScratchBuffer.data(), _textureWriteScratchBuffer.size())
-        };
-
-        const descriptor_write_info writes[] = { camera, scene, instances, materials, textures };
-        get_render_manager()->write(writes);
-
-        const descriptor_set descriptors[] = { *sceneDescriptor, *drawableDescriptor };
-        const std::uint32_t dynamicOffsets[] = { 0, 0 };
-
         auto graphicsList = get_render_manager()->next_graphics_command_list();
-		graphicsList.begin();
+        graphicsList.begin();
 
-        graphicsList.bind_graphics_descriptor_sets(_sceneLayout, span(descriptors), 0, span(dynamicOffsets));
-		graphicsList.begin_render_pass(beginInfo);
-        _opaque->render(graphicsList, _indirectCommands, _indirectCount, _maxDrawCalls * frameInFlight, _numBufferGroupsToDraw);
-        graphicsList.end_render_pass();
+        for (const auto& camera : _activeCams)
+        {
+            const auto cameraData = camera.get<camera_component>();
+            set_active_render_target(cameraData.target);
 
-        _blit->set_input_texture(_colorTarget.view);
-		_blit->set_output_texture(get_render_manager()->get_swapchain_image(), get_render_manager()->get_swapchain_width(), get_render_manager()->get_swapchain_height());
-		_blit->record(graphicsList);
+            clear_value clears[] = {
+                {
+                    .color = {
+                        .float32 = {
+                            0.0f, 0.0f, 0.0f, 1.0f
+                        }
+                    }
+                },
+                {
+                    .depthStencil = {
+                        .depth = 1.0f
+                    }
+                }
+            };
+
+            render_pass_begin_info beginInfo = {
+                .attachmentBegin = std::nullopt,
+                .pass = _scenePass,
+                .buffer = _activeRenderTarget.fbo,
+                .x = 0,
+                .y = 0,
+                .width = _activeRenderTarget.width,
+                .height = _activeRenderTarget.height,
+                .clearValues = clears
+            };
+
+            auto sceneDescriptor = get_render_manager()->allocate_transient(_sceneWideLayout);
+            auto drawableDescriptor = get_render_manager()->allocate_transient(_drawableLayout);
+            assert(*sceneDescriptor && *drawableDescriptor);
+
+            auto frameInFlight = get_render_manager()->get_frame_in_flight();
+
+            const descriptor_buffer_info cameraBufferInfo = {
+                .buf = _cameraData,
+                .offset = frameInFlight * sizeof(scene_camera) * _maxCameras,
+                .length = sizeof(scene_camera)
+            };
+
+            const descriptor_write_info camera = {
+                .set = *sceneDescriptor,
+                .type = descriptor_type::UNIFORM_BUFFER,
+                .binding = 0,
+                .element = 0,
+                .info = span(cameraBufferInfo)
+            };
+
+            const descriptor_buffer_info sceneBufferInfo = {
+                .buf = _sceneData,
+                .offset = frameInFlight * sizeof(scene_data),
+                .length = sizeof(scene_data)
+            };
+
+            const descriptor_write_info scene = {
+                .set = *sceneDescriptor,
+                .type = descriptor_type::STORAGE_BUFFER,
+                .binding = 1,
+                .element = 0,
+                .info = span(sceneBufferInfo)
+            };
+
+            const descriptor_buffer_info instanceBufferInfo = {
+                .buf = _instanceData,
+                .offset = frameInFlight * _maxInstances * sizeof(gpu_instance_data),
+                .length = _maxInstances * sizeof(gpu_instance_data)
+            };
+
+            const descriptor_write_info instances = {
+                .set = *drawableDescriptor,
+                .type = descriptor_type::DYNAMIC_STORAGE_BUFFER,
+                .binding = 0,
+                .element = 0,
+                .info = span(instanceBufferInfo)
+            };
+
+            const descriptor_buffer_info materialBufferInfo = {
+                .buf = _materials,
+                .offset = frameInFlight * _maxMaterials * sizeof(gpu_material_data),
+                .length = _maxMaterials * sizeof(gpu_material_data)
+            };
+
+            const descriptor_write_info materials = {
+                .set = *drawableDescriptor,
+                .type = descriptor_type::DYNAMIC_STORAGE_BUFFER,
+                .binding = 1,
+                .element = 0,
+                .info = span(materialBufferInfo)
+            };
+
+            auto activeColorTexture = get_render_manager()->renderables().try_fetch_texture(_activeRenderTarget.colorTex);
+            auto activeDepthTexture = get_render_manager()->renderables().try_fetch_texture(_activeRenderTarget.depthTex);
+
+            _textureWriteScratchBuffer.clear();
+            for (std::size_t i = 0; i < _hostSceneData.texturesLoaded; ++i)
+            {
+                auto& tex = _textures[i];
+                if ((activeColorTexture && activeColorTexture->view == tex.view) ||
+                    (activeDepthTexture && activeDepthTexture->view == tex.view))
+                {
+                    const descriptor_image_info info = {
+                        .view = _invalidTexture.view,
+                        .sam = _invalidTexture.sampler,
+                        .layout = image_layout::SHADER_READ_ONLY_OPTIMAL
+                    };
+                    _textureWriteScratchBuffer.push_back(info);
+                }
+                else
+                {
+                    const descriptor_image_info info = {
+                        .view = tex.view,
+                        .sam = tex.sampler,
+                        .layout = image_layout::SHADER_READ_ONLY_OPTIMAL
+                    };
+                    _textureWriteScratchBuffer.push_back(info);
+                }
+
+            }
+
+            for (std::size_t i = _hostSceneData.texturesLoaded; i < _maxTextures; ++i)
+            {
+                const descriptor_image_info info = {
+                    .view = _invalidTexture.view,
+                    .sam = _invalidTexture.sampler,
+                    .layout = image_layout::SHADER_READ_ONLY_OPTIMAL
+                };
+                _textureWriteScratchBuffer.push_back(info);
+            }
+
+            const descriptor_write_info textures = {
+                .set = *drawableDescriptor,
+                .type = descriptor_type::COMBINED_IMAGE_SAMPLER,
+                .binding = 2,
+                .element = 0,
+                .info = span(_textureWriteScratchBuffer.data(), _textureWriteScratchBuffer.size())
+            };
+
+            const descriptor_write_info writes[] = { camera, scene, instances, materials, textures };
+            get_render_manager()->write(writes);
+
+            const descriptor_set descriptors[] = { *sceneDescriptor, *drawableDescriptor };
+            const std::uint32_t dynamicOffsets[] = { 0, 0 };
+
+            const viewport vp = {
+                .x = 0.0f,
+                .y = 0.0f,
+                .width = as<float>(_activeRenderTarget.width),
+                .height = as<float>(_activeRenderTarget.height),
+                .minDepth = 0.0f,
+                .maxDepth = 1.0f
+            };
+
+            const scissor_region sc = {
+                .x = 0,
+                .y = 0,
+                .width = _activeRenderTarget.width,
+                .height = _activeRenderTarget.height
+            };
+
+            if (_prevRenderTarget.fbo != _activeRenderTarget.fbo)
+            {
+                transition_render_targets(graphicsList);
+            }
+
+            graphicsList.set_viewports(span(vp));
+            graphicsList.set_scissors(span(sc));
+
+            graphicsList.bind_graphics_descriptor_sets(_sceneLayout, span(descriptors), 0, span(dynamicOffsets));
+            graphicsList.begin_render_pass(beginInfo);
+            _opaque->render(graphicsList, _indirectCommands, _indirectCount, _maxDrawCalls * frameInFlight, _numBufferGroupsToDraw);
+            graphicsList.end_render_pass();
+        }
+
+        _blit->set_input_texture(_activeRenderTarget.color.view);
+        _blit->set_output_texture(get_render_manager()->get_swapchain_image(), get_render_manager()->get_swapchain_width(), get_render_manager()->get_swapchain_height());
+        _blit->record(graphicsList, _defaultRenderTarget.fbo == _activeRenderTarget.fbo);
 
         graphicsList.end();
 
@@ -188,6 +246,8 @@ namespace ryujin
 		};
 
 		graphicsList.submit(submit, get_render_manager()->flight_complete_fence());
+
+        _prevRenderTarget = _activeRenderTarget;
     }
 
     void pbr_render_pipeline::initialize()
@@ -284,108 +344,11 @@ namespace ryujin
 
     void pbr_render_pipeline::init_scene_render_target()
     {
-        const image_create_info colorImageCi = {
-            .type = image_type::TYPE_2D,
-			.format = _colorAttachmentFmt,
-			.width = _targetWidth,
-			.height = _targetHeight,
-			.depth = 1,
-			.mipLevels = 1,
-			.arrayLayers = 1,
-			.samples = sample_count::COUNT_1,
-			.usage = image_usage::COLOR_ATTACHMENT | image_usage::SAMPLED
-        };
-
-        const image_create_info depthImageCi = {
-            .type = image_type::TYPE_2D,
-			.format = _depthAttachmentFmt,
-			.width = _targetWidth,
-			.height = _targetHeight,
-			.depth = 1,
-			.mipLevels = 1,
-			.arrayLayers = 1,
-			.samples = sample_count::COUNT_1,
-			.usage = image_usage::DEPTH_STENCIL_ATTACHMENT
-        };
-
-        const allocation_create_info imgAllocInfo = {
-			.required = memory_property::DEVICE_LOCAL,
-			.preferred = memory_property::DEVICE_LOCAL,
-			.usage = memory_usage::PREFER_DEVICE,
-			.hostSequentialWriteAccess = false,
-			.hostRandomAccess = false
-		};
-
-        const auto colorImageRes = get_render_manager()->create(colorImageCi, imgAllocInfo);
-        const auto depthImageRes = get_render_manager()->create(depthImageCi, imgAllocInfo);
-
-        if (colorImageRes && depthImageRes)
-        {
-            const image_view_create_info colorViewCi = {
-                .usage = image_view_usage{
-                    .usage = image_usage::COLOR_ATTACHMENT | image_usage::SAMPLED,
-                },
-                .img = *colorImageRes,
-                .type = image_view_type::TYPE_2D,
-                .fmt = colorImageCi.format,
-                .subresource = {
-                    .aspect = image_aspect::COLOR,
-                    .baseMipLevel = 0,
-                    .mipLevelCount = 1,
-                    .baseLayer = 0,
-                    .layerCount = 1
-                }
-            };
-
-            const image_view_create_info depthViewCi = {
-                .usage = image_view_usage{
-                    .usage = image_usage::DEPTH_STENCIL_ATTACHMENT,
-                },
-                .img = *depthImageRes,
-                .type = image_view_type::TYPE_2D,
-                .fmt = depthImageCi.format,
-                .subresource = {
-                    .aspect = image_aspect::DEPTH,
-                    .baseMipLevel = 0,
-                    .mipLevelCount = 1,
-                    .baseLayer = 0,
-                    .layerCount = 1
-                }
-            };
-
-            const auto colorViewRes = get_render_manager()->create(colorViewCi);
-            const auto depthViewRes = get_render_manager()->create(depthViewCi);
-
-            if (colorViewRes && depthViewRes)
-            {
-                _colorTarget = {
-                    .img = *colorImageRes,
-                    .view = *colorViewRes
-                };
-
-                _depthTarget = {
-                    .img = *depthImageRes,
-                    .view = *depthViewRes
-                };
-
-                const image_view attachments[] = { *colorViewRes, *depthViewRes };
-
-                frame_buffer_create_info fboInfo = {
-                    .attachments = attachments,
-                    .pass = _scenePass,
-                    .width = _targetWidth,
-                    .height = _targetHeight,
-                    .layers = 1,
-                    .name = "pbr_scene_render_target"
-                };
-
-                const auto fboResult = get_render_manager()->create(fboInfo);
-                if (fboResult)
-                {
-                    _sceneRenderTarget = *fboResult;
-                }
-            }
-        }
+        _defaultRenderTarget = build_render_target("pbr_scene_render_target", {
+                .width = _targetWidth,
+                .height = _targetHeight,
+                .name = "pbr_scene_render_target"
+            });
     }
 
     void pbr_render_pipeline::init_scene_layout()
@@ -469,7 +432,7 @@ namespace ryujin
         const auto materialBytes = sizeof(gpu_material_data) * _maxMaterials * frames;
         const auto indirectBytes = sizeof(gpu_indirect_call) * _maxDrawCalls * frames;
         const auto drawCallBytes = sizeof(std::uint32_t) * _maxDrawCalls * frames;
-        const auto cameraDataBytes = sizeof(scene_camera) * frames;
+        const auto cameraDataBytes = sizeof(scene_camera) * frames * _maxCameras;
         const auto sceneDataBytes = sizeof(scene_data) * frames;
         const auto textureCount = _maxTextures * frames;
 
@@ -543,5 +506,112 @@ namespace ryujin
         {
             // wat do
         }
+    }
+
+    base_render_pipeline::render_target pbr_render_pipeline::build_render_target(const std::string& name, const base_render_pipeline::render_target_info& info)
+    {
+        const image_create_info colorImageCi = {
+            .type = image_type::TYPE_2D,
+            .format = _colorAttachmentFmt,
+            .width = info.width,
+            .height = info.height,
+            .depth = 1,
+            .mipLevels = 1,
+            .arrayLayers = 1,
+            .samples = sample_count::COUNT_1,
+            .usage = image_usage::COLOR_ATTACHMENT | image_usage::SAMPLED
+        };
+
+        const image_create_info depthImageCi = {
+            .type = image_type::TYPE_2D,
+            .format = _depthAttachmentFmt,
+            .width = info.width,
+            .height = info.height,
+            .depth = 1,
+            .mipLevels = 1,
+            .arrayLayers = 1,
+            .samples = sample_count::COUNT_1,
+            .usage = image_usage::DEPTH_STENCIL_ATTACHMENT | image_usage::SAMPLED
+        };
+
+        const allocation_create_info imgAllocInfo = {
+            .required = memory_property::DEVICE_LOCAL,
+            .preferred = memory_property::DEVICE_LOCAL,
+            .usage = memory_usage::PREFER_DEVICE,
+            .hostSequentialWriteAccess = false,
+            .hostRandomAccess = false
+        };
+
+        const auto colorImageRes = get_render_manager()->create(colorImageCi, imgAllocInfo);
+        const auto depthImageRes = get_render_manager()->create(depthImageCi, imgAllocInfo);
+
+        assert(colorImageRes && depthImageRes && "Failed to create color and depth images.");
+
+        const image_view_create_info colorViewCi = {
+                .usage = image_view_usage{
+                    .usage = image_usage::COLOR_ATTACHMENT | image_usage::SAMPLED,
+                },
+                .img = *colorImageRes,
+                .type = image_view_type::TYPE_2D,
+                .fmt = colorImageCi.format,
+                .subresource = {
+                    .aspect = image_aspect::COLOR,
+                    .baseMipLevel = 0,
+                    .mipLevelCount = 1,
+                    .baseLayer = 0,
+                    .layerCount = 1
+                }
+        };
+
+        const image_view_create_info depthViewCi = {
+            .usage = image_view_usage{
+                .usage = image_usage::DEPTH_STENCIL_ATTACHMENT | image_usage::SAMPLED,
+            },
+            .img = *depthImageRes,
+            .type = image_view_type::TYPE_2D,
+            .fmt = depthImageCi.format,
+            .subresource = {
+                .aspect = image_aspect::DEPTH,
+                .baseMipLevel = 0,
+                .mipLevelCount = 1,
+                .baseLayer = 0,
+                .layerCount = 1
+            }
+        };
+
+        const auto colorViewRes = get_render_manager()->create(colorViewCi);
+        const auto depthViewRes = get_render_manager()->create(depthViewCi);
+
+        assert(colorViewRes && depthViewRes && "Failed to create color and depth images.");
+
+        const image_view attachments[] = { *colorViewRes, *depthViewRes };
+
+        frame_buffer_create_info fboInfo = {
+            .attachments = attachments,
+            .pass = _scenePass,
+            .width = info.width,
+            .height = info.height,
+            .layers = 1,
+            .name = name
+        };
+
+        const auto fboResult = get_render_manager()->create(fboInfo);
+        if (fboResult)
+        {
+            return {
+                .fbo = *fboResult,
+                .color = {
+                    .img = *colorImageRes,
+                    .view = *colorViewRes
+                },
+                .depth = {
+                    .img = *depthImageRes,
+                    .view = *depthViewRes
+                },
+                .width = info.width,
+                .height = info.height
+            };
+        }
+        return {};
     }
 }

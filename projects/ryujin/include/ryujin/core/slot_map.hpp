@@ -16,6 +16,7 @@ namespace ryujin
         std::uint32_t index;
         std::uint32_t generation;
     };
+    static constexpr slot_map_key invalid_slot_map_key = { .index = std::numeric_limits<std::uint32_t>::max(), .generation = std::numeric_limits<std::uint32_t>::max() };
 
     inline constexpr bool operator==(const slot_map_key& lhs, const slot_map_key& rhs) noexcept
     {
@@ -64,7 +65,7 @@ namespace ryujin
         const auto end() const noexcept;
         const auto cend() const noexcept;
 
-        static constexpr slot_map_key invalid = { .index = std::numeric_limits<std::uint32_t>::max(), .generation = std::numeric_limits<std::uint32_t>::max() };
+        static constexpr slot_map_key invalid = invalid_slot_map_key;
 
     private:
         bool _increase_capacity(const std::size_t requested);
@@ -158,13 +159,13 @@ namespace ryujin
             // if not the last element, move the last element into the vacated slot
             if (idxToErase != _values.size() - 1)
             {
+                // update trampoline corresponding to the value moved to point to the new value location
+                auto trampolineIdx = _erase[_values.size() - 1];
+                _keys[trampolineIdx].index = idxToErase;
+
                 _values[idxToErase] = std::move(_values[_values.size() - 1]);
             }
             _values.pop_back();
-
-            // update trampoline corresponding to the value moved to point to the new value location
-            auto trampolineIdx = _erase[idxToErase];
-            _keys[trampolineIdx].index = idxToErase;
 
             // add the opened trampoline slot to the front of the free list and icrement the generation
             auto next = _freeListHead;

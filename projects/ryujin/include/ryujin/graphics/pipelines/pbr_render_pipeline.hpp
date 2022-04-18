@@ -4,6 +4,7 @@
 #include "base_render_pipeline.hpp"
 
 #include "../../core/vector.hpp"
+#include "../../entities/registry.hpp"
 #include "../../math/mat4.hpp"
 #include "../../math/vec3.hpp"
 #include "../passes/blit_pass.hpp"
@@ -25,18 +26,14 @@ namespace ryujin
         static constexpr std::uint32_t _maxDrawCalls = 512;
         static constexpr std::uint32_t _maxTextures = 256;
         static constexpr std::uint32_t _maxPointLightCount = 512;
-
-        struct render_target
-        {
-            image img;
-            image_view view;
-        };
+        static constexpr std::uint32_t _maxCameras = 32;
 
     public:
         void pre_render() override;
         void render() override;
     protected:
         void initialize() override;
+        base_render_pipeline::render_target build_render_target(const std::string& name, const base_render_pipeline::render_target_info& info) override;
     private:
         struct alignas(256) scene_camera
         {
@@ -71,10 +68,6 @@ namespace ryujin
         void initialize_buffers();
         void initialize_textures();
 
-        frame_buffer _sceneRenderTarget;
-        render_target _colorTarget;
-        render_target _depthTarget;
-
         descriptor_set_layout _sceneWideLayout = {};
         descriptor_set_layout _drawableLayout = {};
         pipeline_layout _sceneLayout = {};
@@ -94,6 +87,7 @@ namespace ryujin
         std::size_t _numBufferGroupsToDraw = 0;
 
         vector<descriptor_image_info> _textureWriteScratchBuffer;
+        vector<entity_handle<registry::entity_type>> _activeCams;
 
         scene_data _hostSceneData = {};
     };

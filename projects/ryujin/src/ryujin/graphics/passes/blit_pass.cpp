@@ -27,7 +27,7 @@ namespace ryujin
 		rebuild_target(width, height);
 	}
 
-	void blit_pass::record(graphics_command_list& commands)
+	void blit_pass::record(graphics_command_list& commands, const bool draw)
 	{
 		const render_pass_attachment_begin_info attachments = { .views = span(_imageTarget) };
 		const clear_value swapchainClear = { .color = { .float32 = { 1.0f, 0, 0, 1 } } };
@@ -71,7 +71,10 @@ namespace ryujin
 		commands.bind_graphics_descriptor_sets(_layout, _sets[_frame]);
 		commands.set_scissors(sc);
 		commands.set_viewports(vp);
-		commands.draw_arrays(3);
+		if (draw)
+		{
+			commands.draw_arrays(3);
+		}
 		commands.end_render_pass();
 
 		_frame = (_frame + 1) % 2;
