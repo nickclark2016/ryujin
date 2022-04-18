@@ -1,4 +1,4 @@
-@ECHO OFF
+:: @ECHO OFF
 SET input_dir=%1
 SET output_dir=%2
 SET build_cfg=%3
@@ -9,7 +9,7 @@ IF [%3]==[] (
 
 :: Create the output directory
 IF NOT EXIST %output_dir% (
-    MD %output_dir
+    MD %output_dir%
 )
 
 IF NOT EXIST %input_dir% (
@@ -74,3 +74,5 @@ FOR /F "delims=" %%a IN ('dir "%output_dir%" /b /s') DO (
                     )
                 )
 )
+
+EXIT 0
