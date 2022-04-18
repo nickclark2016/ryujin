@@ -643,7 +643,7 @@ namespace ryujin
                 VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
                 nullptr,
                 0,
-                to_vulkan(info.stages[i].stage),
+                as<VkShaderStageFlagBits>(to_vulkan(info.stages[i].stage)),
                 info.stages[i].mod,
                 "main",
                 nullptr
@@ -891,14 +891,26 @@ namespace ryujin
     {
         pipeline_layout layout = {};
 
+        linear_allocator_lock lk(_inlineScratchBuffer);
+        
+        auto pushConstants = _inlineScratchBuffer.typed_allocate<VkPushConstantRange>(info.pushConstants.length());
+        for (std::size_t i = 0; i < info.pushConstants.length(); ++i)
+        {
+            pushConstants[i] = {
+                .stageFlags = to_vulkan(info.pushConstants[i].stages),
+                .offset = info.pushConstants[i].offset,
+                .size = info.pushConstants[i].size
+            };
+        }
+
         const VkPipelineLayoutCreateInfo cinfo = {
-            VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
-            nullptr,
-            0,
-            as<std::uint32_t>(info.layouts.length()),
-            info.layouts.data(),
-            0,
-            nullptr
+            .sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
+            .pNext = nullptr,
+            .flags = 0,
+            .setLayoutCount = as<std::uint32_t>(info.layouts.length()),
+            .pSetLayouts = info.layouts.data(),
+            .pushConstantRangeCount = as<std::uint32_t>(info.pushConstants.length()),
+            .pPushConstantRanges = pushConstants
         };
 
         const auto res = _funcs.createPipelineLayout(&cinfo, get_allocation_callbacks(), &layout);

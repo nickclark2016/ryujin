@@ -10,7 +10,7 @@ namespace ryujin
     {
         float near;
         float far;
-        float verticalFov;
+        float fov;
         slot_map_key target = invalid_slot_map_key;
         std::uint32_t order; // higher == later render
         bool active;

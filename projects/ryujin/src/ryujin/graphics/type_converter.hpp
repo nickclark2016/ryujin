@@ -58,9 +58,9 @@ namespace ryujin
 		return as<VkAccessFlags>(access);
 	}
 
-	inline constexpr VkShaderStageFlagBits to_vulkan(const shader_stage stage)
+	inline constexpr VkShaderStageFlags to_vulkan(const shader_stage stage)
 	{
-		return as<VkShaderStageFlagBits>(stage);
+		return as<VkShaderStageFlags>(stage);
 	}
 
 	inline constexpr VkVertexInputRate to_vulkan(const input_binding_rate rate)

@@ -823,9 +823,17 @@ namespace ryujin
         span<descriptor_set_layout_binding> bindings;
     };
 
+    struct push_constant_range
+    {
+        shader_stage stages;
+        std::uint32_t offset;
+        std::uint32_t size;
+    };
+
     struct pipeline_layout_create_info
     {
         span<descriptor_set_layout> layouts;
+        span<push_constant_range> pushConstants;
         std::string name;
     };
 
