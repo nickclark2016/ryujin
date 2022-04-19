@@ -1,5 +1,7 @@
 #include "image.hpp"
 
+#include <ryujin/core/primitives.hpp>
+
 #include <stb/stb_image.h>
 
 #undef APIENTRY
@@ -23,8 +25,8 @@ namespace ryujin::assets
         }
 
         texture_asset::mip_level level = {
-            .width = as<std::uint32_t>(x),
-            .height = as<std::uint32_t>(y),
+            .width = as<u32>(x),
+            .height = as<u32>(y),
         };
 
         texture_asset::channel_swizzle swizzle {
@@ -40,7 +42,7 @@ namespace ryujin::assets
             type = texture_asset::data_type::FLOAT;
             swizzle.fourth = texture_asset::channel::EXPONENT;
             float* data = stbi_loadf(cpath, &x, &y, &channels, 4);
-            const std::size_t sz = x * y * sizeof(float) * 4;
+            const sz sz = x * y * sizeof(float) * 4;
             level.bytes.resize(sz);
             memcpy(level.bytes.data(), data, sz);
             stbi_image_free(data);
@@ -53,7 +55,7 @@ namespace ryujin::assets
             {
                 type = texture_asset::data_type::USHORT;
                 stbi_us* data = stbi_load_16(cpath, &x, &y, &channels, 4);
-                const std::size_t sz = x * y * sizeof(stbi_us) * 4;
+                const sz sz = x * y * sizeof(stbi_us) * 4;
                 level.bytes.resize(sz);
                 memcpy(level.bytes.data(), data, sz);
                 stbi_image_free(data);
@@ -62,7 +64,7 @@ namespace ryujin::assets
             {
                 type = texture_asset::data_type::UCHAR;
                 stbi_uc* data = stbi_load(cpath, &x, &y, &channels, 4);
-                const std::size_t sz = x * y * sizeof(stbi_uc) * 4;
+                const sz sz = x * y * sizeof(stbi_uc) * 4;
                 level.bytes.resize(sz);
                 memcpy(level.bytes.data(), data, sz);
                 stbi_image_free(data);

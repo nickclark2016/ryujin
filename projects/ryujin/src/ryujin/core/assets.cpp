@@ -1,6 +1,7 @@
 #include <ryujin/core/assets.hpp>
 
 #include <ryujin/core/as.hpp>
+#include <ryujin/core/primitives.hpp>
 
 #undef APIENTRY
 #include <spdlog/spdlog.h>
@@ -20,27 +21,27 @@ namespace ryujin
         return extension;
     } 
 
-    std::uint32_t texture_asset::width() const noexcept
+    u32 texture_asset::width() const noexcept
     {
         return get_mip_level()->width;
     }
 
-    std::uint32_t texture_asset::height() const noexcept
+    u32 texture_asset::height() const noexcept
     {
         return get_mip_level()->height;
     }
 
-    std::uint32_t texture_asset::mip_count() const noexcept
+    u32 texture_asset::mip_count() const noexcept
     {
-        return as<std::uint32_t>(_mips.size());
+        return as<u32>(_mips.size());
     }
 
-    std::uint32_t texture_asset::channel_count() const noexcept
+    u32 texture_asset::channel_count() const noexcept
     {
         return _channels;
     }
 
-    const texture_asset::mip_level* texture_asset::get_mip_level(const std::uint32_t mip) const noexcept
+    const texture_asset::mip_level* texture_asset::get_mip_level(const u32 mip) const noexcept
     {
         if (mip < _mips.size())
         {
@@ -60,7 +61,7 @@ namespace ryujin
         return _swizzle;
     }
 
-    texture_asset::texture_asset(const vector<mip_level>& mips, const std::uint32_t channels, const data_type type, const channel_swizzle swizzle)
+    texture_asset::texture_asset(const vector<mip_level>& mips, const u32 channels, const data_type type, const channel_swizzle swizzle)
         : _mips(mips), _channels(channels), _type(type), _swizzle(swizzle)
     {
     }

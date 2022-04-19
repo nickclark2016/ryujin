@@ -1,5 +1,6 @@
 #include <ryujin/graphics/pipelines/pbr_render_pipeline.hpp>
 
+#include <ryujin/core/primitives.hpp>
 #include <ryujin/graphics/camera_component.hpp>
 #include <ryujin/graphics/render_manager.hpp>
 #include <ryujin/math/transformations.hpp>
@@ -15,7 +16,7 @@ namespace ryujin
         _numTranslucentBufferGroupsToDraw = renderables.write_draw_calls(_translucentIndirectCommands, _translucentIndirectCount, frameInFlight * _maxDrawCalls, material_type::TRANSLUCENT);
         renderables.write_materials(_materials, frameInFlight * _maxMaterials);
         _instanceCounts = renderables.write_instances(_instanceData, frameInFlight * _maxInstances);
-        _hostSceneData.texturesLoaded = as<std::uint32_t>(renderables.write_textures(_textures.data(), frameInFlight * _maxTextures));
+        _hostSceneData.texturesLoaded = as<u32>(renderables.write_textures(_textures.data(), frameInFlight * _maxTextures));
 
         _activeCams.clear();
         renderables.get_active_cameras(_activeCams);
@@ -24,7 +25,7 @@ namespace ryujin
         assert(_activeCams.size() > 0 && "No active cameras defined.");
 
         auto camPtr = reinterpret_cast<scene_camera*>(_cameraData.info.pMappedData) + frameInFlight * _maxCameras;
-        for (std::size_t i = 0; i < _activeCams.size(); ++i)
+        for (sz i = 0; i < _activeCams.size(); ++i)
         {
             auto camera = _activeCams[i];
             const auto& cameraData = camera.get<camera_component>();
@@ -50,7 +51,7 @@ namespace ryujin
         auto graphicsList = get_render_manager()->next_graphics_command_list();
         graphicsList.begin();
 
-        std::uint32_t activeCameraIdx = 0;
+        u32 activeCameraIdx = 0;
         for (const auto& cam : _activeCams)
         {
             const auto cameraData = cam.get<camera_component>();
@@ -148,7 +149,7 @@ namespace ryujin
             auto activeDepthTexture = get_render_manager()->renderables().try_fetch_texture(_activeRenderTarget.depthTex);
 
             _textureWriteScratchBuffer.clear();
-            for (std::size_t i = 0; i < _hostSceneData.texturesLoaded; ++i)
+            for (sz i = 0; i < _hostSceneData.texturesLoaded; ++i)
             {
                 auto& tex = _textures[i];
                 if ((activeColorTexture && activeColorTexture->view == tex.view) ||
@@ -173,7 +174,7 @@ namespace ryujin
 
             }
 
-            for (std::size_t i = _hostSceneData.texturesLoaded; i < _maxTextures; ++i)
+            for (sz i = _hostSceneData.texturesLoaded; i < _maxTextures; ++i)
             {
                 const descriptor_image_info info = {
                     .view = _invalidTexture.view,
@@ -195,7 +196,7 @@ namespace ryujin
             get_render_manager()->write(writes);
 
             const descriptor_set descriptors[] = { *sceneDescriptor, *drawableDescriptor };
-            const std::uint32_t dynamicOffsets[] = { 0, 0 };
+            const u32 dynamicOffsets[] = { 0, 0 };
 
             const viewport vp = {
                 .x = 0.0f,
@@ -223,10 +224,10 @@ namespace ryujin
             graphicsList.set_viewports(span(vp));
             graphicsList.set_scissors(span(sc));
 
-            const std::size_t opaqueIndirectOffset = _maxDrawCalls * frameInFlight;
-            const std::size_t opaqueCountOffset = _maxDrawCalls * frameInFlight;
-            const std::size_t translucentIndirectOffset = opaqueIndirectOffset + _numBufferGroupsToDraw.meshGroupCount;
-            const std::size_t translucentCountOffset = opaqueCountOffset + _numBufferGroupsToDraw.drawCallCount;
+            const sz opaqueIndirectOffset = _maxDrawCalls * frameInFlight;
+            const sz opaqueCountOffset = _maxDrawCalls * frameInFlight;
+            const sz translucentIndirectOffset = opaqueIndirectOffset + _numBufferGroupsToDraw.meshGroupCount;
+            const sz translucentCountOffset = opaqueCountOffset + _numBufferGroupsToDraw.drawCallCount;
 
             graphicsList.bind_graphics_descriptor_sets(_sceneLayout, span(descriptors), 0, span(dynamicOffsets));
             graphicsList.begin_render_pass(beginInfo);
@@ -420,7 +421,7 @@ namespace ryujin
         const push_constant_range activeCameraIndexPc = {
             .stages = shader_stage::VERTEX | shader_stage::FRAGMENT,
             .offset = 0,
-            .size = as<std::uint32_t>(sizeof(4))
+            .size = as<u32>(sizeof(4))
         };
 
         const pipeline_layout_create_info layoutCi = {
@@ -444,7 +445,7 @@ namespace ryujin
         const auto instanceBytes = sizeof(gpu_instance_data) * _maxInstances * frames;
         const auto materialBytes = sizeof(gpu_material_data) * _maxMaterials * frames;
         const auto indirectBytes = sizeof(gpu_indirect_call) * _maxDrawCalls * frames;
-        const auto drawCallBytes = sizeof(std::uint32_t) * _maxDrawCalls * frames;
+        const auto drawCallBytes = sizeof(u32) * _maxDrawCalls * frames;
         const auto cameraDataBytes = sizeof(scene_camera) * frames * _maxCameras;
         const auto sceneDataBytes = sizeof(scene_data) * frames;
         const auto textureCount = _maxTextures * frames;

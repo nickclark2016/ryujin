@@ -9,6 +9,7 @@
 #include "sparse_map.hpp"
 #include "transform_component.hpp"
 
+#include "../core/primitives.hpp"
 #include "../core/vector.hpp"
 
 #include <utility>
@@ -30,24 +31,24 @@ namespace ryujin
 
         struct pool
         {
-            std::size_t identifier;
+            sz identifier;
             void* sparse_map;
             pool_function_table fn;
         };
 
         struct component_identifier_utility
         {
-            static std::size_t id;
+            static sz id;
 
             template <typename T>
-            static std::size_t fetch_identifier()
+            static sz fetch_identifier()
             {
-                static std::size_t typeId = id++;
+                static sz typeId = id++;
                 return typeId;
             }
         };
 
-        template <typename EntityType, typename ComponentType, std::size_t PageSize>
+        template <typename EntityType, typename ComponentType, sz PageSize>
         class component_view_iterable
         {
         public:
@@ -66,7 +67,7 @@ namespace ryujin
             friend class base_registry<EntityType>;
         };
 
-        template <typename EntityType, typename PoolValueType, std::size_t PageSize>
+        template <typename EntityType, typename PoolValueType, sz PageSize>
         constexpr pool_function_table construct_pool_fn_table()
         {
             pool_function_table table;
@@ -92,8 +93,8 @@ namespace ryujin
             return table;
         }
 
-        template <typename EntityType, typename ValueType, std::size_t PageSize>
-        pool allocate_pool(const std::size_t identifier)
+        template <typename EntityType, typename ValueType, sz PageSize>
+        pool allocate_pool(const sz identifier)
         {
             pool p;
             p.identifier = identifier;
@@ -102,42 +103,42 @@ namespace ryujin
             return p;
         }
 
-        template <typename EntityType, typename ComponentType, std::size_t PageSize>
+        template <typename EntityType, typename ComponentType, sz PageSize>
         inline auto ryujin::detail::component_view_iterable<EntityType, ComponentType, PageSize>::begin() noexcept
         {
             sparse_map<EntityType, ComponentType, PageSize>* map = reinterpret_cast<sparse_map<EntityType, ComponentType, PageSize>*>(_pool.sparse_map);
             return map->value_begin();
         }
 
-        template <typename EntityType, typename ComponentType, std::size_t PageSize>
+        template <typename EntityType, typename ComponentType, sz PageSize>
         inline auto ryujin::detail::component_view_iterable<EntityType, ComponentType, PageSize>::begin() const noexcept
         {
             const sparse_map<EntityType, ComponentType, PageSize>* map = reinterpret_cast<const sparse_map<EntityType, ComponentType, PageSize>*>(_pool.sparse_map);
             return map->value_begin();
         }
 
-        template <typename EntityType, typename ComponentType, std::size_t PageSize>
+        template <typename EntityType, typename ComponentType, sz PageSize>
         inline const auto ryujin::detail::component_view_iterable<EntityType, ComponentType, PageSize>::cbegin() const noexcept
         {
             const sparse_map<EntityType, ComponentType, PageSize>* map = reinterpret_cast<const sparse_map<EntityType, ComponentType, PageSize>*>(_pool.sparse_map);
             return map->value_cbegin();
         }
 
-        template <typename EntityType, typename ComponentType, std::size_t PageSize>
+        template <typename EntityType, typename ComponentType, sz PageSize>
         inline auto ryujin::detail::component_view_iterable<EntityType, ComponentType, PageSize>::end() noexcept
         {
             sparse_map<EntityType, ComponentType, PageSize>* map = reinterpret_cast<sparse_map<EntityType, ComponentType, PageSize>*>(_pool.sparse_map);
             return map->value_end();
         }
 
-        template <typename EntityType, typename ComponentType, std::size_t PageSize>
+        template <typename EntityType, typename ComponentType, sz PageSize>
         inline auto ryujin::detail::component_view_iterable<EntityType, ComponentType, PageSize>::end() const noexcept
         {
             const sparse_map<EntityType, ComponentType, PageSize>* map = reinterpret_cast<const sparse_map<EntityType, ComponentType, PageSize>*>(_pool.sparse_map);
             return map->value_end();
         }
 
-        template <typename EntityType, typename ComponentType, std::size_t PageSize>
+        template <typename EntityType, typename ComponentType, sz PageSize>
         inline const auto ryujin::detail::component_view_iterable<EntityType, ComponentType, PageSize>::cend() const noexcept
         {
             const sparse_map<EntityType, ComponentType, PageSize>* map = reinterpret_cast<const sparse_map<EntityType, ComponentType, PageSize>*>(_pool.sparse_map);
@@ -185,7 +186,7 @@ namespace ryujin
         class entity_view_iterator
         {
         public:
-            entity_view_iterator(base_registry<EntityType>* base_registry, std::size_t index, std::size_t nextFreeIndex)
+            entity_view_iterator(base_registry<EntityType>* base_registry, sz index, sz nextFreeIndex)
                 : _registry(base_registry), _index(index), _nextFreeIndex(nextFreeIndex)
             {
             }
@@ -204,8 +205,8 @@ namespace ryujin
             value_type operator*() const;
         private:
             base_registry<EntityType>* _registry;
-            std::size_t _index;
-            std::size_t _nextFreeIndex;
+            sz _index;
+            sz _nextFreeIndex;
         };
 
         template <typename EntityType, typename ... ComponentTypes>
@@ -272,9 +273,9 @@ namespace ryujin
         base_registry& operator=(const base_registry&) = delete;
         base_registry& operator=(base_registry&&) noexcept = delete;
 
-        std::size_t active() const noexcept;
-        std::size_t capacity() const noexcept;
-        std::size_t allocated() const noexcept;
+        sz active() const noexcept;
+        sz capacity() const noexcept;
+        sz allocated() const noexcept;
 
         entity_handle<Type> allocate();
         void deallocate(entity_handle<Type>& handle);
@@ -300,7 +301,7 @@ namespace ryujin
         template <typename T>
         void replace(entity_handle<Type>& handle, const T& value);
 
-        entity_handle<Type> at(const std::size_t idx) noexcept;
+        entity_handle<Type> at(const sz idx) noexcept;
 
         template <typename T>
         auto component_view() noexcept;
@@ -314,7 +315,7 @@ namespace ryujin
         entity_handle<Type> invalid() noexcept;
 
     private:
-        static constexpr std::size_t _poolSize = 1024;
+        static constexpr sz _poolSize = 1024;
         static constexpr entity_type _tombstone = entity_traits<typename entity_type::type>::from_type(~(typename entity_type::type)(0));
 
         vector<detail::pool> _pools;
@@ -324,7 +325,7 @@ namespace ryujin
         entity_type _allocateNewIdentifier();
         entity_type _recycleExistingIdentifier();
 
-        std::size_t _active;
+        sz _active;
 
         event_manager _events;
 
@@ -422,19 +423,19 @@ namespace ryujin
     }
 
     template <typename Type>
-    inline std::size_t ryujin::base_registry<Type>::active() const noexcept
+    inline sz ryujin::base_registry<Type>::active() const noexcept
     {
         return _active;
     }
 
     template <typename Type>
-    inline std::size_t ryujin::base_registry<Type>::capacity() const noexcept
+    inline sz ryujin::base_registry<Type>::capacity() const noexcept
     {
         return _entities.capacity();
     }
 
     template<typename Type>
-    inline std::size_t base_registry<Type>::allocated() const noexcept
+    inline sz base_registry<Type>::allocated() const noexcept
     {
         return _entities.size();
     }
@@ -486,7 +487,7 @@ namespace ryujin
     }
 
     template<typename Type>
-    inline entity_handle<Type> ryujin::base_registry<Type>::at(const std::size_t idx) noexcept
+    inline entity_handle<Type> ryujin::base_registry<Type>::at(const sz idx) noexcept
     {
         if (idx < _entities.size())
         {
@@ -506,7 +507,7 @@ namespace ryujin
         {
             detail::pool p;
             p.sparse_map = nullptr;
-            p.identifier = ~std::size_t(0);
+            p.identifier = ~sz(0);
 
             _pools.push_back(p);
         }
@@ -535,7 +536,7 @@ namespace ryujin
         {
             detail::pool p;
             p.sparse_map = nullptr;
-            p.identifier = ~std::size_t(0);
+            p.identifier = ~sz(0);
 
             _pools.push_back(p);
         }
@@ -657,7 +658,7 @@ namespace ryujin
         {
             detail::pool p;
             p.sparse_map = nullptr;
-            p.identifier = ~std::size_t(0);
+            p.identifier = ~sz(0);
 
             _pools.push_back(p);
         }
@@ -798,8 +799,8 @@ namespace ryujin
         template<typename EntityType, typename ...ComponentTypes>
         inline auto entity_view_iterable<EntityType, ComponentTypes...>::begin() noexcept
         {
-            std::size_t index = 0;
-            std::size_t nextFree = _registry->_freeListHead.identifier;
+            sz index = 0;
+            sz nextFree = _registry->_freeListHead.identifier;
 
             if constexpr (sizeof...(ComponentTypes) == 0)
             {
@@ -841,8 +842,8 @@ namespace ryujin
         template<typename EntityType, typename ...ComponentTypes>
         inline auto entity_view_iterable<EntityType, ComponentTypes...>::begin() const noexcept
         {
-            std::size_t index = 0;
-            std::size_t nextFree = _registry->_freeListHead.identifier;
+            sz index = 0;
+            sz nextFree = _registry->_freeListHead.identifier;
 
             if constexpr (sizeof...(ComponentTypes) == 0)
             {
@@ -879,8 +880,8 @@ namespace ryujin
         template<typename EntityType, typename ...ComponentTypes>
         inline const auto entity_view_iterable<EntityType, ComponentTypes...>::cbegin() const noexcept
         {
-            std::size_t index = 0;
-            std::size_t nextFree = _registry->_freeListHead.identifier;
+            sz index = 0;
+            sz nextFree = _registry->_freeListHead.identifier;
 
             if constexpr (sizeof...(ComponentTypes) == 0)
             {
@@ -933,7 +934,7 @@ namespace ryujin
         }
     }
 
-    using registry = base_registry<entity<std::conditional_t<sizeof(std::size_t) == 8, std::uint64_t, std::uint32_t>>>;
+    using registry = base_registry<entity<std::conditional_t<sizeof(sz) == 8, u64, u32>>>;
 }
 
 #endif // registry_hpp__

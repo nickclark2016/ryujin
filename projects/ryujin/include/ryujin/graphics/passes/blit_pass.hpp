@@ -3,6 +3,8 @@
 
 #include "../types.hpp"
 
+#include "../../core/primitives.hpp"
+
 namespace ryujin
 {
     class render_manager;
@@ -14,7 +16,7 @@ namespace ryujin
         blit_pass(render_manager& manager);
 
         void set_input_texture(image_view view);
-        void set_output_texture(image_view view, const std::uint32_t width, const std::uint32_t height);
+        void set_output_texture(image_view view, const u32 width, const u32 height);
 
         void record(graphics_command_list& commands, const bool draw = true);
 
@@ -24,9 +26,9 @@ namespace ryujin
         void build_pipeline();
         void build_input_sampler();
 
-        void rebuild_target(const std::uint32_t width, const std::uint32_t height, const bool force = false);
+        void rebuild_target(const u32 width, const u32 height, const bool force = false);
 
-        std::uint32_t _targetWidth = 0, _targetHeight = 0;
+        u32 _targetWidth = 0, _targetHeight = 0;
         frame_buffer _target = {};
 
         render_manager& _manager;
@@ -40,7 +42,7 @@ namespace ryujin
         descriptor_set_layout _imageInputSetLayout = {};
 
         descriptor_set _sets[2] = {};
-        std::uint32_t _frame = 0;
+        u32 _frame = 0;
     };
 }
 

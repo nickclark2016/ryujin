@@ -2,10 +2,9 @@
 #define slot_map_hpp__
 
 #include "as.hpp"
+#include "primitives.hpp"
 #include "vector.hpp"
 
-#include <cstddef>
-#include <cstdint>
 #include <memory>
 #include <numeric>
 
@@ -13,10 +12,10 @@ namespace ryujin
 {
     struct slot_map_key
     {
-        std::uint32_t index;
-        std::uint32_t generation;
+        u32 index;
+        u32 generation;
     };
-    static constexpr slot_map_key invalid_slot_map_key = { .index = std::numeric_limits<std::uint32_t>::max(), .generation = std::numeric_limits<std::uint32_t>::max() };
+    static constexpr slot_map_key invalid_slot_map_key = { .index = std::numeric_limits<u32>::max(), .generation = std::numeric_limits<u32>::max() };
 
     inline constexpr bool operator==(const slot_map_key& lhs, const slot_map_key& rhs) noexcept
     {
@@ -30,18 +29,18 @@ namespace ryujin
 
     struct slot_map_key_hash
     {
-        constexpr std::size_t operator()(const slot_map_key& k) const noexcept;
+        constexpr sz operator()(const slot_map_key& k) const noexcept;
     };
 
-    inline constexpr std::size_t slot_map_key_hash::operator()(const slot_map_key& k) const noexcept
+    inline constexpr sz slot_map_key_hash::operator()(const slot_map_key& k) const noexcept
     {
-        std::size_t hash = 7;
+        sz hash = 7;
         hash = 31 * hash + k.index;
         hash = 31 * hash + k.generation;
         return hash;
     }
 
-    template <typename T, typename KeyAllocator = std::allocator<slot_map_key>, typename ValueAllocator = std::allocator<T>, typename IndexAllocator = std::allocator<std::uint32_t>>
+    template <typename T, typename KeyAllocator = std::allocator<slot_map_key>, typename ValueAllocator = std::allocator<T>, typename IndexAllocator = std::allocator<u32>>
     class slot_map
     {
     public:
@@ -49,13 +48,13 @@ namespace ryujin
 
         T* try_get(const slot_map_key& k) noexcept;
         const T* try_get(const slot_map_key& k) const noexcept;
-        std::size_t index_of(const slot_map_key& k) const noexcept;
+        sz index_of(const slot_map_key& k) const noexcept;
 
         bool erase(const slot_map_key& k);
         void clear();
 
-        std::size_t size() const noexcept;
-        std::size_t capacity() const noexcept;
+        sz size() const noexcept;
+        sz capacity() const noexcept;
 
         auto begin() noexcept;
         const auto begin() const noexcept;
@@ -68,17 +67,17 @@ namespace ryujin
         static constexpr slot_map_key invalid = invalid_slot_map_key;
 
     private:
-        bool _increase_capacity(const std::size_t requested);
+        bool _increase_capacity(const sz requested);
 
         vector<slot_map_key, KeyAllocator> _keys;
         vector<T, ValueAllocator> _values;
-        vector<std::uint32_t, IndexAllocator> _erase; // maps value index back to key index for O(1) erasure
+        vector<u32, IndexAllocator> _erase; // maps value index back to key index for O(1) erasure
 
-        std::size_t _size = 0;
-        std::size_t _capacity = 0;
+        sz _size = 0;
+        sz _capacity = 0;
 
-        std::uint32_t _freeListHead = 0;
-        std::uint32_t _freeListTail = 0;
+        u32 _freeListHead = 0;
+        u32 _freeListTail = 0;
     };
 
     template<typename T, typename KeyAllocator, typename ValueAllocator, typename IndexAllocator>
@@ -96,7 +95,7 @@ namespace ryujin
 
         // point trampoline to inserted value
         slot_map_key& trampoline = _keys[head];
-        trampoline.index = as<std::uint32_t>(_values.size());
+        trampoline.index = as<u32>(_values.size());
         _values.push_back(value);
 
         // point erasure lookup to trampoline index
@@ -133,18 +132,18 @@ namespace ryujin
     }
 
     template<typename T, typename KeyAllocator, typename ValueAllocator, typename IndexAllocator>
-    inline std::size_t slot_map<T, KeyAllocator, ValueAllocator, IndexAllocator>::index_of(const slot_map_key& k)  const noexcept
+    inline sz slot_map<T, KeyAllocator, ValueAllocator, IndexAllocator>::index_of(const slot_map_key& k)  const noexcept
     {
         if (k == invalid)
         {
-            return ~as<std::size_t>(0);
+            return ~as<sz>(0);
         }
         const auto trampoline = _keys[k.index];
         if (k.generation == trampoline.generation)
         {
             return trampoline.index;
         }
-        return ~as<std::size_t>(0);
+        return ~as<sz>(0);
     }
 
 
@@ -196,19 +195,19 @@ namespace ryujin
     }
 
     template<typename T, typename KeyAllocator, typename ValueAllocator, typename IndexAllocator>
-    inline std::size_t slot_map<T, KeyAllocator, ValueAllocator, IndexAllocator>::size() const noexcept
+    inline sz slot_map<T, KeyAllocator, ValueAllocator, IndexAllocator>::size() const noexcept
     {
         return _size;
     }
 
     template<typename T, typename KeyAllocator, typename ValueAllocator, typename IndexAllocator>
-    inline std::size_t slot_map<T, KeyAllocator, ValueAllocator, IndexAllocator>::capacity() const noexcept
+    inline sz slot_map<T, KeyAllocator, ValueAllocator, IndexAllocator>::capacity() const noexcept
     {
         return _capacity;
     }
 
     template<typename T, typename KeyAllocator, typename ValueAllocator, typename IndexAllocator>
-    inline bool slot_map<T, KeyAllocator, ValueAllocator, IndexAllocator>::_increase_capacity(const std::size_t requested)
+    inline bool slot_map<T, KeyAllocator, ValueAllocator, IndexAllocator>::_increase_capacity(const sz requested)
     {
         if (requested > _capacity)
         {
@@ -216,14 +215,14 @@ namespace ryujin
             _values.reserve(requested);
             _erase.resize(requested);
 
-            for (std::size_t i = _capacity; i < requested; ++i)
+            for (sz i = _capacity; i < requested; ++i)
             {
                 slot_map_key& k = _keys[i];
-                k.index = as<std::uint32_t>(i) + 1;
+                k.index = as<u32>(i) + 1;
             }
 
-            _freeListHead = as<std::uint32_t>(_size);
-            _freeListTail = as<std::uint32_t>(requested) - 1;
+            _freeListHead = as<u32>(_size);
+            _freeListTail = as<u32>(requested) - 1;
             _capacity = requested;
         }
 

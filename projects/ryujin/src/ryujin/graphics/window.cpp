@@ -11,7 +11,7 @@ namespace ryujin
 			return initGlfw;
 		}
 
-		void focusCallback(GLFWwindow* win, int focused)
+		void focusCallback(GLFWwindow* win, i32 focused)
 		{
 			window* userWin = reinterpret_cast<window*>(glfwGetWindowUserPointer(win));
 			userWin->_focused = focused == GLFW_TRUE;
@@ -32,17 +32,17 @@ namespace ryujin
 			}
 		}
 		
-		void resizeCallback(GLFWwindow* win, int width, int height)
+		void resizeCallback(GLFWwindow* win, i32 width, i32 height)
 		{
 			window* userWin = reinterpret_cast<window*>(glfwGetWindowUserPointer(win));
 
 			for (auto& cb : userWin->_userResizeCallbacks)
 			{
-				cb(static_cast<std::uint32_t>(width), static_cast<std::uint32_t>(height));
+				cb(static_cast<u32>(width), static_cast<u32>(height));
 			}
 		}
 
-		void iconifyCallback(GLFWwindow* win, int minimized)
+		void iconifyCallback(GLFWwindow* win, i32 minimized)
 		{
 			window* userWin = reinterpret_cast<window*>(glfwGetWindowUserPointer(win));
 			const bool isIconified = minimized == GLFW_TRUE;
@@ -63,7 +63,7 @@ namespace ryujin
 			}
 		}
 
-		void maximizeCallback(GLFWwindow* win, int maximized)
+		void maximizeCallback(GLFWwindow* win, i32 maximized)
 		{
 			window* userWin = reinterpret_cast<window*>(glfwGetWindowUserPointer(win));
 			const bool isMaximized = maximized == GLFW_TRUE;
@@ -122,18 +122,18 @@ namespace ryujin
 		glfwSetWindowSizeCallback(_native, nullptr);
 	}
 	
-	result<std::tuple<std::uint32_t, std::uint32_t>, window::error_code> window::size() const noexcept
+	result<std::tuple<u32, u32>, window::error_code> window::size() const noexcept
 	{
-		using result_type = result<std::tuple<std::uint32_t, std::uint32_t>, error_code>;
+		using result_type = result<std::tuple<u32, u32>, error_code>;
 
-		int w, h;
+		i32 w, h;
 		glfwGetWindowSize(_native, &w, &h);
 
-		auto res = std::make_tuple(static_cast<std::uint32_t>(w), static_cast<std::uint32_t>(h));
+		auto res = std::make_tuple(static_cast<u32>(w), static_cast<u32>(h));
 		return result_type::from_success(std::move(res));
 	}
 	
-	void window::size(const std::uint32_t width, const std::uint32_t height) noexcept
+	void window::size(const u32 width, const u32 height) noexcept
 	{
 		glfwSetWindowSize(_native, static_cast<int>(width), static_cast<int>(height));
 	}
@@ -173,7 +173,7 @@ namespace ryujin
 		_userCloseCallbacks.push_back(fn);
 	}
 
-	void window::on_resize(const std::function<void(std::uint32_t, std::uint32_t)>& fn)
+	void window::on_resize(const std::function<void(u32, u32)>& fn)
 	{
 		_userResizeCallbacks.push_back(fn);
 	}

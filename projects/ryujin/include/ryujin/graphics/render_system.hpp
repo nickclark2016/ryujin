@@ -4,6 +4,7 @@
 #include "render_manager.hpp"
 #include "window.hpp"
 
+#include "../core/primitives.hpp"
 #include "../entities/registry.hpp"
 
 #include <VkBootstrap.h>
@@ -29,8 +30,8 @@ namespace ryujin
         void on_render(engine_context& ctx);
         void on_post_render(engine_context& ctx);
 
-        std::unique_ptr<render_manager>& get_render_manager(std::size_t idx) noexcept;
-        std::size_t render_manager_count() const noexcept;
+        std::unique_ptr<render_manager>& get_render_manager(sz idx) noexcept;
+        sz render_manager_count() const noexcept;
     private:
         std::vector<std::unique_ptr<render_manager>> _managers;
 

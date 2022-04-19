@@ -1,9 +1,9 @@
 #ifndef files_hpp__
 #define files_hpp__
 
+#include "primitives.hpp"
 #include "result.hpp"
 
-#include <cstddef>
 #include <memory>
 #include <string>
 
@@ -13,7 +13,7 @@ namespace ryujin
     {
         std::string path;
         std::unique_ptr<char[]> bytes;
-        std::size_t length;
+        sz length;
     };
 
     struct text_file

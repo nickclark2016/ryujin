@@ -8,6 +8,7 @@
 
 #include "../core/as.hpp"
 #include "../core/concepts.hpp"
+#include "../core/primitives.hpp"
 
 #include <cassert>
 
@@ -165,9 +166,9 @@ namespace ryujin
             return false;
         }
 
-        for (std::size_t i = 0; i < 4; ++i)
+        for (sz i = 0; i < 4; ++i)
         {
-            for (std::size_t j = 0; j < 4; ++j)
+            for (sz j = 0; j < 4; ++j)
             {
                 local[i][j] /= local[3][3];
             }
@@ -182,9 +183,9 @@ namespace ryujin
 
         // solve for scale
         vec3<float> row[3];
-        for (std::size_t i = 0; i < 3; ++i)
+        for (sz i = 0; i < 3; ++i)
         {
-            for (std::size_t j = 0; j < 3; ++j)
+            for (sz j = 0; j < 3; ++j)
             {
                 row[i][j] = local[i][j];
             }
@@ -206,12 +207,12 @@ namespace ryujin
         }
         else
         {
-            constexpr std::size_t next[3] = { 1, 2, 0 };
-            std::size_t i = 0;
+            constexpr sz next[3] = { 1, 2, 0 };
+            sz i = 0;
             if (row[1].y > row[0].x) i = 1;
             if (row[2].z > row[i][i]) i = 2;
-            std::size_t j = next[i];
-            std::size_t k = next[j];
+            sz j = next[i];
+            sz k = next[j];
 
             root = std::sqrt(row[i][i] - row[j][j] - row[k][k] + as<T>(1));
             rotation[i + 1] = as<T>(0.5) * root;

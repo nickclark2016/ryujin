@@ -99,7 +99,7 @@ namespace ryujin::detail
 			span(resolveColorAttachments),
 			span<attachment_reference>(),
 			std::nullopt,
-			span<std::uint32_t>()
+			span<u32>()
 		};
 
 		subpass_dependency externalInboundDependency = {

@@ -1,27 +1,28 @@
 #include <ryujin/graphics/passes/opaque_pbr_pass.hpp>
 
 #include <ryujin/core/files.hpp>
+#include <ryujin/core/primitives.hpp>
 #include <ryujin/graphics/render_manager.hpp>
 
 namespace ryujin
 {
-    opaque_pbr_pass::opaque_pbr_pass(render_manager& manager, pipeline_layout layout, render_pass pass, std::uint32_t width, std::uint32_t height)
+    opaque_pbr_pass::opaque_pbr_pass(render_manager& manager, pipeline_layout layout, render_pass pass, u32 width, u32 height)
         : _manager(manager), _layout(layout)
     {
         init_graphics_pipeline(width, height, pass);
     }
 
-    void opaque_pbr_pass::render(graphics_command_list& cmd, buffer& indirect, buffer& count, std::size_t indirectOffset, std::size_t countOffset, std::size_t numBufferGroups)
+    void opaque_pbr_pass::render(graphics_command_list& cmd, buffer& indirect, buffer& count, sz indirectOffset, sz countOffset, sz numBufferGroups)
     {
         cmd.bind_graphics_pipeline(_shader);
 
-        const auto countPtr = reinterpret_cast<std::uint32_t*>(count.info.pMappedData) + countOffset;
+        const auto countPtr = reinterpret_cast<u32*>(count.info.pMappedData) + countOffset;
         const auto indirectBaseAddr = countOffset * sizeof(gpu_indirect_call);
         auto indirectAddrOffset = 0;
-        const auto countBaseAddr = indirectOffset * sizeof(std::uint32_t);
+        const auto countBaseAddr = indirectOffset * sizeof(u32);
         auto countAddrOffset = 0;
 
-        for (std::size_t bufferGroupId = 0; bufferGroupId < numBufferGroups; ++bufferGroupId)
+        for (sz bufferGroupId = 0; bufferGroupId < numBufferGroups; ++bufferGroupId)
         {
             // bind mesh group
             const auto& meshGroup = _manager.renderables().get_buffer_group(bufferGroupId);
@@ -40,7 +41,7 @@ namespace ryujin
         }
     }
 
-    void opaque_pbr_pass::init_graphics_pipeline(std::uint32_t width, std::uint32_t height, render_pass pass)
+    void opaque_pbr_pass::init_graphics_pipeline(u32 width, u32 height, render_pass pass)
     {
         auto vertexSource = files::load_binary("data/shaders/pbr/shader.vert.spv");
 		auto fragmentSource = files::load_binary("data/shaders/pbr/shader.opaque.frag.spv");
@@ -176,7 +177,7 @@ namespace ryujin
 				.samples = sample_count::COUNT_1,
 				.enableSampleShading = false,
 				.minSampleShading = 0.0f,
-				.sampleMask = span<std::uint32_t>(),
+				.sampleMask = span<u32>(),
 				.alphaToCoverageEnabled = false,
 				.alphaToOneEnabled = false
 			},

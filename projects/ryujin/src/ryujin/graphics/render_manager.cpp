@@ -29,7 +29,7 @@ namespace ryujin
                 VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
                 nullptr,
                 type,
-                reinterpret_cast<std::uint64_t>(handle),
+                reinterpret_cast<u64>(handle),
                 name.c_str()
             };
 
@@ -42,7 +42,7 @@ namespace ryujin
             OUT_OF_MEMORY
         };
 
-        template <std::size_t N>
+        template <sz N>
         result<VkWriteDescriptorSet, vulkan_build_errors> build_write(const descriptor_write_info& info, inline_linear_allocator<N>& allocator)
         {
             auto bufs = std::get_if<span<descriptor_buffer_info>>(&info.info);
@@ -60,7 +60,7 @@ namespace ryujin
 
             if (bufInfos)
             {
-                for (std::size_t i = 0; i < count; ++i)
+                for (sz i = 0; i < count; ++i)
                 {
                     bufInfos[i] = {
                         .buffer = (*bufs)[i].buf.buffer,
@@ -71,7 +71,7 @@ namespace ryujin
             }
             else if (imgInfos)
             {
-                for (std::size_t i = 0; i < count; ++i)
+                for (sz i = 0; i < count; ++i)
                 {
                     imgInfos[i] = {
                         .sampler = (*imgs)[i].sam,
@@ -87,7 +87,7 @@ namespace ryujin
                 .dstSet = info.set,
                 .dstBinding = info.binding,
                 .dstArrayElement = info.element,
-                .descriptorCount = as<std::uint32_t>(count),
+                .descriptorCount = as<u32>(count),
                 .descriptorType = to_vulkan(info.type),
                 .pImageInfo = imgInfos,
                 .pBufferInfo = bufInfos,
@@ -238,12 +238,12 @@ namespace ryujin
         return error_code::NO_ERROR;
     }
 
-    std::uint32_t render_manager::get_swapchain_image_count() const noexcept
+    u32 render_manager::get_swapchain_image_count() const noexcept
     {
-        return static_cast<std::uint32_t>(_swapchainImages.size());
+        return static_cast<u32>(_swapchainImages.size());
     }
 
-    result<image_view, render_manager::error_code> render_manager::get_swapchain_image(const std::uint32_t index) const noexcept
+    result<image_view, render_manager::error_code> render_manager::get_swapchain_image(const u32 index) const noexcept
     {
         if (index >= get_swapchain_image_count())
         {
@@ -262,22 +262,22 @@ namespace ryujin
         return as<data_format>(_swapchain.image_format);
     }
 
-    std::uint32_t render_manager::get_swapchain_width() const noexcept
+    u32 render_manager::get_swapchain_width() const noexcept
     {
         return _swapchain.extent.width;
     }
 
-    std::uint32_t render_manager::get_swapchain_height() const noexcept
+    u32 render_manager::get_swapchain_height() const noexcept
     {
         return _swapchain.extent.height;
     }
 
-    std::uint32_t render_manager::get_frame_in_flight() const noexcept
+    u32 render_manager::get_frame_in_flight() const noexcept
     {
         return _currentFrame;
     }
 
-    std::uint32_t render_manager::get_frames_in_flight() const noexcept
+    u32 render_manager::get_frames_in_flight() const noexcept
     {
         return _framesInFlight;
     }
@@ -341,7 +341,7 @@ namespace ryujin
             .pNext = nullptr,
             .flags = 0,
             .maxSets = info.maxSetCount,
-            .poolSizeCount = as<std::uint32_t>(info.sizes.length()),
+            .poolSizeCount = as<u32>(info.sizes.length()),
             .pPoolSizes = sizes
         };
 
@@ -378,7 +378,7 @@ namespace ryujin
         descriptor_set_layout layout = {};
 
         auto bindings = _inlineScratchBuffer.typed_allocate<VkDescriptorSetLayoutBinding>(info.bindings.length());
-        for (std::size_t i = 0; i < info.bindings.length(); ++i)
+        for (sz i = 0; i < info.bindings.length(); ++i)
         {
             auto& binding = info.bindings[i];
 
@@ -395,7 +395,7 @@ namespace ryujin
             VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
             VK_NULL_HANDLE,
             0,
-            as<std::uint32_t>(info.bindings.length()),
+            as<u32>(info.bindings.length()),
             bindings
         };
 
@@ -436,7 +436,7 @@ namespace ryujin
 
         VkFramebufferAttachmentsCreateInfo* imagelessAttachments = nullptr;
         VkImageView* imageAttachments = nullptr;
-        std::uint32_t attachmentCount = 0;
+        u32 attachmentCount = 0;
 
         if (std::holds_alternative<frame_buffer_attachment_create_info>(framebufferInfo.attachments))
         {
@@ -444,11 +444,11 @@ namespace ryujin
             imagelessAttachments = _inlineScratchBuffer.typed_allocate<VkFramebufferAttachmentsCreateInfo>(1);
             imagelessAttachments->sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENTS_CREATE_INFO;
             imagelessAttachments->pNext = nullptr;
-            imagelessAttachments->attachmentImageInfoCount = as<std::uint32_t>(attachments.infos.length());
+            imagelessAttachments->attachmentImageInfoCount = as<u32>(attachments.infos.length());
             auto vkAttachments = _inlineScratchBuffer.typed_allocate<VkFramebufferAttachmentImageInfo>(attachments.infos.length());
             for (size_t i = 0; i < imagelessAttachments->attachmentImageInfoCount; ++i)
             {
-                const auto formatCount = as<std::uint32_t>(attachments.infos[i].formats.length());
+                const auto formatCount = as<u32>(attachments.infos[i].formats.length());
                 auto formats = _inlineScratchBuffer.typed_allocate<VkFormat>(formatCount);
 
                 for (size_t j = 0; j < formatCount; ++j)
@@ -476,13 +476,13 @@ namespace ryujin
             auto& attachments = std::get<span<image_view>>(framebufferInfo.attachments);
             auto vkAttachments = _inlineScratchBuffer.typed_allocate<VkImageView>(attachments.length());
 
-            for (std::size_t i = 0; i < attachments.length(); ++i)
+            for (sz i = 0; i < attachments.length(); ++i)
             {
                 vkAttachments[i] = attachments[i];
             }
 
             imageAttachments = vkAttachments;
-            attachmentCount = as<std::uint32_t>(attachments.length());
+            attachmentCount = as<u32>(attachments.length());
         }
 
         VkFramebufferCreateInfo cinfo = {};
@@ -673,9 +673,9 @@ namespace ryujin
             VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
             nullptr,
             0,
-            as<std::uint32_t>(info.vertexInput.bindings.length()),
+            as<u32>(info.vertexInput.bindings.length()),
             vertexBindings,
-            as<std::uint32_t>(info.vertexInput.attributes.length()),
+            as<u32>(info.vertexInput.attributes.length()),
             vertexAttributes
         };
 
@@ -720,9 +720,9 @@ namespace ryujin
             VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO,
             nullptr,
             0,
-            as<std::uint32_t>(info.viewport.viewports.length()),
+            as<u32>(info.viewport.viewports.length()),
             viewports,
-            as<std::uint32_t>(info.viewport.scissors.length()),
+            as<u32>(info.viewport.scissors.length()),
             scissors
         };
 
@@ -798,7 +798,7 @@ namespace ryujin
         auto colorBlendState = _inlineScratchBuffer.typed_allocate<VkPipelineColorBlendStateCreateInfo>();
         auto attachments = _inlineScratchBuffer.typed_allocate<VkPipelineColorBlendAttachmentState>(info.blendState.attachments.length());
 
-        for (std::size_t i = 0; i < info.blendState.attachments.length(); ++i)
+        for (sz i = 0; i < info.blendState.attachments.length(); ++i)
         {
             auto& attachment = info.blendState.attachments[i];
 
@@ -820,7 +820,7 @@ namespace ryujin
             0,
             info.blendState.logicOp.has_value() ? VK_TRUE : VK_FALSE,
             to_vulkan(info.blendState.logicOp.value_or(logic_op::CLEAR)),
-            as<std::uint32_t>(info.blendState.attachments.length()),
+            as<u32>(info.blendState.attachments.length()),
             attachments,
             {
                 info.blendState.blendConstants[0],
@@ -833,7 +833,7 @@ namespace ryujin
         auto dynamicState = _inlineScratchBuffer.typed_allocate<VkPipelineDynamicStateCreateInfo>();
         auto states = _inlineScratchBuffer.typed_allocate<VkDynamicState>(info.dynamicStates.length());
 
-        for (std::size_t i = 0; i < info.dynamicStates.length(); ++i)
+        for (sz i = 0; i < info.dynamicStates.length(); ++i)
         {
             states[i] = to_vulkan(info.dynamicStates[i]);
         }
@@ -842,7 +842,7 @@ namespace ryujin
             VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO,
             nullptr,
             0,
-            as<std::uint32_t>(info.dynamicStates.length()),
+            as<u32>(info.dynamicStates.length()),
             states
         };
 
@@ -850,7 +850,7 @@ namespace ryujin
             VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,
             nullptr,
             0,
-            as<std::uint32_t>(info.stages.length()),
+            as<u32>(info.stages.length()),
             stages,
             vertexInput,
             inputAssemblyState,
@@ -888,7 +888,7 @@ namespace ryujin
         linear_allocator_lock lk(_inlineScratchBuffer);
         
         auto pushConstants = _inlineScratchBuffer.typed_allocate<VkPushConstantRange>(info.pushConstants.length());
-        for (std::size_t i = 0; i < info.pushConstants.length(); ++i)
+        for (sz i = 0; i < info.pushConstants.length(); ++i)
         {
             pushConstants[i] = {
                 .stageFlags = to_vulkan(info.pushConstants[i].stages),
@@ -901,9 +901,9 @@ namespace ryujin
             .sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
             .pNext = nullptr,
             .flags = 0,
-            .setLayoutCount = as<std::uint32_t>(info.layouts.length()),
+            .setLayoutCount = as<u32>(info.layouts.length()),
             .pSetLayouts = info.layouts.data(),
-            .pushConstantRangeCount = as<std::uint32_t>(info.pushConstants.length()),
+            .pushConstantRangeCount = as<u32>(info.pushConstants.length()),
             .pPushConstantRanges = pushConstants
         };
 
@@ -943,15 +943,15 @@ namespace ryujin
 
         VkRenderPassCreateInfo2 create = {};
         create.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2;
-        create.attachmentCount = as<std::uint32_t>(info.attachments.length());
-        create.subpassCount = as<std::uint32_t>(info.subpasses.length());
-        create.dependencyCount = as<std::uint32_t>(info.dependencies.length());
+        create.attachmentCount = as<u32>(info.attachments.length());
+        create.subpassCount = as<u32>(info.subpasses.length());
+        create.dependencyCount = as<u32>(info.dependencies.length());
 
         auto attachments = _inlineScratchBuffer.typed_allocate<VkAttachmentDescription2>(create.attachmentCount);
         auto subpasses = _inlineScratchBuffer.typed_allocate<VkSubpassDescription2>(create.subpassCount);
         auto dependencies = _inlineScratchBuffer.typed_allocate<VkSubpassDependency2>(create.dependencyCount);
 
-        for (std::size_t i = 0; i < create.attachmentCount; ++i)
+        for (sz i = 0; i < create.attachmentCount; ++i)
         {
             VkAttachmentDescription2 attachment = {
                 VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2,
@@ -989,7 +989,7 @@ namespace ryujin
             return data;
         };
 
-        for (std::size_t i = 0; i < create.subpassCount; ++i)
+        for (sz i = 0; i < create.subpassCount; ++i)
         {
             const auto& sp = info.subpasses[i];
 
@@ -999,20 +999,20 @@ namespace ryujin
                 0,
                 VK_PIPELINE_BIND_POINT_GRAPHICS,
                 0,
-                as<std::uint32_t>(sp.inputs.length()),
+                as<u32>(sp.inputs.length()),
                 to_reference(sp.inputs),
-                as<std::uint32_t>(sp.colors.length()),
+                as<u32>(sp.colors.length()),
                 to_reference(sp.colors),
                 to_reference(sp.resolves),
                 to_reference(span(sp.depthStencil)),
-                as<std::uint32_t>(sp.preserveIndices.length()),
+                as<u32>(sp.preserveIndices.length()),
                 sp.preserveIndices.data()
             };
 
             subpasses[i] = subpass;
         }
 
-        for (std::size_t i = 0; i < create.dependencyCount; ++i)
+        for (sz i = 0; i < create.dependencyCount; ++i)
         {
             const auto& dep = info.dependencies[i];
 
@@ -1130,8 +1130,8 @@ namespace ryujin
             VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
             nullptr,
             0,
-            as<std::uint32_t>(info.bytes.length()),
-            reinterpret_cast<const std::uint32_t*>(info.bytes.data())
+            as<u32>(info.bytes.length()),
+            reinterpret_cast<const u32*>(info.bytes.data())
         };
 
         const auto res = _funcs.createShaderModule(&cinfo, get_allocation_callbacks(), &sm);
@@ -1157,7 +1157,7 @@ namespace ryujin
         return result<descriptor_set, error_code>::from_error(error_code::RESOURCE_ALLOCATION_FROM_POOL_FAILURE);
     }
 
-    result<buffer_region, render_manager::error_code> render_manager::write_to_staging_buffer(const void* data, const std::size_t bytes)
+    result<buffer_region, render_manager::error_code> render_manager::write_to_staging_buffer(const void* data, const sz bytes)
     {
         auto stagingBuffer = _stagingBuffers[0];
         if (stagingBuffer.offset + bytes > stagingBuffer.size)
@@ -1208,7 +1208,7 @@ namespace ryujin
             }
             else
             {
-                _funcs.updateDescriptorSets(as<std::uint32_t>(i), infoPtr, 0, nullptr);
+                _funcs.updateDescriptorSets(as<u32>(i), infoPtr, 0, nullptr);
                 --i;
 
                 _inlineScratchBuffer.reset();
@@ -1220,7 +1220,7 @@ namespace ryujin
             }
         }
 
-        _funcs.updateDescriptorSets(as<std::uint32_t>(count), infoPtr, 0, nullptr);
+        _funcs.updateDescriptorSets(as<u32>(count), infoPtr, 0, nullptr);
     }
 
     result<descriptor_set, render_manager::error_code> render_manager::_allocate(const descriptor_set_allocate_info& info)
@@ -1727,7 +1727,7 @@ namespace ryujin
             _device.get_queue_index(vkb::QueueType::compute).value()
         };
 
-        for (std::size_t i = 0; i < _framesInFlight; ++i)
+        for (sz i = 0; i < _framesInFlight; ++i)
         {
             VkSemaphore imageReady = {}, renderComplete = {};
             VkFence inFlight = {};
@@ -1906,9 +1906,9 @@ namespace ryujin
             nullptr
         };
 
-        i.waitSemaphoreCount = as<std::uint32_t>(info.wait.length());
+        i.waitSemaphoreCount = as<u32>(info.wait.length());
         i.commandBufferCount = 1;
-        i.signalSemaphoreCount = as<std::uint32_t>(info.signal.length());
+        i.signalSemaphoreCount = as<u32>(info.signal.length());
 
         i.pCommandBuffers = &_buffer;
         i.pSignalSemaphores = info.signal.data();
@@ -1918,7 +1918,7 @@ namespace ryujin
         auto waitSemaphores = allocator.typed_allocate<VkSemaphore>(i.waitSemaphoreCount);
         auto waitStages = allocator.typed_allocate<VkPipelineStageFlags>(i.waitSemaphoreCount);
 
-        for (std::size_t idx = 0; idx < i.waitSemaphoreCount; ++idx)
+        for (sz idx = 0; idx < i.waitSemaphoreCount; ++idx)
         {
             waitSemaphores[idx] = info.wait[idx].sem;
             waitStages[idx] = to_vulkan(info.wait[idx].stageMask);
@@ -1942,7 +1942,7 @@ namespace ryujin
         VkBufferMemoryBarrier* vkBufMemBarriers = allocator.typed_allocate<VkBufferMemoryBarrier>(bufMemBarriers.length());
         VkImageMemoryBarrier* vkImgMemBarriers = allocator.typed_allocate<VkImageMemoryBarrier>(imgMemBarriers.length());
 
-        for (std::size_t i = 0; i < memBarriers.length(); ++i)
+        for (sz i = 0; i < memBarriers.length(); ++i)
         {
             vkMemBarriers[i] = {
                 .sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER,
@@ -1952,7 +1952,7 @@ namespace ryujin
             };
         }
 
-        for (std::size_t i = 0; i < bufMemBarriers.length(); ++i)
+        for (sz i = 0; i < bufMemBarriers.length(); ++i)
         {
             vkBufMemBarriers[i] = {
                 .sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER,
@@ -1967,7 +1967,7 @@ namespace ryujin
             };
         }
 
-        for (std::size_t i = 0; i < imgMemBarriers.length(); ++i)
+        for (sz i = 0; i < imgMemBarriers.length(); ++i)
         {
             vkImgMemBarriers[i] = {
                 .sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
@@ -1989,10 +1989,10 @@ namespace ryujin
             };
         }
 
-        _funcs->cmdPipelineBarrier(_buffer, to_vulkan(src), to_vulkan(dst), 0, as<std::uint32_t>(memBarriers.length()), vkMemBarriers, as<std::uint32_t>(bufMemBarriers.length()), vkBufMemBarriers, as<std::uint32_t>(imgMemBarriers.length()), vkImgMemBarriers);
+        _funcs->cmdPipelineBarrier(_buffer, to_vulkan(src), to_vulkan(dst), 0, as<u32>(memBarriers.length()), vkMemBarriers, as<u32>(bufMemBarriers.length()), vkBufMemBarriers, as<u32>(imgMemBarriers.length()), vkImgMemBarriers);
     }
 
-    void command_list::push_constants(const pipeline_layout& layout, const shader_stage stages, const std::uint32_t offset, const std::uint32_t size, const void* data)
+    void command_list::push_constants(const pipeline_layout& layout, const shader_stage stages, const u32 offset, const u32 size, const void* data)
     {
         assert(offset % 4 == 0 && "Push constant offset must be a multiple of 4");
         assert(size % 4 == 0 && size > 0 && "Push constant size must be a multiple of 4 greater than 0");
@@ -2004,12 +2004,12 @@ namespace ryujin
         return _buffer != nullptr;
     }
 
-    std::uint32_t command_list::queue_index() const noexcept
+    u32 command_list::queue_index() const noexcept
     {
         return _queueIndex;
     }
 
-    command_list::command_list(VkCommandBuffer cmdBuffer, vkb::DispatchTable& fns, VkQueue target, std::uint32_t queueIndex)
+    command_list::command_list(VkCommandBuffer cmdBuffer, vkb::DispatchTable& fns, VkQueue target, u32 queueIndex)
         : _buffer(cmdBuffer), _funcs(&fns), _target(target), _queueIndex(queueIndex)
     {
     }
@@ -2021,7 +2021,7 @@ namespace ryujin
         {
             attachmentInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_ATTACHMENT_BEGIN_INFO;
             attachmentInfo.pNext = nullptr;
-            attachmentInfo.attachmentCount = as<std::uint32_t>(begin.attachmentBegin->views.length());
+            attachmentInfo.attachmentCount = as<u32>(begin.attachmentBegin->views.length());
             attachmentInfo.pAttachments = begin.attachmentBegin->views.data();
         }
 
@@ -2031,7 +2031,7 @@ namespace ryujin
             begin.pass,
             begin.buffer,
             { begin.x, begin.y, begin.width, begin.height },
-            as<std::uint32_t>(begin.clearValues.length()),
+            as<u32>(begin.clearValues.length()),
             begin.clearValues.data()
         };
 
@@ -2043,7 +2043,7 @@ namespace ryujin
         _funcs->cmdEndRenderPass(_buffer);
     }
 
-    void graphics_command_list::draw_arrays(const std::uint32_t count, const std::uint32_t instances, const std::uint32_t firstVertex, const std::uint32_t firstInstance)
+    void graphics_command_list::draw_arrays(const u32 count, const u32 instances, const u32 firstVertex, const u32 firstInstance)
     {
         _funcs->cmdDraw(_buffer, count, instances, firstVertex, firstInstance);
     }
@@ -2053,41 +2053,41 @@ namespace ryujin
         _funcs->cmdBindPipeline(_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
     }
 
-    void graphics_command_list::bind_graphics_descriptor_sets(const pipeline_layout& layout, const span<descriptor_set>& sets, const std::uint32_t firstSet, const span<std::uint32_t>& offsets)
+    void graphics_command_list::bind_graphics_descriptor_sets(const pipeline_layout& layout, const span<descriptor_set>& sets, const u32 firstSet, const span<u32>& offsets)
     {
-        _funcs->cmdBindDescriptorSets(_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, layout, firstSet, as<std::uint32_t>(sets.length()), sets.data(), as<std::uint32_t>(offsets.length()), offsets.data());
+        _funcs->cmdBindDescriptorSets(_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, layout, firstSet, as<u32>(sets.length()), sets.data(), as<u32>(offsets.length()), offsets.data());
     }
 
-    void graphics_command_list::bind_index_buffer(const buffer& buf, const std::size_t offset)
+    void graphics_command_list::bind_index_buffer(const buffer& buf, const sz offset)
     {
         _funcs->cmdBindIndexBuffer(_buffer, buf.buffer, offset, VK_INDEX_TYPE_UINT32);
     }
 
-    void graphics_command_list::bind_vertex_buffers(const std::size_t first, const span<buffer>& buffers, const span<std::size_t>& offsets)
+    void graphics_command_list::bind_vertex_buffers(const sz first, const span<buffer>& buffers, const span<sz>& offsets)
     {
-        constexpr std::size_t MAX_BINDINGS = 16;
+        constexpr sz MAX_BINDINGS = 16;
         VkBuffer bindings[MAX_BINDINGS] = { VK_NULL_HANDLE };
-        std::size_t bindingOffsets[MAX_BINDINGS] = { 0 };
+        sz bindingOffsets[MAX_BINDINGS] = { 0 };
 
-        for (std::size_t i = 0; i < buffers.length(); ++i)
+        for (sz i = 0; i < buffers.length(); ++i)
         {
             bindings[i] = buffers[i].buffer;
         }
 
         if (offsets.length())
         {
-            for (std::size_t i = 0; i < offsets.length(); ++i)
+            for (sz i = 0; i < offsets.length(); ++i)
             {
                 bindingOffsets[i] = offsets[i];
             }
         }
 
-        _funcs->cmdBindVertexBuffers(_buffer, as<std::uint32_t>(first), as<std::uint32_t>(buffers.length()), bindings, bindingOffsets);
+        _funcs->cmdBindVertexBuffers(_buffer, as<u32>(first), as<u32>(buffers.length()), bindings, bindingOffsets);
     }
 
-    void graphics_command_list::draw_indexed_indirect(const buffer& indirect, const std::size_t indirectOffset, const buffer& count, const std::size_t countOffset, const std::size_t maxDrawCount, const std::size_t stride)
+    void graphics_command_list::draw_indexed_indirect(const buffer& indirect, const sz indirectOffset, const buffer& count, const sz countOffset, const sz maxDrawCount, const sz stride)
     {
-        _funcs->cmdDrawIndexedIndirectCount(_buffer, indirect.buffer, indirectOffset, count.buffer, countOffset, as<std::uint32_t>(maxDrawCount), as<std::uint32_t>(stride));
+        _funcs->cmdDrawIndexedIndirectCount(_buffer, indirect.buffer, indirectOffset, count.buffer, countOffset, as<u32>(maxDrawCount), as<u32>(stride));
     }
 
     void graphics_command_list::set_viewports(const span<viewport>& viewports)
@@ -2106,7 +2106,7 @@ namespace ryujin
             };
         }
         
-        _funcs->cmdSetViewport(_buffer, 0, as<std::uint32_t>(viewports.length()), vps);
+        _funcs->cmdSetViewport(_buffer, 0, as<u32>(viewports.length()), vps);
     }
 
     void graphics_command_list::set_scissors(const span<scissor_region>& scissors)
@@ -2121,26 +2121,26 @@ namespace ryujin
             };
         }
 
-        _funcs->cmdSetScissor(_buffer, 0, as<std::uint32_t>(scissors.length()), srs);
+        _funcs->cmdSetScissor(_buffer, 0, as<u32>(scissors.length()), srs);
     }
 
-    graphics_command_list::graphics_command_list(VkCommandBuffer cmdBuffer, vkb::DispatchTable& fns, VkQueue target, std::uint32_t queueIndex)
+    graphics_command_list::graphics_command_list(VkCommandBuffer cmdBuffer, vkb::DispatchTable& fns, VkQueue target, u32 queueIndex)
         : command_list(cmdBuffer, fns, target, queueIndex)
     {
     }
 
     void transfer_command_list::copy(const buffer& src, const buffer& dst, const span<buffer_copy_regions>& regions)
     {
-        static constexpr std::size_t max = 16;
+        static constexpr sz max = 16;
         VkBufferCopy copies[max] = {};
 
-        std::size_t copied = 0;
+        sz copied = 0;
 
-        for (std::size_t i = 0; i < regions.length(); i += max)
+        for (sz i = 0; i < regions.length(); i += max)
         {
-            std::size_t count = std::min(regions.length() - copied, max);
+            sz count = std::min(regions.length() - copied, max);
 
-            for (std::size_t j = 0; j < count; ++j)
+            for (sz j = 0; j < count; ++j)
             {
                 copies[j] = {
                     .srcOffset = regions[copied + j].srcOffset,
@@ -2149,29 +2149,29 @@ namespace ryujin
                 };
             }
 
-            _funcs->cmdCopyBuffer(_buffer, src.buffer, dst.buffer, as<std::uint32_t>(count), copies + copied);
+            _funcs->cmdCopyBuffer(_buffer, src.buffer, dst.buffer, as<u32>(count), copies + copied);
             copied += count;
         }
     }
 
     void transfer_command_list::copy(const buffer& src, const image& dst, const image_layout layout, const span<buffer_image_copy_regions>& regions)
     {
-        static constexpr std::size_t max = 16;
+        static constexpr sz max = 16;
         VkBufferImageCopy copies[max] = {};
 
-        std::size_t copied = 0;
+        sz copied = 0;
 
-        for (std::size_t i = 0; i < regions.length(); i += max)
+        for (sz i = 0; i < regions.length(); i += max)
         {
-            std::size_t count = std::min(regions.length() - copied, max);
+            sz count = std::min(regions.length() - copied, max);
 
-            for (std::size_t j = 0; j < count; ++j)
+            for (sz j = 0; j < count; ++j)
             {
                 auto& region = regions[copied + j];
                 copies[j] = {
                     .bufferOffset = region.bufferOffset,
-                    .bufferRowLength = as<std::uint32_t>(region.rowLength),
-                    .bufferImageHeight = as<std::uint32_t>(region.imageHeight),
+                    .bufferRowLength = as<u32>(region.rowLength),
+                    .bufferImageHeight = as<u32>(region.imageHeight),
                     .imageSubresource = {
                         .aspectMask = to_vulkan(region.subresource.aspect),
                         .mipLevel = region.subresource.mipLevel,
@@ -2191,12 +2191,12 @@ namespace ryujin
                 };
             }
 
-            _funcs->cmdCopyBufferToImage(_buffer, src.buffer, dst.image, to_vulkan(layout), as<std::uint32_t>(count), copies + copied);
+            _funcs->cmdCopyBufferToImage(_buffer, src.buffer, dst.image, to_vulkan(layout), as<u32>(count), copies + copied);
             copied += count;
         }
     }
 
-    transfer_command_list::transfer_command_list(VkCommandBuffer cmdBuffer, vkb::DispatchTable& fns, VkQueue target, std::uint32_t queueIndex)
+    transfer_command_list::transfer_command_list(VkCommandBuffer cmdBuffer, vkb::DispatchTable& fns, VkQueue target, u32 queueIndex)
         : command_list(cmdBuffer, fns, target, queueIndex)
     {
     }
@@ -2215,21 +2215,21 @@ namespace ryujin
         deletors.clear();
     }
 
-    std::size_t descriptor_layout_cache::descriptor_layout_binding_hasher::operator()(const descriptor_set_layout_binding& key) const noexcept
+    sz descriptor_layout_cache::descriptor_layout_binding_hasher::operator()(const descriptor_set_layout_binding& key) const noexcept
     {
-        std::size_t hash = 7;
+        sz hash = 7;
 
-        hash = 31 * hash + std::hash<std::uint32_t>()(key.binding);
-        hash = 31 * hash + std::hash<std::uint32_t>()(key.count);
-        hash = 31 * hash + std::hash<std::uint32_t>()(as<std::uint32_t>(key.stages));
-        hash = 31 * hash + std::hash<std::uint32_t>()(as<std::uint32_t>(key.type));
+        hash = 31 * hash + std::hash<u32>()(key.binding);
+        hash = 31 * hash + std::hash<u32>()(key.count);
+        hash = 31 * hash + std::hash<u32>()(as<u32>(key.stages));
+        hash = 31 * hash + std::hash<u32>()(as<u32>(key.type));
 
         return hash;
     }
 
-    std::size_t descriptor_layout_cache::descriptor_layout_cache_hasher::operator()(const descriptor_layout_cache_entry& key) const noexcept
+    sz descriptor_layout_cache::descriptor_layout_cache_hasher::operator()(const descriptor_layout_cache_entry& key) const noexcept
     {
-        std::size_t result = 7;
+        sz result = 7;
         result = 31 * std::hash<size_t>()(key.count);
         for (auto i = 0u; i < key.count; ++i)
         {
@@ -2248,7 +2248,7 @@ namespace ryujin
         descriptor_set_layout res = {};
 
         descriptor_layout_cache_entry key = {};
-        key.count = as<std::uint32_t>(info.bindings.length());
+        key.count = as<u32>(info.bindings.length());
 
 #ifdef _RYUJIN_WINDOWS
         memcpy_s(key.bindings.data(), key.bindings.size() * sizeof(descriptor_set_layout_binding), info.bindings.data(), info.bindings.length() * sizeof(descriptor_set_layout_binding));
@@ -2366,26 +2366,26 @@ namespace ryujin
         }
     }
 
-    descriptor_pool descriptor_allocator::create_pool(const std::size_t count)
+    descriptor_pool descriptor_allocator::create_pool(const sz count)
     {
         descriptor_pool pool = {};
 
         const descriptor_pool_size sizes[] = {
-            { descriptor_type::SAMPLER, as<std::uint32_t>(count * 0.5f) },
-            { descriptor_type::COMBINED_IMAGE_SAMPLER, as<std::uint32_t>(count * 4.0f) },
-            { descriptor_type::SAMPLED_IMAGE, as<std::uint32_t>(count * 4.0f) },
-            { descriptor_type::STORAGE_IMAGE, as<std::uint32_t>(count * 1.0f) },
-            { descriptor_type::UNIFORM_TEXEL_BUFFER, as<std::uint32_t>(count * 1.0f) },
-            { descriptor_type::STORAGE_TEXEL_BUFFER, as<std::uint32_t>(count * 1.0f) },
-            { descriptor_type::UNIFORM_BUFFER, as<std::uint32_t>(count * 2.0f) },
-            { descriptor_type::STORAGE_BUFFER, as<std::uint32_t>(count * 2.0f) },
-            { descriptor_type::DYNAMIC_UNIFORM_BUFFER, as<std::uint32_t>(count * 1.0f) },
-            { descriptor_type::DYNAMIC_STORAGE_BUFFER, as<std::uint32_t>(count * 1.0f) },
-            { descriptor_type::INPUT_ATTACHMENT, as<std::uint32_t>(count * 0.5f) }
+            { descriptor_type::SAMPLER, as<u32>(count * 0.5f) },
+            { descriptor_type::COMBINED_IMAGE_SAMPLER, as<u32>(count * 4.0f) },
+            { descriptor_type::SAMPLED_IMAGE, as<u32>(count * 4.0f) },
+            { descriptor_type::STORAGE_IMAGE, as<u32>(count * 1.0f) },
+            { descriptor_type::UNIFORM_TEXEL_BUFFER, as<u32>(count * 1.0f) },
+            { descriptor_type::STORAGE_TEXEL_BUFFER, as<u32>(count * 1.0f) },
+            { descriptor_type::UNIFORM_BUFFER, as<u32>(count * 2.0f) },
+            { descriptor_type::STORAGE_BUFFER, as<u32>(count * 2.0f) },
+            { descriptor_type::DYNAMIC_UNIFORM_BUFFER, as<u32>(count * 1.0f) },
+            { descriptor_type::DYNAMIC_STORAGE_BUFFER, as<u32>(count * 1.0f) },
+            { descriptor_type::INPUT_ATTACHMENT, as<u32>(count * 0.5f) }
         };
 
         const descriptor_pool_create_info info = {
-            .maxSetCount = as<const std::uint32_t>(count),
+            .maxSetCount = as<const u32>(count),
             .sizes = span(sizes)
         };
         const auto res = _manager->create(info);
@@ -2436,7 +2436,7 @@ namespace ryujin
         return *this;
     }
 
-    descriptor_writer& descriptor_writer::write_buffer(const descriptor_set set, const std::uint32_t binding, const descriptor_type type, const std::uint32_t element, const span<descriptor_buffer_info>& buffers)
+    descriptor_writer& descriptor_writer::write_buffer(const descriptor_set set, const u32 binding, const descriptor_type type, const u32 element, const span<descriptor_buffer_info>& buffers)
     {
         descriptor_write_info info = {
             .set = set,
@@ -2451,7 +2451,7 @@ namespace ryujin
         return *this;
     }
 
-    descriptor_writer& descriptor_writer::write_image(const descriptor_set set, const std::uint32_t binding, const descriptor_type type, const std::uint32_t element, const span<descriptor_image_info>& images)
+    descriptor_writer& descriptor_writer::write_image(const descriptor_set set, const u32 binding, const descriptor_type type, const u32 element, const span<descriptor_image_info>& images)
     {
         descriptor_write_info info = {
             .set = set,

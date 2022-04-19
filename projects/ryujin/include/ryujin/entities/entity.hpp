@@ -1,8 +1,7 @@
 #ifndef entity_hpp__
 #define entity_hpp__
 
-#include <cstddef>
-#include <cstdint>
+#include "../core/primitives.hpp"
 
 namespace ryujin
 {
@@ -12,21 +11,21 @@ namespace ryujin
     };
 
     template <>
-    struct entity<std::uint32_t>
+    struct entity<u32>
     {
-        using type = std::uint32_t;
+        using type = u32;
 
-        std::uint32_t identifier : 22;
-        std::uint16_t version : 10;
+        u32 identifier : 22;
+        u16 version : 10;
     };
 
     template <>
-    struct entity<std::uint64_t>
+    struct entity<u64>
     {
-        using type = std::uint64_t;
+        using type = u64;
 
-        std::uint32_t identifier;
-        std::uint32_t version;
+        u32 identifier;
+        u32 version;
     };
 
     template <typename T>
@@ -47,15 +46,15 @@ namespace ryujin
     };
     
     template <>
-    struct entity_traits<std::uint32_t>
+    struct entity_traits<u32>
     {
-        using type = std::uint32_t;
-        using version_type = std::uint16_t;
-        using identifier_type = std::uint32_t;
+        using type = u32;
+        using version_type = u16;
+        using identifier_type = u32;
 
-        static constexpr std::uint32_t identifier_mask = 0xFFFFF8;
-        static constexpr std::uint32_t version_mask = 0xFF8;
-        static constexpr std::uint32_t version_shift = 22;
+        static constexpr u32 identifier_mask = 0xFFFFF8;
+        static constexpr u32 version_mask = 0xFF8;
+        static constexpr u32 version_shift = 22;
 
         static constexpr type to_type(const entity<type> entity)
         {
@@ -75,15 +74,15 @@ namespace ryujin
     };
 
     template <>
-    struct entity_traits<std::uint64_t>
+    struct entity_traits<u64>
     {
-        using type = std::uint64_t;
-        using version_type = std::uint32_t;
-        using identifier_type = std::uint32_t;
+        using type = u64;
+        using version_type = u32;
+        using identifier_type = u32;
 
-        static constexpr std::uint32_t identifier_mask = 0xFFFFFFFF;
-        static constexpr std::uint32_t version_mask = 0xFFFFFFFF;
-        static constexpr std::uint32_t version_shift = 32;
+        static constexpr u32 identifier_mask = 0xFFFFFFFF;
+        static constexpr u32 version_mask = 0xFFFFFFFF;
+        static constexpr u32 version_shift = 32;
 
         static constexpr type to_type(const entity<type> entity)
         {

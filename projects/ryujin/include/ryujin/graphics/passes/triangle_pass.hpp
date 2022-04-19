@@ -3,6 +3,8 @@
 
 #include "../types.hpp"
 
+#include "../../core/primitives.hpp"
+
 namespace ryujin
 {
     class render_manager;
@@ -19,7 +21,7 @@ namespace ryujin
         void build_pipeline_layout();
         void build_pipeline(const render_pass& pass);
 
-        std::uint32_t _targetWidth = 0, _targetHeight = 0;
+        u32 _targetWidth = 0, _targetHeight = 0;
         frame_buffer _target = {};
 
         render_manager& _manager;

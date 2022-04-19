@@ -1,6 +1,7 @@
 #ifndef window_hpp__
 #define window_hpp__
 
+#include "../core/primitives.hpp"
 #include "../core/result.hpp"
 #include "../core/vector.hpp"
 
@@ -15,11 +16,11 @@ namespace ryujin
 {
     namespace detail
     {
-        void focusCallback(GLFWwindow*, int);
+        void focusCallback(GLFWwindow*, i32);
         void closeCallback(GLFWwindow*);
-        void resizeCallback(GLFWwindow*, int, int);
-        void iconifyCallback(GLFWwindow*, int);
-        void maximizeCallback(GLFWwindow*, int);
+        void resizeCallback(GLFWwindow*, i32, i32);
+        void iconifyCallback(GLFWwindow*, i32);
+        void maximizeCallback(GLFWwindow*, i32);
     } // namespace detail
 
     class render_manager;
@@ -38,16 +39,16 @@ namespace ryujin
         struct create_info
         {
             std::string name;
-            std::uint32_t width;
-            std::uint32_t height;
+            u32 width;
+            u32 height;
         };
 
         static result<std::unique_ptr<window>, error_code> create(const create_info& info) noexcept;
 
         ~window();
 
-        result<std::tuple<std::uint32_t, std::uint32_t>, error_code> size() const noexcept;
-        void size(const std::uint32_t width, const std::uint32_t height) noexcept;
+        result<std::tuple<u32, u32>, error_code> size() const noexcept;
+        void size(const u32 width, const u32 height) noexcept;
         bool focused() const noexcept;
         void focus() noexcept;
         bool should_close() const noexcept;
@@ -56,7 +57,7 @@ namespace ryujin
 
         void on_focus(const std::function<void(bool)>& fn);
         void on_close(const std::function<void()>& fn);
-        void on_resize(const std::function<void(std::uint32_t, std::uint32_t)>& fn);
+        void on_resize(const std::function<void(u32, u32)>& fn);
         void on_iconify(const std::function<void()>& fn);
         void on_restore(const std::function<void()>& fn);
         void on_maximize(const std::function<void()>& fn);
@@ -72,7 +73,7 @@ namespace ryujin
         vector<std::function<void()>> _userCloseCallbacks;
 
         GLFWwindowsizefun _resizeCb;
-        vector<std::function<void(std::uint32_t, std::uint32_t)>> _userResizeCallbacks;
+        vector<std::function<void(u32, u32)>> _userResizeCallbacks;
 
         GLFWwindowiconifyfun _iconifyCb;
         GLFWwindowmaximizefun _maximizeCb;

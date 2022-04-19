@@ -3,6 +3,8 @@
 
 #include "../types.hpp"
 
+#include "../../core/primitives.hpp"
+
 namespace ryujin
 {
     class render_manager;
@@ -11,11 +13,11 @@ namespace ryujin
     class opaque_pbr_pass
     {
     public:
-        opaque_pbr_pass(render_manager& manager, pipeline_layout layout, render_pass pass, std::uint32_t width, std::uint32_t height);
+        opaque_pbr_pass(render_manager& manager, pipeline_layout layout, render_pass pass, u32 width, u32 height);
 
-        void render(graphics_command_list& cmd, buffer& indirect, buffer& count, std::size_t indirectOffset, std::size_t countOffset, std::size_t numBufferGroups);
+        void render(graphics_command_list& cmd, buffer& indirect, buffer& count, sz indirectOffset, sz countOffset, sz numBufferGroups);
     private:
-        void init_graphics_pipeline(std::uint32_t width, std::uint32_t height, render_pass pass);
+        void init_graphics_pipeline(u32 width, u32 height, render_pass pass);
 
         render_manager& _manager;
         pipeline_layout _layout = {};

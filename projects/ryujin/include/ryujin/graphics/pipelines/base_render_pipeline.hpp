@@ -2,9 +2,9 @@
 #define base_render_pipeline_hpp__
 
 #include "../types.hpp"
+#include "../../core/primitives.hpp"
 #include "../../core/slot_map.hpp"
 
-#include <cstdint>
 #include <unordered_map>
 #include <string>
 
@@ -18,8 +18,8 @@ namespace ryujin
     public:
         struct render_target_info
         {
-            std::uint32_t width;
-            std::uint32_t height;
+            u32 width;
+            u32 height;
             std::string name;
         };
 
@@ -41,7 +41,7 @@ namespace ryujin
             return target ? target->fbo : frame_buffer{};
         }
 
-        inline void get_render_target_dimensions(const slot_map_key& k, std::uint32_t& width, std::uint32_t& height)
+        inline void get_render_target_dimensions(const slot_map_key& k, u32& width, u32& height)
         {
             auto target = _targets.try_get(k);
             if (target)
@@ -80,8 +80,8 @@ namespace ryujin
             render_texture depth;
             slot_map_key colorTex;
             slot_map_key depthTex;
-            std::uint32_t width;
-            std::uint32_t height;
+            u32 width;
+            u32 height;
         };
 
         virtual render_target build_render_target(const std::string& name, const render_target_info& info) = 0;

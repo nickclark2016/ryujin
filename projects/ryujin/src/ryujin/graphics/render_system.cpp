@@ -1,6 +1,7 @@
 #include <ryujin/graphics/render_system.hpp>
 
 #include <ryujin/core/engine.hpp>
+#include <ryujin/core/primitives.hpp>
 
 #undef APIENTRY
 #include <spdlog/spdlog.h>
@@ -230,12 +231,12 @@ namespace ryujin
 		}
 	}
 
-	std::unique_ptr<render_manager>& render_system::get_render_manager(std::size_t idx) noexcept
+	std::unique_ptr<render_manager>& render_system::get_render_manager(sz idx) noexcept
 	{
 		return _managers[idx];
 	}
 	
-	std::size_t render_system::render_manager_count() const noexcept
+	sz render_system::render_manager_count() const noexcept
 	{
 		return _managers.size();
 	}

@@ -2,6 +2,7 @@
 #define types_hpp__
 
 #include "../core/as.hpp"
+#include "../core/primitives.hpp"
 #include "../core/span.hpp"
 
 #include <VkBootstrap.h>
@@ -14,7 +15,7 @@
 
 namespace ryujin
 {
-    enum class access_type : std::uint32_t
+    enum class access_type : u32
     {
         NONE = 0,
         INDIRECT_COMMAND_READ = 0x00001,
@@ -36,7 +37,7 @@ namespace ryujin
         MEMORY_WRITE = 0x10000,
     };
 
-    enum class address_mode : std::uint32_t
+    enum class address_mode : u32
     {
         REPEAT = 0,
         MIRRORED_REPEAT = 1,
@@ -45,14 +46,14 @@ namespace ryujin
         MIRROR_CLAMP_TO_EDGE = 4
     };
 
-    enum class attachment_load_op : std::uint32_t
+    enum class attachment_load_op : u32
     {
         LOAD = 0,
         CLEAR = 1,
         DONT_CARE = 2
     };
 
-    enum class attachment_store_op : std::uint32_t
+    enum class attachment_store_op : u32
     {
         STORE = 0,
         DONT_CARE = 1
@@ -86,7 +87,7 @@ namespace ryujin
         MAX = 4
     };
 
-    enum class buffer_usage : std::uint32_t
+    enum class buffer_usage : u32
     {
         TRANSFER_SRC = 0x001,
         TRANSFER_DST = 0x002,
@@ -99,7 +100,7 @@ namespace ryujin
         INDIRECT = 0x100,
     };
 
-    enum class compare_op : std::uint32_t
+    enum class compare_op : u32
     {
         NEVER = 0,
         LESS = 1,
@@ -111,14 +112,14 @@ namespace ryujin
         ALWAYS = 7
     };
 
-    enum class cull_mode : std::uint32_t
+    enum class cull_mode : u32
     {
         NONE = 0x00,
         FRONT = 0x01,
         BACK = 0x02
     };
 
-    enum class data_format : std::uint32_t
+    enum class data_format : u32
     {
         UNDEFINED = 0,
         R4G4_UNORM_PACK8 = 1,
@@ -307,7 +308,7 @@ namespace ryujin
         ASTC_12x12_SRGB_BLOCK = 184,
     };
 
-    enum class descriptor_type : std::uint32_t
+    enum class descriptor_type : u32
     {
         SAMPLER = 0,
         COMBINED_IMAGE_SAMPLER = 1,
@@ -322,19 +323,19 @@ namespace ryujin
         INPUT_ATTACHMENT = 10
     };
 
-    enum class dynamic_pipeline_state : std::uint32_t
+    enum class dynamic_pipeline_state : u32
     {
         VIEWPORT = 0,
         SCISSOR = 1
     };
 
-    enum class filter : std::uint32_t
+    enum class filter : u32
     {
         NEAREST = 0,
         LINEAR = 1
     };
 
-    enum class logic_op : std::uint32_t
+    enum class logic_op : u32
     {
         CLEAR = 0,
         AND = 1,
@@ -354,14 +355,14 @@ namespace ryujin
         SET = 15
     };
 
-    enum class image_aspect : std::uint32_t
+    enum class image_aspect : u32
     {
         COLOR = 0x01,
         DEPTH = 0x02,
         STENCIL = 0x04
     };
 
-    enum class image_layout : std::uint32_t
+    enum class image_layout : u32
     {
         UNDEFINED = 0,
         GENERAL = 1,
@@ -383,7 +384,7 @@ namespace ryujin
         PRESENT_SRC_KHR = 1000001002,
     };
 
-    enum class image_usage : std::uint32_t
+    enum class image_usage : u32
     {
         TRANSFER_SRC = 0x001,
         TRANSFER_DST = 0x002,
@@ -395,14 +396,14 @@ namespace ryujin
         INPUT_ATTACHMENT = 0x080
     };
 
-    enum class image_type : std::uint32_t
+    enum class image_type : u32
     {
         TYPE_1D = 0,
         TYPE_2D = 1,
         TYPE_3D = 2
     };
 
-    enum class image_view_type : std::uint32_t
+    enum class image_view_type : u32
     {
         TYPE_1D,
         TYPE_2D,
@@ -413,19 +414,19 @@ namespace ryujin
         TYPE_CUBE_ARRAY
     };
 
-    enum class input_binding_rate : std::uint32_t
+    enum class input_binding_rate : u32
     {
         PER_VERTEX = 0,
         PER_INSTANCE = 1
     };
 
-    enum class mipmap_mode : std::uint32_t
+    enum class mipmap_mode : u32
     {
         NEAREST = 0,
         LINEAR = 1
     };
 
-    enum class memory_property : std::uint32_t
+    enum class memory_property : u32
     {
         NONE = 0x0,
         DEVICE_LOCAL = 0x01,
@@ -434,14 +435,14 @@ namespace ryujin
         HOST_CACHED = 0x04
     };
 
-    enum class memory_usage : std::uint32_t
+    enum class memory_usage : u32
     {
         PREFER_AUTO_SELECT = 7,
         PREFER_DEVICE = 8,
         PREFER_HOST = 9,
     };
 
-    enum class pipeline_stage : std::uint32_t
+    enum class pipeline_stage : u32
     {
         TOP_OF_PIPE = 0x00001,
         DRAW_INDIRECT = 0x00002,
@@ -462,14 +463,14 @@ namespace ryujin
         ALL_COMMANDS = 0x10000,
     };
 
-    enum class polygon_rasterization_mode : std::uint32_t
+    enum class polygon_rasterization_mode : u32
     {
         FILL = 0,
         LINE = 1,
         POINT = 2
     };
 
-    enum class primitive_topology : std::uint32_t
+    enum class primitive_topology : u32
     {
         POINT_LIST = 0,
         LINE_LIST = 1,
@@ -484,7 +485,7 @@ namespace ryujin
         PATCH_LIST = 10
     };
 
-    enum class sample_count : std::uint32_t
+    enum class sample_count : u32
     {
         COUNT_1 = 0x01,
         COUNT_2 = 0x02,
@@ -493,7 +494,7 @@ namespace ryujin
         COUNT_16 = 0x10
     };
 
-    enum class shader_stage : std::uint32_t
+    enum class shader_stage : u32
     {
         VERTEX = 0x001,
         TESSELLATION_CONTROL = 0x002,
@@ -503,7 +504,7 @@ namespace ryujin
         COMPUTE = 0x020,
     };
 
-    enum class stencil_op : std::uint32_t
+    enum class stencil_op : u32
     {
         KEEP = 0,
         ZERO = 1,
@@ -515,7 +516,7 @@ namespace ryujin
         DECREMENT_AND_WRAP = 7
     };
 
-    enum class vertex_winding_order : std::uint32_t
+    enum class vertex_winding_order : u32
     {
         COUNTER_CLOCKWISE = 0,
         CLOCKWISE = 1
@@ -563,7 +564,7 @@ namespace ryujin
 
     struct attachment_reference
     {
-        std::uint32_t attachment;
+        u32 attachment;
         image_layout layout;
         image_aspect aspect;
     };
@@ -574,13 +575,13 @@ namespace ryujin
         span<attachment_reference> colors;
         span<attachment_reference> resolves;
         std::optional<attachment_reference> depthStencil;
-        span<std::uint32_t> preserveIndices;
+        span<u32> preserveIndices;
     };
 
     struct subpass_dependency
     {
-        std::uint32_t srcSubpassIndex;
-        std::uint32_t dstSubpassIndex;
+        u32 srcSubpassIndex;
+        u32 dstSubpassIndex;
         pipeline_stage srcStagesMask;
         pipeline_stage dstStagesMask;
         access_type srcAccessMask;
@@ -610,9 +611,9 @@ namespace ryujin
     {
         std::variant<frame_buffer_attachment_create_info, span<image_view>> attachments;
         render_pass pass;
-        std::uint32_t width;
-        std::uint32_t height;
-        std::uint32_t layers;
+        u32 width;
+        u32 height;
+        u32 layers;
         std::string name;
     };
 
@@ -629,16 +630,16 @@ namespace ryujin
 
     struct vertex_input_binding
     {
-        std::uint32_t binding;
-        std::uint32_t stride;
+        u32 binding;
+        u32 stride;
         input_binding_rate rate;
     };
 
     struct vertex_input_attribute
     {
-        std::uint32_t location;
-        std::uint32_t binding;
-        std::uint32_t offset;
+        u32 location;
+        u32 binding;
+        u32 offset;
         data_format format;
     };
 
@@ -666,10 +667,10 @@ namespace ryujin
 
     struct scissor_region
     {
-        std::int32_t x;
-        std::int32_t y;
-        std::uint32_t width;
-        std::uint32_t height;
+        i32 x;
+        i32 y;
+        u32 width;
+        u32 height;
     };
 
     struct viewport_state_info
@@ -701,7 +702,7 @@ namespace ryujin
         sample_count samples;
         bool enableSampleShading;
         float minSampleShading;
-        span<std::uint32_t> sampleMask;
+        span<u32> sampleMask;
         bool alphaToCoverageEnabled;
         bool alphaToOneEnabled;
     };
@@ -724,9 +725,9 @@ namespace ryujin
         stencil_op pass;
         stencil_op depthFail;
         compare_op compare;
-        std::uint32_t compareMask;
-        std::uint32_t writeMask;
-        std::uint32_t reference;
+        u32 compareMask;
+        u32 writeMask;
+        u32 reference;
     };
 
     struct depth_stencil_state_info
@@ -770,18 +771,18 @@ namespace ryujin
         span<dynamic_pipeline_state> dynamicStates;
         pipeline_layout layout;
         render_pass pass;
-        std::uint32_t subpass;
+        u32 subpass;
     };
 
     struct image_create_info
     {
         image_type type;
         data_format format;
-        std::uint32_t width;
-        std::uint32_t height;
-        std::uint32_t depth;
-        std::uint32_t mipLevels;
-        std::uint32_t arrayLayers;
+        u32 width;
+        u32 height;
+        u32 depth;
+        u32 mipLevels;
+        u32 arrayLayers;
         sample_count samples;
         image_usage usage;
     };
@@ -794,10 +795,10 @@ namespace ryujin
     struct image_subresource_range
     {
         image_aspect aspect;
-        std::uint32_t baseMipLevel;
-        std::uint32_t mipLevelCount;
-        std::uint32_t baseLayer;
-        std::uint32_t layerCount;
+        u32 baseMipLevel;
+        u32 mipLevelCount;
+        u32 baseLayer;
+        u32 layerCount;
     };
 
     struct image_view_create_info
@@ -812,9 +813,9 @@ namespace ryujin
 
     struct descriptor_set_layout_binding
     {
-        std::uint32_t binding;
+        u32 binding;
         descriptor_type type;
-        std::uint32_t count;
+        u32 count;
         shader_stage stages;
     };
 
@@ -826,8 +827,8 @@ namespace ryujin
     struct push_constant_range
     {
         shader_stage stages;
-        std::uint32_t offset;
-        std::uint32_t size;
+        u32 offset;
+        u32 size;
     };
 
     struct pipeline_layout_create_info
@@ -839,7 +840,7 @@ namespace ryujin
 
     struct buffer_create_info
     {
-        std::size_t size;
+        sz size;
         buffer_usage usage;
     };
 
@@ -874,12 +875,12 @@ namespace ryujin
     struct descriptor_pool_size
     {
         descriptor_type type;
-        std::uint32_t count;
+        u32 count;
     };
 
     struct descriptor_pool_create_info
     {
-        std::uint32_t maxSetCount;
+        u32 maxSetCount;
         span<descriptor_pool_size> sizes;
     };
 
@@ -897,8 +898,8 @@ namespace ryujin
     struct descriptor_buffer_info
     {
         buffer buf;
-        std::size_t offset;
-        std::size_t length;
+        sz offset;
+        sz length;
     };
 
     struct descriptor_image_info
@@ -912,8 +913,8 @@ namespace ryujin
     {
         descriptor_set set;
         descriptor_type type;
-        std::uint32_t binding;
-        std::uint32_t element;
+        u32 binding;
+        u32 element;
         std::variant<span<descriptor_buffer_info>, span<descriptor_image_info>> info;
     };
 
@@ -936,31 +937,31 @@ namespace ryujin
 
     struct buffer_copy_regions
     {
-        std::size_t srcOffset;
-        std::size_t dstOffset;
-        std::size_t size;
+        sz srcOffset;
+        sz dstOffset;
+        sz size;
     };
 
     struct image_subresource_layers
     {
         image_aspect aspect;
-        std::uint32_t mipLevel;
-        std::uint32_t baseArrayLayer;
-        std::uint32_t layerCount;
+        u32 mipLevel;
+        u32 baseArrayLayer;
+        u32 layerCount;
     };
 
     struct buffer_image_copy_regions
     {
-        std::size_t bufferOffset;
-        std::size_t rowLength;
-        std::size_t imageHeight;
+        sz bufferOffset;
+        sz rowLength;
+        sz imageHeight;
         image_subresource_layers subresource;
-        std::int32_t x;
-        std::int32_t y;
-        std::int32_t z;
-        std::uint32_t width;
-        std::uint32_t height;
-        std::uint32_t depth;
+        i32 x;
+        i32 y;
+        i32 z;
+        u32 width;
+        u32 height;
+        u32 depth;
     };
 
     struct wait_info
@@ -990,8 +991,8 @@ namespace ryujin
         uint32_t dstQueue;
 
         buffer buf;
-        std::size_t offset;
-        std::size_t size;
+        sz offset;
+        sz size;
     };
 
     struct image_memory_barrier
@@ -1037,42 +1038,42 @@ namespace ryujin
 
     constexpr access_type operator|(const access_type lhs, const access_type rhs)
     {
-        return as<access_type>(as<std::uint32_t>(lhs) | as<std::uint32_t>(rhs));
+        return as<access_type>(as<u32>(lhs) | as<u32>(rhs));
     }
 
     constexpr buffer_usage operator|(const buffer_usage lhs, const buffer_usage rhs)
     {
-        return as<buffer_usage>(as<std::uint32_t>(lhs) | as<std::uint32_t>(rhs));
+        return as<buffer_usage>(as<u32>(lhs) | as<u32>(rhs));
     }
 
     constexpr image_aspect operator|(const image_aspect lhs, const image_aspect rhs)
     {
-        return as<image_aspect>(as<std::uint32_t>(lhs) | as<std::uint32_t>(rhs));
+        return as<image_aspect>(as<u32>(lhs) | as<u32>(rhs));
     }
 
     constexpr image_usage operator|(const image_usage lhs, const image_usage rhs)
     {
-        return as<image_usage>(as<std::uint32_t>(lhs) | as<std::uint32_t>(rhs));
+        return as<image_usage>(as<u32>(lhs) | as<u32>(rhs));
     }
 
     constexpr pipeline_stage operator|(const pipeline_stage lhs, const pipeline_stage rhs)
     {
-        return as<pipeline_stage>(as<std::uint32_t>(lhs) | as<std::uint32_t>(rhs));
+        return as<pipeline_stage>(as<u32>(lhs) | as<u32>(rhs));
     }
 
     constexpr shader_stage operator|(const shader_stage lhs, const shader_stage rhs)
     {
-        return as<shader_stage>(as<std::uint32_t>(lhs) | as<std::uint32_t>(rhs));
+        return as<shader_stage>(as<u32>(lhs) | as<u32>(rhs));
     }
 
     constexpr cull_mode operator|(const cull_mode lhs, const cull_mode rhs)
     {
-        return as<cull_mode>(as<std::uint32_t>(lhs) | as<std::uint32_t>(rhs));
+        return as<cull_mode>(as<u32>(lhs) | as<u32>(rhs));
     }
 
     constexpr memory_property operator|(const memory_property lhs, const memory_property rhs)
     {
-        return as<memory_property>(as<std::uint32_t>(lhs) | as<std::uint32_t>(rhs));
+        return as<memory_property>(as<u32>(lhs) | as<u32>(rhs));
     }
 }
 

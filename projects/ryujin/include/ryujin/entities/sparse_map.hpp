@@ -3,6 +3,8 @@
 
 #include "entity.hpp"
 
+#include "../core/primitives.hpp"
+
 #include <cstddef>
 #include <memory>
 #include <utility>
@@ -10,7 +12,7 @@
 
 namespace ryujin
 {
-    template <typename EntityType, typename ValueType, std::size_t PageSize>
+    template <typename EntityType, typename ValueType, sz PageSize>
     class sparse_map
     {
     public:
@@ -18,8 +20,8 @@ namespace ryujin
         using value_type = ValueType;
 
         bool empty() const noexcept;
-        std::size_t size() const noexcept;
-        std::size_t capacity() const noexcept;
+        sz size() const noexcept;
+        sz capacity() const noexcept;
         bool contains(const key_type& key) const noexcept;
         bool contains(const key_type& key, const value_type& value);
 
@@ -27,7 +29,7 @@ namespace ryujin
         const value_type& get(const key_type& key) const;
 
         void shrink_to_fit();
-        void reserve(const std::size_t count);
+        void reserve(const sz count);
         
         void clear();
         bool insert(const key_type& key, const value_type& value);
@@ -47,8 +49,8 @@ namespace ryujin
     private:
         using sparse_page_type = EntityType[];
 
-        std::size_t _page(const key_type& tp) const noexcept;
-        std::size_t _offset(const key_type& tp) const noexcept;
+        sz _page(const key_type& tp) const noexcept;
+        sz _offset(const key_type& tp) const noexcept;
 
         std::vector<std::unique_ptr<sparse_page_type>> _sparse;
         std::vector<EntityType> _packed;
@@ -57,25 +59,25 @@ namespace ryujin
         static constexpr EntityType _tombstone = entity_traits<typename EntityType::type>::from_type(~(typename EntityType::type)(0));
     };
     
-    template<typename EntityType, typename ValueType, std::size_t PageSize>
+    template<typename EntityType, typename ValueType, sz PageSize>
     inline bool sparse_map<EntityType, ValueType, PageSize>::empty() const noexcept
     {
         return _packed.empty();
     }
     
-    template<typename EntityType, typename ValueType, std::size_t PageSize>
-    inline std::size_t sparse_map<EntityType, ValueType, PageSize>::size() const noexcept
+    template<typename EntityType, typename ValueType, sz PageSize>
+    inline sz sparse_map<EntityType, ValueType, PageSize>::size() const noexcept
     {
         return _packed.size();
     }
     
-    template<typename EntityType, typename ValueType, std::size_t PageSize>
-    inline std::size_t sparse_map<EntityType, ValueType, PageSize>::capacity() const noexcept
+    template<typename EntityType, typename ValueType, sz PageSize>
+    inline sz sparse_map<EntityType, ValueType, PageSize>::capacity() const noexcept
     {
         return _packed.capacity();
     }
     
-    template<typename EntityType, typename ValueType, std::size_t PageSize>
+    template<typename EntityType, typename ValueType, sz PageSize>
     inline bool sparse_map<EntityType, ValueType, PageSize>::contains(const key_type& key) const noexcept
     {
         const auto page = _page(key);
@@ -89,7 +91,7 @@ namespace ryujin
         return false;
     }
     
-    template<typename EntityType, typename ValueType, std::size_t PageSize>
+    template<typename EntityType, typename ValueType, sz PageSize>
     inline bool sparse_map<EntityType, ValueType, PageSize>::contains(const key_type& key, const value_type& value)
     {
         const auto page = _page(key);
@@ -103,7 +105,7 @@ namespace ryujin
         return false;
     }
 
-    template<typename EntityType, typename ValueType, std::size_t PageSize>
+    template<typename EntityType, typename ValueType, sz PageSize>
     inline typename sparse_map<EntityType, ValueType, PageSize>::value_type& sparse_map<EntityType, ValueType, PageSize>::get(const key_type& key)
     {
         const auto page = _page(key);
@@ -113,7 +115,7 @@ namespace ryujin
         return _values[trampoline.identifier];
     }
 
-    template<typename EntityType, typename ValueType, std::size_t PageSize>
+    template<typename EntityType, typename ValueType, sz PageSize>
     inline const typename sparse_map<EntityType, ValueType, PageSize>::value_type& sparse_map<EntityType, ValueType, PageSize>::get(const key_type& key) const
     {
         const auto page = _page(key);
@@ -123,7 +125,7 @@ namespace ryujin
         return _values[trampoline.identifier];
     }
     
-    template<typename EntityType, typename ValueType, std::size_t PageSize>
+    template<typename EntityType, typename ValueType, sz PageSize>
     inline void sparse_map<EntityType, ValueType, PageSize>::shrink_to_fit()
     {
         _packed.shrink_to_fit();
@@ -131,8 +133,8 @@ namespace ryujin
         _values.shrink_to_fit();
     }
     
-    template<typename EntityType, typename ValueType, std::size_t PageSize>
-    inline void sparse_map<EntityType, ValueType, PageSize>::reserve(const std::size_t count)
+    template<typename EntityType, typename ValueType, sz PageSize>
+    inline void sparse_map<EntityType, ValueType, PageSize>::reserve(const sz count)
     {
         const auto pageCount = 1 + ((count - 1) / PageSize);
         _sparse.reserve(pageCount);
@@ -149,7 +151,7 @@ namespace ryujin
         }
     }
     
-    template<typename EntityType, typename ValueType, std::size_t PageSize>
+    template<typename EntityType, typename ValueType, sz PageSize>
     inline void sparse_map<EntityType, ValueType, PageSize>::clear()
     {
         _packed.clear();
@@ -157,7 +159,7 @@ namespace ryujin
         _sparse.clear();
     }
     
-    template<typename EntityType, typename ValueType, std::size_t PageSize>
+    template<typename EntityType, typename ValueType, sz PageSize>
     inline bool sparse_map<EntityType, ValueType, PageSize>::insert(const key_type& key, const value_type& value)
     {
         const auto sparsePage = _page(key);
@@ -166,7 +168,7 @@ namespace ryujin
         for (auto pg = _sparse.size(); pg <= sparsePage; ++pg)
         {
             auto page = std::make_unique<EntityType[]>(PageSize);
-            for (std::size_t i = 0; i < PageSize; ++i)
+            for (sz i = 0; i < PageSize; ++i)
             {
                 page[i] = _tombstone;
             }
@@ -185,7 +187,7 @@ namespace ryujin
         return false;
     }
     
-    template<typename EntityType, typename ValueType, std::size_t PageSize>
+    template<typename EntityType, typename ValueType, sz PageSize>
     inline bool sparse_map<EntityType, ValueType, PageSize>::remove(const key_type& key)
     {
         const auto sparsePage = _page(key);
@@ -216,7 +218,7 @@ namespace ryujin
         return false;
     }
     
-    template<typename EntityType, typename ValueType, std::size_t PageSize>
+    template<typename EntityType, typename ValueType, sz PageSize>
     inline bool sparse_map<EntityType, ValueType, PageSize>::remove(const key_type& key, const value_type& value)
     {
         const auto sparsePage = _page(key);
@@ -253,7 +255,7 @@ namespace ryujin
         return false;
     }
 
-    template<typename EntityType, typename ValueType, std::size_t PageSize>
+    template<typename EntityType, typename ValueType, sz PageSize>
     inline bool sparse_map<EntityType, ValueType, PageSize>::replace(const key_type& key, const value_type& value)
     {
         const auto sparsePage = _page(key);
@@ -262,7 +264,7 @@ namespace ryujin
         for (auto pg = _sparse.size(); pg <= sparsePage; ++pg)
         {
             auto page = std::make_unique<EntityType[]>(PageSize);
-            for (std::size_t i = 0; i < PageSize; ++i)
+            for (sz i = 0; i < PageSize; ++i)
             {
                 page[i] = _tombstone;
             }
@@ -279,7 +281,7 @@ namespace ryujin
         return false;
     }
 
-    template<typename EntityType, typename ValueType, std::size_t PageSize>
+    template<typename EntityType, typename ValueType, sz PageSize>
     inline bool sparse_map<EntityType, ValueType, PageSize>::insert_or_replace(const key_type& key, const value_type& value)
     {
         const auto sparsePage = _page(key);
@@ -288,7 +290,7 @@ namespace ryujin
         for (auto pg = _sparse.size(); pg <= sparsePage; ++pg)
         {
             auto page = std::make_unique<EntityType[]>(PageSize);
-            for (std::size_t i = 0; i < PageSize; ++i)
+            for (sz i = 0; i < PageSize; ++i)
             {
                 page[i] = _tombstone;
             }
@@ -312,43 +314,43 @@ namespace ryujin
         }
     }
 
-    template<typename EntityType, typename ValueType, std::size_t PageSize>
+    template<typename EntityType, typename ValueType, sz PageSize>
     inline auto sparse_map<EntityType, ValueType, PageSize>::value_begin() noexcept
     {
         return _values.begin();
     }
 
-    template<typename EntityType, typename ValueType, std::size_t PageSize>
+    template<typename EntityType, typename ValueType, sz PageSize>
     inline auto sparse_map<EntityType, ValueType, PageSize>::value_begin() const noexcept
     {
         return _values.begin();
     }
 
-    template<typename EntityType, typename ValueType, std::size_t PageSize>
+    template<typename EntityType, typename ValueType, sz PageSize>
     inline const auto sparse_map<EntityType, ValueType, PageSize>::value_cbegin() const noexcept
     {
         return _values.cbegin();
     }
 
-    template<typename EntityType, typename ValueType, std::size_t PageSize>
+    template<typename EntityType, typename ValueType, sz PageSize>
     inline auto sparse_map<EntityType, ValueType, PageSize>::value_end() noexcept
     {
         return _values.end();
     }
 
-    template<typename EntityType, typename ValueType, std::size_t PageSize>
+    template<typename EntityType, typename ValueType, sz PageSize>
     inline auto sparse_map<EntityType, ValueType, PageSize>::value_end() const noexcept
     {
         return _values.end();
     }
 
-    template<typename EntityType, typename ValueType, std::size_t PageSize>
+    template<typename EntityType, typename ValueType, sz PageSize>
     inline const auto sparse_map<EntityType, ValueType, PageSize>::value_cend() const noexcept
     {
         return _values.cend();
     }
 
-    template<typename EntityType, typename ValueType, std::size_t PageSize>
+    template<typename EntityType, typename ValueType, sz PageSize>
     inline bool operator==(const sparse_map<EntityType, ValueType, PageSize>& lhs, const sparse_map<EntityType, ValueType, PageSize>& rhs) noexcept
     {
         using tp = sparse_map<EntityType, ValueType, PageSize>::key_type::type;
@@ -371,7 +373,7 @@ namespace ryujin
         return false;
     }
 
-    template<typename EntityType, typename ValueType, std::size_t PageSize>
+    template<typename EntityType, typename ValueType, sz PageSize>
     inline bool operator!=(const sparse_map<EntityType, ValueType, PageSize>& lhs, const sparse_map<EntityType, ValueType, PageSize>& rhs) noexcept
     {
         using tp = sparse_map<EntityType, ValueType, PageSize>::key_type::type;
@@ -394,15 +396,15 @@ namespace ryujin
         return true;
     }
 
-    template<typename EntityType, typename ValueType, std::size_t PageSize>
-    inline std::size_t sparse_map<EntityType, ValueType, PageSize>::_page(const key_type& tp) const noexcept
+    template<typename EntityType, typename ValueType, sz PageSize>
+    inline sz sparse_map<EntityType, ValueType, PageSize>::_page(const key_type& tp) const noexcept
     {
         const auto result = tp.identifier / PageSize;
         return result;
     }
 
-    template<typename EntityType, typename ValueType, std::size_t PageSize>
-    inline std::size_t sparse_map<EntityType, ValueType, PageSize>::_offset(const key_type& tp) const noexcept
+    template<typename EntityType, typename ValueType, sz PageSize>
+    inline sz sparse_map<EntityType, ValueType, PageSize>::_offset(const key_type& tp) const noexcept
     {
         constexpr bool isPowerOf2 = (PageSize != 0) && ((PageSize & (PageSize - 1)) != 0);
         if constexpr (isPowerOf2)

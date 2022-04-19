@@ -4,6 +4,7 @@
 #include "types.hpp"
 
 #include "../core/assets.hpp"
+#include "../core/primitives.hpp"
 #include "../core/slot_map.hpp"
 #include "../core/vector.hpp"
 #include "../entities/registry.hpp"
@@ -35,10 +36,10 @@ namespace ryujin
 
     struct renderable_mesh
     {
-        std::uint32_t bufferGroupId;
-        std::uint32_t vertexOffset;
-        std::uint32_t indexOffset;
-        std::uint32_t indexCount;
+        u32 bufferGroupId;
+        u32 vertexOffset;
+        u32 indexOffset;
+        u32 indexCount;
     };
 
     struct renderable_component
@@ -50,27 +51,27 @@ namespace ryujin
     struct gpu_instance_data
     {
         mat4<float> transform;
-        std::uint32_t material;
-        std::uint32_t parent;
-        std::uint32_t pad0, pad1;
+        u32 material;
+        u32 parent;
+        u32 pad0, pad1;
     };
 
     struct gpu_material_data
     {
-        std::uint32_t albedo;
-        std::uint32_t normal;
-        std::uint32_t metallicRoughness;
-        std::uint32_t emissive;
-        std::uint32_t ambientOcclusion;
+        u32 albedo;
+        u32 normal;
+        u32 metallicRoughness;
+        u32 emissive;
+        u32 ambientOcclusion;
     };
 
     struct gpu_indirect_call
     {
-        std::uint32_t indexCount;
-        std::uint32_t instanceCount;
-        std::uint32_t firstIndex;
-        std::int32_t vertexOffset;
-        std::uint32_t firstInstance;
+        u32 indexCount;
+        u32 instanceCount;
+        u32 firstIndex;
+        i32 vertexOffset;
+        u32 firstInstance;
     };
 
     class renderable_manager
@@ -87,14 +88,14 @@ namespace ryujin
 
         struct instance_write_info
         {
-            std::size_t opaqueCount;
-            std::size_t translucentCount;
+            sz opaqueCount;
+            sz translucentCount;
         };
 
         struct draw_call_write_info
         {
-            std::size_t meshGroupCount;
-            std::size_t drawCallCount;
+            sz meshGroupCount;
+            sz drawCallCount;
         };
 
         explicit renderable_manager(render_manager* manager, registry* reg);
@@ -109,12 +110,12 @@ namespace ryujin
         slot_map_key load_mesh(const std::string& name, const mesh& m);
         void build_meshes();
 
-        instance_write_info write_instances(buffer& buf, const std::size_t offset);
-        std::size_t write_materials(buffer& buf, const std::size_t offset);
-        draw_call_write_info write_draw_calls(buffer& indirectBuffer, buffer& drawCountBuffer, const std::size_t offset, const material_type type);
-        std::size_t write_textures(texture* buf, std::size_t offset);
+        instance_write_info write_instances(buffer& buf, const sz offset);
+        sz write_materials(buffer& buf, const sz offset);
+        draw_call_write_info write_draw_calls(buffer& indirectBuffer, buffer& drawCountBuffer, const sz offset, const material_type type);
+        sz write_textures(texture* buf, sz offset);
 
-        const buffer_group& get_buffer_group(const std::size_t idx) const noexcept;
+        const buffer_group& get_buffer_group(const sz idx) const noexcept;
 
         entity_handle<registry::entity_type> main_camera() noexcept;
 
@@ -165,13 +166,13 @@ namespace ryujin
         image_sampler _defaultSampler = {};
 
         // mesh group id -> collection of meshes -> vector of entities with that mesh
-        vector<std::unordered_map<std::uint32_t, std::unordered_map<slot_map_key, vector<entity_type>, slot_map_key_hash>>> _entities;
+        vector<std::unordered_map<u32, std::unordered_map<slot_map_key, vector<entity_type>, slot_map_key_hash>>> _entities;
         bool _entitiesDirty;
 
         vector<vector<gpu_indirect_call>> _drawCallCache;
-        vector<vector<std::uint32_t>> _drawCountCache;
+        vector<vector<u32>> _drawCountCache;
         vector<draw_call_write_info> _groupsWrittenCount;
-        std::map<std::uint32_t, vector<entity_type>> _cameras;
+        std::map<u32, vector<entity_type>> _cameras;
     };
 }
 

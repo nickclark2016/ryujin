@@ -1,6 +1,7 @@
 #ifndef camera_component_hpp__
 #define camera_component_hpp__
 
+#include "../core/primitives.hpp"
 #include "../core/slot_map.hpp"
 #include "../math/vec3.hpp"
 
@@ -12,7 +13,7 @@ namespace ryujin
         float far;
         float fov;
         slot_map_key target = invalid_slot_map_key;
-        std::uint32_t order; // higher == later render
+        u32 order; // higher == later render
         bool active;
     };
 }

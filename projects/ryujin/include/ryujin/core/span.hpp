@@ -2,6 +2,7 @@
 #define span_hpp__
 
 #include "as.hpp"
+#include "primitives.hpp"
 
 #include <cstddef>
 #include <optional>
@@ -18,23 +19,23 @@ namespace ryujin
 
         constexpr span(const T& value);
         constexpr span(const T* begin, const T* end);
-        constexpr span(const T* begin, const std::size_t length);
+        constexpr span(const T* begin, const sz length);
         constexpr span(const std::optional<T>& opt);
 
-        template <std::size_t N>
+        template <sz N>
         constexpr span(const T(&d)[N]);
 
         span& operator=(const span& rhs);
         span& operator=(span&& rhs) noexcept;
 
         constexpr const T* data() const noexcept;
-        constexpr std::size_t length() const noexcept;
+        constexpr sz length() const noexcept;
 
-        constexpr const T& operator[](const std::size_t idx) const noexcept;
+        constexpr const T& operator[](const sz idx) const noexcept;
     private:
 
         const T* _ptr;
-        std::size_t _length;
+        sz _length;
     };
 
     template <typename T>
@@ -44,14 +45,14 @@ namespace ryujin
     span(const T*, const T*) -> span<T>;
 
     template <typename T>
-    span(const T*, const std::size_t) -> span<T>;
+    span(const T*, const sz) -> span<T>;
 
-    template <typename T, std::size_t N>
+    template <typename T, sz N>
     span(const T[N]) -> span<T>;
     
     template<typename T>
     inline constexpr span<T>::span()
-        : span<T>((T*)nullptr, as<std::size_t>(0))
+        : span<T>((T*)nullptr, as<sz>(0))
     {
     }
 
@@ -71,7 +72,7 @@ namespace ryujin
 
     template<typename T>
     inline constexpr span<T>::span(const T& value)
-        : _ptr(&value), _length(as<std::size_t>(1))
+        : _ptr(&value), _length(as<sz>(1))
     {
     }
 
@@ -82,7 +83,7 @@ namespace ryujin
     }
     
     template<typename T>
-    inline constexpr span<T>::span(const T* begin, const std::size_t length)
+    inline constexpr span<T>::span(const T* begin, const sz length)
         : _ptr(begin), _length(length)
     {
     }
@@ -118,19 +119,19 @@ namespace ryujin
     }
     
     template<typename T>
-    inline constexpr std::size_t span<T>::length() const noexcept
+    inline constexpr sz span<T>::length() const noexcept
     {
         return _length;
     }
 
     template<typename T>
-    inline constexpr const T& span<T>::operator[](const std::size_t idx) const noexcept
+    inline constexpr const T& span<T>::operator[](const sz idx) const noexcept
     {
         return _ptr[idx];
     }
     
     template<typename T>
-    template<std::size_t N>
+    template<sz N>
     inline constexpr span<T>::span(const T(&d)[N])
         : _ptr(d), _length(N)
     {}

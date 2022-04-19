@@ -1,6 +1,7 @@
 #include <ryujin/graphics/renderable.hpp>
 
 #include <ryujin/core/as.hpp>
+#include <ryujin/core/primitives.hpp>
 #include <ryujin/graphics/camera_component.hpp>
 #include <ryujin/graphics/render_manager.hpp>
 
@@ -90,7 +91,7 @@ namespace ryujin
         case texture_asset::data_type::UCHAR:
             if (channels != 4)
             {
-                spdlog::error("Unknown texture asset format {} with {} channels.", as<std::uint32_t>(dataType), channels);
+                spdlog::error("Unknown texture asset format {} with {} channels.", as<u32>(dataType), channels);
                 return decltype(_textures)::invalid;
             }
             fmt = data_format::R8G8B8A8_SRGB;
@@ -99,14 +100,14 @@ namespace ryujin
         case texture_asset::data_type::USHORT:
             if (channels != 4)
             {
-                spdlog::error("Unknown texture asset format {} with {} channels.", as<std::uint32_t>(dataType), channels);
+                spdlog::error("Unknown texture asset format {} with {} channels.", as<u32>(dataType), channels);
                 return decltype(_textures)::invalid;
             }
             fmt = data_format::R16G16B16A16_SFLOAT;
             bpp = 8;
             break;
         default:
-            spdlog::error("Unknown texture asset format {} with {} channels.", as<std::uint32_t>(dataType), channels);
+            spdlog::error("Unknown texture asset format {} with {} channels.", as<u32>(dataType), channels);
             return decltype(_textures)::invalid;
         }
 
@@ -192,7 +193,7 @@ namespace ryujin
 
         cmdList = _manager->next_transfer_command_list();
 
-        for (std::uint32_t i = 0; i < mipCount; ++i)
+        for (u32 i = 0; i < mipCount; ++i)
         {
             const auto& mip = asset.get_mip_level(i);
             auto imgWriteInfo = _manager->write_to_staging_buffer(mip->bytes.data(), mip->bytes.size());
@@ -394,10 +395,10 @@ namespace ryujin
     {
         renderable_mesh mesh
         {
-            .bufferGroupId = as<std::uint32_t>(_bakedBufferGroups.size()),
-            .vertexOffset = as<std::uint32_t>(_activeMeshGroup.positions.size()),
-            .indexOffset = as<std::uint32_t>(_activeMeshGroup.indices.size()),
-            .indexCount = as<std::uint32_t>(m.indices.size())
+            .bufferGroupId = as<u32>(_bakedBufferGroups.size()),
+            .vertexOffset = as<u32>(_activeMeshGroup.positions.size()),
+            .indexOffset = as<u32>(_activeMeshGroup.indices.size()),
+            .indexCount = as<u32>(m.indices.size())
         };
 
         auto requestedVerts = _activeMeshGroup.positions.size() + m.vertices.size();
@@ -447,9 +448,9 @@ namespace ryujin
     void renderable_manager::build_meshes()
     {
         // build staging buffer
-        const std::size_t positionsSize = sizeof(mesh_group::position_t) * _activeMeshGroup.positions.size();
-        const std::size_t interleavedSize = sizeof(mesh_group::interleaved_t) * _activeMeshGroup.interleavedValues.size();
-        const std::size_t indicesSize = sizeof(std::uint32_t) * _activeMeshGroup.indices.size();
+        const sz positionsSize = sizeof(mesh_group::position_t) * _activeMeshGroup.positions.size();
+        const sz interleavedSize = sizeof(mesh_group::interleaved_t) * _activeMeshGroup.interleavedValues.size();
+        const sz indicesSize = sizeof(u32) * _activeMeshGroup.indices.size();
         const buffer_create_info stagingInfo = {
             .size = (positionsSize + interleavedSize + indicesSize),
             .usage = buffer_usage::TRANSFER_SRC
@@ -590,11 +591,11 @@ namespace ryujin
         _activeMeshGroup.clear();
     }
     
-    renderable_manager::instance_write_info renderable_manager::write_instances(buffer& buf, const std::size_t offset)
+    renderable_manager::instance_write_info renderable_manager::write_instances(buffer& buf, const sz offset)
     {
         auto instances = reinterpret_cast<gpu_instance_data*>(buf.info.pMappedData) + offset;
-        std::size_t opaqueInstances = 0;
-        for (const auto& [meshGroupId, meshMapping] : _entities[as<std::size_t>(material_type::OPAQUE)])
+        sz opaqueInstances = 0;
+        for (const auto& [meshGroupId, meshMapping] : _entities[as<sz>(material_type::OPAQUE)])
         {
             for (const auto& [key, ents] : meshMapping)
             {
@@ -605,14 +606,14 @@ namespace ryujin
                     auto matHandle = handle.get<renderable_component>().material;
                     auto mat = _materials.index_of(matHandle);
                     instances[opaqueInstances].transform = tx.matrix;
-                    instances[opaqueInstances].material = as<std::uint32_t>(mat);
+                    instances[opaqueInstances].material = as<u32>(mat);
                     ++opaqueInstances;
                 }
             }
         }
 
-        std::size_t transparentInstances = 0;
-        for (const auto& [meshGroupId, meshMapping] : _entities[as<std::size_t>(material_type::TRANSLUCENT)])
+        sz transparentInstances = 0;
+        for (const auto& [meshGroupId, meshMapping] : _entities[as<sz>(material_type::TRANSLUCENT)])
         {
             for (const auto& [key, ents] : meshMapping)
             {
@@ -623,7 +624,7 @@ namespace ryujin
                     auto matHandle = handle.get<renderable_component>().material;
                     auto mat = _materials.index_of(matHandle);
                     instances[opaqueInstances + transparentInstances].transform = tx.matrix;
-                    instances[opaqueInstances + transparentInstances].material = as<std::uint32_t>(mat);
+                    instances[opaqueInstances + transparentInstances].material = as<u32>(mat);
                     ++transparentInstances;
                 }
             }
@@ -635,10 +636,10 @@ namespace ryujin
         };
     }
 
-    std::size_t renderable_manager::write_materials(buffer& buf, const std::size_t offset)
+    sz renderable_manager::write_materials(buffer& buf, const sz offset)
     {
         // TODO: figure out some way to do this only when a new material is added or a 
-        std::size_t materialId = 0;
+        sz materialId = 0;
         auto materials = reinterpret_cast<gpu_material_data*>(buf.info.pMappedData) + offset;
 
         for (const auto& material : _materials)
@@ -650,11 +651,11 @@ namespace ryujin
             const auto ao = material.ao;
 
             const gpu_material_data data = {
-                .albedo = as<std::uint32_t>(_textures.index_of(albedo)),
-                .normal = as<std::uint32_t>(_textures.index_of(normal)),
-                .metallicRoughness = as<std::uint32_t>(_textures.index_of(metalRough)),
-                .emissive = as<std::uint32_t>(_textures.index_of(emissive)),
-                .ambientOcclusion = as<std::uint32_t>(_textures.index_of(ao))
+                .albedo = as<u32>(_textures.index_of(albedo)),
+                .normal = as<u32>(_textures.index_of(normal)),
+                .metallicRoughness = as<u32>(_textures.index_of(metalRough)),
+                .emissive = as<u32>(_textures.index_of(emissive)),
+                .ambientOcclusion = as<u32>(_textures.index_of(ao))
             };
 
             materials[materialId++] = data;
@@ -662,18 +663,18 @@ namespace ryujin
         return materialId;
     }
 
-    renderable_manager::draw_call_write_info renderable_manager::write_draw_calls(buffer& indirectBuffer, buffer& drawCountBuffer, const std::size_t offset, const material_type type)
+    renderable_manager::draw_call_write_info renderable_manager::write_draw_calls(buffer& indirectBuffer, buffer& drawCountBuffer, const sz offset, const material_type type)
     {
-        const std::size_t typeId = as<std::size_t>(type);
+        const sz typeId = as<sz>(type);
 
         if (_entitiesDirty)
         {
             spdlog::debug("Renderable entities change detected. Rebuilding draw information.");
-            std::uint32_t firstInstance = 0;
-            std::uint32_t meshGroupsWritten = 0;
-            std::size_t totalDrawCalls = 0;
+            u32 firstInstance = 0;
+            u32 meshGroupsWritten = 0;
+            sz totalDrawCalls = 0;
 
-            for (std::size_t i = 0; i < _drawCallCache.size(); ++i)
+            for (sz i = 0; i < _drawCallCache.size(); ++i)
             {
                 meshGroupsWritten = 0;
                 totalDrawCalls = 0;
@@ -682,22 +683,22 @@ namespace ryujin
 
                 for (const auto& [meshGroupId, meshMapping] : _entities[i])
                 {
-                    std::uint32_t drawCallCount = 0;
+                    u32 drawCallCount = 0;
 
                     for (const auto& [key, ents] : meshMapping)
                     {
                         auto mesh = _meshes.try_get(key);
                         gpu_indirect_call call = {
                             .indexCount = mesh->indexCount,
-                            .instanceCount = as<std::uint32_t>(ents.size()),
+                            .instanceCount = as<u32>(ents.size()),
                             .firstIndex = mesh->indexOffset,
-                            .vertexOffset = as<std::int32_t>(mesh->vertexOffset),
+                            .vertexOffset = as<i32>(mesh->vertexOffset),
                             .firstInstance = firstInstance
                         };
 
                         _drawCallCache[i].push_back(call);
 
-                        firstInstance += as<std::uint32_t>(ents.size());
+                        firstInstance += as<u32>(ents.size());
                         ++drawCallCount;
                     }
                     _drawCountCache[i].push_back(drawCallCount);
@@ -717,15 +718,15 @@ namespace ryujin
         auto drawCallMapping = reinterpret_cast<gpu_indirect_call*>(indirectBuffer.info.pMappedData) + offset;
         memcpy(drawCallMapping, _drawCallCache[typeId].data(), _drawCallCache[typeId].size() * sizeof(gpu_indirect_call));
 
-        auto mapped = reinterpret_cast<std::uint32_t*>(drawCountBuffer.info.pMappedData) + offset;
-        memcpy(mapped, _drawCountCache[typeId].data(), _drawCountCache[typeId].size() * sizeof(std::uint32_t));
+        auto mapped = reinterpret_cast<u32*>(drawCountBuffer.info.pMappedData) + offset;
+        memcpy(mapped, _drawCountCache[typeId].data(), _drawCountCache[typeId].size() * sizeof(u32));
         
         return _groupsWrittenCount[typeId];
     }
 
-    std::size_t renderable_manager::write_textures(texture* buf, std::size_t offset)
+    sz renderable_manager::write_textures(texture* buf, sz offset)
     {
-        std::size_t textureId = 0;
+        sz textureId = 0;
         for (auto& tex : _textures)
         {
             buf[textureId++] = tex;
@@ -733,7 +734,7 @@ namespace ryujin
         return textureId;
     }
 
-    const renderable_manager::buffer_group& renderable_manager::get_buffer_group(const std::size_t idx) const noexcept
+    const renderable_manager::buffer_group& renderable_manager::get_buffer_group(const sz idx) const noexcept
     {
         return _bakedBufferGroups[idx];
     }
@@ -773,7 +774,7 @@ namespace ryujin
             auto mesh = renderable->mesh;
             auto group = _meshes.try_get(mesh);
             auto mat = _materials.try_get(renderable->material);
-            _entities[as<std::size_t>(mat->type)][group->bufferGroupId][mesh].push_back(ent);
+            _entities[as<sz>(mat->type)][group->bufferGroupId][mesh].push_back(ent);
 
             _entitiesDirty = true;
         }
@@ -788,7 +789,7 @@ namespace ryujin
             auto mesh = renderable->mesh;
             auto group = _meshes.try_get(mesh);
             auto mat = _materials.try_get(renderable->material);
-            auto& ents = _entities[as<std::size_t>(mat->type)][group->bufferGroupId][mesh];
+            auto& ents = _entities[as<sz>(mat->type)][group->bufferGroupId][mesh];
             auto it = std::find(ents.begin(), ents.end(), ent);
             if (it != ents.end())
             {

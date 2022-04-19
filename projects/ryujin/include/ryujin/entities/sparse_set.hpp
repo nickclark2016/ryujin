@@ -3,6 +3,8 @@
 
 #include "entity.hpp"
 
+#include "../core/primitives.hpp"
+
 #include <cstddef>
 #include <memory>
 #include <vector>
@@ -10,7 +12,7 @@
 namespace ryujin
 {
 
-    template <typename EntityType, std::size_t PageSize>
+    template <typename EntityType, sz PageSize>
     class sparse_set
     {
     public:
@@ -25,8 +27,8 @@ namespace ryujin
         sparse_set& operator=(sparse_set&&) noexcept = default;
 
         bool empty() const noexcept;
-        std::size_t size() const noexcept;
-        std::size_t capacity() const noexcept;
+        sz size() const noexcept;
+        sz capacity() const noexcept;
         bool contains(const type& tp) const noexcept;
         
         void shrink_to_fit();
@@ -35,20 +37,20 @@ namespace ryujin
         void insert(const type& tp);
         void remove(const type& tp);
 
-        void reserve(const std::size_t count);
+        void reserve(const sz count);
     private:
         using sparse_page_type = EntityType[];
 
         std::vector<std::unique_ptr<sparse_page_type>> _sparse;
         std::vector<EntityType> _packed;
 
-        std::size_t _page(const type& tp) const noexcept;
-        std::size_t _offset(const type& tp) const noexcept;
+        sz _page(const type& tp) const noexcept;
+        sz _offset(const type& tp) const noexcept;
 
         static constexpr type _tombstone = entity_traits<typename EntityType::type>::from_type(~(typename EntityType::type)(0));
     };
 
-    template <typename EntityType, std::size_t PageSize>
+    template <typename EntityType, sz PageSize>
     bool operator==(const sparse_set<EntityType, PageSize>& lhs, const sparse_set<EntityType, PageSize>& rhs) noexcept
     {
         using tp = sparse_set<EntityType, PageSize>::type::type;
@@ -71,7 +73,7 @@ namespace ryujin
         return false;
     }
 
-    template <typename EntityType, std::size_t PageSize>
+    template <typename EntityType, sz PageSize>
     bool operator!=(const sparse_set<EntityType, PageSize>& lhs, const sparse_set<EntityType, PageSize>& rhs) noexcept
     {
         using tp = sparse_set<EntityType, PageSize>::type::type;
@@ -94,25 +96,25 @@ namespace ryujin
         return true;
     }
 
-    template<typename EntityType, std::size_t PageSize>
+    template<typename EntityType, sz PageSize>
     inline bool sparse_set<EntityType, PageSize>::empty() const noexcept
     {
         return size() == 0;
     }
 
-    template<typename EntityType, std::size_t PageSize>
-    inline std::size_t sparse_set<EntityType, PageSize>::size() const noexcept
+    template<typename EntityType, sz PageSize>
+    inline sz sparse_set<EntityType, PageSize>::size() const noexcept
     {
         return _packed.size();
     }
 
-    template<typename EntityType, std::size_t PageSize>
-    inline std::size_t sparse_set<EntityType, PageSize>::capacity() const noexcept
+    template<typename EntityType, sz PageSize>
+    inline sz sparse_set<EntityType, PageSize>::capacity() const noexcept
     {
         return _packed.capacity();
     }
 
-    template<typename EntityType, std::size_t PageSize>
+    template<typename EntityType, sz PageSize>
     inline bool sparse_set<EntityType, PageSize>::contains(const type& tp) const noexcept
     {
         const auto page = _page(tp);
@@ -126,7 +128,7 @@ namespace ryujin
         return false;
     }
 
-    template<typename EntityType, std::size_t PageSize>
+    template<typename EntityType, sz PageSize>
     inline void sparse_set<EntityType, PageSize>::shrink_to_fit()
     {
         if (empty())
@@ -135,14 +137,14 @@ namespace ryujin
         }
     }
 
-    template<typename EntityType, std::size_t PageSize>
+    template<typename EntityType, sz PageSize>
     inline void sparse_set<EntityType, PageSize>::clear()
     {
         _sparse.clear();
         _packed.clear();
     }
 
-    template<typename EntityType, std::size_t PageSize>
+    template<typename EntityType, sz PageSize>
     inline void sparse_set<EntityType, PageSize>::insert(const type& tp)
     {
         const auto sparsePage = _page(tp);
@@ -151,7 +153,7 @@ namespace ryujin
         for (auto pg = _sparse.size(); pg <= sparsePage; ++pg)
         {
             auto page = std::make_unique<EntityType[]>(PageSize);
-            for (std::size_t i = 0; i < PageSize; ++i)
+            for (sz i = 0; i < PageSize; ++i)
             {
                 page[i] = _tombstone;
             }
@@ -167,7 +169,7 @@ namespace ryujin
         }
     }
 
-    template<typename EntityType, std::size_t PageSize>
+    template<typename EntityType, sz PageSize>
     inline void sparse_set<EntityType, PageSize>::remove(const type& tp)
     {
         const auto sparsePage = _page(tp);
@@ -191,8 +193,8 @@ namespace ryujin
         }
     }
 
-    template<typename EntityType, std::size_t PageSize>
-    inline void sparse_set<EntityType, PageSize>::reserve(const std::size_t count)
+    template<typename EntityType, sz PageSize>
+    inline void sparse_set<EntityType, PageSize>::reserve(const sz count)
     {
         const auto pageCount = 1 + ((count - 1) / PageSize);
         _sparse.reserve(pageCount);
@@ -208,15 +210,15 @@ namespace ryujin
         }
     }
 
-    template<typename EntityType, std::size_t PageSize>
-    inline std::size_t sparse_set<EntityType, PageSize>::_page(const type& tp) const noexcept
+    template<typename EntityType, sz PageSize>
+    inline sz sparse_set<EntityType, PageSize>::_page(const type& tp) const noexcept
     {
         const auto result = tp.identifier / PageSize;
         return result;
     }
 
-    template<typename EntityType, std::size_t PageSize>
-    inline std::size_t sparse_set<EntityType, PageSize>::_offset(const type& tp) const noexcept
+    template<typename EntityType, sz PageSize>
+    inline sz sparse_set<EntityType, PageSize>::_offset(const type& tp) const noexcept
     {
         constexpr bool isPowerOf2 = (PageSize != 0) && ((PageSize & (PageSize - 1)) != 0);
         if constexpr (isPowerOf2)

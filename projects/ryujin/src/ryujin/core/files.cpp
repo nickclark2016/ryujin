@@ -1,6 +1,7 @@
 #include <ryujin/core/files.hpp>
 
 #include <ryujin/core/as.hpp>
+#include <ryujin/core/primitives.hpp>
 
 #include <spdlog/spdlog.h>
 
@@ -39,12 +40,12 @@ namespace ryujin
         const auto validation = detail::validate_file(path);
         if (validation != error_code::NO_ERROR)
         {
-            spdlog::warn("Failed to load binary file: {} - Error code: {}", path, as<std::uint32_t>(validation));
+            spdlog::warn("Failed to load binary file: {} - Error code: {}", path, as<u32>(validation));
             return result<binary_file, error_code>::from_error(validation);
         }
 
         std::ifstream file(path, std::ios::ate | std::ios::binary);
-        const auto size = as<std::size_t>(file.tellg());
+        const auto size = as<sz>(file.tellg());
         binary_file bin = {
             path,
             std::make_unique<char[]>(size),
@@ -65,7 +66,7 @@ namespace ryujin
         const auto validation = detail::validate_file(path);
         if (validation != error_code::NO_ERROR)
         {
-            spdlog::warn("Failed to load text file: {} - Error code: {}", path, as<std::uint32_t>(validation));
+            spdlog::warn("Failed to load text file: {} - Error code: {}", path, as<u32>(validation));
             return result<text_file, error_code>::from_error(validation);
         }
 

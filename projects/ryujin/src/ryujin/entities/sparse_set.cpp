@@ -4,7 +4,7 @@
 
 namespace ryujin
 {
-    template class sparse_set<std::conditional_t<sizeof(size_t) == 8, entity<std::uint64_t>, entity<std::uint32_t>>, 512>;
-    template class sparse_set<std::conditional_t<sizeof(size_t) == 8, entity<std::uint64_t>, entity<std::uint32_t>>, 1024>;
-    template class sparse_set<std::conditional_t<sizeof(size_t) == 8, entity<std::uint64_t>, entity<std::uint32_t>>, 2048>;
+    template class sparse_set<std::conditional_t<sizeof(size_t) == 8, entity<u64>, entity<u32>>, 512>;
+    template class sparse_set<std::conditional_t<sizeof(size_t) == 8, entity<u64>, entity<u32>>, 1024>;
+    template class sparse_set<std::conditional_t<sizeof(size_t) == 8, entity<u64>, entity<u32>>, 2048>;
 }

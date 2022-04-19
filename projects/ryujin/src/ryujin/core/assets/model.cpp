@@ -2,6 +2,7 @@
 
 #include <ryujin/core/as.hpp>
 #include <ryujin/core/assets.hpp>
+#include <ryujin/core/primitives.hpp>
 #include <ryujin/math/transformations.hpp>
 
 #include <tinygltf/tiny_gltf.h>
@@ -165,7 +166,7 @@ namespace ryujin::assets
 
                         if (accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT)
                         {
-                            for (std::size_t i = 0; i < accessor.count; ++i)
+                            for (sz i = 0; i < accessor.count; ++i)
                             {
                                 auto dataOffset = bufferView.byteOffset + accessor.byteOffset + i * accessor.ByteStride(bufferView);
                                 auto rawStart = data + dataOffset;
@@ -175,7 +176,7 @@ namespace ryujin::assets
                         }
                         else if (accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE)
                         {
-                            for (std::size_t i = 0; i < accessor.count; ++i)
+                            for (sz i = 0; i < accessor.count; ++i)
                             {
                                 auto dataOffset = bufferView.byteOffset + accessor.byteOffset + i * accessor.ByteStride(bufferView);
                                 auto rawStart = data + dataOffset;
@@ -186,7 +187,7 @@ namespace ryujin::assets
                         }
                         else if(accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT)
                         {
-                            for (std::size_t i = 0; i < accessor.count; ++i)
+                            for (sz i = 0; i < accessor.count; ++i)
                             {
                                 auto dataOffset = bufferView.byteOffset + accessor.byteOffset + i * accessor.ByteStride(bufferView);
                                 auto rawStart = data + dataOffset;
@@ -212,7 +213,7 @@ namespace ryujin::assets
 
                         m.vertices.resize(accessor.count);
                         
-                        for (std::size_t i = 0; i < accessor.count; ++i)
+                        for (sz i = 0; i < accessor.count; ++i)
                         {
                             auto dataOffset = bufferView.byteOffset + accessor.byteOffset + i * accessor.ByteStride(bufferView);
                             auto rawStart = data + dataOffset;
@@ -234,7 +235,7 @@ namespace ryujin::assets
                         auto& buffer = gltfModel.buffers[bufferView.buffer];
                         auto data = buffer.data.data();
                         
-                        for (std::size_t i = 0; i < accessor.count; ++i)
+                        for (sz i = 0; i < accessor.count; ++i)
                         {
                             auto dataOffset = bufferView.byteOffset + accessor.byteOffset + i * accessor.ByteStride(bufferView);
                             auto rawStart = data + dataOffset;
@@ -258,7 +259,7 @@ namespace ryujin::assets
 
                         if (accessor.componentType == TINYGLTF_COMPONENT_TYPE_FLOAT)
                         {
-                            for (std::size_t i = 0; i < accessor.count; ++i)
+                            for (sz i = 0; i < accessor.count; ++i)
                             {
                                 auto dataOffset = bufferView.byteOffset + accessor.byteOffset + i * accessor.ByteStride(bufferView);
                                 auto rawStart = data + dataOffset;
@@ -272,7 +273,7 @@ namespace ryujin::assets
                         }
                         else if (accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE)
                         {
-                            for (std::size_t i = 0; i < accessor.count; ++i)
+                            for (sz i = 0; i < accessor.count; ++i)
                             {
                                 auto dataOffset = bufferView.byteOffset + accessor.byteOffset + i * accessor.ByteStride(bufferView);
                                 auto rawStart = data + dataOffset;
@@ -286,7 +287,7 @@ namespace ryujin::assets
                         }
                         else if (accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT)
                         {
-                            for (std::size_t i = 0; i < accessor.count; ++i)
+                            for (sz i = 0; i < accessor.count; ++i)
                             {
                                 auto dataOffset = bufferView.byteOffset + accessor.byteOffset + i * accessor.ByteStride(bufferView);
                                 auto rawStart = data + dataOffset;
@@ -308,7 +309,7 @@ namespace ryujin::assets
                         auto& buffer = gltfModel.buffers[bufferView.buffer];
                         auto data = buffer.data.data();
                         
-                        for (std::size_t i = 0; i < accessor.count; ++i)
+                        for (sz i = 0; i < accessor.count; ++i)
                         {
                             auto dataOffset = bufferView.byteOffset + accessor.byteOffset + i * accessor.ByteStride(bufferView);
                             auto rawStart = data + dataOffset;
@@ -401,7 +402,7 @@ namespace ryujin::assets
                 models.push_back(std::move(asset));
             }
 
-            for (std::size_t i = 0; i < gltfModel.nodes.size(); ++i)
+            for (sz i = 0; i < gltfModel.nodes.size(); ++i)
             {
                 auto& node = gltfModel.nodes[i];
 

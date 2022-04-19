@@ -21,7 +21,7 @@ namespace ryujin
 		_inputImageView = view;
 	}
 
-	void blit_pass::set_output_texture(image_view view, const std::uint32_t width, const std::uint32_t height)
+	void blit_pass::set_output_texture(image_view view, const u32 width, const u32 height)
 	{
 		_imageTarget = view;
 		rebuild_target(width, height);
@@ -106,7 +106,7 @@ namespace ryujin
 			.colors = span(resolveColorAttachments),
 			.resolves = span<attachment_reference>(),
 			.depthStencil = std::nullopt,
-			.preserveIndices = span<std::uint32_t>()
+			.preserveIndices = span<u32>()
 		};
 
 		subpass_dependency externalInboundDependency = {
@@ -257,7 +257,7 @@ namespace ryujin
 				.samples = sample_count::COUNT_1,
 				.enableSampleShading = false,
 				.minSampleShading = 0.0f,
-				.sampleMask = span<std::uint32_t>(),
+				.sampleMask = span<u32>(),
 				.alphaToCoverageEnabled = false,
 				.alphaToOneEnabled = false
 			},
@@ -306,7 +306,7 @@ namespace ryujin
 		}
 	}
 
-	void blit_pass::rebuild_target(const std::uint32_t width, const std::uint32_t height, const bool force)
+	void blit_pass::rebuild_target(const u32 width, const u32 height, const bool force)
 	{
 		if (_targetWidth == width && _targetHeight == height && !force)
 		{

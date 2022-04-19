@@ -1,6 +1,7 @@
 #ifndef vector_hpp__
 #define vector_hpp__
 
+#include "primitives.hpp"
 #include "result.hpp"
 
 #include <memory>
@@ -27,7 +28,7 @@ namespace ryujin
         iterator erase(iterator start, iterator stop);
     };
     
-    template <typename Type, std::size_t Capacity = 32>
+    template <typename Type, sz Capacity = 32>
     class static_vector
     {
     public:
@@ -75,21 +76,21 @@ namespace ryujin
         constexpr const_iterator end() const noexcept;
         constexpr const_iterator cend() const noexcept;
 
-        constexpr reference operator[](const std::size_t idx) noexcept;
-        constexpr const_reference operator[](const std::size_t idx) const noexcept;
+        constexpr reference operator[](const sz idx) noexcept;
+        constexpr const_reference operator[](const sz idx) const noexcept;
         constexpr pointer data() noexcept;
         constexpr const_pointer data() const noexcept;
 
-        constexpr std::size_t size() const noexcept;
-        constexpr std::size_t capacity() const noexcept;
+        constexpr sz size() const noexcept;
+        constexpr sz capacity() const noexcept;
         constexpr bool empty() const noexcept;
 
     private:
         Type _data[Capacity];
 
-        std::size_t _size = 0;
+        sz _size = 0;
 
-        error_code _make_hole(const std::size_t idx, const std::size_t sz);
+        error_code _make_hole(const sz idx, const sz sz);
     };
 
     template<typename Type, typename Allocator>
@@ -145,38 +146,38 @@ namespace ryujin
         return begin() + (res - std::vector<Type, Allocator>::begin());
     }
     
-    template<typename Type, std::size_t Capacity>
+    template<typename Type, sz Capacity>
     inline constexpr static_vector<Type, Capacity>::static_vector()
         : _data{ Type() }
     {
     }
 
-    template<typename Type, std::size_t Capacity>
+    template<typename Type, sz Capacity>
     inline constexpr static_vector<Type, Capacity>::static_vector(const static_vector& other)
         : _size(other._size)
     {
-        for (std::size_t i = 0; i < _size; ++i)
+        for (sz i = 0; i < _size; ++i)
         {
             _data[i] = other._data[i];
         }
     }
 
-    template<typename Type, std::size_t Capacity>
+    template<typename Type, sz Capacity>
     inline constexpr static_vector<Type, Capacity>::static_vector(static_vector&& other) noexcept
         : _size(other._size)
     {
         std::move(other._data, other._data + other._size, _data);
     }
     
-    template<typename Type, std::size_t Capacity>
+    template<typename Type, sz Capacity>
     inline constexpr static_vector<Type, Capacity>& static_vector<Type, Capacity>::operator=(const static_vector& rhs)
     {
-        for (std::size_t i = _size; i < rhs._size; ++i)
+        for (sz i = _size; i < rhs._size; ++i)
         {
             _data[i].~Type();
         }
 
-        for (std::size_t i = 0; i < rhs._size; ++i)
+        for (sz i = 0; i < rhs._size; ++i)
         {
             _data[i] = rhs._data[i];
         }
@@ -186,10 +187,10 @@ namespace ryujin
         return *this;
     }
 
-    template<typename Type, std::size_t Capacity>
+    template<typename Type, sz Capacity>
     inline constexpr static_vector<Type, Capacity>& static_vector<Type, Capacity>::operator=(static_vector&& rhs) noexcept
     {
-        for (std::size_t i = _size; i < rhs._size; ++i)
+        for (sz i = _size; i < rhs._size; ++i)
         {
             _data[i].~Type();
         }
@@ -201,25 +202,25 @@ namespace ryujin
         return *this;
     }
     
-    template<typename Type, std::size_t Capacity>
-    inline constexpr std::size_t static_vector<Type, Capacity>::size() const noexcept
+    template<typename Type, sz Capacity>
+    inline constexpr sz static_vector<Type, Capacity>::size() const noexcept
     {
         return _size;
     }
     
-    template<typename Type, std::size_t Capacity>
-    inline constexpr std::size_t static_vector<Type, Capacity>::capacity() const noexcept
+    template<typename Type, sz Capacity>
+    inline constexpr sz static_vector<Type, Capacity>::capacity() const noexcept
     {
         return Capacity;
     }
 
-    template<typename Type, std::size_t Capacity>
+    template<typename Type, sz Capacity>
     inline constexpr bool static_vector<Type, Capacity>::empty() const noexcept
     {
         return _size == 0;
     }
     
-    template<typename Type, std::size_t Capacity>
+    template<typename Type, sz Capacity>
     inline constexpr result<typename static_vector<Type, Capacity>::iterator, typename static_vector<Type, Capacity>::error_code> static_vector<Type, Capacity>::push_back(const Type& value)
     {
         if (_size >= Capacity)
@@ -233,7 +234,7 @@ namespace ryujin
         return result<iterator, error_code>::from_success(it);
     }
     
-    template<typename Type, std::size_t Capacity>
+    template<typename Type, sz Capacity>
     inline constexpr result<typename static_vector<Type, Capacity>::iterator, typename static_vector<Type, Capacity>::error_code> static_vector<Type, Capacity>::push_back(Type&& value) noexcept
     {
         if (_size >= Capacity)
@@ -247,7 +248,7 @@ namespace ryujin
         return result<iterator, error_code>::from_success(it);
     }
     
-    template<typename Type, std::size_t Capacity>
+    template<typename Type, sz Capacity>
     inline constexpr static_vector<Type, Capacity>::error_code static_vector<Type, Capacity>::pop_back() noexcept
     {
         if (_size == 0)
@@ -259,7 +260,7 @@ namespace ryujin
         return error_code::SUCCESS;
     }
 
-    template<typename Type, std::size_t Capacity>
+    template<typename Type, sz Capacity>
     inline constexpr result<typename static_vector<Type, Capacity>::iterator, typename static_vector<Type, Capacity>::error_code> static_vector<Type, Capacity>::insert(const_iterator position, const Type& value)
     {
         if (_size >= Capacity)
@@ -281,7 +282,7 @@ namespace ryujin
         return result<iterator, error_code>::from_success(begin() + idx);
     }
 
-    template<typename Type, std::size_t Capacity>
+    template<typename Type, sz Capacity>
     inline constexpr result<typename static_vector<Type, Capacity>::iterator, typename static_vector<Type, Capacity>::error_code> static_vector<Type, Capacity>::insert(const_iterator position, Type&& value) noexcept
     {
         if (_size >= Capacity)
@@ -303,7 +304,7 @@ namespace ryujin
         return result<iterator, error_code>::from_success(begin() + idx);
     }
 
-    template<typename Type, std::size_t Capacity>
+    template<typename Type, sz Capacity>
     template<typename It>
     inline constexpr  result<typename static_vector<Type, Capacity>::iterator, typename static_vector<Type, Capacity>::error_code> static_vector<Type, Capacity>::insert(const_iterator position, It start, It end) noexcept
     {
@@ -324,7 +325,7 @@ namespace ryujin
         
         auto it = start;
 
-        for (std::size_t i = 0; i < count; ++i)
+        for (sz i = 0; i < count; ++i)
         {
             _data[idx + i] = *it;
             ++it;
@@ -335,7 +336,7 @@ namespace ryujin
         return result<iterator, error_code>::from_success(begin() + idx);
     }
 
-    template<typename Type, std::size_t Capacity>
+    template<typename Type, sz Capacity>
     inline constexpr result<typename static_vector<Type, Capacity>::iterator, typename static_vector<Type, Capacity>::error_code> static_vector<Type, Capacity>::erase(const_iterator position)
     {
         if (position == end())
@@ -345,7 +346,7 @@ namespace ryujin
         return erase(position, position + 1);
     }
 
-    template<typename Type, std::size_t Capacity>
+    template<typename Type, sz Capacity>
     inline constexpr result<typename static_vector<Type, Capacity>::iterator, typename static_vector<Type, Capacity>::error_code> static_vector<Type, Capacity>::erase(const_iterator start, const_iterator end)
     {
         const size_t s = start - begin();
@@ -363,7 +364,7 @@ namespace ryujin
             return result<iterator, error_code>::from_success(begin() + e);
         }
         
-        for (std::size_t i = s; i < e; ++i)
+        for (sz i = s; i < e; ++i)
         {
             if (i < _size - count)
             {
@@ -381,74 +382,74 @@ namespace ryujin
         return result<iterator, error_code>::from_success(begin() + s);
     }
 
-    template<typename Type, std::size_t Capacity>
+    template<typename Type, sz Capacity>
     inline constexpr void static_vector<Type, Capacity>::clear()
     {
         erase(begin(), end());
     }
 
-    template<typename Type, std::size_t Capacity>
+    template<typename Type, sz Capacity>
     inline constexpr typename static_vector<Type, Capacity>::iterator static_vector<Type, Capacity>::begin() noexcept
     {
         return &_data[0];
     }
 
-    template<typename Type, std::size_t Capacity>
+    template<typename Type, sz Capacity>
     inline constexpr static_vector<Type, Capacity>::const_iterator static_vector<Type, Capacity>::begin() const noexcept
     {
         return &_data[0];
     }
 
-    template<typename Type, std::size_t Capacity>
+    template<typename Type, sz Capacity>
     inline constexpr static_vector<Type, Capacity>::const_iterator static_vector<Type, Capacity>::cbegin() const noexcept
     {
         return &_data[0];
     }
 
-    template<typename Type, std::size_t Capacity>
+    template<typename Type, sz Capacity>
     inline constexpr static_vector<Type, Capacity>::iterator static_vector<Type, Capacity>::end() noexcept
     {
         return _data + _size;
     }
 
-    template<typename Type, std::size_t Capacity>
+    template<typename Type, sz Capacity>
     inline constexpr static_vector<Type, Capacity>::const_iterator static_vector<Type, Capacity>::end() const noexcept
     {
         return _data + _size;
     }
 
-    template<typename Type, std::size_t Capacity>
+    template<typename Type, sz Capacity>
     inline constexpr static_vector<Type, Capacity>::const_iterator static_vector<Type, Capacity>::cend() const noexcept
     {
         return _data + _size;
     }
 
-    template<typename Type, std::size_t Capacity>
-    inline constexpr static_vector<Type, Capacity>::reference static_vector<Type, Capacity>::operator[](const std::size_t idx) noexcept
+    template<typename Type, sz Capacity>
+    inline constexpr static_vector<Type, Capacity>::reference static_vector<Type, Capacity>::operator[](const sz idx) noexcept
     {
         return _data[idx];
     }
 
-    template<typename Type, std::size_t Capacity>
-    inline constexpr static_vector<Type, Capacity>::const_reference static_vector<Type, Capacity>::operator[](const std::size_t idx) const noexcept
+    template<typename Type, sz Capacity>
+    inline constexpr static_vector<Type, Capacity>::const_reference static_vector<Type, Capacity>::operator[](const sz idx) const noexcept
     {
         return _data[idx];
     }
 
-    template<typename Type, std::size_t Capacity>
+    template<typename Type, sz Capacity>
     inline constexpr static_vector<Type, Capacity>::pointer static_vector<Type, Capacity>::data() noexcept
     {
         return _data;
     }
     
-    template<typename Type, std::size_t Capacity>
+    template<typename Type, sz Capacity>
     inline constexpr static_vector<Type, Capacity>::const_pointer static_vector<Type, Capacity>::data() const noexcept
     {
         return _data;
     }
     
-    template<typename Type, std::size_t Capacity>
-    inline static_vector<Type, Capacity>::error_code static_vector<Type, Capacity>::_make_hole(const std::size_t idx, const std::size_t size)
+    template<typename Type, sz Capacity>
+    inline static_vector<Type, Capacity>::error_code static_vector<Type, Capacity>::_make_hole(const sz idx, const sz size)
     {
         if (_size + size > Capacity)
         {
@@ -456,12 +457,12 @@ namespace ryujin
         }
 
         // iterate from end to hole
-        for (std::size_t i = _size; i > idx; --i)
+        for (sz i = _size; i > idx; --i)
         {
             _data[i - 1 + size] = std::move(_data[i - 1]);
         }
         
-        for (std::size_t i = idx; i < idx + size; ++i)
+        for (sz i = idx; i < idx + size; ++i)
         {
             _data[i].~Type();
         }

@@ -110,7 +110,7 @@ namespace ryujin
 				.samples = sample_count::COUNT_1,
 				.enableSampleShading = false,
 				.minSampleShading = 0.0f,
-				.sampleMask = span<std::uint32_t>(),
+				.sampleMask = span<u32>(),
 				.alphaToCoverageEnabled = false,
 				.alphaToOneEnabled = false
 			},

@@ -1,6 +1,7 @@
 #ifndef asset_hpp__
 #define asset_hpp__
 
+#include "primitives.hpp"
 #include "slot_map.hpp"
 #include "vector.hpp"
 
@@ -47,24 +48,24 @@ namespace ryujin
 
         struct mip_level
         {
-            std::uint32_t width;
-            std::uint32_t height;
+            u32 width;
+            u32 height;
             vector<std::byte> bytes;
         };
 
-        std::uint32_t width() const noexcept;
-        std::uint32_t height() const noexcept;
-        std::uint32_t mip_count() const noexcept;
-        std::uint32_t channel_count() const noexcept;
+        u32 width() const noexcept;
+        u32 height() const noexcept;
+        u32 mip_count() const noexcept;
+        u32 channel_count() const noexcept;
         data_type type() const noexcept;
         channel_swizzle swizzle() const noexcept;
-        const mip_level* get_mip_level(const std::uint32_t mip = 0) const noexcept;
+        const mip_level* get_mip_level(const u32 mip = 0) const noexcept;
 
-        texture_asset(const vector<mip_level>& mips, const std::uint32_t channels, const data_type type, const channel_swizzle swizzle);
+        texture_asset(const vector<mip_level>& mips, const u32 channels, const data_type type, const channel_swizzle swizzle);
 
     private:
         vector<mip_level> _mips;
-        std::uint32_t _channels = 0;
+        u32 _channels = 0;
         data_type _type = {};
         channel_swizzle _swizzle;
     };
@@ -97,14 +98,14 @@ namespace ryujin
     struct mesh
     {
         vector<vertex> vertices;
-        vector<std::uint32_t> indices;
+        vector<u32> indices;
         std::string name;
         const material_asset* material;
     };
 
     struct mesh_group
     {
-        std::uint32_t id;
+        u32 id;
         vector<mesh> meshes;
     };
 

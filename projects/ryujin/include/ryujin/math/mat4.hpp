@@ -4,6 +4,7 @@
 #include "vec4.hpp"
 
 #include "../core/concepts.hpp"
+#include "../core/primitives.hpp"
 
 namespace ryujin
 {
@@ -48,8 +49,8 @@ namespace ryujin
         constexpr mat4(const T m00, const T m10, const T m20, const T m30, const T m01, const T m11, const T m21, const T m31,
             const T m02, const T m12, const T m22, const T m32, const T m03, const T m13, const T m23, const T m33);
 
-        constexpr vec4<T>& operator[](const std::size_t col) noexcept;
-        constexpr const vec4<T>& operator[](const std::size_t col) const noexcept;
+        constexpr vec4<T>& operator[](const sz col) noexcept;
+        constexpr const vec4<T>& operator[](const sz col) const noexcept;
 
         constexpr mat4& operator+=(const mat4& rhs) noexcept;
         constexpr mat4& operator-=(const mat4& rhs) noexcept;
@@ -99,13 +100,13 @@ namespace ryujin
     }
     
     template<numeric T>
-    inline constexpr vec4<T>& mat4<T>::operator[](const std::size_t col) noexcept
+    inline constexpr vec4<T>& mat4<T>::operator[](const sz col) noexcept
     {
         return columns[col];
     }
     
     template<numeric T>
-    inline constexpr const vec4<T>& mat4<T>::operator[](const std::size_t col) const noexcept
+    inline constexpr const vec4<T>& mat4<T>::operator[](const sz col) const noexcept
     {
         return columns[col];
     }

@@ -1,6 +1,8 @@
 #ifndef events_hpp__
 #define events_hpp__
 
+#include "../core/primitives.hpp"
+
 #include <cstddef>
 #include <functional>
 #include <unordered_map>
@@ -11,12 +13,12 @@ namespace ryujin
     {
         struct struct_identifier_utility
         {
-            static std::size_t id;
+            static sz id;
 
             template <typename T>
-            static std::size_t fetch_identifier()
+            static sz fetch_identifier()
             {
-                static std::size_t typeId = id++;
+                static sz typeId = id++;
                 return typeId;
             }
         };
@@ -34,7 +36,7 @@ namespace ryujin
     private:
         using event_callback = std::function<void(const void*)>;
 
-        std::unordered_map<std::size_t, std::vector<event_callback>> _callbacks;
+        std::unordered_map<sz, std::vector<event_callback>> _callbacks;
     };
     
     template <typename T, typename ... Args>

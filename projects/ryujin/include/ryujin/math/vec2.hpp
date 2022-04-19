@@ -2,6 +2,7 @@
 #define vec2_hpp__
 
 #include "../core/concepts.hpp"
+#include "../core/primitives.hpp"
 
 #include <cstddef>
 #include <type_traits>
@@ -35,8 +36,8 @@ namespace ryujin
         constexpr vec2(const T scalar);
         constexpr vec2(const T x, const T y);
 
-        constexpr T& operator[](const std::size_t index) noexcept;
-        constexpr const T& operator[](const std::size_t index) const noexcept;
+        constexpr T& operator[](const sz index) noexcept;
+        constexpr const T& operator[](const sz index) const noexcept;
 
         vec2& operator+=(const vec2& rhs) noexcept;
         vec2& operator-=(const vec2& rhs) noexcept;
@@ -77,13 +78,13 @@ namespace ryujin
     }
     
     template <numeric T>
-    inline constexpr T& vec2<T>::operator[](const std::size_t index) noexcept
+    inline constexpr T& vec2<T>::operator[](const sz index) noexcept
     {
         return data[index];
     }
     
     template <numeric T>
-    inline constexpr const T& vec2<T>::operator[](const std::size_t index) const noexcept
+    inline constexpr const T& vec2<T>::operator[](const sz index) const noexcept
     {
         return data[index];
     }

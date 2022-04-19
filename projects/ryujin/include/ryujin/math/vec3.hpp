@@ -4,6 +4,7 @@
 #include "math_utils.hpp"
 
 #include "../core/concepts.hpp"
+#include "../core/primitives.hpp"
 
 #include <cstddef>
 #include <type_traits>
@@ -34,8 +35,8 @@ namespace ryujin
         constexpr vec3(const T scalar);
         constexpr vec3(const T x, const T y, const T z);
 
-        constexpr T& operator[](const std::size_t index) noexcept;
-        constexpr const T& operator[](const std::size_t index) const noexcept;
+        constexpr T& operator[](const sz index) noexcept;
+        constexpr const T& operator[](const sz index) const noexcept;
 
         vec3& operator+=(const vec3& rhs) noexcept;
         vec3& operator-=(const vec3& rhs) noexcept;
@@ -76,13 +77,13 @@ namespace ryujin
     }
     
     template <numeric T>
-    inline constexpr T& vec3<T>::operator[](const std::size_t index) noexcept
+    inline constexpr T& vec3<T>::operator[](const sz index) noexcept
     {
         return data[index];
     }
     
     template <numeric T>
-    inline constexpr const T& vec3<T>::operator[](const std::size_t index) const noexcept
+    inline constexpr const T& vec3<T>::operator[](const sz index) const noexcept
     {
         return data[index];
     }

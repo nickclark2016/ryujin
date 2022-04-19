@@ -6,6 +6,7 @@
 
 #include "../core/as.hpp"
 #include "../core/concepts.hpp"
+#include "../core/primitives.hpp"
 
 #include <cmath>
 #include <cstddef>
@@ -33,8 +34,8 @@ namespace ryujin
         constexpr quat(const T w, const T x, const T y, const T z);
         constexpr quat(const vec3<T>& euler);
 
-        constexpr T& operator[](const std::size_t index) noexcept;
-        constexpr const T& operator[](const std::size_t index) const noexcept;
+        constexpr T& operator[](const sz index) noexcept;
+        constexpr const T& operator[](const sz index) const noexcept;
     };
 
     template <numeric T>
@@ -84,13 +85,13 @@ namespace ryujin
     }
     
     template <numeric T>
-    inline constexpr T& quat<T>::operator[](const std::size_t index) noexcept
+    inline constexpr T& quat<T>::operator[](const sz index) noexcept
     {
         return data[index];
     }
     
     template <numeric T>
-    inline constexpr const T& quat<T>::operator[](const std::size_t index) const noexcept
+    inline constexpr const T& quat<T>::operator[](const sz index) const noexcept
     {
         return data[index];
     }
