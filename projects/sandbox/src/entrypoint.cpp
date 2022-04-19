@@ -9,9 +9,7 @@ using namespace ryujin;
 class sandbox_application final : public base_application
 {
 public:
-    sandbox_application()
-    {
-    }
+    sandbox_application() = default;
 
     void pre_init(engine_context& ctx) override
     {
@@ -76,25 +74,17 @@ public:
         entity4.assign(cubeRenderableComponent);
         entity4.get<transform_component>().matrix = transformation4;
 
-        offscreen = manager->get_render_pipeline()->add_render_target({
-                .width = 1024,
-                .height = 1024,
-                .name = "offscreen_pbr_target"
-            });
-
         auto cameraEntity = ctx.get_registry().allocate();
         cameraEntity.assign(camera_component{
             .near = 0.01f,
             .far = 1000.0f,
             .fov = 90.0f,
-            .target = offscreen,
             .order = 1,
             .active = true
         });
-    }
 
-    int frame = 0;
-    int framesUntilSwitch = 100;
+        cameraEntity.get<transform_component>().position = vec3(-2.0f, 0.0f, -5.0f);
+    }
 
     void on_exit(engine_context& ctx) override
     {
@@ -108,16 +98,10 @@ public:
 
     void post_render(engine_context& ctx) override
     {
-        if (frame++ == framesUntilSwitch)
-        {
-            auto& manager = ctx.get_render_system().get_render_manager(0);
-            manager->get_render_pipeline()->remove_render_target(offscreen);
-        }
     }
 
     void on_frame(engine_context& ctx) override
     {
-        
     }
 };
 

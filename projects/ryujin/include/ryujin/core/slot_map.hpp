@@ -112,6 +112,10 @@ namespace ryujin
     template<typename T, typename KeyAllocator, typename ValueAllocator, typename IndexAllocator>
     inline T* slot_map<T, KeyAllocator, ValueAllocator, IndexAllocator>::try_get(const slot_map_key& k) noexcept
     {
+        if (k.index >= _keys.size())
+        {
+            return nullptr;
+        }
         const auto trampoline = _keys[k.index];
         if (k.generation == trampoline.generation)
         {

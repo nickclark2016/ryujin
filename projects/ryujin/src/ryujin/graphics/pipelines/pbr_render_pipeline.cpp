@@ -32,11 +32,12 @@ namespace ryujin
             const auto& cameraTransform = camera.get<transform_component>();
 
             auto projection = perspective(16.0f / 9.0f, cameraData.fov, cameraData.near, cameraData.far);
-        
+            auto view = look_at(cameraTransform.position, vec3(as<f32>(0)), up<f32>);
+
             camPtr[i] = {
-                .view = mat4(1.0f),
+                .view = view,
                 .proj = projection,
-                .viewProj = projection,
+                .viewProj = projection * view,
                 .position = cameraTransform.position,
                 .orientation = euler(cameraTransform.rotation)
             };

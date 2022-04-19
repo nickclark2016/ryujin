@@ -246,6 +246,56 @@ namespace ryujin
         const vec4<T> col3(zero, zero, (as<T>(2) * near * far) / nearMinusFar, zero);
         return mat4(col0, col1, col2, col3);
     }
+
+    template <numeric T>
+    inline constexpr mat4<T> look_at(const vec3<T>& eye, const vec3<T>& target, const vec3<T>& up)
+    {
+        const auto fwd = normalize(target - eye);
+        const auto side = normalize(cross(up, fwd));
+        const auto u = cross(fwd, side);
+
+        mat4 look(as<T>(1));
+
+        look[0][0] = side.x;
+        look[1][0] = side.y;
+        look[2][0] = side.z;
+        look[0][1] = u.x;
+        look[1][1] = u.y;
+        look[2][1] = u.z;
+        look[0][2] = fwd.x;
+        look[1][2] = fwd.y;
+        look[2][2] = fwd.z;
+        look[3][0] = -dot(side, eye);
+        look[3][1] = -dot(up, eye);
+        look[3][2] = -dot(fwd, eye);
+
+        return look;
+    }
+
+    template <numeric T>
+    inline constexpr mat4<T> look_direction(const vec3<T>& eye, const vec3<T>& forwards, const vec3<T>& up)
+    {
+        const auto fwd = normalize(forwards);
+        const auto side = normalize(cross(up, fwd));
+        const auto u = cross(fwd, side);
+
+        mat4 look(as<T>(1));
+
+        look[0][0] = side.x;
+        look[1][0] = side.y;
+        look[2][0] = side.z;
+        look[0][1] = u.x;
+        look[1][1] = u.y;
+        look[2][1] = u.z;
+        look[0][2] = fwd.x;
+        look[1][2] = fwd.y;
+        look[2][2] = fwd.z;
+        look[3][0] = -dot(side, eye);
+        look[3][1] = -dot(up, eye);
+        look[3][2] = -dot(fwd, eye);
+
+        return look;
+    }
 }
 
 #endif // transformations_hpp__

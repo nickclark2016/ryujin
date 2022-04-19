@@ -184,6 +184,23 @@ namespace ryujin
         const T magSquared = v.x * v.x + v.y * v.y + v.z * v.z;
         return fast_inv_sqrt(magSquared) * v;
     }
+
+    template <numeric T>
+    inline constexpr vec3<T> cross(const vec3<T>& lhs, const vec3<T>& rhs)
+    {
+        return vec3(
+            lhs[1] * rhs[2] - rhs[1] * lhs[2],
+            lhs[2] * rhs[0] - rhs[2] * lhs[0],
+            lhs[0] * rhs[1] - rhs[0] * lhs[1]
+        );
+    }
+
+    template <numeric T>
+    inline constexpr T dot(const vec3<T>& lhs, const vec3<T>& rhs)
+    {
+        const auto prod = lhs * rhs;
+        return prod[0] + prod[1] + prod[2];
+    }
 }
 
 #endif // vec3_hpp__
