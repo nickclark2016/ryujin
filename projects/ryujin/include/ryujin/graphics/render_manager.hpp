@@ -45,6 +45,7 @@ namespace ryujin
         void submit(const submit_info& info, const fence f = nullptr);
 
         void barrier(pipeline_stage src, pipeline_stage dst, const span<memory_barrier>& memBarriers, const span<buffer_memory_barrier>& bufMemBarriers, const span<image_memory_barrier>& imgMemBarriers);
+        void push_constants(const pipeline_layout& layout, const shader_stage stages, const std::uint32_t offset, const std::uint32_t size, const void* data);
 
         operator bool() const noexcept;
 

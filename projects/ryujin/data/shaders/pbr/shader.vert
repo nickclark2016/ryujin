@@ -18,7 +18,7 @@ layout (location = 0) out VS_OUT
 
 layout (set = 0, binding = 0) uniform Camera
 {
-    scene_camera camera;
+    scene_camera cameras[MAX_CAMERA_COUNT];
 };
 
 layout (set = 1, binding = 0) buffer Instances
@@ -26,8 +26,15 @@ layout (set = 1, binding = 0) buffer Instances
     instance_data instances[MAX_INSTANCE_COUNT];
 };
 
+layout (push_constant) uniform constants
+{
+    uint activeCamera;
+};
+
 void main(void)
 {
+    scene_camera camera = cameras[activeCamera];
+
     instance_data instance = instances[gl_InstanceIndex];
     mat4 mvp = camera.viewProj * instance.transform;
     vec4 worldPos = mvp * vec4(position, 1);

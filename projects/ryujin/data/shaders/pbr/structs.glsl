@@ -5,6 +5,7 @@ layout (constant_id = 0) const uint MAX_INSTANCE_COUNT = 1024 * 512;
 layout (constant_id = 1) const uint MAX_MATERIAL_COUNT = 1024 * 64;
 layout (constant_id = 2) const uint MAX_TEXTURE_COUNT = 256;
 layout (constant_id = 3) const uint MAX_POINT_LIGHT_COUNT = 512;
+layout (constant_id = 4) const uint MAX_CAMERA_COUNT = 32;
 
 struct material
 {

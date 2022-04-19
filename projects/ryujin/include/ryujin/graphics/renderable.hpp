@@ -17,6 +17,12 @@ namespace ryujin
 {
     class render_manager;
 
+    enum class material_type
+    {
+        OPAQUE,
+        TRANSLUCENT
+    };
+
     struct material
     {
         slot_map_key albedo;
@@ -24,6 +30,7 @@ namespace ryujin
         slot_map_key metallicRoughness;
         slot_map_key emissive;
         slot_map_key ao;
+        material_type type;
     };
 
     struct renderable_mesh
@@ -78,6 +85,12 @@ namespace ryujin
             buffer indices;
         };
 
+        struct instance_write_info
+        {
+            std::size_t opaqueCount;
+            std::size_t translucentCount;
+        };
+
         explicit renderable_manager(render_manager* manager, registry* reg);
         slot_map_key load_texture(const std::string& name, const texture_asset& asset);
         slot_map_key load_texture(const std::string& name, const image img, const image_view view);
@@ -90,9 +103,9 @@ namespace ryujin
         slot_map_key load_mesh(const std::string& name, const mesh& m);
         void build_meshes();
 
-        std::size_t write_instances(buffer& buf, const std::size_t offset);
+        instance_write_info write_instances(buffer& buf, const std::size_t offset);
         std::size_t write_materials(buffer& buf, const std::size_t offset);
-        std::size_t write_draw_calls(buffer& indirectBuffer, buffer& drawCountBuffer, const std::size_t offset);
+        std::size_t write_draw_calls(buffer& indirectBuffer, buffer& drawCountBuffer, const std::size_t offset, const material_type type);
         std::size_t write_textures(texture* buf, std::size_t offset);
 
         const buffer_group& get_buffer_group(const std::size_t idx) const noexcept;
@@ -146,8 +159,12 @@ namespace ryujin
         image_sampler _defaultSampler = {};
 
         // mesh group id -> collection of meshes -> vector of entities with that mesh
-        std::unordered_map<std::uint32_t, std::unordered_map<slot_map_key, vector<entity_type>, slot_map_key_hash>> _entities;
+        vector<std::unordered_map<std::uint32_t, std::unordered_map<slot_map_key, vector<entity_type>, slot_map_key_hash>>> _entities;
+        bool _entitiesDirty;
 
+        vector<vector<gpu_indirect_call>> _drawCallCache;
+        vector<vector<std::uint32_t>> _drawCountCache;
+        vector<std::size_t> _groupsWrittenCount;
         std::map<std::uint32_t, vector<entity_type>> _cameras;
     };
 }

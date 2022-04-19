@@ -11,7 +11,8 @@ namespace ryujin
         auto& renderables = get_render_manager()->renderables();
         auto frameInFlight = get_render_manager()->get_frame_in_flight();
 
-        _numBufferGroupsToDraw = renderables.write_draw_calls(_indirectCommands, _indirectCount, frameInFlight * _maxDrawCalls);
+        _numBufferGroupsToDraw = renderables.write_draw_calls(_indirectCommands, _indirectCount, frameInFlight * _maxDrawCalls, material_type::OPAQUE);
+        _numTranslucentBufferGroupsToDraw = renderables.write_draw_calls(_translucentIndirectCommands, _translucentIndirectCount, frameInFlight * _maxDrawCalls, material_type::TRANSLUCENT);
         renderables.write_materials(_materials, frameInFlight * _maxMaterials);
         renderables.write_instances(_instanceData, frameInFlight * _maxInstances);
         _hostSceneData.texturesLoaded = as<std::uint32_t>(renderables.write_textures(_textures.data(), frameInFlight * _maxTextures));
@@ -19,8 +20,8 @@ namespace ryujin
         _activeCams.clear();
         renderables.get_active_cameras(_activeCams);
 
-        assert(_activeCams.size() <= _maxCameras && "Too many active cameras defined.");
-        assert(_activeCams.size() > 0 && "No active cameras defined.");
+        // assert(_activeCams.size() <= _maxCameras && "Too many active cameras defined.");
+        // assert(_activeCams.size() > 0 && "No active cameras defined.");
 
         auto camPtr = reinterpret_cast<scene_camera*>(_cameraData.info.pMappedData) + frameInFlight * _maxCameras;
         for (std::size_t i = 0; i < _activeCams.size(); ++i)
@@ -49,9 +50,10 @@ namespace ryujin
         auto graphicsList = get_render_manager()->next_graphics_command_list();
         graphicsList.begin();
 
-        for (const auto& camera : _activeCams)
+        std::uint32_t activeCameraIdx = 0;
+        for (const auto& cam : _activeCams)
         {
-            const auto cameraData = camera.get<camera_component>();
+            const auto cameraData = cam.get<camera_component>();
             set_active_render_target(cameraData.target);
 
             clear_value clears[] = {
@@ -89,7 +91,7 @@ namespace ryujin
             const descriptor_buffer_info cameraBufferInfo = {
                 .buf = _cameraData,
                 .offset = frameInFlight * sizeof(scene_camera) * _maxCameras,
-                .length = sizeof(scene_camera)
+                .length = sizeof(scene_camera) * _maxCameras
             };
 
             const descriptor_write_info camera = {
@@ -216,12 +218,15 @@ namespace ryujin
                 transition_render_targets(graphicsList);
             }
 
+            graphicsList.push_constants(_sceneLayout, shader_stage::VERTEX | shader_stage::FRAGMENT, 0, 4, &activeCameraIdx);
+
             graphicsList.set_viewports(span(vp));
             graphicsList.set_scissors(span(sc));
 
             graphicsList.bind_graphics_descriptor_sets(_sceneLayout, span(descriptors), 0, span(dynamicOffsets));
             graphicsList.begin_render_pass(beginInfo);
             _opaque->render(graphicsList, _indirectCommands, _indirectCount, _maxDrawCalls * frameInFlight, _numBufferGroupsToDraw);
+            // render(graphicsList, _translucentIndirectCommands, _translucentIndirectCount, _maxDrawCalls * frameInFlight, _numBufferGroupsToDraw);
             graphicsList.end_render_pass();
         }
 
@@ -402,27 +407,29 @@ namespace ryujin
         auto sceneSetLayoutResult = get_render_manager()->create(sceneSetLayoutCi);
         auto drawableSetLayoutResult = get_render_manager()->create(drawableSetLayoutCi);
 
-        if (sceneSetLayoutResult && drawableSetLayoutResult)
-        {
-            descriptor_set_layout layouts[] = { *sceneSetLayoutResult, *drawableSetLayoutResult };
+        assert(sceneSetLayoutResult && drawableSetLayoutResult && "Failed to create set layouts.");
 
-            const pipeline_layout_create_info layoutCi = {
-                .layouts = span(layouts),
-                .name = "pbr_pipeline_layout"
-            };
+        const descriptor_set_layout layouts[] = { *sceneSetLayoutResult, *drawableSetLayoutResult };
 
-            auto pipelineLayoutResult = get_render_manager()->create(layoutCi);
-            if (pipelineLayoutResult)
-            {
-                _sceneLayout = *pipelineLayoutResult;
-                _sceneWideLayout = *sceneSetLayoutResult;
-                _drawableLayout = *drawableSetLayoutResult;
-            }
-        }
-        else
-        {
-            // error out
-        }
+        const push_constant_range activeCameraIndexPc = {
+            .stages = shader_stage::VERTEX | shader_stage::FRAGMENT,
+            .offset = 0,
+            .size = as<std::uint32_t>(sizeof(4))
+        };
+
+        const pipeline_layout_create_info layoutCi = {
+            .layouts = span(layouts),
+            .pushConstants = span(activeCameraIndexPc),
+            .name = "pbr_pipeline_layout"
+        };
+
+        const auto pipelineLayoutResult = get_render_manager()->create(layoutCi);
+        
+        assert(pipelineLayoutResult && "Failed to create pipeline layout.");
+
+        _sceneLayout = *pipelineLayoutResult;
+        _sceneWideLayout = *sceneSetLayoutResult;
+        _drawableLayout = *drawableSetLayoutResult;
     }
 
     void pbr_render_pipeline::initialize_buffers()
@@ -477,16 +484,22 @@ namespace ryujin
 
         auto instanceBufferResult = get_render_manager()->create(instanceBufferCi, allocCi);
         auto materialBufferResult = get_render_manager()->create(materialBufferCi, allocCi);
-        auto indirectBufferResult = get_render_manager()->create(indirectBufferCi, allocCi);
-        auto countBufferResult = get_render_manager()->create(countBufferCi, allocCi);
+        auto opaqueIndirectBufferResult = get_render_manager()->create(indirectBufferCi, allocCi);
+        auto translucentIndirectBufferResult = get_render_manager()->create(indirectBufferCi, allocCi);
+        auto opaqueCountBufferResult = get_render_manager()->create(countBufferCi, allocCi);
+        auto translucentCountBufferResult = get_render_manager()->create(countBufferCi, allocCi);
         auto cameraBufferResult = get_render_manager()->create(cameraBufferCi, allocCi);
         auto sceneBufferResult = get_render_manager()->create(sceneBufferCi, allocCi);
 
-        const auto buffersBuilt = instanceBufferResult && materialBufferResult && indirectBufferResult && countBufferResult && cameraBufferResult && sceneBufferResult;
+        const auto buffersBuilt = instanceBufferResult && materialBufferResult && opaqueIndirectBufferResult && translucentIndirectBufferResult && 
+                                  opaqueCountBufferResult && translucentCountBufferResult && cameraBufferResult && sceneBufferResult;
         assert(buffersBuilt);
 
-        _indirectCommands = *indirectBufferResult;
-        _indirectCount = *countBufferResult;
+        _indirectCommands = *opaqueIndirectBufferResult;
+        _indirectCount = *opaqueCountBufferResult;
+        _translucentIndirectCommands = *translucentIndirectBufferResult;
+        _indirectCount = *translucentCountBufferResult;
+        _translucentIndirectCount = *translucentCountBufferResult;
         _materials = *materialBufferResult;
         _instanceData = *instanceBufferResult;
         _cameraData = *cameraBufferResult;

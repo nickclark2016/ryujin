@@ -15,7 +15,7 @@ layout (location = 0) in VS_OUT
 
 layout (set = 0, binding = 0) uniform Camera
 {
-    scene_camera camera;
+    scene_camera cameras[MAX_CAMERA_COUNT];
 };
 
 layout (std430, set = 0, binding = 1) buffer SceneData 
@@ -35,6 +35,11 @@ layout (std430, set = 1, binding = 1) buffer Materials
 };
 
 layout (set = 1, binding = 2) uniform sampler2D textures[MAX_TEXTURE_COUNT];
+
+layout (push_constant) uniform constants
+{
+    uint activeCamera;
+};
 
 void main(void)
 {

@@ -77,7 +77,9 @@ namespace ryujin
         std::unique_ptr<opaque_pbr_pass> _opaque;
 
         buffer _indirectCommands = {};
+        buffer _translucentIndirectCommands = {};
         buffer _indirectCount = {};
+        buffer _translucentIndirectCount = {};
         buffer _materials = {};
         buffer _instanceData = {};
         buffer _cameraData = {};
@@ -85,6 +87,7 @@ namespace ryujin
         vector<texture> _textures;
         texture _invalidTexture = {};
         std::size_t _numBufferGroupsToDraw = 0;
+        std::size_t _numTranslucentBufferGroupsToDraw = 0;
 
         vector<descriptor_image_info> _textureWriteScratchBuffer;
         vector<entity_handle<registry::entity_type>> _activeCams;

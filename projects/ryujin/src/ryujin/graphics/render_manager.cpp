@@ -179,9 +179,6 @@ namespace ryujin
         for (auto& b : _stagingBuffers)
         {
             b.offset = 0;
-#ifdef _DEBUG
-            memset(b.buf.info.pMappedData, 0, b.buf.info.size);
-#endif
         }
 
         VkAcquireNextImageInfoKHR imageAcquireInfo = {
@@ -1994,6 +1991,13 @@ namespace ryujin
         }
 
         _funcs->cmdPipelineBarrier(_buffer, to_vulkan(src), to_vulkan(dst), 0, as<std::uint32_t>(memBarriers.length()), vkMemBarriers, as<std::uint32_t>(bufMemBarriers.length()), vkBufMemBarriers, as<std::uint32_t>(imgMemBarriers.length()), vkImgMemBarriers);
+    }
+
+    void command_list::push_constants(const pipeline_layout& layout, const shader_stage stages, const std::uint32_t offset, const std::uint32_t size, const void* data)
+    {
+        assert(offset % 4 == 0 && "Push constant offset must be a multiple of 4");
+        assert(size % 4 == 0 && size > 0 && "Push constant size must be a multiple of 4 greater than 0");
+        _funcs->cmdPushConstants(_buffer, layout, to_vulkan(stages), offset, size, data);
     }
 
     command_list::operator bool() const noexcept
