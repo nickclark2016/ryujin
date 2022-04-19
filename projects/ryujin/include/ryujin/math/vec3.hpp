@@ -201,6 +201,26 @@ namespace ryujin
         const auto prod = lhs * rhs;
         return prod[0] + prod[1] + prod[2];
     }
+
+    template <numeric T>
+    inline constexpr vec3<T> as_radians(const vec3<T>& v)
+    {
+        return vec3(
+            as_radians(v.x),
+            as_radians(v.y),
+            as_radians(v.z)
+        );
+    }
+
+    template <numeric T>
+    inline constexpr vec3<T> as_degrees(const vec3<T>& v)
+    {
+        return vec3(
+            as_degrees(v.x),
+            as_degrees(v.y),
+            as_degrees(v.z)
+        );
+    }
 }
 
 #endif // vec3_hpp__

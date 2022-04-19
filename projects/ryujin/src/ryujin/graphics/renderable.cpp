@@ -410,9 +410,9 @@ namespace ryujin
         for (const auto& vertex : m.vertices)
         {
             mesh_group::position_t positionAttrib = {
-                .x = vertex.position.x,
-                .y = vertex.position.y,
-                .z = vertex.position.z
+                .x = compress_to_half(vertex.position.x),
+                .y = compress_to_half(vertex.position.y),
+                .z = compress_to_half(vertex.position.z)
             };
 
             mesh_group::interleaved_t interleavedAttribs = {

@@ -139,7 +139,7 @@ namespace ryujin
 
         struct mesh_group
         {
-            struct position_t { float x, y, z; };
+            struct position_t { u16 x, y, z; };
             struct texcoord_t { float u, v; };
             struct normal_t { float x, y, z; };
             struct tangent_t { float x, y, z, w; };

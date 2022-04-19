@@ -115,7 +115,7 @@ namespace ryujin
 
         const vertex_input_binding positionsBinding = {
             .binding = 0,
-            .stride = 3 * sizeof(float),
+            .stride = 3 * sizeof(u16),
             .rate = input_binding_rate::PER_VERTEX
         };
 
@@ -131,7 +131,7 @@ namespace ryujin
             .location = 0,
             .binding = 0,
             .offset = 0,
-            .format = data_format::R32G32B32_SFLOAT
+            .format = data_format::R16G16B16_SNORM
         };
 
         const vertex_input_attribute texCoord0Attrib = {

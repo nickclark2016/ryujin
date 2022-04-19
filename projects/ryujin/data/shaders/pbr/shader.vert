@@ -2,7 +2,7 @@
 
 #include "structs.glsl"
 
-layout (location = 0) in vec3 position;
+layout (location = 0) in mediump vec3 position;
 layout (location = 1) in vec2 texcoord0;
 layout (location = 2) in vec3 normal;
 layout (location = 3) in vec4 tangent;
