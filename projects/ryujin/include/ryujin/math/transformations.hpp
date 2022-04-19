@@ -1,6 +1,7 @@
 #ifndef transformations_hpp__
 #define transformations_hpp__
 
+#include "mat3.hpp"
 #include "mat4.hpp"
 #include "quat.hpp"
 #include "vec3.hpp"
@@ -22,6 +23,86 @@ namespace ryujin
 
     template <numeric T>
     constexpr vec3<T> right = vec3<T>(as<T>(1), as<T>(0), as<T>(0));
+
+    template <numeric T>
+    inline constexpr mat3<T> as_mat3(const quat<T>& q)
+    {
+        mat3 res(as<T>(1));
+        const T qxx = q.x * q.x;
+        const T qxy = q.x * q.y;
+        const T qxz = q.x * q.z;
+        const T qyy = q.y * q.y;
+        const T qyz = q.y * q.z;
+        const T qzz = q.z * q.z;
+        const T qwx = q.w * q.x;
+        const T qwy = q.w * q.y;
+        const T qwz = q.w * q.z;
+
+        constexpr T one = as<T>(1);
+        constexpr T two = as<T>(2);
+
+        res[0][0] = one - two * (qyy + qzz);
+        res[0][1] = two * (qxy + qwz);
+        res[0][2] = two * (qxz - qwy);
+
+        res[1][0] = two * (qxy - qwz);
+        res[1][1] = one - two * (qxx + qzz);
+        res[1][2] = two * (qyz + qwx);
+
+        res[2][0] = two * (qxz + qwy);
+        res[2][1] = two * (qyz - qwx);
+        res[2][2] = one - two * (qxx * qyy);
+
+        return res;
+    }
+
+    template <numeric T>
+    inline constexpr quat<T> as_quat(const mat3<T>& m)
+    {
+        const T x = m[0][0] - m[1][1] - m[2][2];
+        const T y = m[1][1] - m[0][0] - m[2][2];
+        const T z = m[2][2] - m[0][0] - m[1][1];
+        const T w = m[0][0] + m[1][1] + m[2][2];
+
+        u32 biggestIndex = 0;
+        u32 biggest = w;
+
+        if (x > biggest)
+        {
+            biggestIndex = 1;
+            biggest = x;
+        }
+
+        if (y > biggest)
+        {
+            biggestIndex = 2;
+            biggest = y;
+        }
+
+        if (z > biggest)
+        {
+            biggestIndex = 3;
+            biggest = 3;
+        }
+
+        const T biggestValue = std::sqrt(biggest + as<T>(1)) + as<T>(0.5);
+        const T multiplier = as<T>(0.25) / biggestValue;
+
+        switch (biggestValue)
+        {
+        case 0:
+            return quat(biggestValue, multiplier * (m[1][2] - m[2][1]), multiplier * (m[2][0] - m[0][2]), multiplier * (m[0][1] - m[1][0]));
+        case 1:
+            return quat(multiplier * (m[1][2] - m[2][1]), biggestValue, multiplier * (m[0][1] + m[1][0]), multiplier * (m[2][0] + m[0][2]));
+        case 2:
+            return quat(multiplier * (m[2][0] - m[0][2]), multiplier * (m[0][1] + m[1][0]), biggestValue, multiplier * (m[1][2] + m[2][1]));
+        case 3:
+            return quat(multiplier * (m[0][1] - m[1][0]), multiplier * (m[2][0] + m[0][2]), multiplier * (m[1][2] + m[2][1]), biggestValue);
+        default:
+           assert(false && "Sani ty check. Should never reach. If it does, please open a PR.");
+           return quat<T>();
+        }
+    }
 
     template <numeric T>
     inline constexpr mat4<T> as_mat4(const quat<T>& q)
@@ -295,6 +376,43 @@ namespace ryujin
         look[3][2] = -dot(fwd, eye);
 
         return look;
+    }
+
+    template <numeric T>
+    inline constexpr mat3<T> tbn(const vec3<T>& tangent, const vec3<T>& bitangent, const vec3<T>& normal)
+    {
+        return mat3(tangent, bitangent, normal);
+    }
+
+    template <numeric T>
+    inline constexpr quat<T> encode_tbn(const vec3<T>& tangent, const vec3<T>& bitangent, const vec3<T>& normal)
+    {
+        const mat3 tbnMatrix = tbn(tangent, bitangent, normal);
+        quat<T> qtangent = as_quat(tbnMatrix);
+        qtangent = qtangent.normalize();
+
+        if (qtangent.w < 0)
+        {
+            qtangent = -qtangent;
+        }
+
+        const T bias = as<T>(1) / (std::pow(as<T>(2), as<T>(16)) - as<T>(1));
+        if (qtangent.w < bias)
+        {
+            const T normFactor = std::sqrt(as<T>(1) - bias * bias); // sqrt(1 - bias^2)
+            qtangent.w = bias;
+            qtangent.x *= normFactor;
+            qtangent.y *= normFactor;
+            qtangent.z *= normFactor;
+        }
+
+        const vec3 naturalBinorm = cross(tangent, normal);
+        if (dot(naturalBinorm, bitangent) <= 0)
+        {
+            qtangent = -qtangent;
+        }
+
+        return qtangent;
     }
 }
 

@@ -124,6 +124,12 @@ namespace ryujin
     }
 
     template <numeric T>
+    inline constexpr quat<T> operator-(const quat<T>& q)
+    {
+        return quat(-q.w, -q.x, -q.y, -q.z);
+    }
+
+    template <numeric T>
     inline constexpr T norm(const quat<T>& q)
     {
         const T magSquared = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w;
