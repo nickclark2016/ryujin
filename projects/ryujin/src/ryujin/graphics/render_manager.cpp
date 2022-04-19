@@ -176,10 +176,7 @@ namespace ryujin
         auto cmdBuffer = list._buffer;
 
         // reset the staging buffers
-        for (auto& b : _stagingBuffers)
-        {
-            b.offset = 0;
-        }
+        reset_staging_buffer();
 
         VkAcquireNextImageInfoKHR imageAcquireInfo = {
             VK_STRUCTURE_TYPE_ACQUIRE_NEXT_IMAGE_INFO_KHR,
@@ -1189,7 +1186,9 @@ namespace ryujin
         for (auto& buf : _stagingBuffers)
         {
             buf.offset = 0;
-            memset(buf.buf.info.pMappedData, 0, buf.size);
+#ifdef _DEBUG
+            memset(buf.buf.info.pMappedData, 0, buf.size); // this takes about 1ms for each staging buffer at time of writing
+#endif
         }
     }
 

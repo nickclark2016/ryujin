@@ -662,19 +662,21 @@ namespace ryujin
         return materialId;
     }
 
-    std::size_t renderable_manager::write_draw_calls(buffer& indirectBuffer, buffer& drawCountBuffer, const std::size_t offset, const material_type type)
+    renderable_manager::draw_call_write_info renderable_manager::write_draw_calls(buffer& indirectBuffer, buffer& drawCountBuffer, const std::size_t offset, const material_type type)
     {
-        // TODO: figure out some way to only do this when we change the mapping
-        std::uint32_t firstInstance = 0;
-        std::uint32_t meshGroupsWritten = 0;
-
         const std::size_t typeId = as<std::size_t>(type);
 
         if (_entitiesDirty)
         {
+            spdlog::debug("Renderable entities change detected. Rebuilding draw information.");
+            std::uint32_t firstInstance = 0;
+            std::uint32_t meshGroupsWritten = 0;
+            std::size_t totalDrawCalls = 0;
+
             for (std::size_t i = 0; i < _drawCallCache.size(); ++i)
             {
                 meshGroupsWritten = 0;
+                totalDrawCalls = 0;
                 _drawCallCache[i].clear();
                 _drawCountCache[i].clear();
 
@@ -699,9 +701,14 @@ namespace ryujin
                         ++drawCallCount;
                     }
                     _drawCountCache[i].push_back(drawCallCount);
+                    totalDrawCalls += drawCallCount;
                     ++meshGroupsWritten;
                 }
-                _groupsWrittenCount[i] = meshGroupsWritten;
+
+                _groupsWrittenCount[i] = {
+                    .meshGroupCount = meshGroupsWritten,
+                    .drawCallCount = totalDrawCalls
+                };
             }
 
             _entitiesDirty = false;
@@ -713,7 +720,6 @@ namespace ryujin
         auto mapped = reinterpret_cast<std::uint32_t*>(drawCountBuffer.info.pMappedData) + offset;
         memcpy(mapped, _drawCountCache[typeId].data(), _drawCountCache[typeId].size() * sizeof(std::uint32_t));
         
-        spdlog::trace("Writing {} mesh groups to indirect commands.", meshGroupsWritten);
         return _groupsWrittenCount[typeId];
     }
 

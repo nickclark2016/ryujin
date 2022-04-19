@@ -14,14 +14,14 @@ namespace ryujin
         _numBufferGroupsToDraw = renderables.write_draw_calls(_indirectCommands, _indirectCount, frameInFlight * _maxDrawCalls, material_type::OPAQUE);
         _numTranslucentBufferGroupsToDraw = renderables.write_draw_calls(_translucentIndirectCommands, _translucentIndirectCount, frameInFlight * _maxDrawCalls, material_type::TRANSLUCENT);
         renderables.write_materials(_materials, frameInFlight * _maxMaterials);
-        renderables.write_instances(_instanceData, frameInFlight * _maxInstances);
+        _instanceCounts = renderables.write_instances(_instanceData, frameInFlight * _maxInstances);
         _hostSceneData.texturesLoaded = as<std::uint32_t>(renderables.write_textures(_textures.data(), frameInFlight * _maxTextures));
 
         _activeCams.clear();
         renderables.get_active_cameras(_activeCams);
 
-        // assert(_activeCams.size() <= _maxCameras && "Too many active cameras defined.");
-        // assert(_activeCams.size() > 0 && "No active cameras defined.");
+        assert(_activeCams.size() <= _maxCameras && "Too many active cameras defined.");
+        assert(_activeCams.size() > 0 && "No active cameras defined.");
 
         auto camPtr = reinterpret_cast<scene_camera*>(_cameraData.info.pMappedData) + frameInFlight * _maxCameras;
         for (std::size_t i = 0; i < _activeCams.size(); ++i)
@@ -223,10 +223,15 @@ namespace ryujin
             graphicsList.set_viewports(span(vp));
             graphicsList.set_scissors(span(sc));
 
+            const std::size_t opaqueIndirectOffset = _maxDrawCalls * frameInFlight;
+            const std::size_t opaqueCountOffset = _maxDrawCalls * frameInFlight;
+            const std::size_t translucentIndirectOffset = opaqueIndirectOffset + _numBufferGroupsToDraw.meshGroupCount;
+            const std::size_t translucentCountOffset = opaqueCountOffset + _numBufferGroupsToDraw.drawCallCount;
+
             graphicsList.bind_graphics_descriptor_sets(_sceneLayout, span(descriptors), 0, span(dynamicOffsets));
             graphicsList.begin_render_pass(beginInfo);
-            _opaque->render(graphicsList, _indirectCommands, _indirectCount, _maxDrawCalls * frameInFlight, _numBufferGroupsToDraw);
-            // render(graphicsList, _translucentIndirectCommands, _translucentIndirectCount, _maxDrawCalls * frameInFlight, _numBufferGroupsToDraw);
+            _opaque->render(graphicsList, _indirectCommands, _indirectCount, opaqueIndirectOffset, opaqueCountOffset, _numBufferGroupsToDraw.meshGroupCount);
+            _naiveTranslucent->render(graphicsList, _translucentIndirectCommands, _translucentIndirectCount, _maxDrawCalls* frameInFlight, translucentCountOffset, _numTranslucentBufferGroupsToDraw.meshGroupCount);
             graphicsList.end_render_pass();
         }
 
@@ -265,6 +270,7 @@ namespace ryujin
 
         _blit = std::make_unique<blit_pass>(*get_render_manager());
         _opaque = std::make_unique<opaque_pbr_pass>(*get_render_manager(), _sceneLayout, _scenePass, _targetWidth, _targetHeight);
+        _naiveTranslucent = std::make_unique<naive_translucent_pbr_pass>(*get_render_manager(), _sceneLayout, _scenePass, _targetWidth, _targetHeight);
     }
 
     void pbr_render_pipeline::init_scene_pass()
@@ -482,12 +488,21 @@ namespace ryujin
             .persistentlyMapped = true
         };
 
+        const allocation_create_info seqAllocCi = {
+            .required = memory_property::HOST_COHERENT | memory_property::HOST_VISIBLE,
+            .preferred = memory_property::NONE,
+            .usage = memory_usage::PREFER_AUTO_SELECT,
+            .hostSequentialWriteAccess = true,
+            .hostRandomAccess = false,
+            .persistentlyMapped = true
+        };
+
         auto instanceBufferResult = get_render_manager()->create(instanceBufferCi, allocCi);
         auto materialBufferResult = get_render_manager()->create(materialBufferCi, allocCi);
-        auto opaqueIndirectBufferResult = get_render_manager()->create(indirectBufferCi, allocCi);
-        auto translucentIndirectBufferResult = get_render_manager()->create(indirectBufferCi, allocCi);
-        auto opaqueCountBufferResult = get_render_manager()->create(countBufferCi, allocCi);
-        auto translucentCountBufferResult = get_render_manager()->create(countBufferCi, allocCi);
+        auto opaqueIndirectBufferResult = get_render_manager()->create(indirectBufferCi, seqAllocCi);
+        auto translucentIndirectBufferResult = get_render_manager()->create(indirectBufferCi, seqAllocCi);
+        auto opaqueCountBufferResult = get_render_manager()->create(countBufferCi, seqAllocCi);
+        auto translucentCountBufferResult = get_render_manager()->create(countBufferCi, seqAllocCi);
         auto cameraBufferResult = get_render_manager()->create(cameraBufferCi, allocCi);
         auto sceneBufferResult = get_render_manager()->create(sceneBufferCi, allocCi);
 

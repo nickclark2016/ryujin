@@ -91,6 +91,12 @@ namespace ryujin
             std::size_t translucentCount;
         };
 
+        struct draw_call_write_info
+        {
+            std::size_t meshGroupCount;
+            std::size_t drawCallCount;
+        };
+
         explicit renderable_manager(render_manager* manager, registry* reg);
         slot_map_key load_texture(const std::string& name, const texture_asset& asset);
         slot_map_key load_texture(const std::string& name, const image img, const image_view view);
@@ -105,7 +111,7 @@ namespace ryujin
 
         instance_write_info write_instances(buffer& buf, const std::size_t offset);
         std::size_t write_materials(buffer& buf, const std::size_t offset);
-        std::size_t write_draw_calls(buffer& indirectBuffer, buffer& drawCountBuffer, const std::size_t offset, const material_type type);
+        draw_call_write_info write_draw_calls(buffer& indirectBuffer, buffer& drawCountBuffer, const std::size_t offset, const material_type type);
         std::size_t write_textures(texture* buf, std::size_t offset);
 
         const buffer_group& get_buffer_group(const std::size_t idx) const noexcept;
@@ -164,7 +170,7 @@ namespace ryujin
 
         vector<vector<gpu_indirect_call>> _drawCallCache;
         vector<vector<std::uint32_t>> _drawCountCache;
-        vector<std::size_t> _groupsWrittenCount;
+        vector<draw_call_write_info> _groupsWrittenCount;
         std::map<std::uint32_t, vector<entity_type>> _cameras;
     };
 }

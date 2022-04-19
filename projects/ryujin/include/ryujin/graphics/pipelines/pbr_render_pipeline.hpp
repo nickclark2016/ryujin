@@ -8,7 +8,9 @@
 #include "../../math/mat4.hpp"
 #include "../../math/vec3.hpp"
 #include "../passes/blit_pass.hpp"
+#include "../passes/naive_translucent_pbr_pass.hpp"
 #include "../passes/opaque_pbr_pass.hpp"
+#include "../render_manager.hpp"
 #include "../types.hpp"
 
 #include <memory>
@@ -75,6 +77,7 @@ namespace ryujin
 
         std::unique_ptr<blit_pass> _blit;
         std::unique_ptr<opaque_pbr_pass> _opaque;
+        std::unique_ptr<naive_translucent_pbr_pass> _naiveTranslucent;
 
         buffer _indirectCommands = {};
         buffer _translucentIndirectCommands = {};
@@ -86,11 +89,13 @@ namespace ryujin
         buffer _sceneData = {};
         vector<texture> _textures;
         texture _invalidTexture = {};
-        std::size_t _numBufferGroupsToDraw = 0;
-        std::size_t _numTranslucentBufferGroupsToDraw = 0;
 
         vector<descriptor_image_info> _textureWriteScratchBuffer;
         vector<entity_handle<registry::entity_type>> _activeCams;
+
+        renderable_manager::draw_call_write_info _numBufferGroupsToDraw = {};
+        renderable_manager::draw_call_write_info _numTranslucentBufferGroupsToDraw = {};
+        renderable_manager::instance_write_info _instanceCounts;
 
         scene_data _hostSceneData = {};
     };
