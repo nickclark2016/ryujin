@@ -115,7 +115,7 @@ namespace ryujin
     template <numeric T>
     inline constexpr quat<T> operator*(const T lhs, const quat<T>& rhs)
     {
-        return quat4(
+        return quat(
             lhs * rhs.w,
             lhs * rhs.x,
             lhs * rhs.y,

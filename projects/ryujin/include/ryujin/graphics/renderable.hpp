@@ -140,14 +140,12 @@ namespace ryujin
         struct mesh_group
         {
             struct position_t { u16 x, y, z; };
-            struct texcoord_t { float u, v; };
-            struct normal_t { float x, y, z; };
-            struct tangent_t { float x, y, z, w; };
+            struct encoded_tbn_t { u16 x, y, z, w; };
+            struct texcoord_t { u16 u, v; };
             struct interleaved_t
             {
+                encoded_tbn_t tbn;
                 texcoord_t texcoord0;
-                normal_t normal;
-                tangent_t tangent;
             };
 
             vector<position_t> positions;

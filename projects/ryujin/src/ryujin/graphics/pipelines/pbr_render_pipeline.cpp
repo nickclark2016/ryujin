@@ -32,7 +32,7 @@ namespace ryujin
             const auto& cameraTransform = camera.get<transform_component>();
 
             auto projection = perspective(16.0f / 9.0f, cameraData.fov, cameraData.near, cameraData.far);
-            auto view = look_at(cameraTransform.position, vec3(as<f32>(0)), up<f32>);
+            auto view = look_direction(cameraTransform.position, extract_forward(cameraTransform.rotation), extract_up(cameraTransform.rotation));
 
             camPtr[i] = {
                 .view = view,
@@ -233,7 +233,7 @@ namespace ryujin
             graphicsList.bind_graphics_descriptor_sets(_sceneLayout, span(descriptors), 0, span(dynamicOffsets));
             graphicsList.begin_render_pass(beginInfo);
             _opaque->render(graphicsList, _indirectCommands, _indirectCount, opaqueIndirectOffset, opaqueCountOffset, _numBufferGroupsToDraw.meshGroupCount);
-            _naiveTranslucent->render(graphicsList, _translucentIndirectCommands, _translucentIndirectCount, _maxDrawCalls* frameInFlight, translucentCountOffset, _numTranslucentBufferGroupsToDraw.meshGroupCount);
+            // _naiveTranslucent->render(graphicsList, _translucentIndirectCommands, _translucentIndirectCount, _maxDrawCalls* frameInFlight, translucentCountOffset, _numTranslucentBufferGroupsToDraw.meshGroupCount);
             graphicsList.end_render_pass();
         }
 

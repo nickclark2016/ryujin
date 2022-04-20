@@ -206,7 +206,7 @@ namespace ryujin
                 _packed.pop_back();
 
                 const auto valueBack = _values.back();
-                _values[packedIndex] = valueBack;
+                _values[packedIndex] = std::move(valueBack);
                 _values.pop_back();
 
                 const auto toMove = entity_traits<typename EntityType::type>::from_type(packedIndex);

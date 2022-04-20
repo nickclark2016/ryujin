@@ -65,7 +65,7 @@ namespace ryujin
         const T w = m[0][0] + m[1][1] + m[2][2];
 
         u32 biggestIndex = 0;
-        u32 biggest = w;
+        T biggest = w;
 
         if (x > biggest)
         {
@@ -88,7 +88,7 @@ namespace ryujin
         const T biggestValue = std::sqrt(biggest + as<T>(1)) + as<T>(0.5);
         const T multiplier = as<T>(0.25) / biggestValue;
 
-        switch (biggestValue)
+        switch (biggestIndex)
         {
         case 0:
             return quat(biggestValue, multiplier * (m[1][2] - m[2][1]), multiplier * (m[2][0] - m[0][2]), multiplier * (m[0][1] - m[1][0]));
@@ -389,7 +389,7 @@ namespace ryujin
     {
         const mat3 tbnMatrix = tbn(tangent, bitangent, normal);
         quat<T> qtangent = as_quat(tbnMatrix);
-        qtangent = qtangent.normalize();
+        qtangent = normalize(qtangent);
 
         if (qtangent.w < 0)
         {
@@ -413,6 +413,24 @@ namespace ryujin
         }
 
         return qtangent;
+    }
+
+    template <numeric T>
+    inline constexpr vec3<T> extract_forward(const quat<T>& rotation)
+    {
+        const T x = as<T>(2) * (rotation.x * rotation.z + rotation.w * rotation.y);
+        const T y = as<T>(2) * (rotation.y * rotation.z - rotation.w * rotation.x);
+        const T z = as<T>(1) - as<T>(2) * (rotation.x * rotation.x + rotation.y * rotation.y);
+        return vec3(x, y, z);
+    }
+
+    template <numeric T>
+    inline constexpr vec3<T> extract_up(const quat<T>& rotation)
+    {
+        const T x = as<T>(2) * (rotation.x * rotation.y - rotation.w * rotation.z);
+        const T y = as<T>(1) - as<T>(2) * (rotation.x * rotation.x + rotation.z * rotation.z);
+        const T z = as<T>(2) * (rotation.y * rotation.z + rotation.w * rotation.x);
+        return vec3(x, y, z);
     }
 }
 

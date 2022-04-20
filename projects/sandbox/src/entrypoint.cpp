@@ -23,8 +23,6 @@ public:
         ctx.add_window(winInfo);
     }
 
-    slot_map_key offscreen;
-
     void on_load(engine_context& ctx) override
     {
         auto cube = ctx.get_assets().load_model("data/models/cube/Cube.gltf");
@@ -50,29 +48,25 @@ public:
 
         const vec3<float> rotation(3.1415f / 4.0f, 0.0f, 0.0f);
 
-        const mat4 transformation = transform(vec3(-2.0f, 2.0f, 5.0f), rotation, vec3(1.0f));
-
         auto entity = ctx.get_registry().allocate();
         entity.assign(cubeRenderableComponent);
-        entity.get<transform_component>().matrix = transformation;
+        set_transform(entity.get<transform_component>(), vec3(-2.0f, 2.0f, 5.0f), rotation, vec3(1.0f));
 
         const mat4 transformation2 = transform(vec3(2.0f, 2.0f, 5.0f), rotation, vec3(1.0f));
 
         auto entity2 = ctx.get_registry().allocate();
         entity2.assign(cubeRenderableComponent);
-        entity2.get<transform_component>().matrix = transformation2;
-
-        const mat4 transformation3 = transform(vec3(-2.0f, -2.0f, 5.0f), rotation, vec3(1.0f));
+        set_transform(entity2.get<transform_component>(), vec3(2.0f, 2.0f, 5.0f), rotation, vec3(1.0f));
 
         auto entity3 = ctx.get_registry().allocate();
         entity3.assign(cubeRenderableComponent);
-        entity3.get<transform_component>().matrix = transformation3;
+        set_transform(entity3.get<transform_component>(), vec3(-2.0f, -2.0f, 5.0f), rotation, vec3(1.0f));
 
         const mat4 transformation4 = transform(vec3(2.0f, -2.0f, 5.0f), rotation, vec3(1.0f));
 
         auto entity4 = ctx.get_registry().allocate();
         entity4.assign(cubeRenderableComponent);
-        entity4.get<transform_component>().matrix = transformation4;
+        set_transform(entity4.get<transform_component>(), vec3(2.0f, -2.0f, 5.0f), rotation, vec3(1.0f));
 
         auto cameraEntity = ctx.get_registry().allocate();
         cameraEntity.assign(camera_component{
@@ -82,8 +76,7 @@ public:
             .order = 1,
             .active = true
         });
-
-        cameraEntity.get<transform_component>().position = vec3(-2.0f, 0.0f, -5.0f);
+        set_transform(cameraEntity.get<transform_component>(), vec3(0.0f, 0.0f, -1.0f), as_radians(vec3(0.0f, 15.0f, 0.0f)), vec3(1.0f));
     }
 
     void on_exit(engine_context& ctx) override

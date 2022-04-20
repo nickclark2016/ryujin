@@ -121,7 +121,7 @@ namespace ryujin
 
         const vertex_input_binding interleavedBinding = {
             .binding = 1,
-            .stride = (2 + 3 + 4) * sizeof(float),
+            .stride = 6 * sizeof(u16),
             .rate = input_binding_rate::PER_VERTEX
         };
 
@@ -134,28 +134,21 @@ namespace ryujin
             .format = data_format::R16G16B16_SNORM
         };
 
-        const vertex_input_attribute texCoord0Attrib = {
+        const vertex_input_attribute tbnAttrib = {
             .location = 1,
             .binding = 1,
             .offset = 0,
-            .format = data_format::R32G32_SFLOAT
+            .format = data_format::R16G16B16A16_SNORM
         };
 
-        const vertex_input_attribute normalAttrib = {
+        const vertex_input_attribute texCoord0Attrib = {
             .location = 2,
             .binding = 1,
-            .offset = 2 * sizeof(float),
-            .format = data_format::R32G32B32_SFLOAT
+            .offset = 4 * sizeof(u16),
+            .format = data_format::R16G16_SNORM
         };
 
-        const vertex_input_attribute tangentAttrib = {
-            .location = 3,
-            .binding = 1,
-            .offset = normalAttrib.offset + 3 * sizeof(float),
-            .format = data_format::R32G32B32A32_SFLOAT
-        };
-
-        const vertex_input_attribute vertexAttribs[] = { positionAttrib, texCoord0Attrib, normalAttrib, tangentAttrib };
+        const vertex_input_attribute vertexAttribs[] = { positionAttrib, tbnAttrib, texCoord0Attrib };
         const dynamic_pipeline_state dynStatesEnabled[] = { dynamic_pipeline_state::VIEWPORT, dynamic_pipeline_state::SCISSOR };
 
         const graphics_pipeline_create_info pipelineInfo = {

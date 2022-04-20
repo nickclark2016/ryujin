@@ -18,12 +18,24 @@ for f in $(find $input_dir -name '*.vert' -or -name '*.vs' -or \
             -name '*.frag' -or -name '.fs' -or -name '*.comp' -or \
             -name '*.cs'); do
     if [ "$build_cfg" = "debug" ]; then
-        glslc "$f" -o "$f.spv" -O0
+        if glslc "$f" -o "$f.spv" -O0; then
+                echo "Compiled $f"
+            else
+                exit 1
+            fi
     else
         if [ "$build_cfg" = "release" ]; then
-            glslc "$f" -o "$f.spv" -O
+            if glslc "$f" -o "$f.spv" -O; then
+                echo "Compiled $f"
+            else
+                exit 1
+            fi
         else
-            glslc "$f" -o "$f.spv"
+            if glslc "$f" -o "$f.spv"; then
+                echo "Compiled $f"
+            else
+                exit 1
+            fi
         fi
     fi
 done
@@ -35,5 +47,9 @@ for f in $(find $output_dir -name '*.vert' -or -name '*.vs' -or \
             -name '*.tese' -or -name '*.geom' -or -name '*.gs' -or \
             -name '*.frag' -or -name '.fs' -or -name '*.comp' -or \
             -name '*.cs'); do
-    rm -rf "$f"
+    rm -f "$f"
+done
+
+for f in $(find $input_dir -name '*.spv'); do
+    rm -f "$f"
 done

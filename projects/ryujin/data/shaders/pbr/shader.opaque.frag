@@ -9,7 +9,8 @@ layout (location = 0) in VS_OUT
     vec3 worldPosition;
     vec2 texcoord0;
     vec3 normal;
-    vec4 tangent;
+    vec3 tangent;
+    vec3 bitangent;
     flat int instanceID;
 } vs_in;
 

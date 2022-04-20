@@ -4,6 +4,7 @@
 #include <ryujin/core/primitives.hpp>
 #include <ryujin/graphics/camera_component.hpp>
 #include <ryujin/graphics/render_manager.hpp>
+#include <ryujin/math/transformations.hpp>
 
 #undef APIENTRY
 #include <spdlog/spdlog.h>
@@ -415,21 +416,19 @@ namespace ryujin
                 .z = compress_to_half(vertex.position.z)
             };
 
+            const auto bitangent = cross(vertex.normal, vertex.tangent);
+            const auto tbn = encode_tbn(vertex.tangent, bitangent, vertex.normal);
+
             mesh_group::interleaved_t interleavedAttribs = {
+                .tbn = {
+                    .x = compress_to_half(tbn.x),
+                    .y = compress_to_half(tbn.y),
+                    .z = compress_to_half(tbn.z),
+                    .w = compress_to_half(tbn.w)
+                },
                 .texcoord0 = {
-                    .u = vertex.texCoord.u,
-                    .v = vertex.texCoord.v
-                },
-                .normal = {
-                    .x = vertex.normal.x,
-                    .y = vertex.normal.y,
-                    .z = vertex.normal.z
-                },
-                .tangent = {
-                    .x = vertex.tangent.x,
-                    .y = vertex.tangent.y,
-                    .z = vertex.tangent.z,
-                    .w = vertex.tangent.w
+                    .u = compress_to_half(vertex.texCoord.u),
+                    .v = compress_to_half(vertex.texCoord.v)
                 }
             };
 
