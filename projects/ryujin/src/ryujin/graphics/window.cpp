@@ -141,6 +141,15 @@ namespace ryujin
 
 	window::~window()
 	{
+		_userCloseCallbacks.clear();
+		_userCursorPosCallbacks.clear();
+		_userFocusCallbacks.clear();
+		_userIconifyCallbacks.clear();
+		_userKeyCallbacks.clear();
+		_userMaximizeCallbacks.clear();
+		_userResizeCallbacks.clear();
+		_userRestoreCallbacks.clear();
+
 		glfwSetWindowFocusCallback(_native, nullptr);
 		glfwSetWindowCloseCallback(_native, nullptr);
 		glfwSetWindowSizeCallback(_native, nullptr);

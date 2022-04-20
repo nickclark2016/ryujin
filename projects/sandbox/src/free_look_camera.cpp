@@ -46,11 +46,7 @@ void free_look_camera::on_update(double delta)
 
 	// Rotation
 	const auto deltaMouse = in->get_mouse().cursor_position_delta();
-	if (std::isnan(_yaw))
-	{
-		std::cout << "Yaw NaN" << std::endl;
-		// _yaw = 0;
-	}
+
 	_yaw += as<f32>(deltaMouse.x) * _sensitivityX * as<f32>(delta);
 
 	

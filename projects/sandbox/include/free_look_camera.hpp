@@ -1,9 +1,8 @@
 #ifndef free_look_camera_hpp__
 #define free_look_camera_hpp__
 
-#include <ryujin/math/vec3.hpp>
-
 #include <ryujin/entities/registry.hpp>
+#include <ryujin/math/vec3.hpp>
 
 using namespace ryujin;
 
