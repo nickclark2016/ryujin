@@ -27,8 +27,8 @@ namespace ryujin
         input(const input& i);
         input& operator=(const input& i);
 
-        const keyboard& get_keys() const;
-        const mouse& get_mouse() const;
+        [[nodiscard]] const keyboard& get_keys() const;
+        [[nodiscard]] const mouse& get_mouse() const;
 
         static void poll();
         static input register_window(const std::unique_ptr<window>& win);
@@ -42,8 +42,8 @@ namespace ryujin
         explicit input(const std::unique_ptr<window>& win);
 
         std::reference_wrapper<const std::unique_ptr<window>> _win;
-        keyboard _keys;
-        ryujin::mouse _mouse;
+        keyboard _keys = {};
+        mouse _mouse = {};
     };
 }
 

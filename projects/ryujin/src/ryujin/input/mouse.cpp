@@ -4,12 +4,12 @@ namespace ryujin
 {
     vec2<f64> mouse::cursor_position() const noexcept
     {
-        return vec2(_x, _y);
+        return { _x, _y };
     }
 
     vec2<f64> mouse::cursor_position_delta() const noexcept
     {
-        return vec2(_x - _prevX, _y - _prevY);
+        return { _x - _prevX, _y - _prevY };
     }
 
     void mouse::pre_poll()

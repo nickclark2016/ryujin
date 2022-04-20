@@ -10,10 +10,8 @@
 #include "../math/quat.hpp"
 #include "../math/vec2.hpp"
 #include "../math/vec3.hpp"
-#include "../math/vec4.hpp"
 
 #include <cstddef>
-#include <cstdint>
 #include <filesystem>
 #include <unordered_map>
 
@@ -144,8 +142,7 @@ namespace ryujin
         const material_asset* load_material(const std::string& name, material_asset material);
 
         const slot_map_key load_mesh_group(const mesh_group& group);
-        const mesh_group* get_mesh_group(const slot_map_key& key) const noexcept;
-
+        [[nodiscard]] const mesh_group* get_mesh_group(const slot_map_key& key) const noexcept;
 
     private:
         std::unordered_map<std::string, std::unique_ptr<texture_asset>> _textures;

@@ -73,6 +73,8 @@ namespace ryujin
 
         void after_close(const std::function<void()>& fn);
 
+        bool is_cursor_captured() const;
+
     private:
         GLFWwindow* _native;
         bool _focused = true;

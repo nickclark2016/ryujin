@@ -4,14 +4,13 @@
 #include "primitives.hpp"
 
 #include <memory>
-#include <new>
 
 namespace ryujin
 {
     class linear_allocator
     {
     public:
-        linear_allocator(const sz bytes);
+		linear_allocator(const sz bytes);
 
         void* allocate(const sz bytes);
         void deallocate(void* ptr);
@@ -24,8 +23,8 @@ namespace ryujin
         template <typename T>
         T* typed_reallocate(T* ptr, const sz count = 1);
 
-        sz usage() const noexcept;
-        sz capacity() const noexcept;
+		[[nodiscard]] sz usage() const noexcept;
+        [[nodiscard]] sz capacity() const noexcept;
 
     private:
         std::unique_ptr<unsigned char[]> _data;
@@ -49,11 +48,11 @@ namespace ryujin
         template <typename T>
         T* typed_reallocate(T* ptr, const sz count = 1);
 
-        sz usage() const noexcept;
-        sz capacity() const noexcept;
+        [[nodiscard]] sz usage() const noexcept;
+        [[nodiscard]] sz capacity() const noexcept;
 
     private:
-        unsigned char _data[N];
+        unsigned char _data[N] = { 0 };
         sz _offset = 0;
         sz _lastOffset = 0;
         const sz _length = N;
@@ -94,12 +93,12 @@ namespace ryujin
 
         if (adjusted)
         {
-            const sz offset = reinterpret_cast<const unsigned char*>(adjusted) - &_data[0];
+            const sz offset = static_cast<const unsigned char*>(adjusted) - &_data[0];
             _lastOffset = offset;
             _offset = _lastOffset + size;
         }
 
-        return reinterpret_cast<T*>(adjusted);
+        return static_cast<T*>(adjusted);
     }
 
     template<typename T>
@@ -115,8 +114,7 @@ namespace ryujin
 
         auto bufferSize = _length - _offset;
 
-        const sz offset = reinterpret_cast<const unsigned char*>(ptr) - &_data[0];
-        if (offset != _lastOffset)
+        if (const sz offset = reinterpret_cast<const unsigned char*>(ptr) - &_data[0]; offset != _lastOffset)
         {
             return nullptr;
         }
@@ -126,11 +124,11 @@ namespace ryujin
 
         if (adjusted)
         {
-            const sz offset = reinterpret_cast<const unsigned char*>(adjusted) - &_data[0];
+            const sz offset = static_cast<const unsigned char*>(adjusted) - &_data[0];
             _offset = _lastOffset + size;
         }
 
-        return reinterpret_cast<T*>(adjusted);
+        return static_cast<T*>(adjusted);
     }
 
     template <sz N>
@@ -156,7 +154,7 @@ namespace ryujin
     template <sz N>
     inline void* inline_linear_allocator<N>::reallocate(void* ptr, const sz bytes)
     {
-        const sz offset = reinterpret_cast<const unsigned char*>(ptr) - &_data[0];
+        const sz offset = static_cast<const unsigned char*>(ptr) - &_data[0];
         if (offset != _lastOffset)
         {
             return nullptr;
@@ -209,12 +207,12 @@ namespace ryujin
 
         if (adjusted)
         {
-            const sz offset = reinterpret_cast<const unsigned char*>(adjusted) - &_data[0];
+            const sz offset = static_cast<const unsigned char*>(adjusted) - &_data[0];
             _lastOffset = offset;
             _offset = _lastOffset + size;
         }
 
-        return reinterpret_cast<T*>(adjusted);
+        return static_cast<T*>(adjusted);
     }
 
     template<sz N>
@@ -241,11 +239,11 @@ namespace ryujin
 
         if (adjusted)
         {
-            const sz offset = reinterpret_cast<const unsigned char*>(adjusted) - &_data[0];
+            const sz offset = static_cast<const unsigned char*>(adjusted) - &_data[0];
             _offset = _lastOffset + size;
         }
 
-        return reinterpret_cast<T*>(adjusted);
+        return static_cast<T*>(adjusted);
     }
 
     template <typename T>

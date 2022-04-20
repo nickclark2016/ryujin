@@ -8,7 +8,7 @@ namespace ryujin
     template <typename EntityType>
     struct entity_relationship_component
     {
-        static constexpr EntityType tombstone = entity_traits<typename EntityType::type>::from_type(~(typename EntityType::type)(0));
+        static constexpr EntityType tombstone = entity_traits<typename EntityType::type>::from_type(~static_cast<typename EntityType::type>(0));
 
         EntityType parent;
         EntityType firstChild;

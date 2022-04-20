@@ -3,8 +3,6 @@
 #include <ryujin/graphics/camera_component.hpp>
 #include <ryujin/input/input.hpp>
 
-#include <iostream>
-
 free_look_camera::free_look_camera(const vec3<float> position, registry& reg)
 {
 	_yaw = _pitch = 0.0f;
@@ -15,7 +13,7 @@ free_look_camera::free_look_camera(const vec3<float> position, registry& reg)
 	set_position(_entity.get<transform_component>(), position);
 }
 
-void free_look_camera::on_update(double delta)
+void free_look_camera::on_update(const double delta)
 {
 	const auto in = input::get_input();
 	if (!in)
@@ -58,11 +56,6 @@ void free_look_camera::on_update(double delta)
 	}
 
 	set_rotation(transform, as_radians(vec3(_pitch, _yaw, 0.0f)));
-
-	if (std::isnan(_yaw))
-	{
-		std::cout << "YAW NAN 1" << std::endl;
-	}
 }
 
 void free_look_camera::set_x_sensitivity(const f32 sensitivity)

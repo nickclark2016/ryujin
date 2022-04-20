@@ -11,8 +11,8 @@ namespace ryujin
     class mouse
     {
     public:
-        vec2<f64> cursor_position() const noexcept;
-        vec2<f64> cursor_position_delta() const noexcept;
+		[[nodiscard]] vec2<f64> cursor_position() const noexcept;
+		[[nodiscard]] vec2<f64> cursor_position_delta() const noexcept;
         
     private:
         friend class input;
@@ -20,8 +20,8 @@ namespace ryujin
         void pre_poll();
         void set_cursor_position(const f64 x, const f64 y);
 
-        f64 _x, _y;
-        f64 _prevX, _prevY;
+        f64 _x = 0, _y = 0;
+        f64 _prevX = 0, _prevY = 0;
     };
 }
 

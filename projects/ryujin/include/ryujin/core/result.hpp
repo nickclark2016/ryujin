@@ -1,7 +1,6 @@
 #ifndef result_hpp__
 #define result_hpp__
 
-#include <new>
 #include <variant>
 
 namespace ryujin

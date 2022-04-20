@@ -240,7 +240,12 @@ namespace ryujin
 	{
 		_afterCloseCb = fn;
 	}
-	
+
+	bool window::is_cursor_captured() const
+	{
+		return glfwGetInputMode(_native, GLFW_CURSOR) == GLFW_CURSOR_DISABLED;
+	}
+
 	void window::capture_cursor()
 	{
 		glfwSetInputMode(_native, GLFW_CURSOR, GLFW_CURSOR_DISABLED);

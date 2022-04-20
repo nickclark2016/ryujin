@@ -11,7 +11,7 @@ class free_look_camera
 public:
 	free_look_camera(vec3<float> position, registry& reg);
 
-	void on_update(double delta);
+	void on_update(const double delta);
 
 	void set_x_sensitivity(f32 sensitivity);
 	void set_y_sensitivity(f32 sensitivity);

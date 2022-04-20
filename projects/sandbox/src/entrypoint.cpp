@@ -27,8 +27,9 @@ public:
 
         auto& win = ctx.add_window(winInfo);
         win->focus();
+        win->capture_cursor();
 
-        win->on_focus([&win](bool focused) {
+        win->on_focus([&win](bool) {
                 win->capture_cursor();
             });
     }
@@ -42,7 +43,7 @@ public:
 
         auto& renderables = manager->renderables();
 
-        auto root = renderables.load_to_entities(ctx.get_assets(), *cube);
+        renderables.load_to_entities(ctx.get_assets(), *cube);
 
         renderables.build_meshes();
 
@@ -77,11 +78,14 @@ public:
             ctx.get_window("Sandbox")->capture_cursor();
         }
 
-        _camera->on_update(1.0 / 60.0);
+        if (ctx.get_window("Sandbox")->is_cursor_captured())
+        {
+            _camera->on_update(1.0 / 60.0);
+        }
     }
 };
 
-int main(int argc, char** argv)
+int main(int, char**)
 {
 	const auto engine = std::make_unique<engine_context>();
     std::unique_ptr<base_application> app(new sandbox_application());

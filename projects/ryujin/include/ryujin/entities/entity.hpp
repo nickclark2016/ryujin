@@ -65,9 +65,10 @@ namespace ryujin
 
         static constexpr entity<type> from_type(const type value)
         {
-            entity<type> entity = {};
-            entity.identifier = value & identifier_mask;
-            entity.version = (value >> version_shift) & version_mask;
+	        const entity<type> entity = {
+                .identifier = static_cast<identifier_type>(value) & identifier_mask,
+                .version = static_cast<version_type>(value >> version_shift & version_mask)
+            };
 
             return entity;
         }
@@ -93,9 +94,10 @@ namespace ryujin
 
         static constexpr entity<type> from_type(const type value)
         {
-            entity<type> entity = {};
-            entity.identifier = value & identifier_mask;
-            entity.version = (value >> version_shift) & version_mask;
+            const entity<type> entity = {
+                .identifier = static_cast<identifier_type>(value) & identifier_mask,
+                .version = static_cast<version_type>(value >> version_shift & version_mask)
+            };
 
             return entity;
         }

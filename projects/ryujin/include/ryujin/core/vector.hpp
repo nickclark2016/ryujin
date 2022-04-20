@@ -172,6 +172,9 @@ namespace ryujin
     template<typename Type, sz Capacity>
     inline constexpr static_vector<Type, Capacity>& static_vector<Type, Capacity>::operator=(const static_vector& rhs)
     {
+        if (this == &rhs)
+            return *this;
+
         for (sz i = _size; i < rhs._size; ++i)
         {
             _data[i].~Type();
@@ -249,7 +252,7 @@ namespace ryujin
     }
     
     template<typename Type, sz Capacity>
-    inline constexpr static_vector<Type, Capacity>::error_code static_vector<Type, Capacity>::pop_back() noexcept
+    inline constexpr typename static_vector<Type, Capacity>::error_code static_vector<Type, Capacity>::pop_back() noexcept
     {
         if (_size == 0)
         {
@@ -395,61 +398,61 @@ namespace ryujin
     }
 
     template<typename Type, sz Capacity>
-    inline constexpr static_vector<Type, Capacity>::const_iterator static_vector<Type, Capacity>::begin() const noexcept
+    inline constexpr typename static_vector<Type, Capacity>::const_iterator static_vector<Type, Capacity>::begin() const noexcept
     {
         return &_data[0];
     }
 
     template<typename Type, sz Capacity>
-    inline constexpr static_vector<Type, Capacity>::const_iterator static_vector<Type, Capacity>::cbegin() const noexcept
+    inline constexpr typename static_vector<Type, Capacity>::const_iterator static_vector<Type, Capacity>::cbegin() const noexcept
     {
         return &_data[0];
     }
 
     template<typename Type, sz Capacity>
-    inline constexpr static_vector<Type, Capacity>::iterator static_vector<Type, Capacity>::end() noexcept
+    inline constexpr typename static_vector<Type, Capacity>::iterator static_vector<Type, Capacity>::end() noexcept
     {
         return _data + _size;
     }
 
     template<typename Type, sz Capacity>
-    inline constexpr static_vector<Type, Capacity>::const_iterator static_vector<Type, Capacity>::end() const noexcept
+    inline constexpr typename static_vector<Type, Capacity>::const_iterator static_vector<Type, Capacity>::end() const noexcept
     {
         return _data + _size;
     }
 
     template<typename Type, sz Capacity>
-    inline constexpr static_vector<Type, Capacity>::const_iterator static_vector<Type, Capacity>::cend() const noexcept
+    inline constexpr typename static_vector<Type, Capacity>::const_iterator static_vector<Type, Capacity>::cend() const noexcept
     {
         return _data + _size;
     }
 
     template<typename Type, sz Capacity>
-    inline constexpr static_vector<Type, Capacity>::reference static_vector<Type, Capacity>::operator[](const sz idx) noexcept
+    inline constexpr typename static_vector<Type, Capacity>::reference static_vector<Type, Capacity>::operator[](const sz idx) noexcept
     {
         return _data[idx];
     }
 
     template<typename Type, sz Capacity>
-    inline constexpr static_vector<Type, Capacity>::const_reference static_vector<Type, Capacity>::operator[](const sz idx) const noexcept
+    inline constexpr typename static_vector<Type, Capacity>::const_reference static_vector<Type, Capacity>::operator[](const sz idx) const noexcept
     {
         return _data[idx];
     }
 
     template<typename Type, sz Capacity>
-    inline constexpr static_vector<Type, Capacity>::pointer static_vector<Type, Capacity>::data() noexcept
+    inline constexpr typename static_vector<Type, Capacity>::pointer static_vector<Type, Capacity>::data() noexcept
     {
         return _data;
     }
     
     template<typename Type, sz Capacity>
-    inline constexpr static_vector<Type, Capacity>::const_pointer static_vector<Type, Capacity>::data() const noexcept
+    inline constexpr typename static_vector<Type, Capacity>::const_pointer static_vector<Type, Capacity>::data() const noexcept
     {
         return _data;
     }
     
     template<typename Type, sz Capacity>
-    inline static_vector<Type, Capacity>::error_code static_vector<Type, Capacity>::_make_hole(const sz idx, const sz size)
+    inline typename static_vector<Type, Capacity>::error_code static_vector<Type, Capacity>::_make_hole(const sz idx, const sz size)
     {
         if (_size + size > Capacity)
         {
