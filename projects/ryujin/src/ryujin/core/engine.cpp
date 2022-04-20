@@ -71,6 +71,7 @@ namespace ryujin
     
     void engine_context::execute(std::unique_ptr<base_application>& app)
     {
+#if MULTITHREADED_EXECUTION
         _isRunning.store(true);
         _renderer = std::make_unique<render_system>();
 
@@ -121,6 +122,31 @@ namespace ryujin
 
         _renderer = nullptr;
         glfwTerminate();
+#else
+        _renderer = std::make_unique<render_system>();
+
+        app->pre_init(*this);
+        _renderer->on_init(*this);
+        auto illegalTextureAsset = get_assets().load_texture("data/textures/invalid_texture.png");
+        _renderer->get_render_manager(0)->renderables().load_texture("internal_illegal_texture", *illegalTextureAsset);
+        app->on_load(*this);
+        while (!_windows.empty())
+        {
+            input::poll();
+            app->on_frame(*this);
+            _renderer->render_prework(*this);
+            _renderer->on_pre_render(*this);
+            app->on_render(*this);
+            _renderer->on_render(*this);
+            app->post_render(*this);
+            _renderer->on_post_render(*this);
+        }
+
+        app->on_exit(*this);
+
+        _renderer = nullptr;
+        glfwTerminate();
+#endif
     }
 
     registry& engine_context::get_registry() noexcept
