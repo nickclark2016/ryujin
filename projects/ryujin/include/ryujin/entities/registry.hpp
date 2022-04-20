@@ -376,7 +376,7 @@ namespace ryujin
     template <typename T>
     inline entity_handle<Type>& entity_handle<Type>::replace(const T& t)
     {
-        _registry->template replace(*this, t);
+        _registry->replace(*this, t);
         return *this;
     }
 

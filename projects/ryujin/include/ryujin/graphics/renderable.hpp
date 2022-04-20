@@ -105,6 +105,8 @@ namespace ryujin
         std::optional<texture> try_fetch_texture(const slot_map_key& key);
         void unload_texture(const slot_map_key& key);
 
+        entity_handle<registry::entity_type> load_to_entities(const asset_manager& mgr, const model_asset& asset);
+
         slot_map_key load_material(const std::string& name, const material_asset& asset);
 
         slot_map_key load_mesh(const std::string& name, const mesh& m);
@@ -159,7 +161,10 @@ namespace ryujin
         mesh_group _activeMeshGroup;
 
         slot_map<renderable_mesh> _meshes;
+        std::unordered_map<std::string, slot_map_key> _meshesLut;
+
         slot_map<material> _materials;
+        std::unordered_map<std::string, slot_map_key> _materialsLut;
 
         image_sampler _defaultSampler = {};
 

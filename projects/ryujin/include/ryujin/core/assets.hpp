@@ -5,6 +5,7 @@
 #include "slot_map.hpp"
 #include "vector.hpp"
 
+#include "../entities/transform_component.hpp"
 #include "../math/mat4.hpp"
 #include "../math/quat.hpp"
 #include "../math/vec2.hpp"
@@ -101,6 +102,8 @@ namespace ryujin
         vector<u32> indices;
         std::string name;
         const material_asset* material;
+        vec3<float> position;
+        vec3<float> scale;
     };
 
     struct mesh_group
@@ -115,7 +118,11 @@ namespace ryujin
         slot_map_key get_mesh_group() const;
         const std::string& name() const;
 
+        transform_component transform() const noexcept;
+        void transform(const transform_component& tx) noexcept;
+
         void add_child(model_asset& child);
+        const vector<model_asset*> children() const noexcept;
 
         model_asset(const std::string& name, const slot_map_key mesh, mat4<float> transform, vec3<float> translate, quat<float> rotate, vec3<float> scale);
     private:
@@ -137,7 +144,7 @@ namespace ryujin
         const material_asset* load_material(const std::string& name, material_asset material);
 
         const slot_map_key load_mesh_group(const mesh_group& group);
-        mesh_group* get_mesh_group(const slot_map_key& key) noexcept;
+        const mesh_group* get_mesh_group(const slot_map_key& key) const noexcept;
 
 
     private:

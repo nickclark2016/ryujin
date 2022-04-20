@@ -88,6 +88,12 @@ namespace ryujin
         const_cast<vec3<float>&>(tx.scale) = scale;
         const_cast<mat4<float>&>(tx.matrix) = transform(tx.position, tx.rotation, tx.scale);
     }
+
+    inline void apply_parent_transform(transform_component& tx, const transform_component& parent)
+    {
+        const auto merged = parent.matrix * tx.matrix;
+        decompose(merged, const_cast<vec3<float>&>(tx.position), const_cast<quat<float>&>(tx.rotation), const_cast<vec3<float>&>(tx.scale));
+    }
 } // namespace ryujin
 
 #endif // transformation_component_hpp__

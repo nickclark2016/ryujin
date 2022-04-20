@@ -89,6 +89,25 @@ namespace ryujin
         const u32 v = detail::as_u32_bits(as<float>(m)) >> 23; // evil log2 bit hack to count leading zeros in denormalized format
         return detail::as_float_bits((value & 0x8000) << 16 | (e != 0) * ((e + 112) << 23 | m) | ((e == 0) & (m != 0)) * ((v - 37) << 23 | ((m << (150 - v)) & 0x007FE000))); // sign : normalized : denormalized
     }
+
+    template <numeric T>
+    inline constexpr T inverse_lerp(const T value, const T low, const T high)
+    {
+        return (value - low) / (high - low);
+    }
+
+    template <numeric T>
+    inline constexpr T lerp(const T low, const T high, const T t)
+    {
+        return low + t * (high - low);
+    }
+
+    template <numeric T>
+    inline constexpr T reproject(const T value, const T oldMin, const T oldMax, const T newMin = as<T>(-1), const T newMax = as<T>(1))
+    {
+        const auto t = inverse_lerp(value, oldMin, oldMax);
+        return lerp(newMin, newMax, t);
+    }
 }
 
 #endif // math_utils_hpp__

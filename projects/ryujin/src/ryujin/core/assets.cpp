@@ -76,10 +76,28 @@ namespace ryujin
         return _name;
     }
 
+    transform_component model_asset::transform() const noexcept
+    {
+        return transform_component();
+    }
+
+    void model_asset::transform(const transform_component& tx) noexcept
+    {
+        _transform = tx.matrix;
+        _translation = tx.position;
+        _rotation = tx.rotation;
+        _scale = tx.scale;
+    }
+
     void model_asset::add_child(model_asset& child)
     {
         _children.push_back(&child);
         child._parent = this;
+    }
+
+    const vector<model_asset*> model_asset::children() const noexcept
+    {
+        return _children;
     }
 
     model_asset::model_asset(const std::string& name, const slot_map_key mesh, mat4<float> transform, vec3<float> translate, quat<float> rotate, vec3<float> scale)
@@ -178,7 +196,7 @@ namespace ryujin
         return _meshes.insert(group);
     }
     
-    mesh_group* asset_manager::get_mesh_group(const slot_map_key& key) noexcept
+    const mesh_group* asset_manager::get_mesh_group(const slot_map_key& key) const noexcept
     {
         return _meshes.try_get(key);
     }

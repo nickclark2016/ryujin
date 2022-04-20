@@ -10,6 +10,7 @@
 #undef APIENTRY
 #include <spdlog/spdlog.h>
 
+#include <cmath>
 #include <utility>
 
 #undef OPAQUE
@@ -212,6 +213,13 @@ namespace ryujin::assets
                         auto data = buffer.data.data();
 
                         m.vertices.resize(accessor.count);
+
+                        float minX = std::numeric_limits<float>::max();
+                        float maxX = -std::numeric_limits<float>::max();
+                        float minY = std::numeric_limits<float>::max();
+                        float maxY = -std::numeric_limits<float>::max();
+                        float minZ = std::numeric_limits<float>::max();
+                        float maxZ = -std::numeric_limits<float>::max();
                         
                         for (sz i = 0; i < accessor.count; ++i)
                         {
@@ -224,7 +232,35 @@ namespace ryujin::assets
                             v.position.x = start[0];
                             v.position.y = start[1];
                             v.position.z = start[2];
+
+                            minX = std::min(minX, v.position.x);
+                            maxX = std::max(maxX, v.position.x);
+                            minY = std::min(minY, v.position.y);
+                            maxY = std::max(maxY, v.position.y);
+                            minZ = std::min(minZ, v.position.z);
+                            maxZ = std::max(maxZ, v.position.z);
                         }
+
+                        for (auto& v : m.vertices)
+                        {
+                            v.position.x = reproject(v.position.x, minX, maxX, -1.0f, 1.0f);
+                            v.position.y = reproject(v.position.y, minY, maxY, -1.0f, 1.0f);
+                            v.position.z = reproject(v.position.z, minZ, maxZ, -1.0f, 1.0f);
+                        }
+
+                        // compute mid point
+                        m.position = vec3(
+                            (maxX + minX) / 2.0f,
+                            (maxY + minY) / 2.0f,
+                            (maxZ + minZ) / 2.0f
+                        );
+
+                        // compute scale for each direction
+                        m.scale = vec3(
+                            (maxX - minX) / 2.0f,
+                            (maxY - minY) / 2.0f,
+                            (maxZ - minZ) / 2.0f
+                        );
                     }
 
                     if (normalsAccessorIterator != endAccessorIterator)
@@ -412,6 +448,9 @@ namespace ryujin::assets
                 {
                     auto& child = models[childNode];
                     parent->add_child(*child);
+                    auto tx = child->transform();
+                    apply_parent_transform(tx, parent->transform());
+                    child->transform(tx);
                 }
             }
         }

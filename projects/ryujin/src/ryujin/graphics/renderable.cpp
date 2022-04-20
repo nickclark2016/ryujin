@@ -367,6 +367,88 @@ namespace ryujin
         }
     }
 
+    entity_handle<registry::entity_type> renderable_manager::load_to_entities(const asset_manager& mgr, const model_asset& asset)
+    {
+        auto meshGroupKey = asset.get_mesh_group();
+        auto baseTransform = asset.transform();
+
+        // Handle parent transform prop
+
+        auto baseEntity = _registry->allocate();
+        baseEntity.replace(baseTransform);
+
+        const auto entityTombstone = entity_relationship_component<registry::entity_type>::tombstone;
+
+        entity_relationship_component<registry::entity_type> children = {
+            .parent = entityTombstone,
+            .firstChild = entityTombstone,
+            .nextSibling = entityTombstone
+        };
+
+        baseEntity.assign(children);
+
+        // TODO: Coalesce to a single entity if we only have a single mesh?
+        for (const auto meshGroup = mgr.get_mesh_group(meshGroupKey); auto mesh : meshGroup->meshes)
+        {
+            auto meshName = fmt::v8::format("{}_{}", asset.name(), mesh.name);
+            auto meshKeyIt = _meshesLut.find(meshName);
+            auto meshKey = meshKeyIt == _meshesLut.end() ? invalid_slot_map_key : meshKeyIt->second;
+
+            if (meshKey == invalid_slot_map_key)
+            {
+                meshKey = load_mesh(mesh.name, mesh);
+            }
+
+            auto entity = _registry->allocate();
+            // apply mesh-specific transformations
+            auto position = baseTransform.position + mesh.position;
+            auto rotation = baseTransform.rotation;
+            auto scale = baseTransform.scale * mesh.scale;
+
+            auto& material = *mesh.material;
+            auto materialName = fmt::v8::format("{}_{}", asset.name(), material.name);
+            auto materialKeyIt = _materialsLut.find(materialName);
+            auto materialKey = materialKeyIt == _materialsLut.end() ? invalid_slot_map_key : materialKeyIt->second;
+            
+            if (materialKey == invalid_slot_map_key)
+            {
+                materialKey = load_material(materialName, material);
+            }
+
+            set_transform(entity.get<transform_component>(), position, rotation, scale);
+            entity.assign(renderable_component{
+                    .material = materialKey,
+                    .mesh = meshKey
+                });
+
+            auto& parentRelationship = baseEntity.get<entity_relationship_component<registry::entity_type>>();
+
+            entity_relationship_component<registry::entity_type> relate = {
+                .parent = baseEntity.handle(),
+                .firstChild = entityTombstone,
+                .nextSibling = parentRelationship.firstChild
+            };
+
+            parentRelationship.firstChild = entity.handle();
+            entity.assign(relate);
+        }
+
+        // After loading each of the meshes to a child, load child models
+        for (const auto child : asset.children())
+        {
+            auto parent = load_to_entities(mgr, *child);
+
+            auto& baseRelationship = baseEntity.get<entity_relationship_component<registry::entity_type>>();
+            auto& myRelationship = parent.get<entity_relationship_component<registry::entity_type>>();
+
+            myRelationship.parent = baseEntity.handle();
+            myRelationship.nextSibling = baseRelationship.firstChild;
+            baseRelationship.firstChild = parent.handle();
+        }
+
+        return baseEntity;
+    }
+
     slot_map_key renderable_manager::load_material(const std::string& name, const material_asset& asset)
     {
         const auto base = asset.baseColorTexture;
@@ -441,7 +523,9 @@ namespace ryujin
             _activeMeshGroup.indices.push_back(index);
         }
 
-        return _meshes.insert(mesh);
+        auto key = _meshes.insert(mesh);
+        _meshesLut[name] = key;
+        return key;
     }
 
     void renderable_manager::build_meshes()
@@ -619,7 +703,7 @@ namespace ryujin
                 for (const auto& ent : ents)
                 {
                     entity_handle handle(ent, _registry);
-                    auto tx = handle.get<transform_component>();
+                    auto& tx = handle.get<transform_component>();
                     auto matHandle = handle.get<renderable_component>().material;
                     auto mat = _materials.index_of(matHandle);
                     instances[opaqueInstances + transparentInstances].transform = tx.matrix;
