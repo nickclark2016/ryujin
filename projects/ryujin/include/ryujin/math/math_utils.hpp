@@ -17,10 +17,10 @@ namespace ryujin
         constexpr T pi = as<T>(3.14159265359);
 
         template <numeric T>
-        constexpr T half_pi = pi / as<T>(2);
+        constexpr T half_pi = pi<T> / as<T>(2);
 
         template <numeric T>
-        constexpr T inv_pi = as<T>(1) / pi;
+        constexpr T inv_pi = as<T>(1) / pi<T>;
     };
 
     namespace detail

@@ -30,6 +30,8 @@ namespace ryujin
 			{
 				cb();
 			}
+
+			userWin->_afterCloseCb();
 		}
 		
 		void resizeCallback(GLFWwindow* win, i32 width, i32 height)
@@ -223,6 +225,11 @@ namespace ryujin
 	void window::on_cursor_move(const std::function<void(f64, f64)>& fn)
 	{
 		_userCursorPosCallbacks.push_back(fn);
+	}
+
+	void window::after_close(const std::function<void()>& fn)
+	{
+		_afterCloseCb = fn;
 	}
 	
 	void window::capture_cursor()

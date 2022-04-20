@@ -71,9 +71,11 @@ namespace ryujin
         void capture_cursor();
         void release_cursor();
 
+        void after_close(const std::function<void()>& fn);
+
     private:
         GLFWwindow* _native;
-        bool _focused;
+        bool _focused = false;
 
         GLFWwindowfocusfun _focusCb;
         vector<std::function<void(bool)>> _userFocusCallbacks;
@@ -96,6 +98,8 @@ namespace ryujin
 
         GLFWcursorposfun _cursorPosCb;
         vector<std::function<void(f64, f64)>> _userCursorPosCallbacks;
+
+        std::function<void()> _afterCloseCb = []() {};
 
         friend void detail::focusCallback(GLFWwindow*, int);
         friend void detail::closeCallback(GLFWwindow*);

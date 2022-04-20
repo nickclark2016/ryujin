@@ -35,9 +35,13 @@ namespace ryujin
             auto& win = _windows[info.name];
             input::register_window(win);
 
-            win->on_close([info, this]() {
+            win->after_close([info, this]() {
                     this->remove_window(info.name);
                 });
+
+            //win->on_close([info, this]() {
+            //        this->remove_window(info.name);
+            //    });
 
             return win;
         }
@@ -114,6 +118,9 @@ namespace ryujin
         _renderLogic.join();
 
         app->on_exit(*this);
+
+        _renderer = nullptr;
+        glfwTerminate();
     }
 
     registry& engine_context::get_registry() noexcept

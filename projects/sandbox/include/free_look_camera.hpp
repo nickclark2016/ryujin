@@ -1,0 +1,37 @@
+#ifndef free_look_camera_hpp__
+#define free_look_camera_hpp__
+
+#include <ryujin/math/vec3.hpp>
+
+#include <ryujin/entities/registry.hpp>
+
+using namespace ryujin;
+
+class free_look_camera
+{
+public:
+	free_look_camera(vec3<float> position, registry& reg);
+
+	void on_update(double delta);
+
+	void set_x_sensitivity(f32 sensitivity);
+	void set_y_sensitivity(f32 sensitivity);
+
+	void set_speed(f32 speed);
+
+	void constrain_pitch(bool constrain);
+
+private:
+	f32 _yaw;
+	f32 _pitch;
+
+	bool _constrainPitch = true;
+	f32 _sensitivityX = 1.0f;
+	f32 _sensitivityY = 1.0f;
+
+	f32 _speed = 0.2f;
+
+	entity_handle<registry::entity_type> _entity;
+};
+
+#endif // free_look_camera_h__

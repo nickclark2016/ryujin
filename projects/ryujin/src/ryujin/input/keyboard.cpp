@@ -2,6 +2,8 @@
 
 #include <ryujin/core/as.hpp>
 
+#include <cstring>
+
 namespace ryujin
 {
     keyboard::keyboard()

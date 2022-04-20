@@ -19,8 +19,8 @@ namespace ryujin
         }
     }
 
-    std::unordered_map<std::reference_wrapper<const std::unique_ptr<window>>, input, detail::input_hasher, detail::input_hasher> input::_inputs;
-    std::optional<std::reference_wrapper<const std::unique_ptr<window>>> input::_active;
+    std::unordered_map<std::reference_wrapper<const std::unique_ptr<window>>, input, detail::input_hasher, detail::input_hasher> input::_inputs = {};
+    std::optional<std::reference_wrapper<const std::unique_ptr<window>>> input::_active = std::nullopt;
 
     input::input(const input& i)
         : _win(i._win)
@@ -33,12 +33,12 @@ namespace ryujin
         return *this;
     }
 
-    const keyboard& input::keys() const
+    const keyboard& input::get_keys() const
     {
         return _keys;
     }
 
-    const mouse& input::mouse() const
+    const mouse& input::get_mouse() const
     {
         return _mouse;
     }
