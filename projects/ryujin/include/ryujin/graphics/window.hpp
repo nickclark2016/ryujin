@@ -22,6 +22,7 @@ namespace ryujin
         void iconifyCallback(GLFWwindow*, i32);
         void maximizeCallback(GLFWwindow*, i32);
         void keyboardCallback(GLFWwindow*, i32, i32, i32, i32);
+        void cursorCallback(GLFWwindow*, f64, f64);
     } // namespace detail
 
     class render_manager;
@@ -63,7 +64,12 @@ namespace ryujin
         void on_restore(const std::function<void()>& fn);
         void on_maximize(const std::function<void()>& fn);
 
-        void on_keystroke(const std::function<void(int, int, int, int)>& fn);
+        void on_keystroke(const std::function<void(i32, i32, i32, i32)>& fn);
+
+        void on_cursor_move(const std::function<void(f64, f64)>& fn);
+
+        void capture_cursor();
+        void release_cursor();
 
     private:
         GLFWwindow* _native;
@@ -88,12 +94,16 @@ namespace ryujin
         GLFWkeyfun _keyboardCb;
         vector<std::function<void(int, int, int, int)>> _userKeyCallbacks;
 
+        GLFWcursorposfun _cursorPosCb;
+        vector<std::function<void(f64, f64)>> _userCursorPosCallbacks;
+
         friend void detail::focusCallback(GLFWwindow*, int);
         friend void detail::closeCallback(GLFWwindow*);
         friend void detail::resizeCallback(GLFWwindow*, int, int);
         friend void detail::iconifyCallback(GLFWwindow*, int);
         friend void detail::maximizeCallback(GLFWwindow*, int);
         friend void detail::keyboardCallback(GLFWwindow*, i32, i32, i32, i32);
+        friend void detail::cursorCallback(GLFWwindow*, f64, f64);
         
         friend class render_manager;
     };

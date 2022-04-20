@@ -92,6 +92,15 @@ namespace ryujin
 				cb(key, scan, action, mods);
 			}
 		}
+
+		void cursorCallback(GLFWwindow* win, f64 x, f64 y)
+		{
+			window* userWin = reinterpret_cast<window*>(glfwGetWindowUserPointer(win));
+			for (auto& cb : userWin->_userCursorPosCallbacks)
+			{
+				cb(x, y);
+			}
+		}
 	}
 
 	result<std::unique_ptr<window>, window::error_code> window::create(const window::create_info& info) noexcept
@@ -123,6 +132,7 @@ namespace ryujin
 		
 		// Input functions
 		glfwSetKeyCallback(win->_native, detail::keyboardCallback);
+		glfwSetCursorPosCallback(win->_native, detail::cursorCallback);
 
 		return result_type::from_success(std::move(win));
 	}
@@ -208,5 +218,20 @@ namespace ryujin
 	void window::on_keystroke(const std::function<void(int, int, int, int)>& fn)
 	{
 		_userKeyCallbacks.push_back(fn);
+	}
+	
+	void window::on_cursor_move(const std::function<void(f64, f64)>& fn)
+	{
+		_userCursorPosCallbacks.push_back(fn);
+	}
+	
+	void window::capture_cursor()
+	{
+		glfwSetInputMode(_native, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	}
+	
+	void window::release_cursor()
+	{
+		glfwSetInputMode(_native, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
 }

@@ -25,7 +25,13 @@ public:
             720
         };
 
-        ctx.add_window(winInfo)->focus();
+        auto& win = ctx.add_window(winInfo);
+        win->focus();
+        win->capture_cursor();
+
+        win->on_focus([&win](bool focused) {
+                win->capture_cursor();
+            });
     }
 
     void on_load(engine_context& ctx) override
@@ -78,6 +84,11 @@ public:
         else if (in->keys().get_state(keyboard::key::S) != keyboard::state::RELEASED)
         {
             set_position(tx, tx.position + vec3(0.0f, 0.0f, -0.01f));
+        }
+
+        if (in->keys().get_state(keyboard::key::ESCAPE) == keyboard::state::PRESSED)
+        {
+            ctx.get_window("Sandbox")->release_cursor();
         }
     }
 };

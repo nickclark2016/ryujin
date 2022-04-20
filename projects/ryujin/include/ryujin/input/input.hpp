@@ -2,6 +2,7 @@
 #define input_hpp__
 
 #include "keyboard.hpp"
+#include "mouse.hpp"
 
 #include "../graphics/window.hpp"
 
@@ -27,6 +28,7 @@ namespace ryujin
         input& operator=(const input& i);
 
         const keyboard& keys() const;
+        const mouse& mouse() const;
 
         static void poll();
         static input register_window(const std::unique_ptr<window>& win);
@@ -41,6 +43,7 @@ namespace ryujin
 
         std::reference_wrapper<const std::unique_ptr<window>> _win;
         keyboard _keys;
+        ryujin::mouse _mouse;
     };
 }
 

@@ -38,8 +38,17 @@ namespace ryujin
         return _keys;
     }
 
+    const mouse& input::mouse() const
+    {
+        return _mouse;
+    }
+
     void input::poll()
     {
+        for (auto& [_, input] : _inputs)
+        {
+            input._mouse.pre_poll();
+        }
         glfwPollEvents();
     }
 
@@ -71,6 +80,13 @@ namespace ryujin
                 const auto k = as<keyboard::key>(key);
                 const auto state = as<keyboard::state>(action);
                 in._keys.set_state(k, state);
+            });
+
+        win->on_cursor_move([w](f64 x, f64 y) {
+                const auto it = _inputs.find(w);
+                if (it == _inputs.end()) return;
+                auto& in = it->second;
+                in._mouse.set_cursor_position(x, y);
             });
 
         win->on_close([w]() {
