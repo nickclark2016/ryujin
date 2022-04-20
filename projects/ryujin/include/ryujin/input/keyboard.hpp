@@ -1,6 +1,8 @@
 #ifndef keyboard_hpp__
 #define keyboard_hpp__
 
+#include "../core/as.hpp"
+#include "../core/primitives.hpp"
 #include "../graphics/window.hpp"
 
 namespace ryujin
@@ -9,15 +11,12 @@ namespace ryujin
 
     class keyboard
     {
-        struct keyboard_state
-        {
-
-        };
-
     public:
-        enum class key
+        keyboard();
+
+        enum class key : u32
         {
-            UNKNOWN = -1,
+            UNKNOWN = as<u32>(-1),
             SPACE = 32,
             APOSTROPHE = 39,
             COMMA = 44,
@@ -140,21 +139,21 @@ namespace ryujin
             MENU = 348
         };
 
-        enum class state
+        enum class state : u32
         {
-            RELEASED,
-            PRESSED,
-            REPEATED
+            RELEASED = 0,
+            PRESSED = 1,
+            REPEATED = 2
         };
 
-        state get_state(const key k);
+        state get_state(const key k) const noexcept;
 
     private:
         friend class input;
 
         void set_state(key k, state s);
 
-        state _states[static_cast<int>(key::MENU) + 1];
+        state _states[static_cast<int>(key::MENU) + 1] = { state::RELEASED };
     };
 }
 

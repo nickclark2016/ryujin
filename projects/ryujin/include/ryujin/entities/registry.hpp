@@ -150,6 +150,7 @@ namespace ryujin
     class entity_handle
     {
     public:
+        entity_handle() = default;
         entity_handle(const Type& handle, base_registry<Type>* reg);
 
         Type handle() const noexcept;
@@ -176,8 +177,8 @@ namespace ryujin
         bool contains() const;
 
     private:
-        Type _handle;
-        base_registry<Type>* _registry;
+        Type _handle = {};
+        base_registry<Type>* _registry = nullptr;
     };
 
     namespace detail

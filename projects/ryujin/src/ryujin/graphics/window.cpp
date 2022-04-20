@@ -83,6 +83,15 @@ namespace ryujin
 				}
 			}
 		}
+	
+		void keyboardCallback(GLFWwindow* win, i32 key, i32 scan, i32 action, i32 mods)
+		{
+			window* userWin = reinterpret_cast<window*>(glfwGetWindowUserPointer(win));
+			for (auto& cb : userWin->_userKeyCallbacks)
+			{
+				cb(key, scan, action, mods);
+			}
+		}
 	}
 
 	result<std::unique_ptr<window>, window::error_code> window::create(const window::create_info& info) noexcept
@@ -111,6 +120,9 @@ namespace ryujin
 		glfwSetWindowSizeCallback(win->_native, detail::resizeCallback);
 		glfwSetWindowIconifyCallback(win->_native, detail::iconifyCallback);
 		glfwSetWindowMaximizeCallback(win->_native, detail::maximizeCallback);
+		
+		// Input functions
+		glfwSetKeyCallback(win->_native, detail::keyboardCallback);
 
 		return result_type::from_success(std::move(win));
 	}
@@ -191,5 +203,10 @@ namespace ryujin
 	void window::on_maximize(const std::function<void()>& fn)
 	{
 		_userMaximizeCallbacks.push_back(fn);
+	}
+	
+	void window::on_keystroke(const std::function<void(int, int, int, int)>& fn)
+	{
+		_userKeyCallbacks.push_back(fn);
 	}
 }

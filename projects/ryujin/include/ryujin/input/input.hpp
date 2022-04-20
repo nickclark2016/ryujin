@@ -1,9 +1,12 @@
 #ifndef input_hpp__
 #define input_hpp__
 
+#include "keyboard.hpp"
+
 #include "../graphics/window.hpp"
 
 #include <memory>
+#include <optional>
 #include <unordered_map>
 
 namespace ryujin
@@ -23,15 +26,21 @@ namespace ryujin
         input(const input& i);
         input& operator=(const input& i);
 
+        const keyboard& keys() const;
+
         static void poll();
         static input register_window(const std::unique_ptr<window>& win);
 
+        static input* get_input();
+
     private:
         static std::unordered_map<std::reference_wrapper<const std::unique_ptr<window>>, input, detail::input_hasher, detail::input_hasher> _inputs;
+        static std::optional<std::reference_wrapper<const std::unique_ptr<window>>> _active;
 
         explicit input(const std::unique_ptr<window>& win);
 
         std::reference_wrapper<const std::unique_ptr<window>> _win;
+        keyboard _keys;
     };
 }
 

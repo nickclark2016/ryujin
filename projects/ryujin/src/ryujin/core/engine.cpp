@@ -31,11 +31,15 @@ namespace ryujin
         auto result = window::create(info);
         if (result)
         {
-            (*result)->on_close([info, this] () {
+            _windows[info.name] = result.success();
+            auto& win = _windows[info.name];
+            input::register_window(win);
+
+            win->on_close([info, this]() {
                     this->remove_window(info.name);
                 });
-            _windows[info.name] = result.success();
-            return _windows[info.name];
+
+            return win;
         }
 
         return _invalidWindowHandle;

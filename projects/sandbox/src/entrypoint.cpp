@@ -1,8 +1,11 @@
 #include <ryujin/core/engine.hpp>
 #include <ryujin/graphics/camera_component.hpp>
 #include <ryujin/graphics/render_system.hpp>
+#include <ryujin/input/input.hpp>
 #include <ryujin/graphics/pipelines/pbr_render_pipeline.hpp>
 #include <ryujin/math/transformations.hpp>
+
+#include <iostream>
 
 using namespace ryujin;
 
@@ -10,6 +13,8 @@ class sandbox_application final : public base_application
 {
 public:
     sandbox_application() = default;
+
+    entity_handle<registry::entity_type> camera;
 
     void pre_init(engine_context& ctx) override
     {
@@ -20,7 +25,7 @@ public:
             720
         };
 
-        ctx.add_window(winInfo);
+        ctx.add_window(winInfo)->focus();
     }
 
     void on_load(engine_context& ctx) override
@@ -68,25 +73,23 @@ public:
         entity4.assign(cubeRenderableComponent);
         set_transform(entity4.get<transform_component>(), vec3(2.0f, -2.0f, 5.0f), rotation, vec3(1.0f));
 
-        auto cameraEntity = ctx.get_registry().allocate();
-        cameraEntity.assign(camera_component{
+        camera = ctx.get_registry().allocate();
+        camera.assign(camera_component{
             .near = 0.01f,
             .far = 1000.0f,
             .fov = 90.0f,
             .order = 1,
             .active = true
         });
-        set_transform(cameraEntity.get<transform_component>(), vec3(0.0f, 0.0f, -1.0f), as_radians(vec3(0.0f, 15.0f, 0.0f)), vec3(1.0f));
+        set_transform(camera.get<transform_component>(), vec3(0.0f, 0.0f, -1.0f), as_radians(vec3(0.0f, 15.0f, 0.0f)), vec3(1.0f));
     }
 
     void on_exit(engine_context& ctx) override
     {
-
     }
 
     void on_render(engine_context& ctx) override
     {
-
     }
 
     void post_render(engine_context& ctx) override
@@ -95,6 +98,19 @@ public:
 
     void on_frame(engine_context& ctx) override
     {
+        auto& tx = camera.get<transform_component>();
+
+        auto in = input::get_input();
+        if (!in) return;
+
+        if (in->keys().get_state(keyboard::key::W) != keyboard::state::RELEASED)
+        {
+            set_position(tx, tx.position + vec3(0.0f, 0.0f, 0.01f));
+        }
+        else if (in->keys().get_state(keyboard::key::S) != keyboard::state::RELEASED)
+        {
+            set_position(tx, tx.position + vec3(0.0f, 0.0f, -0.01f));
+        }
     }
 };
 

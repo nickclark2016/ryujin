@@ -314,7 +314,8 @@ namespace ryujin
         // 0                            1 / tan(fov / 2)        0                               0
         // 0                            0                       (-near - far) / (near - far)    (2 * near * far) / (near - far)
         // 0                            0                       1                               0
-        const T tanFov2 = as<T>(std::tan(fov / as<T>(2)));
+        const T fovRad = as_radians(fov);
+        const T tanFov2 = as<T>(std::tan(fovRad / as<T>(2)));
         const T invTanFov2 = as<T>(1) / tanFov2;
         const T invAspectTanFov2 = invTanFov2 * (as<T>(1) / aspect);
         const T nearMinusFar = near - far;
