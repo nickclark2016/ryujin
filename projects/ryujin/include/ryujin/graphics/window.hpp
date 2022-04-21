@@ -75,7 +75,7 @@ namespace ryujin
 
     private:
         GLFWwindow* _native;
-        bool _focused = false;
+        bool _focused = true;
 
         GLFWwindowfocusfun _focusCb;
         vector<std::function<void(bool)>> _userFocusCallbacks;

@@ -46,6 +46,7 @@ public:
 
         renderables.build_meshes();
 
+        std::this_thread::sleep_for(std::chrono::seconds(1));
         _camera = std::make_unique<free_look_camera>(vec3(-5.0f, 5.0f, -5.0f), ctx.get_registry());
     }
 

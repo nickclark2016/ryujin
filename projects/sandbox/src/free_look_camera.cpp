@@ -47,18 +47,22 @@ void free_look_camera::on_update(double delta)
 	// Rotation
 	const auto deltaMouse = in->get_mouse().cursor_position_delta();
 
-	_yaw += as<f32>(deltaMouse.x) * _sensitivityX * as<f32>(delta);
-
-	
+	_yaw += as<f32>(deltaMouse.x) * _sensitivityX * as<f32>(delta);	
 	_yaw = fmod(_yaw, 360.0f);
+
 	_pitch += as<f32>(deltaMouse.y) * _sensitivityY * as<f32>(delta);
 
-	if(_constrainPitch)
+	if (_constrainPitch)
 	{
 		_pitch = clamp(_pitch, -89.0f, 89.0f);
 	}
 
 	set_rotation(transform, as_radians(vec3(_pitch, _yaw, 0.0f)));
+
+	if (std::isnan(_yaw))
+	{
+		std::cout << "YAW NAN 1" << std::endl;
+	}
 }
 
 void free_look_camera::set_x_sensitivity(const f32 sensitivity)

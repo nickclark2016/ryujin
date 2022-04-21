@@ -35,10 +35,10 @@ namespace ryujin
 
         transform_component& operator=(transform_component&& rhs) noexcept
         {
-            const_cast<mat4<float>&>(matrix) = std::move(const_cast<mat4<float>&>(rhs.matrix));
-            const_cast<vec3<float>&>(position) = std::move(const_cast<vec3<float>&>(rhs.position));
-            const_cast<quat<float>&>(rotation) = std::move(const_cast<quat<float>&>(rhs.rotation));
-            const_cast<vec3<float>&>(scale) = std::move(const_cast<vec3<float>&>(rhs.scale));
+            const_cast<mat4<float>&>(matrix) = std::move(const_cast<mat4<float>&&>(rhs.matrix));
+            const_cast<vec3<float>&>(position) = std::move(const_cast<vec3<float>&&>(rhs.position));
+            const_cast<quat<float>&>(rotation) = std::move(const_cast<quat<float>&&>(rhs.rotation));
+            const_cast<vec3<float>&>(scale) = std::move(const_cast<vec3<float>&&>(rhs.scale));
             return *this;
         }
     };
