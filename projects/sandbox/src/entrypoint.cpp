@@ -3,6 +3,7 @@
 #include <ryujin/input/input.hpp>
 #include <ryujin/graphics/pipelines/pbr_render_pipeline.hpp>
 
+#include <cmath>
 #include <iostream>
 
 #include "free_look_camera.hpp"
@@ -11,7 +12,7 @@ using namespace ryujin;
 
 class sandbox_application final : public base_application
 {
-    std::unique_ptr<free_look_camera> _camera;
+    free_look_camera _camera;
 
 public:
     sandbox_application() = default;
@@ -27,10 +28,6 @@ public:
 
         auto& win = ctx.add_window(winInfo);
         win->focus();
-
-        win->on_focus([&win](bool focused) {
-                win->capture_cursor();
-            });
     }
 
     void on_load(engine_context& ctx) override
@@ -47,7 +44,7 @@ public:
         renderables.build_meshes();
 
         std::this_thread::sleep_for(std::chrono::seconds(1));
-        _camera = std::make_unique<free_look_camera>(vec3(-5.0f, 5.0f, -5.0f), ctx.get_registry());
+        _camera = free_look_camera(vec3(-5.0f, 5.0f, -5.0f), ctx.get_registry());
     }
 
     void on_exit(engine_context& ctx) override
@@ -77,7 +74,7 @@ public:
             ctx.get_window("Sandbox")->capture_cursor();
         }
 
-        _camera->on_update(1.0 / 60.0);
+        _camera.on_update(1.0 / 60.0);
     }
 };
 

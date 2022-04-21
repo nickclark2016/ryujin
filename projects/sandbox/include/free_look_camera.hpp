@@ -9,6 +9,7 @@ using namespace ryujin;
 class free_look_camera
 {
 public:
+	free_look_camera() = default;
 	free_look_camera(vec3<float> position, registry& reg);
 
 	void on_update(double delta);
@@ -21,6 +22,8 @@ public:
 	void constrain_pitch(bool constrain);
 
 private:
+	u64 _padding;
+
 	f32 _yaw;
 	f32 _pitch;
 
