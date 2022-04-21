@@ -16,7 +16,7 @@ namespace ryujin
         _numTranslucentBufferGroupsToDraw = renderables.write_draw_calls(_translucentIndirectCommands, _translucentIndirectCount, frameInFlight * _maxDrawCalls, material_type::TRANSLUCENT);
         renderables.write_materials(_materials, frameInFlight * _maxMaterials);
         _instanceCounts = renderables.write_instances(_instanceData, frameInFlight * _maxInstances);
-        _hostSceneData.texturesLoaded = as<u32>(renderables.write_textures(_textures.data(), frameInFlight * _maxTextures));
+        _textureCount = as<u32>(renderables.write_textures(_textures.data(), frameInFlight * _maxTextures));
 
         _activeCams.clear();
         renderables.get_active_cameras(_activeCams);
@@ -43,8 +43,7 @@ namespace ryujin
             };
         }
 
-        auto scenePtr = reinterpret_cast<scene_data*>(_sceneData.info.pMappedData) + frameInFlight;
-        *scenePtr = _hostSceneData;
+        renderables.write_scene_data(_sceneData, frameInFlight);
     }
 
     void pbr_render_pipeline::render()
@@ -106,8 +105,8 @@ namespace ryujin
 
             const descriptor_buffer_info sceneBufferInfo = {
                 .buf = _sceneData,
-                .offset = frameInFlight * sizeof(scene_data),
-                .length = sizeof(scene_data)
+                .offset = frameInFlight * sizeof(gpu_scene_data),
+                .length = sizeof(gpu_scene_data)
             };
 
             const descriptor_write_info scene = {
@@ -150,7 +149,7 @@ namespace ryujin
             auto activeDepthTexture = get_render_manager()->renderables().try_fetch_texture(_activeRenderTarget.depthTex);
 
             _textureWriteScratchBuffer.clear();
-            for (sz i = 0; i < _hostSceneData.texturesLoaded; ++i)
+            for (sz i = 0; i < _textureCount; ++i)
             {
                 auto& tex = _textures[i];
                 if ((activeColorTexture && activeColorTexture->view == tex.view) ||
@@ -175,7 +174,7 @@ namespace ryujin
 
             }
 
-            for (sz i = _hostSceneData.texturesLoaded; i < _maxTextures; ++i)
+            for (sz i = _textureCount; i < _maxTextures; ++i)
             {
                 const descriptor_image_info info = {
                     .view = _invalidTexture.view,
@@ -448,7 +447,7 @@ namespace ryujin
         const auto indirectBytes = sizeof(gpu_indirect_call) * _maxDrawCalls * frames;
         const auto drawCallBytes = sizeof(u32) * _maxDrawCalls * frames;
         const auto cameraDataBytes = sizeof(scene_camera) * frames * _maxCameras;
-        const auto sceneDataBytes = sizeof(scene_data) * frames;
+        const auto sceneDataBytes = sizeof(gpu_scene_data) * frames;
         const auto textureCount = _maxTextures * frames;
 
         const buffer_create_info instanceBufferCi = {

@@ -1,6 +1,7 @@
 #ifndef renderable_hpp__
 #define renderable_hpp__
 
+#include "lighting_components.hpp"
 #include "types.hpp"
 
 #include "../core/assets.hpp"
@@ -74,6 +75,51 @@ namespace ryujin
         u32 firstInstance;
     };
 
+    struct gpu_directional_light
+    {
+        vec4<float> directionIntensity; // (xyz) direction, (w) intensity
+    };
+    
+    struct gpu_point_light
+    {
+        vec3<f32> position;
+        vec3<f32> color;
+        vec4<f32> attenuation; // constant, linear, quadratic, range
+    };
+
+    struct gpu_spot_light
+    {
+        vec3<f32> position;
+        vec3<f32> rotation;
+        vec3<f32> color;
+        vec4<f32> attenuation; // constant, linear, quadratic, range
+        f32 innerRadius;
+        f32 outerRadius;
+    };
+
+    struct gpu_ambient_light
+    {
+        vec4<float> color; // (xyz) color, (w) intensity
+    };
+
+    struct alignas(256) gpu_scene_lighting
+    {
+        static constexpr sz MAX_POINT_LIGHTS = 512;
+        static constexpr sz MAX_SPOT_LIGHTS = 512;
+        u32 numPointLights;
+        u32 numSpotLights;
+        gpu_point_light points[MAX_POINT_LIGHTS];
+        gpu_spot_light spots[MAX_SPOT_LIGHTS];
+        gpu_directional_light sun;
+        gpu_ambient_light ambient;
+    };
+
+    struct gpu_scene_data
+    {
+        gpu_scene_lighting lighting;
+        u32 texturesLoaded;
+    };
+
     class renderable_manager
     {
     public:
@@ -117,6 +163,8 @@ namespace ryujin
         draw_call_write_info write_draw_calls(buffer& indirectBuffer, buffer& drawCountBuffer, const sz offset, const material_type type);
         sz write_textures(texture* buf, sz offset);
 
+        sz write_scene_data(buffer& buf, const sz offset);
+
         const buffer_group& get_buffer_group(const sz idx) const noexcept;
 
         entity_handle<registry::entity_type> main_camera() noexcept;
@@ -132,6 +180,13 @@ namespace ryujin
 
         void register_camera(entity_type ent);
         void unregister_camera(entity_type ent);
+
+        void register_point_light(entity_type ent);
+        void register_spot_light(entity_type ent);
+        void register_directional_light(entity_type ent);
+        void unregister_point_light(entity_type ent);
+        void unregister_spot_light(entity_type ent);
+        void unregister_directional_light(entity_type ent);
         
         registry* _registry;
         render_manager* _manager;
@@ -171,6 +226,9 @@ namespace ryujin
         // mesh group id -> collection of meshes -> vector of entities with that mesh
         vector<std::unordered_map<u32, std::unordered_map<slot_map_key, vector<entity_type>, slot_map_key_hash>>> _entities;
         bool _entitiesDirty;
+
+        vector<entity_type> _directionalLights;
+        gpu_scene_data _sceneDataCache = {};
 
         vector<vector<gpu_indirect_call>> _drawCallCache;
         vector<vector<u32>> _drawCountCache;

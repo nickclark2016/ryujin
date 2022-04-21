@@ -23,6 +23,8 @@ namespace ryujin
         void maximizeCallback(GLFWwindow*, i32);
         void keyboardCallback(GLFWwindow*, i32, i32, i32, i32);
         void cursorCallback(GLFWwindow*, f64, f64);
+        void scrollCallback(GLFWwindow*, f64, f64);
+        void mouseButtonCallback(GLFWwindow*, i32, i32, i32);
     } // namespace detail
 
     class render_manager;
@@ -65,8 +67,9 @@ namespace ryujin
         void on_maximize(const std::function<void()>& fn);
 
         void on_keystroke(const std::function<void(i32, i32, i32, i32)>& fn);
-
         void on_cursor_move(const std::function<void(f64, f64)>& fn);
+        void on_scroll(const std::function<void(f64, f64)>& fn);
+        void on_buttonstroke(const std::function<void(i32, i32, i32)>& fn);
 
         void capture_cursor();
         void release_cursor();
@@ -101,6 +104,12 @@ namespace ryujin
         GLFWcursorposfun _cursorPosCb;
         vector<std::function<void(f64, f64)>> _userCursorPosCallbacks;
 
+        GLFWscrollfun _scrollCb;
+        vector<std::function<void(f64, f64)>> _userScrollCallbacks;
+
+        GLFWmousebuttonfun _mouseBtnCb;
+        vector<std::function<void(i32, i32, i32)>> _userMouseBtnCallbacks;
+
         std::function<void()> _afterCloseCb = []() {};
 
         friend void detail::focusCallback(GLFWwindow*, int);
@@ -110,6 +119,8 @@ namespace ryujin
         friend void detail::maximizeCallback(GLFWwindow*, int);
         friend void detail::keyboardCallback(GLFWwindow*, i32, i32, i32, i32);
         friend void detail::cursorCallback(GLFWwindow*, f64, f64);
+        friend void detail::scrollCallback(GLFWwindow*, f64, f64);
+        friend void detail::mouseButtonCallback(GLFWwindow*, i32, i32, i32);
         
         friend class render_manager;
     };

@@ -817,6 +817,36 @@ namespace ryujin
         return textureId;
     }
 
+    sz renderable_manager::write_scene_data(buffer& buf, const sz offset)
+    {
+        _sceneDataCache.texturesLoaded = as<u32>(_textures.size());
+        
+        gpu_directional_light sun = {
+            .directionIntensity = { 0.0f, -1.0f, 0.0f, 1.0f }
+        };
+
+        if (!_directionalLights.empty())
+        {
+            auto sunEntity = _directionalLights.front();
+            auto dirLight = entity_handle<entity_type>(sunEntity, _registry).get<directional_light_component>();
+            sun.directionIntensity = {
+                dirLight.color.r,
+                dirLight.color.g,
+                dirLight.color.b,
+                dirLight.intensity
+            };
+        }
+
+        auto& lighting = _sceneDataCache.lighting;
+        lighting.sun = sun;
+        lighting.numPointLights = 0;
+        lighting.numSpotLights = 0;
+
+        auto ptr = reinterpret_cast<gpu_scene_data*>(buf.info.pMappedData) + offset;
+        *ptr = _sceneDataCache;
+        return 1;
+    }
+
     const renderable_manager::buffer_group& renderable_manager::get_buffer_group(const sz idx) const noexcept
     {
         return _bakedBufferGroups[idx];
@@ -915,6 +945,36 @@ namespace ryujin
             {
                 cams.erase(it);
             }
+        }
+    }
+
+    void renderable_manager::register_point_light(entity_type ent)
+    {
+    }
+
+    void renderable_manager::register_spot_light(entity_type ent)
+    {
+    }
+
+    void renderable_manager::register_directional_light(entity_type ent)
+    {
+        _directionalLights.push_back(ent);
+    }
+
+    void renderable_manager::unregister_point_light(entity_type ent)
+    {
+    }
+
+    void renderable_manager::unregister_spot_light(entity_type ent)
+    {
+    }
+
+    void renderable_manager::unregister_directional_light(entity_type ent)
+    {
+        const auto it = std::find(_directionalLights.begin(), _directionalLights.end(), ent);
+        if (it != _directionalLights.end())
+        {
+            _directionalLights.erase(it);
         }
     }
 

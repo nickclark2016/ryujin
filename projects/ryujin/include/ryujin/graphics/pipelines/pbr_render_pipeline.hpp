@@ -28,7 +28,6 @@ namespace ryujin
         static constexpr u32 _maxMaterials = 1024 * 64;
         static constexpr u32 _maxDrawCalls = 512;
         static constexpr u32 _maxTextures = 256;
-        static constexpr u32 _maxPointLightCount = 512;
         static constexpr u32 _maxCameras = 32;
 
     public:
@@ -45,24 +44,6 @@ namespace ryujin
             mat4<float> viewProj; // proj * view
             vec3<float> position;
             vec3<float> orientation;
-        };
-
-        struct point_light
-        {
-            vec3<float> position;
-            vec3<float> color;
-        };
-
-        struct scene_lighting
-        {
-            point_light lights[_maxPointLightCount];
-            u32 pointLightCount = 0;
-        };
-
-        struct alignas(256) scene_data
-        {
-            scene_lighting lighting = {};
-            u32 texturesLoaded = 0;
         };
 
         void init_scene_pass();
@@ -98,7 +79,7 @@ namespace ryujin
         renderable_manager::draw_call_write_info _numTranslucentBufferGroupsToDraw = {};
         renderable_manager::instance_write_info _instanceCounts;
 
-        scene_data _hostSceneData = {};
+        u32 _textureCount = 0;
     };
 }
 

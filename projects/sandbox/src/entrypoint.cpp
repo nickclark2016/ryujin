@@ -74,14 +74,14 @@ public:
             ctx.get_window("Sandbox")->release_cursor();
         }
 
-        if(in->get_keys().get_state(keyboard::key::C) == keyboard::state::PRESSED)
+        if (in->get_mouse().get_state(mouse::button::LEFT) == mouse::state::PRESSED)
         {
             ctx.get_window("Sandbox")->capture_cursor();
         }
 
         if (ctx.get_window("Sandbox")->is_cursor_captured())
         {
-            _camera->on_update(1.0 / 60.0);
+            _camera.on_update(1.0 / 60.0);
         }
     }
 };

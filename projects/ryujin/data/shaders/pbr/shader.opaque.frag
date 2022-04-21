@@ -19,7 +19,7 @@ layout (set = 0, binding = 0) uniform Camera
     scene_camera cameras[MAX_CAMERA_COUNT];
 };
 
-layout (std430, set = 0, binding = 1) buffer SceneData 
+layout (set = 0, binding = 1) buffer SceneData 
 {
     scene_lighting lighting;
     uint texturesLoaded;
@@ -53,6 +53,13 @@ void main(void)
     }
     else
     {
-        fragColor = texture(textures[mat.albedo], vs_in.texcoord0);
+        scene_camera cam = cameras[activeCamera];
+        vec4 albedo = texture(textures[mat.albedo], vs_in.texcoord0);
+        vec3 toLightDir = -normalize(lighting.sun.direction);
+        vec3 toViewDir = normalize(cam.position - vs_in.worldPosition);
+        vec3 halfway = normalize(toLightDir + toViewDir);
+        float spec = pow(max(dot(vs_in.normal, halfway), 0.0), 16.0);
+        vec3 specular = vec3(0.3) * spec;
+        fragColor = vec4(lighting.sceneAmbient.color + albedo.xyz + specular, 1.0);
     }
 }

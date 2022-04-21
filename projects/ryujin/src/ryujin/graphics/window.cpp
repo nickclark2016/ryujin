@@ -103,6 +103,24 @@ namespace ryujin
 				cb(x, y);
 			}
 		}
+
+		void scrollCallback(GLFWwindow* win, f64 x, f64 y)
+		{
+			window* userWin = reinterpret_cast<window*>(glfwGetWindowUserPointer(win));
+			for (auto& cb : userWin->_userScrollCallbacks)
+			{
+				cb(x, y);
+			}
+		}
+
+		void mouseButtonCallback(GLFWwindow* win, i32 button, i32 action, i32 mods)
+		{
+			window* userWin = reinterpret_cast<window*>(glfwGetWindowUserPointer(win));
+			for (auto& cb : userWin->_userMouseBtnCallbacks)
+			{
+				cb(button, action, mods);
+			}
+		}
 	}
 
 	result<std::unique_ptr<window>, window::error_code> window::create(const window::create_info& info) noexcept
@@ -135,6 +153,8 @@ namespace ryujin
 		// Input functions
 		glfwSetKeyCallback(win->_native, detail::keyboardCallback);
 		glfwSetCursorPosCallback(win->_native, detail::cursorCallback);
+		glfwSetScrollCallback(win->_native, detail::scrollCallback);
+		glfwSetMouseButtonCallback(win->_native, detail::mouseButtonCallback);
 
 		return result_type::from_success(std::move(win));
 	}
@@ -149,6 +169,7 @@ namespace ryujin
 		_userMaximizeCallbacks.clear();
 		_userResizeCallbacks.clear();
 		_userRestoreCallbacks.clear();
+		_userScrollCallbacks.clear();
 
 		glfwSetWindowFocusCallback(_native, nullptr);
 		glfwSetWindowCloseCallback(_native, nullptr);
@@ -234,6 +255,16 @@ namespace ryujin
 	void window::on_cursor_move(const std::function<void(f64, f64)>& fn)
 	{
 		_userCursorPosCallbacks.push_back(fn);
+	}
+
+	void window::on_scroll(const std::function<void(f64, f64)>& fn)
+	{
+		_userScrollCallbacks.push_back(fn);
+	}
+
+	void window::on_buttonstroke(const std::function<void(i32, i32, i32)>& fn)
+	{
+		_userMouseBtnCallbacks.push_back(fn);
 	}
 
 	void window::after_close(const std::function<void()>& fn)

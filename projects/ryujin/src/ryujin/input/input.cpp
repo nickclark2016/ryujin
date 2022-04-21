@@ -89,6 +89,22 @@ namespace ryujin
                 i._mouse.set_cursor_position(x, y);
             });
 
+        win->on_scroll([w](const f64 x, const f64 y) {
+                const auto it = _inputs.find(w);
+                if (it == _inputs.end()) return;
+                auto& i = it->second;
+                i._mouse.set_scroll_offset(x, y);
+            });
+
+        win->on_buttonstroke([w](const i32 btn, const i32 action, const i32 mods) {
+                const auto it = _inputs.find(w);
+                if (it == _inputs.end()) return;
+                auto& i = it->second;
+                const auto k = as<mouse::button>(btn);
+                const auto state = as<mouse::state>(action);
+                i._mouse.set_state(k, state);
+            });
+
         win->on_close([w]() {
                 _inputs.erase(w);
             });
