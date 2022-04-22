@@ -144,9 +144,9 @@ void main(void)
         vec3 lo = vec3(0.0);
 
         // compute directional lighting
-        vec3 sunLightVector = -normalize(lighting.sun.direction);
+        vec3 sunLightVector = -normalize(lighting.sun.direction.xyz);
         vec3 halfV = normalize(sunLightVector + viewVector);
-        vec3 radiance = lighting.sun.color;
+        vec3 radiance = lighting.sun.color.rgb;
 
         float ndf = ggx_dist(normalFromTexture, halfV, rough);
         float g = geom_smith(normalFromTexture, viewVector, sunLightVector, rough);

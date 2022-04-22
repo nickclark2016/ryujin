@@ -831,7 +831,7 @@ namespace ryujin
         
         gpu_directional_light sun = {
             .directionIntensity = { 0.0f, -1.0f, 0.0f, 1.0f },
-            .color = { 1.0f, 1.0f, 1.0f }
+            .color = { 1.0f, 1.0f, 1.0f, 0.0f }
         };
 
         if (!_directionalLights.empty())
@@ -844,7 +844,8 @@ namespace ryujin
             sun.color = {
                 dirLight.color.r,
                 dirLight.color.g,
-                dirLight.color.b
+                dirLight.color.b,
+                0.0
             };
         }
 

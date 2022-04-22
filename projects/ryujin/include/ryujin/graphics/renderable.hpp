@@ -78,44 +78,46 @@ namespace ryujin
     struct gpu_directional_light
     {
         vec4<float> directionIntensity; // (xyz) direction, (w) intensity
-        vec3<float> color;
+        vec4<float> color;
     };
     
     struct gpu_point_light
     {
-        vec3<f32> position;
-        vec3<f32> color;
+        vec4<f32> position;
+        vec4<f32> color;
         vec4<f32> attenuation; // constant, linear, quadratic, range
     };
 
     struct gpu_spot_light
     {
-        vec3<f32> position;
-        vec3<f32> rotation;
-        vec3<f32> color;
+        vec4<f32> position;
+        vec4<f32> rotation;
+        vec4<f32> color;
         vec4<f32> attenuation; // constant, linear, quadratic, range
         f32 innerRadius;
         f32 outerRadius;
+        f32 pad0, pad1;
     };
 
-    struct gpu_ambient_light
+    struct alignas(16) gpu_ambient_light
     {
         vec4<float> color; // (xyz) color, (w) intensity
     };
 
-    struct alignas(256) gpu_scene_lighting
+    struct gpu_scene_lighting
     {
         static constexpr sz MAX_POINT_LIGHTS = 512;
         static constexpr sz MAX_SPOT_LIGHTS = 512;
         u32 numPointLights;
         u32 numSpotLights;
+        u32 pad0, pad1;
         gpu_point_light points[MAX_POINT_LIGHTS];
         gpu_spot_light spots[MAX_SPOT_LIGHTS];
         gpu_directional_light sun;
         gpu_ambient_light ambient;
     };
 
-    struct gpu_scene_data
+    struct alignas(512) gpu_scene_data
     {
         gpu_scene_lighting lighting;
         u32 texturesLoaded;

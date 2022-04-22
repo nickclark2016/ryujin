@@ -28,42 +28,39 @@ struct scene_camera
 
 struct directional_light
 {
-    vec3 direction;
-    float intensity;
-    vec3 color;
+    vec4 direction;
+    vec4 color;
 };
 
 struct point_light
 {
-    vec3 position;
-    vec3 color;
-    vec3 attenuation;
-    float range;
+    vec4 position;
+    vec4 color;
+    vec4 attenuation;
 };
 
 struct spot_light
 {
-    vec3 position;
-    vec3 rotation;
-    vec3 color;
-    vec3 attenuation;
-    float range;
+    vec4 position;
+    vec4 rotation;
+    vec4 color;
+    vec4 attenuation;
     float innerRadius;
     float outerRadius;
+    float pad0;
+    float pad1;
 };
 
 struct ambient_lighting
 {
-    vec3 color;
-    float intensity;
+    vec4 color;
 };
 
 struct scene_lighting
 {
     uint numPointLights;
     uint numSpotLights;
-    uint pad0;
-    uint pad1;
+    uint pad0, pad1;
     point_light pointLights[MAX_POINT_LIGHT_COUNT];
     spot_light spotLights[MAX_SPOT_LIGHT_COUNT];
     directional_light sun;
