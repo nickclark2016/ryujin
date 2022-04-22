@@ -74,7 +74,7 @@ public:
     {
         auto& cubeTx = cubeEnt.get<transform_component>();
         auto cubeRot = euler(cubeTx.rotation);
-        cubeRot.x += 0.01f;
+        cubeRot.x += 0.0001f;
         set_rotation(cubeTx, cubeRot);
 
 	    const auto in = input::get_input();

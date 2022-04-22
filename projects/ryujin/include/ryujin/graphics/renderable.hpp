@@ -78,6 +78,7 @@ namespace ryujin
     struct gpu_directional_light
     {
         vec4<float> directionIntensity; // (xyz) direction, (w) intensity
+        vec3<float> color;
     };
     
     struct gpu_point_light

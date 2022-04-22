@@ -830,7 +830,8 @@ namespace ryujin
         _sceneDataCache.texturesLoaded = as<u32>(_textures.size());
         
         gpu_directional_light sun = {
-            .directionIntensity = { 0.0f, -1.0f, 0.0f, 1.0f }
+            .directionIntensity = { 0.0f, -1.0f, 0.0f, 1.0f },
+            .color = { 1.0f, 1.0f, 1.0f }
         };
 
         if (!_directionalLights.empty())
@@ -838,10 +839,12 @@ namespace ryujin
             auto sunEntity = _directionalLights.front();
             auto dirLight = entity_handle<entity_type>(sunEntity, _registry).get<directional_light_component>();
             sun.directionIntensity = {
+                0.0f, -1.0f, 0.0f, 1.0f // TODO: extract direction from orientation vector
+            };
+            sun.color = {
                 dirLight.color.r,
                 dirLight.color.g,
-                dirLight.color.b,
-                dirLight.intensity
+                dirLight.color.b
             };
         }
 

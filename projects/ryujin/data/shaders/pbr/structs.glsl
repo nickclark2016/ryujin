@@ -30,6 +30,7 @@ struct directional_light
 {
     vec3 direction;
     float intensity;
+    vec3 color;
 };
 
 struct point_light
@@ -77,5 +78,7 @@ struct instance_data
     uint pad0;
     uint pad1;
 };
+
+const float PI = 3.14159265359;
 
 #endif // structs_glsl_
