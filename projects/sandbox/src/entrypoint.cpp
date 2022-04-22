@@ -74,7 +74,7 @@ public:
     {
         auto& cubeTx = cubeEnt.get<transform_component>();
         auto cubeRot = euler(cubeTx.rotation);
-        cubeRot.x += 0.0001f;
+        cubeRot.x += as<float>(0.1 * ctx.deltaTime());
         set_rotation(cubeTx, cubeRot);
 
 	    const auto in = input::get_input();
@@ -92,7 +92,8 @@ public:
 
         if (ctx.get_window("Sandbox")->is_cursor_captured())
         {
-            _camera.on_update(1.0 / 60.0);
+            std::cout << ctx.deltaTime() << " s" << std::endl;
+            _camera.on_update(ctx.deltaTime());
         }
     }
 };

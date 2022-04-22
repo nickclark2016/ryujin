@@ -22,16 +22,14 @@ public:
 	void constrain_pitch(bool constrain);
 
 private:
-	u64 _padding;
-
 	f32 _yaw;
 	f32 _pitch;
 
 	bool _constrainPitch = true;
-	f32 _sensitivityX = 1.0f;
-	f32 _sensitivityY = 1.0f;
+	f32 _sensitivityX = 15.0f;
+	f32 _sensitivityY = 15.0f;
 
-	f32 _speed = 0.2f;
+	f32 _speed = 15.0f;
 
 	entity_handle<registry::entity_type> _entity;
 };

@@ -13,7 +13,7 @@ free_look_camera::free_look_camera(const vec3<float> position, registry& reg)
 	set_position(_entity.get<transform_component>(), position);
 }
 
-void free_look_camera::on_update(const double delta)
+void free_look_camera::on_update(const f64 delta)
 {
 	const auto in = input::get_input();
 	if (!in)
@@ -24,22 +24,22 @@ void free_look_camera::on_update(const double delta)
 	// Movement
 	if(in->get_keys().get_state(keyboard::key::W) != keyboard::state::RELEASED)
 	{
-		set_position(transform, transform.position + (_speed * extract_forward(transform.rotation)));
+		set_position(transform, transform.position + (_speed * extract_forward(transform.rotation)) * as<f32>(delta));
 	}
 
 	if (in->get_keys().get_state(keyboard::key::S) != keyboard::state::RELEASED)
 	{
-		set_position(transform, transform.position - (_speed * extract_forward(transform.rotation)));
+		set_position(transform, transform.position - (_speed * extract_forward(transform.rotation)) * as<f32>(delta));
 	}
 
 	if (in->get_keys().get_state(keyboard::key::A) != keyboard::state::RELEASED)
 	{
-		set_position(transform, transform.position + (_speed * cross(extract_forward(transform.rotation), extract_up(transform.rotation))));
+		set_position(transform, transform.position + (_speed * cross(extract_forward(transform.rotation), extract_up(transform.rotation))) * as<f32>(delta));
 	}
 
 	if (in->get_keys().get_state(keyboard::key::D) != keyboard::state::RELEASED)
 	{
-		set_position(transform, transform.position - (_speed * cross(extract_forward(transform.rotation), extract_up(transform.rotation))));
+		set_position(transform, transform.position - (_speed * cross(extract_forward(transform.rotation), extract_up(transform.rotation))) * as<f32>(delta));
 	}
 
 	// Rotation

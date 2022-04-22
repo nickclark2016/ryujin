@@ -8,6 +8,7 @@
 #include "../graphics/render_system.hpp"
 
 #include <atomic>
+#include <chrono>
 #include <memory>
 #include <semaphore>
 #include <string>
@@ -48,6 +49,8 @@ namespace ryujin
         registry& get_registry() noexcept;
         asset_manager& get_assets() noexcept;
         render_system& get_render_system() noexcept;
+
+        f64 deltaTime() const noexcept;
     private:
 
         std::unordered_map<std::string, std::unique_ptr<window>> _windows;
@@ -63,6 +66,9 @@ namespace ryujin
         std::binary_semaphore _rendererComplete;
         std::binary_semaphore _gameLogicComplete;
         std::thread _renderLogic;
+
+        f64 _delta;
+        std::chrono::time_point<std::chrono::high_resolution_clock> _lastTime;
     };
 }
 

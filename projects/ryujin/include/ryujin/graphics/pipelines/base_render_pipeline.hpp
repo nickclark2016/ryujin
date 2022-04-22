@@ -103,13 +103,13 @@ namespace ryujin
         std::unordered_map<std::string, slot_map_key> _renderTargets;
         slot_map<render_target> _targets;
 
-        render_target _activeRenderTarget;
-        render_target _prevRenderTarget;
+        render_target _activeRenderTarget = {};
+        render_target _prevRenderTarget = {};
 
         void transition_render_targets(command_list& list);
 
     private:
-        render_manager* _manager;
+        render_manager* _manager = nullptr;
     };
 }
 

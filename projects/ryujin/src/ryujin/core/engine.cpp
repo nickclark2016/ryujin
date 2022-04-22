@@ -71,6 +71,8 @@ namespace ryujin
     
     void engine_context::execute(std::unique_ptr<base_application>& app)
     {
+        using std::chrono::high_resolution_clock;
+
 #if MULTITHREADED_EXECUTION
         _isRunning.store(true);
         _renderer = std::make_unique<render_system>();
@@ -130,10 +132,15 @@ namespace ryujin
         auto illegalTextureAsset = get_assets().load_texture("data/textures/invalid_texture.png");
         _renderer->get_render_manager(0)->renderables().load_texture("internal_illegal_texture", *illegalTextureAsset);
         app->on_load(*this);
+        _lastTime = high_resolution_clock::now();
         while (!_windows.empty())
         {
             input::poll();
+            auto currentTime = high_resolution_clock::now();
+            auto delta = std::chrono::duration_cast<std::chrono::duration<double>>(currentTime - _lastTime);
+            _delta = delta.count();
             app->on_frame(*this);
+            _lastTime = currentTime;
             _renderer->render_prework(*this);
             _renderer->on_pre_render(*this);
             app->on_render(*this);
@@ -162,5 +169,10 @@ namespace ryujin
     render_system& engine_context::get_render_system() noexcept
     {
         return *_renderer;
+    }
+    
+    f64 engine_context::deltaTime() const noexcept
+    {
+        return _delta;
     }
 }
