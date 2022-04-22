@@ -45,9 +45,9 @@ namespace ryujin
 
         mat3<T> res;
 
-        res[0] = vec3<T>{ as<T>(1) - yy - zz, xy + zw, xz - yw};  // NOLINT
-        res[1] = vec3<T>{ xy - zw, as<T>(1) - xx - zz, yz + xw };  // NOLINT
-        res[2] = vec3<T>{ xz + yw, yz - xw, as<T>(1) - xx - yy };  // NOLINT
+        res[0] = vec3<T>{ as<T>(1) - yy - zz, xy + zw, xz - yw};
+        res[1] = vec3<T>{ xy - zw, as<T>(1) - xx - zz, yz + xw };
+        res[2] = vec3<T>{ xz + yw, yz - xw, as<T>(1) - xx - yy };
 
         return res;
     }
@@ -98,30 +98,24 @@ namespace ryujin
     inline constexpr mat4<T> as_mat4(const quat<T>& q)
     {
         mat4 res(as<T>(1));
-        const T qxx = q.x * q.x;
-        const T qxy = q.x * q.y;
-        const T qxz = q.x * q.z;
-        const T qyy = q.y * q.y;
-        const T qyz = q.y * q.z;
-        const T qzz = q.z * q.z;
-        const T qwx = q.w * q.x;
-        const T qwy = q.w * q.y;
-        const T qwz = q.w * q.z;
+        const T n = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w;
+        const T s = n > 0 ? 2 / n : 0;
+        const T x = s * q.x;
+        const T y = s * q.y;
+        const T z = s * q.z;
+        const T xx = x * q.x;
+        const T xy = x * q.y;
+        const T xz = x * q.z;
+        const T xw = x * q.w;
+        const T yy = y * q.y;
+        const T yz = y * q.z;
+        const T yw = y * q.w;
+        const T zz = z * q.z;
+        const T zw = z * q.w;
 
-        constexpr T one = as<T>(1);
-        constexpr T two = as<T>(2);
-
-        res[0][0] = one - two * (qyy + qzz);
-        res[0][1] = two * (qxy + qwz);
-        res[0][2] = two * (qxz - qwy);
-
-        res[1][0] = two * (qxy - qwz);
-        res[1][1] = one - two * (qxx + qzz);
-        res[1][2] = two * (qyz + qwx);
-
-        res[2][0] = two * (qxz + qwy);
-        res[2][1] = two * (qyz - qwx);
-        res[2][2] = one - two * (qxx * qyy); 
+        res[0] = vec4<T>{ as<T>(1) - yy - zz, xy + zw, xz - yw, as<T>(0) };
+        res[1] = vec4<T>{ xy - zw, as<T>(1) - xx - zz, yz + xw, as<T>(0) };
+        res[2] = vec4<T>{ xz + yw, yz - xw, as<T>(1) - xx - yy, as<T>(0) };
 
         return res;
     }
@@ -209,9 +203,11 @@ namespace ryujin
     {
         // transformation = translation * rotation * scale
         const auto translating = translate(translation);
-        const auto scaling = ryujin::scale(scale);
         const auto rotating = as_mat4(rotation);
-        return translating * rotating * scaling;
+        const auto tr = translating * rotating;
+        const auto scaling = ryujin::scale(tr, scale);
+
+        return scaling;
     }
 
     template <numeric T>
@@ -219,11 +215,9 @@ namespace ryujin
     {
         // transformation = translation * rotation * scale
         const auto translating = translate(translation);
-        auto tr = rotate(translating, rotation.x, right<T>);
-        tr = rotate(tr, rotation.y, up<T>);
-        tr = rotate(tr, rotation.z, front<T>);
-        const auto scaling = ryujin::scale(tr, scale);
-        return scaling;
+        const auto scaling = ryujin::scale(scale);
+        const auto rotating = as_mat4(quat(rotation));
+        return translating * rotating * scaling;
     }
 
     template <numeric T>

@@ -50,6 +50,9 @@ public:
         auto& hierarchy = cubeEnt.get<entity_relationship_component<registry::entity_type>>();
         cubeEnt = entity_handle(hierarchy.firstChild, &ctx.get_registry());
 
+        auto& cubeTx = cubeEnt.get<transform_component>();
+        set_position(cubeTx, vec3(1.0f, 0.0f, 0.0f));
+
         renderables.build_meshes();
 
         _camera = free_look_camera(vec3(-1.0f, 1.0f, -10.0f), ctx.get_registry());
