@@ -92,7 +92,6 @@ public:
 
         if (ctx.get_window("Sandbox")->is_cursor_captured())
         {
-            std::cout << ctx.deltaTime() << " s" << std::endl;
             _camera.on_update(ctx.deltaTime());
         }
     }

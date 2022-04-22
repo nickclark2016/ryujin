@@ -73,7 +73,7 @@ namespace ryujin
     {
         using std::chrono::high_resolution_clock;
 
-#if MULTITHREADED_EXECUTION
+#if 1 || MULTITHREADED_EXECUTION
         _isRunning.store(true);
         _renderer = std::make_unique<render_system>();
 
@@ -112,7 +112,14 @@ namespace ryujin
             _rendererComplete.acquire();
             input::poll();
 
+            auto currentTime = high_resolution_clock::now();
+            auto delta = std::chrono::duration_cast<std::chrono::duration<double>>(currentTime - _lastTime);
+            _delta = delta.count();
+
             app->on_frame(*this);
+
+            _lastTime = currentTime;
+
             _gameLogicComplete.release();
         }
 
