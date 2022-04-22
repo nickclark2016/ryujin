@@ -78,7 +78,7 @@ namespace ryujin
         return piRadians * as<T>(180);
     }
 
-    inline constexpr u16 compress_to_half(const float value)
+    inline constexpr u16 compress_to_half(const f32 value)
     {
         return as<u16>(std::round(clamp(value, -1.0f, +1.0f) * 32767.0f));
     }

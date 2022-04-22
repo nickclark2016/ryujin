@@ -1,42 +1,27 @@
 #ifndef funcs_glsl_
 #define funcs_glsl_
 
-vec3 x_axis_from_quat(vec4 quat)
+vec3 extract_normal(const vec4 q)
 {
-    float fty = 2.0 * quat.y;
-    float ftz = 2.0 * quat.z;
-    float ftwy = fty * quat.w;
-    float ftwz = ftz * quat.w;
-    float ftxy = fty * quat.x;
-    float ftxz = ftz * quat.x;
-    float ftyy = ftz * quat.y;
-    float ftzz = ftz * quat.z;
-
-    return vec3(1.0 - (ftyy + ftzz), ftxy + ftwz, ftxz - ftwy);
+    return vec3( 0.0,  0.0,  1.0) +
+        vec3( 2.0, -2.0, -2.0) * q.x * q.zwx +
+        vec3( 2.0,  2.0, -2.0) * q.y * q.wzy;
 }
 
-vec3 y_axis_from_quat(vec4 quat)
+vec3 extract_tangent(const vec4 q)
 {
-    float ftx = 2.0 * quat.x;
-    float fty = 2.0 * quat.y;
-    float ftz = 2.0 * quat.z;
-    float ftwx = ftx * quat.w;
-    float ftwz = ftz * quat.w;
-    float ftxx = ftx * quat.x;
-    float ftxy = fty * quat.x;
-    float ftyz = ftz * quat.y;
-    float ftzz = ftz * quat.z;
-
-    return vec3(ftxy - ftwz, 1.0 - (ftxx + ftzz), ftyz + ftwx);
+    return vec3( 1.0,  0.0,  0.0) +
+        vec3(-2.0,  2.0, -2.0) * q.y * q.yxw +
+        vec3(-2.0,  2.0,  2.0) * q.z * q.zwx;
 }
 
 void decode_tbn_quaternion(vec4 encodedTbn, out vec3 normal, out vec3 tangent, out vec3 bitangent)
 {
     vec4 quat = normalize(encodedTbn);
-    normal = x_axis_from_quat(quat);
-    tangent = y_axis_from_quat(quat);
-    float bitangentReflection = sign(encodedTbn.w);
-    bitangent = cross(normal, tangent) * bitangentReflection;
+    normal = normalize(extract_normal(quat));
+    tangent = normalize(extract_tangent(quat));
+    vec3 binorm = cross(normal, tangent);
+    bitangent = sign(encodedTbn.w) * binorm;
 }
 
 #endif // funcs_glsl_

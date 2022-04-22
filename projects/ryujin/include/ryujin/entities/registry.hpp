@@ -360,7 +360,7 @@ namespace ryujin
     template <typename T>
     inline entity_handle<Type>& entity_handle<Type>::assign_or_replace(const T& t)
     {
-        _registry->template assign_or_replace(*this, t);
+        _registry->assign_or_replace(*this, t);
         return *this;
     }
 

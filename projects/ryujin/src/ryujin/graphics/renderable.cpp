@@ -498,15 +498,23 @@ namespace ryujin
                 .z = compress_to_half(vertex.position.z)
             };
 
-            const auto bitangent = cross(vertex.normal, vertex.tangent);
-            const auto tbn = encode_tbn(vertex.tangent, bitangent, vertex.normal);
+            const auto tandir = vertex.tangent.w > 0 ? 1.0f : -1.0f;
 
-            mesh_group::interleaved_t interleavedAttribs = {
+            const vec3 n = vertex.normal;
+            vec3 t = { vertex.tangent.x, vertex.tangent.y, vertex.tangent.z };
+            const vec3 b = tandir > 0 ? cross(t, n) : cross(n, t);
+
+            t = tandir > 0 ? cross(n, b) : cross(b, n);
+
+            const mat3 tbn = { t, b, n };
+            const quat encodedTbn = encode_tbn(tbn);
+
+            const mesh_group::interleaved_t interleavedAttribs = {
                 .tbn = {
-                    .x = compress_to_half(tbn.x),
-                    .y = compress_to_half(tbn.y),
-                    .z = compress_to_half(tbn.z),
-                    .w = compress_to_half(tbn.w)
+                    .x = compress_to_half(encodedTbn.x),
+                    .y = compress_to_half(encodedTbn.y),
+                    .z = compress_to_half(encodedTbn.z),
+                    .w = compress_to_half(encodedTbn.w)
                 },
                 .texcoord0 = {
                     .u = compress_to_half(vertex.texCoord.u),

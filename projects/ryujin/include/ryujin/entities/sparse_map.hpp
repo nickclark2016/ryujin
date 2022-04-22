@@ -301,7 +301,7 @@ namespace ryujin
         if (page[sparseOffset] == _tombstone)
         {
             // Value is not in the map
-            page[sparseOffset] = EntityType{ static_cast<EntityType::identifier_type>(_packed.size()), 0 };
+            page[sparseOffset] = EntityType{ static_cast<entity_traits<typename EntityType::type>::identifier_type>(_packed.size()), 0 };
             _packed.push_back(key);
             _values.push_back(value);
             return false;

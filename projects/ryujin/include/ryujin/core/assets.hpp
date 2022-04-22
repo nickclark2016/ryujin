@@ -73,7 +73,7 @@ namespace ryujin
     {
         vec3<float> position;
         vec3<float> normal;
-        vec3<float> tangent;
+        vec4<float> tangent;
         vec2<float> texCoord;
     };
 

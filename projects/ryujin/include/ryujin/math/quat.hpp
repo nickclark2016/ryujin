@@ -22,10 +22,10 @@ namespace ryujin
             T data[4];
             struct
             {
-                T w;
                 T x;
                 T y;
                 T z;
+                T w;
             };
         };
 

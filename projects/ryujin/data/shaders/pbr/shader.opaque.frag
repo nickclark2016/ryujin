@@ -12,7 +12,7 @@ layout (location = 0) in VS_OUT
     vec3 tangent;
     vec3 bitangent;
     flat int instanceID;
-} vs_in;
+} fs_in;
 
 layout (set = 0, binding = 0) uniform Camera
 {
@@ -44,7 +44,7 @@ layout (push_constant) uniform constants
 
 void main(void)
 {
-    uint matId = instances[vs_in.instanceID].material;
+    uint matId = instances[fs_in.instanceID].material;
     material mat = materials[matId];
 
     if (mat.albedo >= texturesLoaded)
@@ -53,13 +53,20 @@ void main(void)
     }
     else
     {
-        scene_camera cam = cameras[activeCamera];
-        vec4 albedo = texture(textures[mat.albedo], vs_in.texcoord0);
-        vec3 toLightDir = -normalize(lighting.sun.direction);
-        vec3 toViewDir = normalize(cam.position - vs_in.worldPosition);
-        vec3 halfway = normalize(toLightDir + toViewDir);
-        float spec = pow(max(dot(vs_in.normal, halfway), 0.0), 16.0);
-        vec3 specular = vec3(0.3) * spec;
-        fragColor = vec4(lighting.sceneAmbient.color + albedo.xyz + specular, 1.0);
+        // ambient
+        vec4 color = texture(textures[mat.albedo], fs_in.texcoord0);
+        vec4 ambient = 0.05 * color;
+        // diffuse
+        vec3 lightDir = normalize(-lighting.sun.direction);
+        vec3 normal = normalize(fs_in.normal);
+        float diff = max(dot(lightDir, normal), 0.0);
+        vec4 diffuse = diff * color;
+        // specular
+        vec3 viewDir = normalize(cameras[activeCamera].position - fs_in.worldPosition);
+        vec3 reflectDir = reflect(-lightDir, normal);
+        vec3 halfwayDir = normalize(lightDir + viewDir);  
+        float spec = pow(max(dot(fs_in.normal, halfwayDir), 0.0), 32.0);
+        vec3 specular = vec3(0.0196, 0.0157, 0.0157) * spec; // assuming bright white light color
+        fragColor = ambient + diffuse + vec4(specular, 0.0);
     }
 }

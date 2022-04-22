@@ -27,7 +27,7 @@ namespace ryujin
         auto camPtr = reinterpret_cast<scene_camera*>(_cameraData.info.pMappedData) + frameInFlight * _maxCameras;
         for (sz i = 0; i < _activeCams.size(); ++i)
         {
-            auto camera = _activeCams[i];
+            auto& camera = _activeCams[i];
             const auto& cameraData = camera.get<camera_component>();
             const auto& cameraTransform = camera.get<transform_component>();
 

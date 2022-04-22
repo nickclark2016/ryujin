@@ -165,6 +165,13 @@ namespace ryujin
     }
 
     template <numeric T>
+    inline constexpr vec3<T> operator*(const vec3<T>& lhs, const T scalar) noexcept
+    {
+        const vec3<T> result = { scalar * lhs[0], scalar * lhs[1], scalar * lhs[2] };
+        return result;
+    }
+
+    template <numeric T>
     inline constexpr vec3<T> operator/(const vec3<T>& lhs, const vec3<T>& rhs) noexcept
     {
         const vec3<T> result = { lhs[0] / rhs[0], lhs[1] / rhs[1], lhs[2] / rhs[2] };

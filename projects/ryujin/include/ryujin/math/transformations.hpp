@@ -4,6 +4,7 @@
 #include "mat3.hpp"
 #include "mat4.hpp"
 #include "quat.hpp"
+#include "vec2.hpp"
 #include "vec3.hpp"
 #include "vec4.hpp"
 
@@ -27,31 +28,26 @@ namespace ryujin
     template <numeric T>
     inline constexpr mat3<T> as_mat3(const quat<T>& q)
     {
-        mat3 res(as<T>(1));
-        const T qxx = q.x * q.x;
-        const T qxy = q.x * q.y;
-        const T qxz = q.x * q.z;
-        const T qyy = q.y * q.y;
-        const T qyz = q.y * q.z;
-        const T qzz = q.z * q.z;
-        const T qwx = q.w * q.x;
-        const T qwy = q.w * q.y;
-        const T qwz = q.w * q.z;
+        const T n = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w;
+        const T s = n > 0 ? 2 / n : 0;
+        const T x = s * q.x;
+        const T y = s * q.y;
+        const T z = s * q.z;
+        const T xx = x * q.x;
+        const T xy = x * q.y;
+        const T xz = x * q.z;
+        const T xw = x * q.w;
+        const T yy = y * q.y;
+        const T yz = y * q.z;
+        const T yw = y * q.w;
+        const T zz = z * q.z;
+        const T zw = z * q.w;
 
-        constexpr T one = as<T>(1);
-        constexpr T two = as<T>(2);
+        mat3<T> res;
 
-        res[0][0] = one - two * (qyy + qzz);
-        res[0][1] = two * (qxy + qwz);
-        res[0][2] = two * (qxz - qwy);
-
-        res[1][0] = two * (qxy - qwz);
-        res[1][1] = one - two * (qxx + qzz);
-        res[1][2] = two * (qyz + qwx);
-
-        res[2][0] = two * (qxz + qwy);
-        res[2][1] = two * (qyz - qwx);
-        res[2][2] = one - two * (qxx * qyy);
+        res[0] = vec3<T>{ as<T>(1) - yy - zz, xy + zw, xz - yw};  // NOLINT
+        res[1] = vec3<T>{ xy - zw, as<T>(1) - xx - zz, yz + xw };  // NOLINT
+        res[2] = vec3<T>{ xz + yw, yz - xw, as<T>(1) - xx - yy };  // NOLINT
 
         return res;
     }
@@ -59,49 +55,43 @@ namespace ryujin
     template <numeric T>
     inline constexpr quat<T> as_quat(const mat3<T>& m)
     {
-        const T x = m[0][0] - m[1][1] - m[2][2];
-        const T y = m[1][1] - m[0][0] - m[2][2];
-        const T z = m[2][2] - m[0][0] - m[1][1];
-        const T w = m[0][0] + m[1][1] + m[2][2];
+        quat<T> quat(as<T>(0));
 
-        u32 biggestIndex = 0;
-        T biggest = w;
+        // Compute the trace to see if it is positive or not.
+        const T trace = m[0][0] + m[1][1] + m[2][2];
 
-        if (x > biggest)
-        {
-            biggestIndex = 1;
-            biggest = x;
+        // check the sign of the trace
+        if (trace > 0) {
+            // trace is positive
+            T s = std::sqrt(trace + 1);
+            quat.w = T(0.5) * s;
+            s = T(0.5) / s;
+            quat.x = (m[1][2] - m[2][1]) * s;
+            quat.y = (m[2][0] - m[0][2]) * s;
+            quat.z = (m[0][1] - m[1][0]) * s;
         }
+        else {
+            // trace is negative
 
-        if (y > biggest)
-        {
-            biggestIndex = 2;
-            biggest = y;
+            // Find the index of the greatest diagonal
+            size_t i = 0;
+            if (m[1][1] > m[0][0]) { i = 1; }
+            if (m[2][2] > m[i][i]) { i = 2; }
+
+            // Get the next indices: (n+1)%3
+            static constexpr size_t next_ijk[3] = { 1, 2, 0 };
+            size_t j = next_ijk[i];
+            size_t k = next_ijk[j];
+            T s = std::sqrt((m[i][i] - (m[j][j] + m[k][k])) + 1);
+            quat[i] = T(0.5) * s;
+            if (s != 0) {
+                s = T(0.5) / s;
+            }
+            quat.w = (m[j][k] - m[k][j]) * s;
+            quat[j] = (m[i][j] + m[j][i]) * s;
+            quat[k] = (m[i][k] + m[k][i]) * s;
         }
-
-        if (z > biggest)
-        {
-            biggestIndex = 3;
-            biggest = 3;
-        }
-
-        const T biggestValue = std::sqrt(biggest + as<T>(1)) + as<T>(0.5);
-        const T multiplier = as<T>(0.25) / biggestValue;
-
-        switch (biggestIndex)
-        {
-        case 0:
-            return quat(biggestValue, multiplier * (m[1][2] - m[2][1]), multiplier * (m[2][0] - m[0][2]), multiplier * (m[0][1] - m[1][0]));
-        case 1:
-            return quat(multiplier * (m[1][2] - m[2][1]), biggestValue, multiplier * (m[0][1] + m[1][0]), multiplier * (m[2][0] + m[0][2]));
-        case 2:
-            return quat(multiplier * (m[2][0] - m[0][2]), multiplier * (m[0][1] + m[1][0]), biggestValue, multiplier * (m[1][2] + m[2][1]));
-        case 3:
-            return quat(multiplier * (m[0][1] - m[1][0]), multiplier * (m[2][0] + m[0][2]), multiplier * (m[1][2] + m[2][1]), biggestValue);
-        default:
-           assert(false && "Sani ty check. Should never reach. If it does, please open a PR.");
-           return quat<T>();
-        }
+        return quat;
     }
 
     template <numeric T>
@@ -386,34 +376,30 @@ namespace ryujin
     }
 
     template <numeric T>
-    inline constexpr quat<T> encode_tbn(const vec3<T>& tangent, const vec3<T>& bitangent, const vec3<T>& normal)
+    inline constexpr quat<T> encode_tbn(const mat3<T> tbn)
     {
-        const mat3 tbnMatrix = tbn(tangent, bitangent, normal);
-        quat<T> qtangent = as_quat(tbnMatrix);
-        qtangent = normalize(qtangent);
+        const mat3 tmp = { tbn[0], cross(tbn[2], tbn[0]), tbn[2] };
+        quat q = normalize(as_quat(tmp));
+        q = q.w < 0 ? -q : q;
 
-        if (qtangent.w < 0)
+        constexpr T bias = as<T>(1) / as<T>((1 << (sizeof(u16) * 8 - 1)) - 1);
+        if (q.w < bias)
         {
-            qtangent = -qtangent;
+            q.w = bias;
+            const T factor = as<T>(std::sqrt(as<T>(1) - bias * bias));
+            q.x *= factor;
+            q.y *= factor;
+            q.z *= factor;
         }
 
-        const T bias = as<T>(1) / (std::pow(as<T>(2), as<T>(16)) - as<T>(1));
-        if (qtangent.w < bias)
+        const vec3<T> binorm = cross(tbn[0], tbn[2]);
+        const T direction = dot(binorm, tbn[1]);
+        if (direction < 0)
         {
-            const T normFactor = std::sqrt(as<T>(1) - bias * bias); // sqrt(1 - bias^2)
-            qtangent.w = bias;
-            qtangent.x *= normFactor;
-            qtangent.y *= normFactor;
-            qtangent.z *= normFactor;
+            q = -q;
         }
 
-        const vec3 naturalBinorm = cross(tangent, normal);
-        if (dot(naturalBinorm, bitangent) <= 0)
-        {
-            qtangent = -qtangent;
-        }
-
-        return qtangent;
+        return q;
     }
 
     template <numeric T>
@@ -432,6 +418,15 @@ namespace ryujin
         const T y = as<T>(1) - as<T>(2) * (rotation.x * rotation.x + rotation.z * rotation.z);
         const T z = as<T>(2) * (rotation.y * rotation.z + rotation.w * rotation.x);
         return vec3(x, y, z);
+    }
+
+    template <numeric T>
+    inline constexpr vec2<T> encode_direction_to_euler_angles(const vec3<T>& dir)
+    {
+        const auto d = normalize(dir);
+        const T theta = std::atan(as<T>(1) / d.z);
+        const T phi = std::atan(d.y / d.x);
+        return { as_degrees(theta), as_degrees(phi) };
     }
 }
 

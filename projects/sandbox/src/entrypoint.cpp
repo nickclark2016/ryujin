@@ -35,6 +35,8 @@ public:
             });
     }
 
+    entity_handle<registry::entity_type> cubeEnt;
+
     void on_load(engine_context& ctx) override
     {
 	    const auto cube = ctx.get_assets().load_model("data/models/cube/Cube.gltf");
@@ -44,12 +46,13 @@ public:
 
         auto& renderables = manager->renderables();
 
-        renderables.load_to_entities(ctx.get_assets(), *cube);
+        cubeEnt = renderables.load_to_entities(ctx.get_assets(), *cube); // actually get first child
+        auto& hierarchy = cubeEnt.get<entity_relationship_component<registry::entity_type>>();
+        cubeEnt = entity_handle(hierarchy.firstChild, &ctx.get_registry());
 
         renderables.build_meshes();
 
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-        _camera = free_look_camera(vec3(-5.0f, 5.0f, -5.0f), ctx.get_registry());
+        _camera = free_look_camera(vec3(-1.0f, 1.0f, -10.0f), ctx.get_registry());
     }
 
     void on_exit(engine_context& ctx) override
@@ -66,6 +69,11 @@ public:
 
     void on_frame(engine_context& ctx) override
     {
+        auto& cubeTx = cubeEnt.get<transform_component>();
+        auto cubeRot = euler(cubeTx.rotation);
+        cubeRot.x += 0.01f;
+        set_rotation(cubeTx, cubeRot);
+
 	    const auto in = input::get_input();
         if (!in) return;
 

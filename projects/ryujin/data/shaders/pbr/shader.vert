@@ -43,5 +43,6 @@ void main(void)
     vs_out.worldPosition = worldPos.xyz;
     vs_out.texcoord0 = texcoord0;
     decode_tbn_quaternion(encodedTbn, vs_out.normal, vs_out.tangent, vs_out.bitangent);
+    vs_out.normal = mat3(transpose(inverse(instance.transform))) * vs_out.normal;
     vs_out.instanceID = gl_InstanceIndex;
 }

@@ -356,7 +356,7 @@ namespace ryujin::assets
                             v.tangent.x = start[0];
                             v.tangent.y = start[1];
                             v.tangent.z = start[2];
-                            // v.tangent.w = start[3];
+                            v.tangent.w = start[3];
                         }
                     }
 
