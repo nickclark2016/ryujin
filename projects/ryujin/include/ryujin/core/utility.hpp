@@ -4,25 +4,27 @@
 #include "primitives.hpp"
 #include "type_traits.hpp"
 
+#include <type_traits>
+
 namespace ryujin
 {
     template <typename T>
-    constexpr T&& forward(remove_reference_t<T>& t) noexcept
+    constexpr T&& forward(std::remove_reference_t<T>& t) noexcept
     {
         return static_cast<T&&>(t);
     }
 
     template <typename T>
-    inline constexpr T&& forward(remove_reference_t<T>&& t) noexcept
+    inline constexpr T&& forward(std::remove_reference_t<T>&& t) noexcept
     {
-        static_assert(!is_lvalue_reference_v<T>);
+        static_assert(!std::is_lvalue_reference_v<T>);
         return static_cast<T&&>(t);
     }
 
     template <typename T>
-    inline constexpr remove_reference_t<T>&& move(T&& t) noexcept
+    inline constexpr std::remove_reference_t<T>&& move(T&& t) noexcept
     {
-        return static_cast<remove_reference_t<T>&&>(t);
+        return static_cast<std::remove_reference_t<T>&&>(t);
     }
 
     struct in_place_t
@@ -48,7 +50,7 @@ namespace ryujin
     };
 
     template <sz I>
-    inline constexpr in_place_index_t in_place_index{};
+    inline constexpr in_place_index_t<I> in_place_index{};
 
     template <typename T>
     constexpr void move_swap(T& a, T& b)

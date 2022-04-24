@@ -79,7 +79,7 @@ namespace ryujin
             if (m[2][2] > m[i][i]) { i = 2; }
 
             // Get the next indices: (n+1)%3
-            static constexpr size_t next_ijk[3] = { 1, 2, 0 };
+            constexpr size_t next_ijk[3] = { 1, 2, 0 };
             size_t j = next_ijk[i];
             size_t k = next_ijk[j];
             T s = std::sqrt((m[i][i] - (m[j][j] + m[k][k])) + 1);

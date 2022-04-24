@@ -2,11 +2,11 @@
 #define variant_hpp__
 
 #include "primitives.hpp"
-#include "type_traits.hpp"
 #include "utility.hpp"
 
 #include <cassert>
 #include <new>
+#include <type_traits>
 
 namespace ryujin
 {
@@ -18,10 +18,10 @@ namespace ryujin
         };
 
         template <typename T, typename ... Ts>
-        struct variant_index_helper<T, T, Ts...> : public ryujin::integral_constant<sz, 0> {};
+        struct variant_index_helper<T, T, Ts...> : public std::integral_constant<sz, 0> {};
 
         template <typename T, typename U, typename... Ts>
-        struct variant_index_helper<T, U, Ts...> : public ryujin::integral_constant<sz, 1 + variant_index_helper<T, Ts...>::value> {};
+        struct variant_index_helper<T, U, Ts...> : public std::integral_constant<sz, 1 + variant_index_helper<T, Ts...>::value> {};
 
         template <typename ... Ts>
         inline constexpr  sz variant_index_helper_v = variant_index_helper<Ts...>::value;
@@ -152,21 +152,21 @@ namespace ryujin
     class alignas(detail::max_value_v<8, alignof(Ts)...>) variant
     {
     public:
-        constexpr variant() noexcept(is_nothrow_default_constructible_v<variant_alternative_t<0, variant<Ts...>>>);
+        constexpr variant() noexcept(std::is_nothrow_default_constructible_v<variant_alternative_t<0, variant<Ts...>>>);
         constexpr variant(const variant& other) noexcept(all_nothrow_copy_constructible_v<Ts...>);
         constexpr variant(variant&& other) noexcept(all_nothrow_move_constructible_v<Ts...>);
         
         template <typename T>
-        constexpr variant(const T& t) noexcept(is_nothrow_copy_constructible_v<T>);
+        constexpr variant(const T& t) noexcept(std::is_nothrow_copy_constructible_v<T>);
 
         template <typename T>
-        constexpr variant(T&& t) noexcept(is_nothrow_move_constructible_v<T>);
+        constexpr variant(T&& t) noexcept(std::is_nothrow_move_constructible_v<T>);
 
         template <typename T, typename ... Args>
-        constexpr explicit variant(ryujin::in_place_type_t<T>, Args&& ... args) noexcept(is_nothrow_constructible_v<T, Args...>);
+        constexpr explicit variant(ryujin::in_place_type_t<T>, Args&& ... args) noexcept(std::is_nothrow_constructible_v<T, Args...>);
 
         template <sz I, typename ... Args>
-        constexpr explicit variant(ryujin::in_place_index_t<I>, Args&& ... args) noexcept(is_nothrow_constructible_v<variant_alternative_t<I, variant<Ts...>>, Args...>);
+        constexpr explicit variant(ryujin::in_place_index_t<I>, Args&& ... args) noexcept(std::is_nothrow_constructible_v<variant_alternative_t<I, variant<Ts...>>, Args...>);
 
         constexpr ~variant() noexcept(all_nothrow_destructible_v<Ts...>);
 
@@ -174,18 +174,18 @@ namespace ryujin
         constexpr variant& operator=(variant&& rhs) noexcept(all_nothrow_move_assignable_v<Ts...> && all_nothrow_destructible_v<Ts...>);
 
         template <typename T>
-        constexpr variant& operator=(const T& rhs) noexcept(is_nothrow_copy_assignable_v<T> && all_nothrow_destructible_v<Ts...>);
+        constexpr variant& operator=(const T& rhs) noexcept(std::is_nothrow_copy_assignable_v<T> && all_nothrow_destructible_v<Ts...>);
 
         template <typename T>
-        constexpr variant& operator=(T&& rhs) noexcept(is_nothrow_move_assignable_v<T> && all_nothrow_destructible_v<Ts...>);
+        constexpr variant& operator=(T&& rhs) noexcept(std::is_nothrow_move_assignable_v<T> && all_nothrow_destructible_v<Ts...>);
 
         constexpr sz index() const noexcept;
 
         template <typename T, typename ... Args>
-        constexpr T& emplace(Args&& ... args) noexcept(is_nothrow_constructible<T, Args...> && all_nothrow_destructible_v<Ts...>);
+        constexpr T& emplace(Args&& ... args) noexcept(std::is_nothrow_constructible_v<T, Args...> && all_nothrow_destructible_v<Ts...>);
 
         template <sz I, typename ... Args>
-        constexpr variant_alternative_t<I, variant>& emplace(Args&& ... args) noexcept(is_nothrow_constructible<variant_alternative_t<I, variant<Ts...>>, Args...> && all_nothrow_destructible_v<Ts...>);
+        constexpr variant_alternative_t<I, variant>& emplace(Args&& ... args) noexcept(std::is_nothrow_constructible_v<variant_alternative_t<I, variant<Ts...>>, Args...> && all_nothrow_destructible_v<Ts...>);
 
         constexpr void swap(variant& rhs) noexcept(all_nothrow_move_constructible_v<Ts...>);
 
@@ -233,9 +233,9 @@ namespace ryujin
     };
 
     template <typename ... Ts>
-    inline constexpr variant<Ts...>::variant() noexcept(is_nothrow_default_constructible_v<variant_alternative_t<0, variant<Ts...>>>)
+    inline constexpr variant<Ts...>::variant() noexcept(std::is_nothrow_default_constructible_v<variant_alternative_t<0, variant<Ts...>>>)
     {
-        using first_type = variant_alternative_t<0, variant<Ts>>;
+        using first_type = variant_alternative_t<0, variant<Ts...>>;
         ::new(_data) first_type();
         _heldIndex = 0;
     }
@@ -256,7 +256,7 @@ namespace ryujin
 
     template <typename ... Ts>
     template <typename T>
-    inline constexpr variant<Ts...>::variant(const T& t) noexcept(is_nothrow_copy_constructible_v<T>)
+    inline constexpr variant<Ts...>::variant(const T& t) noexcept(std::is_nothrow_copy_constructible_v<T>)
     {
         constexpr sz idx = detail::variant_index_helper_v<T, Ts...>;
         static_assert(idx < sizeof...(Ts), "Illegal type specified in variant construction.");
@@ -266,7 +266,7 @@ namespace ryujin
 
     template <typename ... Ts>
     template <typename T>
-    inline constexpr variant<Ts...>::variant(T&& t) noexcept(is_nothrow_move_constructible_v<T>)
+    inline constexpr variant<Ts...>::variant(T&& t) noexcept(std::is_nothrow_move_constructible_v<T>)
     {
         constexpr sz idx = detail::variant_index_helper_v<T, Ts...>;
         static_assert(idx < sizeof...(Ts), "Illegal type specified in variant construction.");
@@ -276,7 +276,7 @@ namespace ryujin
 
     template <typename ... Ts>
     template <typename T, typename ... Args>
-    inline constexpr variant<Ts...>::variant(ryujin::in_place_type_t<T>, Args&& ... args) noexcept(is_nothrow_constructible_v<T, Args...>)
+    inline constexpr variant<Ts...>::variant(ryujin::in_place_type_t<T>, Args&& ... args) noexcept(std::is_nothrow_constructible_v<T, Args...>)
     {
         constexpr sz idx = detail::variant_index_helper_v<T, Ts...>;
         static_assert(idx < sizeof...(Ts), "Illegal index specified in variant construction.");
@@ -286,10 +286,10 @@ namespace ryujin
 
     template <typename ... Ts>
     template <sz I, typename ... Args>
-    inline constexpr variant<Ts...>::variant(ryujin::in_place_index_t<I>, Args&& ... args) noexcept(is_nothrow_constructible_v<variant_alternative_t<I, variant<Ts...>>, Args...>)
+    inline constexpr variant<Ts...>::variant(ryujin::in_place_index_t<I>, Args&& ... args) noexcept(std::is_nothrow_constructible_v<variant_alternative_t<I, variant<Ts...>>, Args...>)
     {
         static_assert(I < sizeof...(Ts), "Illegal index specified in variant construction.");
-        using T = variant_alternative_t<I, Ts...>;
+        using T = variant_alternative_t<I, variant<Ts...>>;
         _heldIndex = I;
         ::new(_data) T(ryujin::forward<Args>(args)...);
     }
@@ -348,7 +348,7 @@ namespace ryujin
 
     template <typename ... Ts>
     template <typename T>
-    inline constexpr variant<Ts...>& variant<Ts...>::operator=(const T& rhs) noexcept(is_nothrow_copy_assignable_v<T> && all_nothrow_destructible_v<Ts...>)
+    inline constexpr variant<Ts...>& variant<Ts...>::operator=(const T& rhs) noexcept(std::is_nothrow_copy_assignable_v<T> && all_nothrow_destructible_v<Ts...>)
     {
         constexpr sz idx = detail::variant_index_helper_v<T, Ts...>;
         static_assert(idx < sizeof...(Ts), "Illegal type specified in variant assignment.");
@@ -368,7 +368,7 @@ namespace ryujin
 
     template <typename ... Ts>
     template <typename T>
-    inline constexpr variant<Ts...>& variant<Ts...>::operator=(T&& rhs) noexcept(is_nothrow_move_assignable_v<T> && all_nothrow_destructible_v<Ts...>)
+    inline constexpr variant<Ts...>& variant<Ts...>::operator=(T&& rhs) noexcept(std::is_nothrow_move_assignable_v<T> && all_nothrow_destructible_v<Ts...>)
     {
         constexpr sz idx = detail::variant_index_helper_v<T, Ts...>;
         static_assert(idx < sizeof...(Ts), "Illegal type specified in variant assignment.");
@@ -394,7 +394,7 @@ namespace ryujin
 
     template <typename ... Ts>
     template <typename T, typename ... Args>
-    constexpr T& variant<Ts...>::emplace(Args&& ... args) noexcept(is_nothrow_constructible<T, Args...>&& all_nothrow_destructible_v<Ts...>)
+    constexpr T& variant<Ts...>::emplace(Args&& ... args) noexcept(std::is_nothrow_constructible_v<T, Args...>&& all_nothrow_destructible_v<Ts...>)
     {
         constexpr sz idx = detail::variant_index_helper_v<T, Ts...>;
         static_assert(idx < sizeof...(Ts), "Illegal type specified in variant emplace.");
@@ -406,7 +406,7 @@ namespace ryujin
 
     template <typename ... Ts>
     template <sz I, typename ... Args>
-    constexpr variant_alternative_t<I, variant<Ts...>>& variant<Ts...>::emplace(Args&& ... args) noexcept(is_nothrow_constructible<variant_alternative_t<I, variant<Ts...>>, Args...>&& all_nothrow_destructible_v<Ts...>)
+    constexpr variant_alternative_t<I, variant<Ts...>>& variant<Ts...>::emplace(Args&& ... args) noexcept(std::is_nothrow_constructible_v<variant_alternative_t<I, variant<Ts...>>, Args...> && all_nothrow_destructible_v<Ts...>)
     {
         static_assert(I < sizeof...(Ts), "Illegal type specified in variant emplace.");
         detail::variant_assignment_helper<Ts...>::destroy(_heldIndex, _data);
@@ -459,28 +459,28 @@ namespace ryujin
     constexpr variant_alternative_t<I, variant<Ts...>>& get(ryujin::variant<Ts...>& v)
     {
         assert(I == v.index());
-        return *reinterpret_cast<variant_alternative_t<I, Ts>*>(v._data);
+        return *reinterpret_cast<variant_alternative_t<I, variant<Ts...>>*>(v._data);
     }
 
     template <sz I, typename ... Ts>
     constexpr variant_alternative_t<I, variant<Ts...>>&& get(ryujin::variant<Ts...>&& v)
     {
         assert(I == v.index());
-        return ryujin::move(*reinterpret_cast<variant_alternative_t<I, Ts>*>(v._data));
+        return ryujin::move(*reinterpret_cast<variant_alternative_t<I, variant<Ts...>>*>(v._data));
     }
 
     template <sz I, typename ... Ts>
     constexpr const variant_alternative_t<I, variant<Ts...>>& get(const ryujin::variant<Ts...>& v)
     {
         assert(I == v.index());
-        return *reinterpret_cast<const variant_alternative_t<I, Ts>*>(v._data);
+        return *reinterpret_cast<const variant_alternative_t<I, variant<Ts...>>*>(v._data);
     }
 
     template <sz I, typename ... Ts>
     constexpr const variant_alternative_t<I, variant<Ts...>>&& get(const ryujin::variant<Ts...>&& v)
     {
         assert(I == v.index());
-        return ryujin::move(*reinterpret_cast<const variant_alternative_t<I, Ts>*>(v._data));
+        return ryujin::move(*reinterpret_cast<const variant_alternative_t<I, variant<Ts...>>*>(v._data));
     }
 
     template <typename T, typename ... Ts>
@@ -502,13 +502,13 @@ namespace ryujin
     template <sz I, typename ... Ts>
     constexpr variant_alternative_t<I, variant<Ts...>>* get_if(ryujin::variant<Ts...>* v)
     {
-        return reinterpret_cast<variant_alternative_t<I, Ts>*>(v._data);
+        return reinterpret_cast<variant_alternative_t<I, variant<Ts...>>*>(v._data);
     }
 
     template <sz I, typename ... Ts>
     constexpr const variant_alternative_t<I, variant<Ts...>>* get_if(const ryujin::variant<Ts...>* v)
     {
-        return reinterpret_cast<const variant_alternative_t<I, Ts>*>(v._data);
+        return reinterpret_cast<const variant_alternative_t<I, variant<Ts...>>*>(v._data);
     }
 
     template <typename T, typename ... Ts>

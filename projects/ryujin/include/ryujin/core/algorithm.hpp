@@ -6,7 +6,7 @@
 namespace ryujin
 {
     template <typename Input, typename Output>
-    constexpr Output move(Input first, Input last, Output result)
+    inline constexpr Output move(Input first, Input last, Output result)
     {
         while (first != last)
         {
