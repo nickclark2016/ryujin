@@ -36,6 +36,7 @@ public:
     }
 
     entity_handle<registry::entity_type> cubeEnt;
+    vec3<float> cubeRotation = { 0.0f, 45.0f, 0.0f };
 
     void on_load(engine_context& ctx) override
     {
@@ -51,11 +52,11 @@ public:
         cubeEnt = entity_handle(hierarchy.firstChild, &ctx.get_registry());
 
         auto& cubeTx = cubeEnt.get<transform_component>();
-        set_position(cubeTx, vec3(1.0f, 0.0f, 0.0f));
+        set_position(cubeTx, vec3(0.0f, 0.0f, 0.0f));
 
         renderables.build_meshes();
 
-        _camera = free_look_camera(vec3(-1.0f, 1.0f, -10.0f), ctx.get_registry());
+        _camera = free_look_camera(vec3(0.0f, 1.0f, -10.0f), ctx.get_registry());
     }
 
     void on_exit(engine_context& ctx) override
@@ -73,9 +74,8 @@ public:
     void on_frame(engine_context& ctx) override
     {
         auto& cubeTx = cubeEnt.get<transform_component>();
-        auto cubeRot = euler(cubeTx.rotation);
-        cubeRot.x += as<float>(0.1 * ctx.deltaTime());
-        set_rotation(cubeTx, cubeRot);
+        cubeRotation.x = std::fmod(cubeRotation.x + as<float>(2.0 * ctx.deltaTime()), 360.0f);
+        set_rotation(cubeTx, as_radians(cubeRotation));
 
 	    const auto in = input::get_input();
         if (!in) return;

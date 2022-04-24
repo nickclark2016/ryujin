@@ -1,7 +1,8 @@
 #ifndef result_hpp__
 #define result_hpp__
 
-#include <variant>
+#include "variant.hpp"
+#include "utility.hpp"
 
 namespace ryujin
 {
@@ -37,7 +38,7 @@ namespace ryujin
         ErrorType error_code() const noexcept;
 
     private:
-        std::variant<SuccessType, ErrorType> _impl;
+        ryujin::variant<SuccessType, ErrorType> _impl;
 
         bool _isSuccessful;
         bool _isInitialized;
@@ -46,7 +47,7 @@ namespace ryujin
     template<typename SuccessType, typename ErrorType>
     inline result<SuccessType, ErrorType>::result(result&& res) noexcept
     {
-        _impl = std::move(res._impl);
+        _impl =  ryujin::move(res._impl);
 
         _isInitialized = res._isInitialized;
         _isSuccessful = res._isSuccessful;
@@ -61,7 +62,7 @@ namespace ryujin
         _isInitialized = other._isInitialized;
         _isSuccessful = other._isSuccessful;
 
-        _impl = std::move(other._impl);
+        _impl =  ryujin::move(other._impl);
 
         other._isInitialized = false;
         other._isSuccessful = false;
@@ -78,37 +79,37 @@ namespace ryujin
     template<typename SuccessType, typename ErrorType>
     inline SuccessType* result<SuccessType, ErrorType>::operator->() noexcept
     {
-        return std::get_if<SuccessType>(&_impl);
+        return ryujin::get_if<SuccessType>(&_impl);
     }
 
     template<typename SuccessType, typename ErrorType>
     inline const SuccessType* result<SuccessType, ErrorType>::operator->() const noexcept
     {
-        return std::get_if<SuccessType>(&_impl);
+        return ryujin::get_if<SuccessType>(&_impl);
     }
 
     template<typename SuccessType, typename ErrorType>
     inline SuccessType& result<SuccessType, ErrorType>::operator*() noexcept
     {
-        return std::get<SuccessType>(_impl);
+        return ryujin::get<SuccessType>(_impl);
     }
 
     template<typename SuccessType, typename ErrorType>
     inline const SuccessType& result<SuccessType, ErrorType>::operator*() const noexcept
     {
-        return std::get<SuccessType>(_impl);
+        return ryujin::get<SuccessType>(_impl);
     }
 
     template<typename SuccessType, typename ErrorType>
     inline SuccessType result<SuccessType, ErrorType>::success() noexcept
     {
-        return std::get<SuccessType>(std::move(_impl));
+        return ryujin::get<SuccessType>(ryujin::move(_impl));
     }
 
     template<typename SuccessType, typename ErrorType>
     inline ErrorType result<SuccessType, ErrorType>::error_code() const noexcept
     {
-        return std::get<ErrorType>(std::move(_impl));
+        return ryujin::get<ErrorType>(ryujin::move(_impl));
     }
     
     template<typename SuccessType, typename ErrorType>
@@ -120,7 +121,7 @@ namespace ryujin
     template<typename SuccessType, typename ErrorType>
     inline result<SuccessType, ErrorType> result<SuccessType, ErrorType>::from_success(SuccessType&& res) noexcept
     {
-        return result<SuccessType, ErrorType>(std::move(res));
+        return result<SuccessType, ErrorType>(ryujin::forward<SuccessType>(res));
     }
 
     template<typename SuccessType, typename ErrorType>
@@ -132,7 +133,7 @@ namespace ryujin
     template<typename SuccessType, typename ErrorType>
     inline result<SuccessType, ErrorType> result<SuccessType, ErrorType>::from_error(ErrorType&& err) noexcept
     {
-        return result<SuccessType, ErrorType>(std::move(err));
+        return result<SuccessType, ErrorType>(ryujin::forward<ErrorType>(err));
     }
 
     template<typename SuccessType, typename ErrorType>
@@ -153,7 +154,7 @@ namespace ryujin
     
     template<typename SuccessType, typename ErrorType>
     inline result<SuccessType, ErrorType>::result(SuccessType&& res) noexcept
-        : _impl(std::forward<SuccessType>(res))
+        : _impl(ryujin::forward<SuccessType>(res))
     {
         _isInitialized = true;
         _isSuccessful = true;
@@ -161,7 +162,7 @@ namespace ryujin
     
     template<typename SuccessType, typename ErrorType>
     inline result<SuccessType, ErrorType>::result(ErrorType&& res) noexcept
-        : _impl(std::forward<ErrorType>(res))
+        : _impl(ryujin::forward<ErrorType>(res))
     {
         _isInitialized = true;
         _isSuccessful = false;

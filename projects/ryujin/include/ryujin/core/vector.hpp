@@ -1,20 +1,32 @@
 #ifndef vector_hpp__
 #define vector_hpp__
 
+#include "algorithm.hpp"
+#include "iterator.hpp"
 #include "primitives.hpp"
 #include "result.hpp"
+#include "utility.hpp"
 
 #include <memory>
-#include <vector>
+#include <new>
 
 namespace ryujin
 {
     template <typename Type, typename Allocator = std::allocator<Type>>
-    class vector : public std::vector<Type, Allocator>
+    class vector
     {
     public:
         using iterator = Type*;
         using const_iterator = const Type*;
+
+        vector();
+        vector(const vector& v);
+        vector(vector&& v) noexcept;
+        vector(const sz count, const Type& value = Type());
+        ~vector();
+
+        vector& operator=(const vector& rhs);
+        vector& operator=(vector&& rhs) noexcept;
 
         iterator begin() noexcept;
         const_iterator begin() const noexcept;
@@ -24,8 +36,45 @@ namespace ryujin
         const_iterator end() const noexcept;
         const_iterator cend() const noexcept;
 
+        void clear();
         iterator erase(iterator it);
         iterator erase(iterator start, iterator stop);
+        void pop_back();
+
+        bool empty() const noexcept;
+        sz size() const noexcept;
+        sz capacity() const noexcept;
+        Type* data() noexcept;
+        const Type* data() const noexcept;
+
+        void resize(const sz newSize, const Type& value = Type());
+        void reserve(const sz newCapacity);
+
+        void insert(const_iterator pos, const Type& value);
+        void insert(const_iterator pos, Type&& value);
+        void push_back(const Type& value);
+        void push_back(Type&& value);
+
+        Type& operator[](const sz idx) noexcept;
+        const Type& operator[](const sz idx) const noexcept;
+
+        Type& at(const sz idx) noexcept;
+        const Type& at(const sz idx) const noexcept;
+
+        Type& front() noexcept;
+        const Type& front() const noexcept;
+        Type& back() noexcept;
+        const Type& back() const noexcept;
+
+    private:
+        Type* _data = {};
+        sz _capacity = 0;
+        sz _size = 0;
+        Allocator _alloc = {};
+
+        void _make_hole(const sz idx, const sz size);
+        bool _needs_resize() const noexcept;
+        void _resize_buffer(const sz newSize = 0) noexcept;
     };
     
     template <typename Type, sz Capacity = 32>
@@ -94,6 +143,104 @@ namespace ryujin
     };
 
     template<typename Type, typename Allocator>
+    inline vector<Type, Allocator>::vector()
+    {
+    }
+
+    template<typename Type, typename Allocator>
+    inline vector<Type, Allocator>::vector(const vector& v)
+        : _alloc(v._alloc)
+    {
+        _resize_buffer(v._capacity);
+        _size = v._size;
+
+        for (sz i = 0; i < _size; ++i)
+        {
+            ::new (_data + i) Type(v[i]);
+        }
+    }
+
+    template<typename Type, typename Allocator>
+    inline vector<Type, Allocator>::vector(vector&& v) noexcept
+        : _data(v._data), _capacity(v._capacity), _size(v._size), _alloc(ryujin::move(v._alloc))
+    {
+        v._data = nullptr;
+        v._capacity = 0;
+        v._size = 0;
+    }
+
+    template<typename Type, typename Allocator>
+    inline vector<Type, Allocator>::vector(const sz count, const Type& value)
+        : _size(count)
+    {
+        _resize_buffer(count);
+        for (sz i = 0; i < _size; ++i)
+        {
+            ::new (_data + i) Type(value);
+        }
+    }
+
+    template<typename Type, typename Allocator>
+    inline vector<Type, Allocator>::~vector()
+    {
+        if (_data)
+        {
+            clear();
+            _alloc.deallocate(_data, _capacity);
+        }
+    }
+
+    template<typename Type, typename Allocator>
+    inline vector<Type, Allocator>& vector<Type, Allocator>::operator=(const vector& rhs)
+    {
+        if (&rhs == this)
+        {
+            return *this;
+        }
+
+        clear();
+        if (size() < rhs.size())
+        {
+            _resize_buffer(rhs.capacity());
+        }
+
+        for (sz i = 0; i < rhs.size(); ++i)
+        {
+            _data[i] = rhs[i];
+        }
+        _size = rhs.size();
+
+        return *this;
+    }
+
+    template<typename Type, typename Allocator>
+    inline vector<Type, Allocator>& vector<Type, Allocator>::operator=(vector&& rhs) noexcept
+    {
+        if (&rhs == this)
+        {
+            return *this;
+        }
+
+        if (_data)
+        {
+            for (sz i = 0; i < _size; ++i)
+            {
+                _data[i].~Type();
+            }
+            _alloc.deallocate(_data, _capacity);
+        }
+
+        _data = rhs._data;
+        _size = rhs._size;
+        _capacity = rhs._capacity;
+        rhs._data = nullptr;
+        rhs._size = 0;
+        rhs._capacity = 0;
+
+        return *this;
+    }
+
+    template<typename Type, typename Allocator>
     inline typename vector<Type, Allocator>::iterator vector<Type, Allocator>::begin() noexcept
     {
         return this->data();
@@ -128,22 +275,229 @@ namespace ryujin
     {
         return this->data() + this->size();
     }
-    
+
+    template<typename Type, typename Allocator>
+    inline bool vector<Type, Allocator>::empty() const noexcept
+    {
+        return _size == 0;
+    }
+
+    template<typename Type, typename Allocator>
+    inline sz vector<Type, Allocator>::size() const noexcept
+    {
+        return _size;
+    }
+
+    template<typename Type, typename Allocator>
+    inline sz vector<Type, Allocator>::capacity() const noexcept
+    {
+        return _capacity;
+    }
+
+    template<typename Type, typename Allocator>
+    inline Type* vector<Type, Allocator>::data() noexcept
+    {
+        return _data;
+    }
+
+    template<typename Type, typename Allocator>
+    inline const Type* vector<Type, Allocator>::data() const noexcept
+    {
+        return _data;
+    }
+
+    template<typename Type, typename Allocator>
+    inline void vector<Type, Allocator>::clear()
+    {
+        erase(begin(), end());
+    }
+
     template<typename Type, typename Allocator>
     inline typename vector<Type, Allocator>::iterator vector<Type, Allocator>::erase(iterator it)
     {
-        const auto idx = it - begin();
-        const auto res = std::vector<Type, Allocator>::erase(std::vector<Type, Allocator>::begin() + idx);
-        return begin() + (res - std::vector<Type, Allocator>::begin());
+        return erase(it, it + 1);
     }
-    
+
     template<typename Type, typename Allocator>
-    inline typename vector<Type, Allocator>::iterator vector<Type, Allocator>::erase(iterator start, iterator stop)
+    inline vector<Type, Allocator>::iterator vector<Type, Allocator>::erase(iterator start, iterator stop)
     {
-        const auto startIdx = start - begin();
-        const auto stopIdx = stop - begin();
-        const auto res = std::vector<Type, Allocator>::erase(std::vector<Type, Allocator>::begin() + startIdx, std::vector<Type, Allocator>::begin() + stopIdx);
-        return begin() + (res - std::vector<Type, Allocator>::begin());
+        const size_t s = start - begin();
+        const size_t e = stop - begin();
+        const size_t count = e - s;
+
+        for (sz i = s; i < _size; ++i)
+        {
+            if (i < _size - count)
+            {
+                _data[i] = ryujin::move(_data[i + count]);
+                _data[i + count].~Type();
+            }
+            else
+            {
+                _data[i].~Type();
+            }
+        }
+
+        _size -= count;
+
+        return begin() + s;
+    }
+
+    template<typename Type, typename Allocator>
+    void vector<Type, Allocator>::pop_back()
+    {
+        erase(end());
+    }
+
+    template<typename Type, typename Allocator>
+    inline void vector<Type, Allocator>::resize(const sz newSize, const Type& value)
+    {
+        if (newSize <= _capacity)
+        {
+            return;
+        }
+        _resize_buffer(newSize);
+        for (sz i = _size; i < newSize; ++i)
+        {
+            ::new (_data + i) Type(value);
+        }
+        _size = newSize;
+    }
+
+    template<typename Type, typename Allocator>
+    inline void vector<Type, Allocator>::reserve(const sz newCapacity)
+    {
+        if (newCapacity <= _capacity)
+        {
+            return;
+        }
+        _resize_buffer(newCapacity);
+    }
+
+    template<typename Type, typename Allocator>
+    inline void vector<Type, Allocator>::insert(const_iterator pos, const Type& value)
+    {
+        const sz idx = pos - _data;
+        if (_needs_resize())
+        {
+            _resize_buffer();
+        }
+        _make_hole(idx, 1);
+        ::new(_data + idx) Type(value);
+        ++_size;
+    }
+
+    template<typename Type, typename Allocator>
+    inline void vector<Type, Allocator>::insert(const_iterator pos, Type&& value)
+    {
+        const sz idx = pos - _data;
+        if (_needs_resize())
+        {
+            _resize_buffer();
+        }
+        _make_hole(idx, 1);
+        ::new(_data + idx) Type(ryujin::forward<Type>(value));
+        ++_size;
+    }
+
+    template<typename Type, typename Allocator>
+    inline void vector<Type, Allocator>::push_back(const Type& value)
+    {
+        insert(end(), value);
+    }
+
+    template<typename Type, typename Allocator>
+    inline void vector<Type, Allocator>::push_back(Type&& value)
+    {
+        insert(end(), ryujin::forward<Type>(value));
+    }
+
+    template<typename Type, typename Allocator>
+    inline Type& vector<Type, Allocator>::operator[](const sz idx) noexcept
+    {
+        return _data[idx];
+    }
+
+    template<typename Type, typename Allocator>
+    inline const Type& vector<Type, Allocator>::operator[](const sz idx) const noexcept
+    {
+        return _data[idx];
+    }
+
+    template<typename Type, typename Allocator>
+    inline Type& vector<Type, Allocator>::at(const sz idx) noexcept
+    {
+        return _data[idx];
+    }
+
+    template<typename Type, typename Allocator>
+    inline const Type& vector<Type, Allocator>::at(const sz idx) const noexcept
+    {
+        return _data[idx];
+    }
+
+    template<typename Type, typename Allocator>
+    inline Type& vector<Type, Allocator>::front() noexcept
+    {
+        return at(0);
+    }
+
+    template<typename Type, typename Allocator>
+    inline const Type& vector<Type, Allocator>::front() const noexcept
+    {
+        return at(0);
+    }
+
+    template<typename Type, typename Allocator>
+    inline Type& vector<Type, Allocator>::back() noexcept
+    {
+        return at(_size - 1);
+    }
+
+    template<typename Type, typename Allocator>
+    inline const Type& vector<Type, Allocator>::back() const noexcept
+    {
+        return at(_size - 1);
+    }
+
+    template<typename Type, typename Allocator>
+    inline void vector<Type, Allocator>::_make_hole(const sz idx, const sz size)
+    {
+        if (idx == _size)
+        {
+            return;
+        }
+
+        // iterate from end to hole
+        for (sz i = _size; i > idx; --i)
+        {
+            _data[i - 1 + size] = ryujin::move(_data[i - 1]);
+        }
+
+        for (sz i = idx; i < idx + size; ++i)
+        {
+            _data[i].~Type();
+        }
+    }
+
+    template<typename Type, typename Allocator>
+    inline bool vector<Type, Allocator>::_needs_resize() const noexcept
+    {
+        return _size == _capacity;
+    }
+
+    template<typename Type, typename Allocator>
+    inline void vector<Type, Allocator>::_resize_buffer(const sz newSize) noexcept
+    {
+        const sz requested = newSize == 0 ? (_capacity == 0 ? 8 : _size * 2) : newSize;
+        Type* allocation = _alloc.allocate(requested);
+        ryujin::move(_data, _data + _size, allocation);
+        if (_capacity)
+        {
+            _alloc.deallocate(_data, _capacity);
+        }
+        _capacity = requested;
+        _data = allocation;
     }
     
     template<typename Type, sz Capacity>
@@ -166,7 +520,7 @@ namespace ryujin
     inline constexpr static_vector<Type, Capacity>::static_vector(static_vector&& other) noexcept
         : _size(other._size)
     {
-        std::move(other._data, other._data + other._size, _data);
+        ryujin::move(other._data, other._data + other._size, _data);
     }
     
     template<typename Type, sz Capacity>
@@ -198,7 +552,7 @@ namespace ryujin
             _data[i].~Type();
         }
 
-        std::move(std::begin(rhs._data), std::end(rhs._data), &_data[0]);
+        ryujin::move(ryujin::begin(rhs._data), ryujin::end(rhs._data), &_data[0]);
 
         _size = rhs._size;
 
@@ -246,7 +600,7 @@ namespace ryujin
         }
 
         iterator it = _data + _size;
-        _data[_size++] = std::move(value);
+        _data[_size++] = ryujin::move(value);
 
         return result<iterator, error_code>::from_success(it);
     }
@@ -300,7 +654,7 @@ namespace ryujin
         }
 
         _make_hole(idx, 1);
-        _data[idx] = std::move(value);
+        _data[idx] = ryujin::move(value);
 
         ++_size;
 
@@ -371,7 +725,7 @@ namespace ryujin
         {
             if (i < _size - count)
             {
-                _data[i] = std::move(_data[i + count]);
+                _data[i] = ryujin::move(_data[i + count]);
                 _data[i + count].~Type();
             }
             else
@@ -462,7 +816,7 @@ namespace ryujin
         // iterate from end to hole
         for (sz i = _size; i > idx; --i)
         {
-            _data[i - 1 + size] = std::move(_data[i - 1]);
+            _data[i - 1 + size] = ryujin::move(_data[i - 1]);
         }
         
         for (sz i = idx; i < idx + size; ++i)

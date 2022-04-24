@@ -71,7 +71,9 @@ namespace ryujin::assets
             }
         }
 
-        texture_asset* asset = new texture_asset({ { level } }, 4, type, swizzle);
+        vector<texture_asset::mip_level> mips;
+        mips.push_back(level);
+        texture_asset* asset = new texture_asset(mips, 4, type, swizzle);
 
         return asset;
     }

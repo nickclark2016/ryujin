@@ -54,7 +54,7 @@ namespace ryujin
     {
         // probably shouldn't do this, but full sending
         tx.rotation = quat(rotation);
-        tx.matrix = transform(tx.position, tx.rotation, tx.scale);
+        tx.matrix = transform(tx.position, rotation, tx.scale);
     }
 
     inline void set_rotation(transform_component& tx, const quat<float>& rotation)
