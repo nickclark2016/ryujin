@@ -12,8 +12,8 @@ namespace ryujin::detail
 		init_render_target();
 		init_graphics_pipeline();
 
-		_blit = std::make_unique<blit_pass>(*get_render_manager());
-		_triangle = std::make_unique<triangle_pass>(*get_render_manager(), _simplePass);
+		_blit = make_unique<blit_pass>(*get_render_manager());
+		_triangle = make_unique<triangle_pass>(*get_render_manager(), _simplePass);
 	}
 
 	void simple_render_pipeline::pre_render()

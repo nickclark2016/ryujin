@@ -133,7 +133,7 @@ namespace ryujin
             tries++;
         }
 
-        _textures[insertionKey] = std::unique_ptr<texture_asset>(asset);
+        _textures[insertionKey] = unique_ptr<texture_asset>(asset);
 
         return asset;
     }
@@ -159,7 +159,7 @@ namespace ryujin
         auto res = assets[0].get();
         for (auto& asset : assets)
         {
-            auto name = asset->name();
+            auto& name = asset->name();
 
             auto tries = 0;
             auto pathStem = path.stem().string();
@@ -170,7 +170,8 @@ namespace ryujin
                 insertionKey = fmt::v8::format("{}_{}", base, tries);
                 tries++;
             }
-            _models[insertionKey] = std::move(asset);
+            _models[insertionKey] = unique_ptr<model_asset>(asset.get());
+            asset.release();
         }
 
         return res;
@@ -187,7 +188,7 @@ namespace ryujin
             tries++;
         }
         material.name = insertionKey;
-        _materials[insertionKey] = std::make_unique<material_asset>(std::move(material));
+        _materials[insertionKey] = make_unique<material_asset>(std::move(material));
         return _materials[insertionKey].get();
     }
 

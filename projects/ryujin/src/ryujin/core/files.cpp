@@ -48,7 +48,7 @@ namespace ryujin
         const auto size = as<sz>(file.tellg());
         binary_file bin = {
             path,
-            std::make_unique<char[]>(size),
+            make_unique<char[]>(size),
             size
         };
 

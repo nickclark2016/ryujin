@@ -10,7 +10,7 @@ namespace ryujin
 
 namespace ryujin::assets
 {
-    vector<std::unique_ptr<model_asset>> load_model(const std::string& path, const std::string& ext, asset_manager* manager);
+    vector<unique_ptr<model_asset>> load_model(const std::string& path, const std::string& ext, asset_manager* manager);
 }
 
 #endif // asset_model_hpp__

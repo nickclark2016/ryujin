@@ -28,7 +28,7 @@ public:
 
         auto& win = ctx.add_window(winInfo);
         win->focus();
-        win->capture_cursor();
+        //win->capture_cursor();
 
         win->on_focus([&win](bool) {
                 win->capture_cursor();

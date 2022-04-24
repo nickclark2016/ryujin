@@ -371,9 +371,9 @@ namespace ryujin::assets
         }
     }
 
-    vector<std::unique_ptr<model_asset>> load_model(const std::string& path, const std::string& ext, asset_manager* manager)
+    vector<unique_ptr<model_asset>> load_model(const std::string& path, const std::string& ext, asset_manager* manager)
     {
-        vector<std::unique_ptr<model_asset>> models;
+        vector<unique_ptr<model_asset>> models;
         
         if (ext == GLB_EXT || ext == GLTF_EXT)
         {
@@ -434,8 +434,8 @@ namespace ryujin::assets
                     }
                 }
 
-                auto asset = std::make_unique<model_asset>(name, meshKey, transform, translate, rotate, scale);
-                models.push_back(std::move(asset));
+                unique_ptr<model_asset> asset = ryujin::make_unique<model_asset>(name, meshKey, transform, translate, rotate, scale);
+                models.push_back(move(asset));
             }
 
             for (sz i = 0; i < gltfModel.nodes.size(); ++i)

@@ -4,6 +4,8 @@
 #include "entity.hpp"
 
 #include "../core/primitives.hpp"
+#include "../core/smart_pointers.hpp"
+#include "../core/vector.hpp"
 
 #include <cstddef>
 #include <memory>
@@ -41,8 +43,8 @@ namespace ryujin
     private:
         using sparse_page_type = EntityType[];
 
-        std::vector<std::unique_ptr<sparse_page_type>> _sparse;
-        std::vector<EntityType> _packed;
+        vector<unique_ptr<sparse_page_type>> _sparse;
+        vector<EntityType> _packed;
 
         sz _page(const type& tp) const noexcept;
         sz _offset(const type& tp) const noexcept;
@@ -152,12 +154,12 @@ namespace ryujin
 
         for (auto pg = _sparse.size(); pg <= sparsePage; ++pg)
         {
-            auto page = std::make_unique<EntityType[]>(PageSize);
+            auto page = make_unique<EntityType[]>(PageSize);
             for (sz i = 0; i < PageSize; ++i)
             {
                 page[i] = _tombstone;
             }
-            _sparse.push_back(std::move(page));
+            _sparse.push_back(ryujin::move(page));
         }
 
         auto& page = _sparse[sparsePage];
@@ -202,7 +204,7 @@ namespace ryujin
 
         for (auto i = _sparse.size(); i < pageCount; ++i)
         {
-            _sparse[i] = std::make_unique<EntityType[]>(PageSize);
+            _sparse[i] = make_unique<EntityType[]>(PageSize);
             for (auto j = 0; j < PageSize; ++j)
             {
                 _sparse[i][j] = _tombstone;

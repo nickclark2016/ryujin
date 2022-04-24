@@ -5,7 +5,7 @@
 namespace ryujin
 {
     linear_allocator::linear_allocator(const sz bytes)
-        : _data(std::make_unique<unsigned char[]>(bytes)), _offset(0), _lastOffset(0), _length(bytes)
+        : _data(make_unique<unsigned char[]>(bytes)), _offset(0), _lastOffset(0), _length(bytes)
     {
     }
 

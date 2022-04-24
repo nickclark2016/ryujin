@@ -3,6 +3,7 @@
 
 #include "base_render_pipeline.hpp"
 
+#include "../../core/smart_pointers.hpp"
 #include "../passes/blit_pass.hpp"
 #include "../passes/triangle_pass.hpp"
 #include "../types.hpp"
@@ -33,8 +34,8 @@ namespace ryujin::detail
         shader_module _simpleVertexShader;
         shader_module _simpleFragmentShader;
 
-        std::unique_ptr<blit_pass> _blit;
-        std::unique_ptr<triangle_pass> _triangle;
+        unique_ptr<blit_pass> _blit;
+        unique_ptr<triangle_pass> _triangle;
     };
 }
 

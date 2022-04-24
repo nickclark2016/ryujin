@@ -269,9 +269,9 @@ namespace ryujin
         initialize_buffers();
         initialize_textures();
 
-        _blit = std::make_unique<blit_pass>(*get_render_manager());
-        _opaque = std::make_unique<opaque_pbr_pass>(*get_render_manager(), _sceneLayout, _scenePass, _targetWidth, _targetHeight);
-        _naiveTranslucent = std::make_unique<naive_translucent_pbr_pass>(*get_render_manager(), _sceneLayout, _scenePass, _targetWidth, _targetHeight);
+        _blit = make_unique<blit_pass>(*get_render_manager());
+        _opaque = make_unique<opaque_pbr_pass>(*get_render_manager(), _sceneLayout, _scenePass, _targetWidth, _targetHeight);
+        _naiveTranslucent = make_unique<naive_translucent_pbr_pass>(*get_render_manager(), _sceneLayout, _scenePass, _targetWidth, _targetHeight);
     }
 
     void pbr_render_pipeline::init_scene_pass()

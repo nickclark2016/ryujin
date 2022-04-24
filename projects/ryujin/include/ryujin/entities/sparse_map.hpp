@@ -4,6 +4,8 @@
 #include "entity.hpp"
 
 #include "../core/primitives.hpp"
+#include "../core/smart_pointers.hpp"
+#include "../core/vector.hpp"
 
 #include <cstddef>
 #include <memory>
@@ -52,9 +54,9 @@ namespace ryujin
         sz _page(const key_type& tp) const noexcept;
         sz _offset(const key_type& tp) const noexcept;
 
-        std::vector<std::unique_ptr<sparse_page_type>> _sparse;
-        std::vector<EntityType> _packed;
-        std::vector<ValueType> _values;
+        vector<unique_ptr<sparse_page_type>> _sparse;
+        vector<EntityType> _packed;
+        vector<ValueType> _values;
 
         static constexpr EntityType _tombstone = entity_traits<typename EntityType::type>::from_type(~(typename EntityType::type)(0));
     };
@@ -143,7 +145,7 @@ namespace ryujin
 
         for (auto i = _sparse.size(); i < pageCount; ++i)
         {
-            _sparse[i] = std::make_unique<EntityType[]>(PageSize);
+            _sparse[i] = make_unique<EntityType[]>(PageSize);
             for (auto j = 0; j < PageSize; ++j)
             {
                 _sparse[i][j] = _tombstone;
@@ -167,12 +169,12 @@ namespace ryujin
 
         for (auto pg = _sparse.size(); pg <= sparsePage; ++pg)
         {
-            auto page = std::make_unique<EntityType[]>(PageSize);
+            auto page = make_unique<EntityType[]>(PageSize);
             for (sz i = 0; i < PageSize; ++i)
             {
                 page[i] = _tombstone;
             }
-            _sparse.push_back(std::move(page));
+            _sparse.push_back(ryujin::move(page));
         }
 
         auto& page = _sparse[sparsePage];
@@ -206,7 +208,7 @@ namespace ryujin
                 _packed.pop_back();
 
                 const auto valueBack = _values.back();
-                _values[packedIndex] = std::move(valueBack);
+                _values[packedIndex] = ryujin::move(valueBack);
                 _values.pop_back();
 
                 const auto toMove = entity_traits<typename EntityType::type>::from_type(packedIndex);
@@ -263,12 +265,12 @@ namespace ryujin
 
         for (auto pg = _sparse.size(); pg <= sparsePage; ++pg)
         {
-            auto page = std::make_unique<EntityType[]>(PageSize);
+            auto page = make_unique<EntityType[]>(PageSize);
             for (sz i = 0; i < PageSize; ++i)
             {
                 page[i] = _tombstone;
             }
-            _sparse.push_back(std::move(page));
+            _sparse.push_back(ryujin::move(page));
         }
 
         auto& page = _sparse[sparsePage];
@@ -289,12 +291,12 @@ namespace ryujin
 
         for (auto pg = _sparse.size(); pg <= sparsePage; ++pg)
         {
-            auto page = std::make_unique<EntityType[]>(PageSize);
+            auto page = make_unique<EntityType[]>(PageSize);
             for (sz i = 0; i < PageSize; ++i)
             {
                 page[i] = _tombstone;
             }
-            _sparse.push_back(std::move(page));
+            _sparse.push_back(ryujin::move(page));
         }
 
         auto& page = _sparse[sparsePage];

@@ -3,8 +3,8 @@
 
 #include "primitives.hpp"
 #include "result.hpp"
+#include "smart_pointers.hpp"
 
-#include <memory>
 #include <string>
 
 namespace ryujin
@@ -12,7 +12,7 @@ namespace ryujin
     struct binary_file
     {
         std::string path;
-        std::unique_ptr<char[]> bytes;
+        unique_ptr<char[]> bytes;
         sz length;
     };
 

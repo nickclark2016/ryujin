@@ -4,6 +4,7 @@
 #include "base_render_pipeline.hpp"
 
 #include "../../core/primitives.hpp"
+#include "../../core/smart_pointers.hpp"
 #include "../../core/vector.hpp"
 #include "../../entities/registry.hpp"
 #include "../../math/mat4.hpp"
@@ -57,9 +58,9 @@ namespace ryujin
         pipeline_layout _sceneLayout = {};
         render_pass _scenePass = {};
 
-        std::unique_ptr<blit_pass> _blit;
-        std::unique_ptr<opaque_pbr_pass> _opaque;
-        std::unique_ptr<naive_translucent_pbr_pass> _naiveTranslucent;
+        unique_ptr<blit_pass> _blit;
+        unique_ptr<opaque_pbr_pass> _opaque;
+        unique_ptr<naive_translucent_pbr_pass> _naiveTranslucent;
 
         buffer _indirectCommands = {};
         buffer _translucentIndirectCommands = {};

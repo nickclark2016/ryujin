@@ -2,6 +2,7 @@
 #define linear_allocator_hpp__
 
 #include "primitives.hpp"
+#include "smart_pointers.hpp"
 
 #include <memory>
 
@@ -27,7 +28,7 @@ namespace ryujin
         [[nodiscard]] sz capacity() const noexcept;
 
     private:
-        std::unique_ptr<unsigned char[]> _data;
+        unique_ptr<unsigned char[]> _data;
         sz _offset;
         sz _lastOffset;
         const sz _length;

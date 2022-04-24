@@ -5,6 +5,7 @@
 #include "slot_map.hpp"
 #include "vector.hpp"
 
+#include "../core/smart_pointers.hpp"
 #include "../entities/transform_component.hpp"
 #include "../math/mat4.hpp"
 #include "../math/quat.hpp"
@@ -145,9 +146,9 @@ namespace ryujin
         [[nodiscard]] const mesh_group* get_mesh_group(const slot_map_key& key) const noexcept;
 
     private:
-        std::unordered_map<std::string, std::unique_ptr<texture_asset>> _textures;
-        std::unordered_map<std::string, std::unique_ptr<model_asset>> _models;
-        std::unordered_map<std::string, std::unique_ptr<material_asset>> _materials;
+        std::unordered_map<std::string, unique_ptr<texture_asset>> _textures;
+        std::unordered_map<std::string, unique_ptr<model_asset>> _models;
+        std::unordered_map<std::string, unique_ptr<material_asset>> _materials;
         
         slot_map<mesh_group> _meshes;
     };
