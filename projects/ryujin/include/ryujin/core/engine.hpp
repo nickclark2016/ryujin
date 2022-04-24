@@ -2,6 +2,7 @@
 #define engine_hpp__
 
 #include "assets.hpp"
+#include "smart_pointers.hpp"
 
 #include "../entities/registry.hpp"
 #include "../graphics/window.hpp"
@@ -38,13 +39,13 @@ namespace ryujin
         engine_context();
         ~engine_context();
 
-        std::unique_ptr<window>& add_window(const window::create_info info);
+        unique_ptr<window>& add_window(const window::create_info info);
         void remove_window(const std::string& win);
-        std::unique_ptr<window>& get_window(const std::string& name);
+        unique_ptr<window>& get_window(const std::string& name);
 
-        const std::unordered_map<std::string, std::unique_ptr<window>>& get_windows() const noexcept;
+        const std::unordered_map<std::string, unique_ptr<window>>& get_windows() const noexcept;
 
-        void execute(std::unique_ptr<base_application>& app);
+        void execute(unique_ptr<base_application>& app);
 
         registry& get_registry() noexcept;
         asset_manager& get_assets() noexcept;
@@ -53,12 +54,12 @@ namespace ryujin
         f64 deltaTime() const noexcept;
     private:
 
-        std::unordered_map<std::string, std::unique_ptr<window>> _windows;
+        std::unordered_map<std::string, unique_ptr<window>> _windows;
 
-        std::unique_ptr<window> _invalidWindowHandle;
+        unique_ptr<window> _invalidWindowHandle;
         
-        std::unique_ptr<asset_manager> _assets;
-        std::unique_ptr<render_system> _renderer;
+        unique_ptr<asset_manager> _assets;
+        unique_ptr<render_system> _renderer;
 
         registry _reg;
 

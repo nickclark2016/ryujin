@@ -19,52 +19,52 @@ namespace ryujin
         using iterator = Type*;
         using const_iterator = const Type*;
 
-        vector();
-        vector(const vector& v);
-        vector(vector&& v) noexcept;
-        vector(const sz count, const Type& value = Type());
-        ~vector();
+        constexpr vector() noexcept;
+        constexpr vector(const vector& v);
+        constexpr vector(vector&& v) noexcept;
+        constexpr vector(const sz count, const Type& value = Type());
+        constexpr ~vector();
 
-        vector& operator=(const vector& rhs);
-        vector& operator=(vector&& rhs) noexcept;
+        constexpr vector& operator=(const vector& rhs);
+        constexpr vector& operator=(vector&& rhs) noexcept;
 
-        iterator begin() noexcept;
-        const_iterator begin() const noexcept;
-        const_iterator cbegin() const noexcept;
+        constexpr iterator begin() noexcept;
+        constexpr const_iterator begin() const noexcept;
+        constexpr const_iterator cbegin() const noexcept;
 
-        iterator end() noexcept;
-        const_iterator end() const noexcept;
-        const_iterator cend() const noexcept;
+        constexpr iterator end() noexcept;
+        constexpr const_iterator end() const noexcept;
+        constexpr const_iterator cend() const noexcept;
 
-        void clear();
-        iterator erase(iterator it);
-        iterator erase(iterator start, iterator stop);
-        void pop_back();
+        constexpr void clear();
+        constexpr iterator erase(iterator it);
+        constexpr iterator erase(iterator start, iterator stop);
+        constexpr void pop_back();
 
-        bool empty() const noexcept;
-        sz size() const noexcept;
-        sz capacity() const noexcept;
-        Type* data() noexcept;
-        const Type* data() const noexcept;
+        constexpr bool empty() const noexcept;
+        constexpr sz size() const noexcept;
+        constexpr sz capacity() const noexcept;
+        constexpr Type* data() noexcept;
+        constexpr const Type* data() const noexcept;
 
-        void resize(const sz newSize, const Type& value = Type());
-        void reserve(const sz newCapacity);
+        constexpr void resize(const sz newSize, const Type& value = Type());
+        constexpr void reserve(const sz newCapacity);
 
-        void insert(const_iterator pos, const Type& value);
-        void insert(const_iterator pos, Type&& value);
-        void push_back(const Type& value);
-        void push_back(Type&& value);
+        constexpr void insert(const_iterator pos, const Type& value);
+        constexpr void insert(const_iterator pos, Type&& value);
+        constexpr void push_back(const Type& value);
+        constexpr void push_back(Type&& value);
 
-        Type& operator[](const sz idx) noexcept;
-        const Type& operator[](const sz idx) const noexcept;
+        constexpr Type& operator[](const sz idx) noexcept;
+        constexpr const Type& operator[](const sz idx) const noexcept;
 
-        Type& at(const sz idx) noexcept;
-        const Type& at(const sz idx) const noexcept;
+        constexpr Type& at(const sz idx) noexcept;
+        constexpr const Type& at(const sz idx) const noexcept;
 
-        Type& front() noexcept;
-        const Type& front() const noexcept;
-        Type& back() noexcept;
-        const Type& back() const noexcept;
+        constexpr Type& front() noexcept;
+        constexpr const Type& front() const noexcept;
+        constexpr Type& back() noexcept;
+        constexpr const Type& back() const noexcept;
 
     private:
         Type* _data = {};
@@ -72,10 +72,35 @@ namespace ryujin
         sz _size = 0;
         Allocator _alloc = {};
 
-        void _make_hole(const sz idx, const sz size);
-        bool _needs_resize() const noexcept;
-        void _resize_buffer(const sz newSize = 0) noexcept;
+        constexpr void _make_hole(const sz idx, const sz size);
+        constexpr bool _needs_resize() const noexcept;
+        constexpr void _resize_buffer(const sz newSize = 0) noexcept;
     };
+
+    template <typename Type, typename Allocator>
+    inline constexpr auto operator<=>(const vector<Type, Allocator>& lhs, const vector<Type, Allocator>& rhs)
+    {
+        if (&lhs == &rhs)
+        {
+            return 0;
+        }
+
+        if (lhs.size() != rhs.size())
+        {
+            return lhs.size() - rhs.size();
+        }
+
+        for (sz i = 0; i < lhs.size(); ++i)
+        {
+            auto cmp = lhs[i] <=> rhs[i];
+            if (cmp)
+            {
+                return cmp;
+            }
+        }
+
+        return 0;
+    }
     
     template <typename Type, sz Capacity = 32>
     class static_vector
@@ -139,16 +164,16 @@ namespace ryujin
 
         sz _size = 0;
 
-        error_code _make_hole(const sz idx, const sz sz);
+        constexpr error_code _make_hole(const sz idx, const sz sz);
     };
 
     template<typename Type, typename Allocator>
-    inline vector<Type, Allocator>::vector()
+    inline constexpr vector<Type, Allocator>::vector() noexcept
     {
     }
 
     template<typename Type, typename Allocator>
-    inline vector<Type, Allocator>::vector(const vector& v)
+    inline constexpr vector<Type, Allocator>::vector(const vector& v)
         : _alloc(v._alloc)
     {
         _resize_buffer(v._capacity);
@@ -161,7 +186,7 @@ namespace ryujin
     }
 
     template<typename Type, typename Allocator>
-    inline vector<Type, Allocator>::vector(vector&& v) noexcept
+    inline constexpr vector<Type, Allocator>::vector(vector&& v) noexcept
         : _data(v._data), _capacity(v._capacity), _size(v._size), _alloc(ryujin::move(v._alloc))
     {
         v._data = nullptr;
@@ -170,7 +195,7 @@ namespace ryujin
     }
 
     template<typename Type, typename Allocator>
-    inline vector<Type, Allocator>::vector(const sz count, const Type& value)
+    inline constexpr vector<Type, Allocator>::vector(const sz count, const Type& value)
         : _size(count)
     {
         _resize_buffer(count);
@@ -181,7 +206,7 @@ namespace ryujin
     }
 
     template<typename Type, typename Allocator>
-    inline vector<Type, Allocator>::~vector()
+    inline constexpr vector<Type, Allocator>::~vector()
     {
         if (_data)
         {
@@ -191,7 +216,7 @@ namespace ryujin
     }
 
     template<typename Type, typename Allocator>
-    inline vector<Type, Allocator>& vector<Type, Allocator>::operator=(const vector& rhs)
+    inline constexpr vector<Type, Allocator>& vector<Type, Allocator>::operator=(const vector& rhs)
     {
         if (&rhs == this)
         {
@@ -214,7 +239,7 @@ namespace ryujin
     }
 
     template<typename Type, typename Allocator>
-    inline vector<Type, Allocator>& vector<Type, Allocator>::operator=(vector&& rhs) noexcept
+    inline constexpr vector<Type, Allocator>& vector<Type, Allocator>::operator=(vector&& rhs) noexcept
     {
         if (&rhs == this)
         {
@@ -241,85 +266,85 @@ namespace ryujin
     }
 
     template<typename Type, typename Allocator>
-    inline typename vector<Type, Allocator>::iterator vector<Type, Allocator>::begin() noexcept
+    inline constexpr typename vector<Type, Allocator>::iterator vector<Type, Allocator>::begin() noexcept
     {
         return this->data();
     }
     
     template<typename Type, typename Allocator>
-    inline typename vector<Type, Allocator>::const_iterator vector<Type, Allocator>::begin() const noexcept
+    inline constexpr typename vector<Type, Allocator>::const_iterator vector<Type, Allocator>::begin() const noexcept
     {
         return this->data();
     }
     
     template<typename Type, typename Allocator>
-    inline typename vector<Type, Allocator>::const_iterator vector<Type, Allocator>::cbegin() const noexcept
+    inline constexpr typename vector<Type, Allocator>::const_iterator vector<Type, Allocator>::cbegin() const noexcept
     {
         return this->data();
     }
     
     template<typename Type, typename Allocator>
-    inline typename vector<Type, Allocator>::iterator vector<Type, Allocator>::end() noexcept
+    inline constexpr typename vector<Type, Allocator>::iterator vector<Type, Allocator>::end() noexcept
     {
         return this->data() + this->size();
     }
     
     template<typename Type, typename Allocator>
-    inline typename vector<Type, Allocator>::const_iterator vector<Type, Allocator>::end() const noexcept
+    inline constexpr typename vector<Type, Allocator>::const_iterator vector<Type, Allocator>::end() const noexcept
     {
         return this->data() + this->size();
     }
     
     template<typename Type, typename Allocator>
-    inline typename vector<Type, Allocator>::const_iterator vector<Type, Allocator>::cend() const noexcept
+    inline constexpr typename vector<Type, Allocator>::const_iterator vector<Type, Allocator>::cend() const noexcept
     {
         return this->data() + this->size();
     }
 
     template<typename Type, typename Allocator>
-    inline bool vector<Type, Allocator>::empty() const noexcept
+    inline constexpr bool vector<Type, Allocator>::empty() const noexcept
     {
         return _size == 0;
     }
 
     template<typename Type, typename Allocator>
-    inline sz vector<Type, Allocator>::size() const noexcept
+    inline constexpr sz vector<Type, Allocator>::size() const noexcept
     {
         return _size;
     }
 
     template<typename Type, typename Allocator>
-    inline sz vector<Type, Allocator>::capacity() const noexcept
+    inline constexpr sz vector<Type, Allocator>::capacity() const noexcept
     {
         return _capacity;
     }
 
     template<typename Type, typename Allocator>
-    inline Type* vector<Type, Allocator>::data() noexcept
+    inline constexpr Type* vector<Type, Allocator>::data() noexcept
     {
         return _data;
     }
 
     template<typename Type, typename Allocator>
-    inline const Type* vector<Type, Allocator>::data() const noexcept
+    inline constexpr const Type* vector<Type, Allocator>::data() const noexcept
     {
         return _data;
     }
 
     template<typename Type, typename Allocator>
-    inline void vector<Type, Allocator>::clear()
+    inline constexpr void vector<Type, Allocator>::clear()
     {
         erase(begin(), end());
     }
 
     template<typename Type, typename Allocator>
-    inline typename vector<Type, Allocator>::iterator vector<Type, Allocator>::erase(iterator it)
+    inline constexpr typename vector<Type, Allocator>::iterator vector<Type, Allocator>::erase(iterator it)
     {
         return erase(it, it + 1);
     }
 
     template<typename Type, typename Allocator>
-    inline vector<Type, Allocator>::iterator vector<Type, Allocator>::erase(iterator start, iterator stop)
+    inline constexpr vector<Type, Allocator>::iterator vector<Type, Allocator>::erase(iterator start, iterator stop)
     {
         const size_t s = start - begin();
         const size_t e = stop - begin();
@@ -344,13 +369,13 @@ namespace ryujin
     }
 
     template<typename Type, typename Allocator>
-    void vector<Type, Allocator>::pop_back()
+    void constexpr vector<Type, Allocator>::pop_back()
     {
         erase(end());
     }
 
     template<typename Type, typename Allocator>
-    inline void vector<Type, Allocator>::resize(const sz newSize, const Type& value)
+    inline constexpr void vector<Type, Allocator>::resize(const sz newSize, const Type& value)
     {
         if (newSize <= _capacity)
         {
@@ -365,7 +390,7 @@ namespace ryujin
     }
 
     template<typename Type, typename Allocator>
-    inline void vector<Type, Allocator>::reserve(const sz newCapacity)
+    inline constexpr void vector<Type, Allocator>::reserve(const sz newCapacity)
     {
         if (newCapacity <= _capacity)
         {
@@ -375,7 +400,7 @@ namespace ryujin
     }
 
     template<typename Type, typename Allocator>
-    inline void vector<Type, Allocator>::insert(const_iterator pos, const Type& value)
+    inline constexpr void vector<Type, Allocator>::insert(const_iterator pos, const Type& value)
     {
         const sz idx = pos - _data;
         if (_needs_resize())
@@ -388,7 +413,7 @@ namespace ryujin
     }
 
     template<typename Type, typename Allocator>
-    inline void vector<Type, Allocator>::insert(const_iterator pos, Type&& value)
+    inline constexpr void vector<Type, Allocator>::insert(const_iterator pos, Type&& value)
     {
         const sz idx = pos - _data;
         if (_needs_resize())
@@ -401,67 +426,67 @@ namespace ryujin
     }
 
     template<typename Type, typename Allocator>
-    inline void vector<Type, Allocator>::push_back(const Type& value)
+    inline constexpr void vector<Type, Allocator>::push_back(const Type& value)
     {
         insert(end(), value);
     }
 
     template<typename Type, typename Allocator>
-    inline void vector<Type, Allocator>::push_back(Type&& value)
+    inline constexpr void vector<Type, Allocator>::push_back(Type&& value)
     {
         insert(end(), ryujin::forward<Type>(value));
     }
 
     template<typename Type, typename Allocator>
-    inline Type& vector<Type, Allocator>::operator[](const sz idx) noexcept
+    inline constexpr Type& vector<Type, Allocator>::operator[](const sz idx) noexcept
     {
         return _data[idx];
     }
 
     template<typename Type, typename Allocator>
-    inline const Type& vector<Type, Allocator>::operator[](const sz idx) const noexcept
+    inline constexpr const Type& vector<Type, Allocator>::operator[](const sz idx) const noexcept
     {
         return _data[idx];
     }
 
     template<typename Type, typename Allocator>
-    inline Type& vector<Type, Allocator>::at(const sz idx) noexcept
+    inline constexpr Type& vector<Type, Allocator>::at(const sz idx) noexcept
     {
         return _data[idx];
     }
 
     template<typename Type, typename Allocator>
-    inline const Type& vector<Type, Allocator>::at(const sz idx) const noexcept
+    inline constexpr const Type& vector<Type, Allocator>::at(const sz idx) const noexcept
     {
         return _data[idx];
     }
 
     template<typename Type, typename Allocator>
-    inline Type& vector<Type, Allocator>::front() noexcept
+    inline constexpr Type& vector<Type, Allocator>::front() noexcept
     {
         return at(0);
     }
 
     template<typename Type, typename Allocator>
-    inline const Type& vector<Type, Allocator>::front() const noexcept
+    inline constexpr const Type& vector<Type, Allocator>::front() const noexcept
     {
         return at(0);
     }
 
     template<typename Type, typename Allocator>
-    inline Type& vector<Type, Allocator>::back() noexcept
+    inline constexpr Type& vector<Type, Allocator>::back() noexcept
     {
         return at(_size - 1);
     }
 
     template<typename Type, typename Allocator>
-    inline const Type& vector<Type, Allocator>::back() const noexcept
+    inline constexpr const Type& vector<Type, Allocator>::back() const noexcept
     {
         return at(_size - 1);
     }
 
     template<typename Type, typename Allocator>
-    inline void vector<Type, Allocator>::_make_hole(const sz idx, const sz size)
+    inline constexpr void vector<Type, Allocator>::_make_hole(const sz idx, const sz size)
     {
         if (idx == _size)
         {
@@ -481,13 +506,13 @@ namespace ryujin
     }
 
     template<typename Type, typename Allocator>
-    inline bool vector<Type, Allocator>::_needs_resize() const noexcept
+    inline constexpr bool vector<Type, Allocator>::_needs_resize() const noexcept
     {
         return _size == _capacity;
     }
 
     template<typename Type, typename Allocator>
-    inline void vector<Type, Allocator>::_resize_buffer(const sz newSize) noexcept
+    inline constexpr void vector<Type, Allocator>::_resize_buffer(const sz newSize) noexcept
     {
         const sz requested = newSize == 0 ? (_capacity == 0 ? 8 : _size * 2) : newSize;
         Type* allocation = _alloc.allocate(requested);
@@ -806,7 +831,7 @@ namespace ryujin
     }
     
     template<typename Type, sz Capacity>
-    inline typename static_vector<Type, Capacity>::error_code static_vector<Type, Capacity>::_make_hole(const sz idx, const sz size)
+    inline constexpr typename static_vector<Type, Capacity>::error_code static_vector<Type, Capacity>::_make_hole(const sz idx, const sz size)
     {
         if (_size + size > Capacity)
         {

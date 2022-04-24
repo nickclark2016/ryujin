@@ -3,10 +3,10 @@
 
 #include "../core/primitives.hpp"
 #include "../core/result.hpp"
+#include "../core/smart_pointers.hpp"
 #include "../core/vector.hpp"
 
 #include <functional>
-#include <memory>
 #include <string_view>
 #include <tuple>
 
@@ -47,7 +47,7 @@ namespace ryujin
             u32 height;
         };
 
-        static result<std::unique_ptr<window>, error_code> create(const create_info& info) noexcept;
+        static result<unique_ptr<window>, error_code> create(const create_info& info) noexcept;
 
         ~window();
 

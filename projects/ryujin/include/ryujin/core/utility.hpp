@@ -49,6 +49,23 @@ namespace ryujin
 
     template <sz I>
     inline constexpr in_place_index_t in_place_index{};
+
+    template <typename T>
+    constexpr void move_swap(T& a, T& b)
+    {
+        auto tmp = ryujin::move(a);
+        a = ryujin::move(b);
+        b = ryujin::move(tmp);
+    }
+
+    template <typename T, sz N>
+    constexpr void move_swap(T(&a)[N], T(&b)[N])
+    {
+        for (sz i = 0; i < N; ++i)
+        {
+            move_swap(a[i], b[i]);
+        }
+    }
 }
 
 #endif // utility_hpp__

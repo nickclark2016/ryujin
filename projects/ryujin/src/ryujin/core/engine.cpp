@@ -18,7 +18,7 @@ namespace ryujin
 #else
         spdlog::set_level(spdlog::level::err);
 #endif
-        _assets = std::make_unique<asset_manager>();
+        _assets = make_unique<asset_manager>();
     }
 
     engine_context::~engine_context()
@@ -26,7 +26,7 @@ namespace ryujin
         _windows.clear();
     }
 
-    std::unique_ptr<window>& engine_context::add_window(const window::create_info info)
+    unique_ptr<window>& engine_context::add_window(const window::create_info info)
     {
         auto result = window::create(info);
         if (result)
@@ -54,7 +54,7 @@ namespace ryujin
         _windows.erase(win);
     }
     
-    std::unique_ptr<window>& engine_context::get_window(const std::string& name)
+    unique_ptr<window>& engine_context::get_window(const std::string& name)
     {
         const auto& it = _windows.find(name);
         if (it == _windows.end())
@@ -64,18 +64,18 @@ namespace ryujin
         return it->second;
     }
 
-    const std::unordered_map<std::string, std::unique_ptr<window>>& engine_context::get_windows() const noexcept
+    const std::unordered_map<std::string, unique_ptr<window>>& engine_context::get_windows() const noexcept
     {
         return _windows;
     }
     
-    void engine_context::execute(std::unique_ptr<base_application>& app)
+    void engine_context::execute(unique_ptr<base_application>& app)
     {
         using std::chrono::high_resolution_clock;
 
 #if 1 || MULTITHREADED_EXECUTION
         _isRunning.store(true);
-        _renderer = std::make_unique<render_system>();
+        _renderer = make_unique<render_system>();
 
         std::barrier initSync(2);
 

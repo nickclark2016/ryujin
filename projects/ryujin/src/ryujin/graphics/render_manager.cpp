@@ -98,11 +98,11 @@ namespace ryujin
         }
     }
 
-    result<std::unique_ptr<render_manager>, render_manager::error_code> render_manager::create(const std::unique_ptr<window>& win, vkb::Instance instance, vkb::Device device, VmaAllocator allocator, const bool nameObjects, registry& reg)
+    result<unique_ptr<render_manager>, render_manager::error_code> render_manager::create(const unique_ptr<window>& win, vkb::Instance instance, vkb::Device device, VmaAllocator allocator, const bool nameObjects, registry& reg)
     {
-        using result_type = result<std::unique_ptr<render_manager>, error_code>;
+        using result_type = result<unique_ptr<render_manager>, error_code>;
 
-        std::unique_ptr<render_manager> manager(new render_manager(win, instance, device, allocator, nameObjects, &reg));
+        unique_ptr<render_manager> manager(new render_manager(win, instance, device, allocator, nameObjects, &reg));
 
         const auto surfaceResult = manager->create_surface();
         if (surfaceResult != error_code::NO_ERROR)
@@ -1485,12 +1485,12 @@ namespace ryujin
         _funcs.waitForFences(1, &f, VK_TRUE, UINT64_MAX);
     }
 
-    std::unique_ptr<base_render_pipeline>& render_manager::get_render_pipeline() noexcept
+    unique_ptr<base_render_pipeline>& render_manager::get_render_pipeline() noexcept
     {
         return _renderer;
     }
 
-    render_manager::render_manager(const std::unique_ptr<window>& win, vkb::Instance instance, vkb::Device device, VmaAllocator allocator, const bool nameObjects, registry* reg)
+    render_manager::render_manager(const unique_ptr<window>& win, vkb::Instance instance, vkb::Device device, VmaAllocator allocator, const bool nameObjects, registry* reg)
         : _win(win), _instance(instance), _device(device), _allocator(allocator), _funcs(device.make_table()), _nameObjects(nameObjects), _descriptorLayoutCache(*this),
             _renderables(this, reg)
     {

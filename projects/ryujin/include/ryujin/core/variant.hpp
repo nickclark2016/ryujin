@@ -502,6 +502,12 @@ namespace ryujin
     {
         return v.index() == detail::variant_index_helper<T, Ts...>::value;
     }
+
+    template <typename ... Ts>
+    void swap(variant<Ts...>& a, variant<Ts...>& b)
+    {
+        a.swap(b);
+    }
 }
 
 #endif // variant_hpp__

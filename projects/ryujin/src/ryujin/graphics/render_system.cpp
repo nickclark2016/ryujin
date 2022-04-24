@@ -192,7 +192,7 @@ namespace ryujin
 			if (managerResult)
 			{
 				const auto idx = _managers.size();
-				_managers.push_back(std::move(managerResult.success()));
+				_managers.push_back(ryujin::move(managerResult.success()));
 			}
 			else
 			{
@@ -231,7 +231,7 @@ namespace ryujin
 		}
 	}
 
-	std::unique_ptr<render_manager>& render_system::get_render_manager(sz idx) noexcept
+	unique_ptr<render_manager>& render_system::get_render_manager(sz idx) noexcept
 	{
 		return _managers[idx];
 	}

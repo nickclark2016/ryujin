@@ -100,7 +100,7 @@ public:
 int main(int, char**)
 {
 	const auto engine = std::make_unique<engine_context>();
-    std::unique_ptr<base_application> app(new sandbox_application());
+    ryujin::unique_ptr<base_application> app(new sandbox_application());
 
     engine->execute(app);
 

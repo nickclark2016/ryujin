@@ -9,6 +9,7 @@
 
 #include "../core/linear_allocator.hpp"
 #include "../core/primitives.hpp"
+#include "../core/smart_pointers.hpp"
 #include "../core/vector.hpp"
 #include "../core/span.hpp"
 
@@ -19,7 +20,6 @@
 #include <atomic>
 #include <deque>
 #include <functional>
-#include <memory>
 #include <optional>
 #include <unordered_map>
 
@@ -282,7 +282,7 @@ namespace ryujin
             ILLEGAL_ARGUMENT
         };
 
-        static result<std::unique_ptr<render_manager>, error_code> create(const std::unique_ptr<window>& win, vkb::Instance instance, vkb::Device device, VmaAllocator allocator, const bool nameObjects, registry& reg);
+        static result<unique_ptr<render_manager>, error_code> create(const unique_ptr<window>& win, vkb::Instance instance, vkb::Device device, VmaAllocator allocator, const bool nameObjects, registry& reg);
 
         render_manager(const render_manager&) = delete;
         render_manager(render_manager&&) noexcept = delete;
@@ -349,11 +349,11 @@ namespace ryujin
         template <render_pipeline_type T>
         void use_render_pipeline();
 
-        std::unique_ptr<base_render_pipeline>& get_render_pipeline() noexcept;
+        unique_ptr<base_render_pipeline>& get_render_pipeline() noexcept;
 
         void wait(const fence& f);
     private:
-        render_manager(const std::unique_ptr<window>& win, vkb::Instance instance, vkb::Device device, VmaAllocator allocator, const bool nameObjects, registry* reg);
+        render_manager(const unique_ptr<window>& win, vkb::Instance instance, vkb::Device device, VmaAllocator allocator, const bool nameObjects, registry* reg);
 
         error_code create_surface();
         error_code create_swapchain();
@@ -370,7 +370,7 @@ namespace ryujin
         result<descriptor_set_layout, error_code> _create(const descriptor_set_layout_create_info& info);
         result<descriptor_set, error_code> _allocate(const descriptor_set_allocate_info& info);
 
-        const std::unique_ptr<window>& _win;
+        const unique_ptr<window>& _win;
         vkb::Device _device;
         vkb::Instance _instance;
         VmaAllocator _allocator;
@@ -415,7 +415,7 @@ namespace ryujin
 
         inline_linear_allocator<256 * 1024> _inlineScratchBuffer;
 
-        std::unique_ptr<base_render_pipeline> _renderer;
+        unique_ptr<base_render_pipeline> _renderer;
 
         std::atomic_bool _isMinimized = false;
 
@@ -440,7 +440,7 @@ namespace ryujin
     template<render_pipeline_type T>
     inline void render_manager::use_render_pipeline()
     {
-        _renderer = std::unique_ptr<base_render_pipeline>(new T());
+        _renderer = ryujin::unique_ptr<base_render_pipeline>(new T());
         _renderer->set_render_manager(this);
     }
 }

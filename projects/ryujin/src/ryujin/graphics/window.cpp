@@ -123,9 +123,9 @@ namespace ryujin
 		}
 	}
 
-	result<std::unique_ptr<window>, window::error_code> window::create(const window::create_info& info) noexcept
+	result<unique_ptr<window>, window::error_code> window::create(const window::create_info& info) noexcept
 	{
-		using result_type = result<std::unique_ptr<window>, error_code>;
+		using result_type = result<unique_ptr<window>, error_code>;
 
 		const bool isInit = detail::initGlfw();
 		if (!isInit)
@@ -140,7 +140,7 @@ namespace ryujin
 			return result_type::from_error(error_code::WINDOW_CREATE_FAILURE);
 		}
 
-		std::unique_ptr<window> win(new window);
+		unique_ptr<window> win(new window);
 		win->_native = nativeWindowHandle;
 		
 		glfwSetWindowUserPointer(win->_native, win.get());
@@ -156,7 +156,7 @@ namespace ryujin
 		glfwSetScrollCallback(win->_native, detail::scrollCallback);
 		glfwSetMouseButtonCallback(win->_native, detail::mouseButtonCallback);
 
-		return result_type::from_success(std::move(win));
+		return result_type::from_success(ryujin::move(win));
 	}
 
 	window::~window()
