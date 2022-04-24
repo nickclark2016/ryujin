@@ -46,11 +46,26 @@ namespace ryujin
         auto add_lvalue_reference_helper(...)->type_identity<T>;
     }
 
+    namespace detail::rvalue_reference
+    {
+        template <typename T>
+        auto add_rvalue_reference_helper(int)->type_identity<T&&>;
+
+        template <typename T>
+        auto add_rvalue_reference_helper(...)->type_identity<T>;
+    }
+
     template <typename T>
     struct add_lvalue_reference : decltype(detail::lvalue_reference::add_lvalue_reference_helper<T>(0)) {};
 
     template <typename T>
     using add_lvalue_reference_t = typename add_lvalue_reference<T>::type;
+
+    template <typename T>
+    struct add_rvalue_reference : decltype(detail::rvalue_reference::add_rvalue_reference_helper<T>(0)) {};
+
+    template <typename T>
+    using add_rvalue_reference_t = typename add_rvalue_reference<T>::type;
 
     template <typename T>
     struct is_lvalue_reference : false_type {};
@@ -60,6 +75,27 @@ namespace ryujin
 
     template <typename T>
     inline constexpr bool is_lvalue_reference_v = is_lvalue_reference<T>::value;
+
+    template <typename T>
+    struct is_rvalue_reference : false_type {};
+
+    template <typename T>
+    struct is_rvalue_reference<T&&> : true_type {};
+
+    template <typename T>
+    inline constexpr bool is_rvalue_reference_v = is_rvalue_reference<T>::value;
+
+    template <typename T>
+    struct is_reference : false_type {};
+
+    template <typename T>
+    struct is_reference<T&> : true_type {};
+
+    template <typename T>
+    struct is_reference<T&&> : true_type {};
+
+    template <typename T>
+    inline constexpr bool is_reference_v = is_reference<T>::value;
 
     template <typename T>
     struct remove_reference { using type = T; };
@@ -95,27 +131,24 @@ namespace ryujin
     template <typename ... Ts>
     inline constexpr bool conjunction_v = conjunction_v<Ts...>::value;
 
+    namespace detail::declval
+    {
+        template <typename T, typename U = T&&>
+        U declval_helper(int);
+
+        template <typename T>
+        T declval_helper(long);
+    }
+
+    template <typename T>
+    auto declval() noexcept -> decltype(detail::declval::declval_helper<T>(0));
+
 #ifdef _MSC_VER
     template <typename T, typename ... Args>
     struct is_constructible : bool_constant<__is_constructible(T, Args...)> {};
 
-    template <typename T>
-    struct is_default_constructible : bool_constant<__is_constructible(T)> {};
-
-    template <typename T>
-    struct is_copy_constructible : bool_constant<__is_constructible(T, add_lvalue_reference_t<const T>)> {};
-
-    template <typename T>
-    struct is_move_constructible : bool_constant<__is_constructible(T, T)> {};
-
     template <typename To, typename From>
     struct is_assignable : bool_constant<__is_assignable(To, From)> {};
-
-    template <typename T>
-    struct is_copy_assignable : bool_constant<__is_assignable(add_lvalue_reference_t<T>, add_lvalue_reference_t<const T>)> {};
-
-    template <typename T>
-    struct is_move_assignable : bool_constant<__is_assignable(add_lvalue_reference_t<T>, T)> {};
 
     template <typename T>
     struct is_destructible : bool_constant<__is_destructible(T)> {};
@@ -123,50 +156,65 @@ namespace ryujin
     template <typename T, typename ... Args>
     struct is_trivially_constructible : bool_constant<__is_trivially_constructible(T, Args...)> {};
 
-    template <typename T>
-    struct is_trivially_default_constructible : bool_constant<__is_trivially_constructible(T)> {};
-
-    template <typename T>
-    struct is_trivially_copy_constructible : bool_constant<__is_trivially_constructible(T, add_lvalue_reference_t<const T>)> {};
-
-    template <typename T>
-    struct is_trivially_move_constructible : bool_constant<__is_trivially_constructible(T, T)> {};
-
     template <typename To, typename From>
     struct is_trivially_assignable : bool_constant<__is_trivially_assignable(To, From)> {};
-
-    template <typename T>
-    struct is_trivially_copy_assignable : bool_constant<__is_trivially_assignable(add_lvalue_reference_t<T>, add_lvalue_reference_t<const T>)> {};
-
-    template <typename T>
-    struct is_trivially_move_assignable : bool_constant<__is_trivially_assignable(add_lvalue_reference_t<T>, T)> {};
 
     template <typename T, typename ... Args>
     struct is_nothrow_constructible : bool_constant<__is_nothrow_constructible(T, Args...)> {};
 
-    template <typename T, typename ... Args>
-    struct is_nothrow_default_constructible : bool_constant<__is_nothrow_constructible(T)> {};
-
-    template <typename T>
-    struct is_nothrow_copy_constructible : bool_constant<__is_nothrow_constructible(T, add_lvalue_reference_t<const T>)> {};
-
-    template <typename T>
-    struct is_nothrow_move_constructible : bool_constant<__is_nothrow_constructible(T, T)> {};
-
     template <typename To, typename From>
     struct is_nothrow_assignable : bool_constant<__is_nothrow_assignable(To, From)> {};
-
-    template <typename T>
-    struct is_nothrow_copy_assignable : bool_constant<__is_nothrow_assignable(add_lvalue_reference_t<T>, add_lvalue_reference_t<const T>)> {};
-
-    template <typename T>
-    struct is_nothrow_move_assignable : bool_constant<__is_nothrow_assignable(add_lvalue_reference_t<T>, T)> {};
 
     template <typename T>
     struct is_nothrow_destructible : bool_constant<__is_nothrow_destructible(T)> {};
 #else
 #error Type traits not fully implemented for your compiler
 #endif
+
+    template <typename T>
+    struct is_default_constructible : is_constructible<T> {};
+
+    template <typename T>
+    struct is_copy_constructible :is_constructible<T, add_lvalue_reference_t<const T>> {};
+
+    template <typename T>
+    struct is_move_constructible : is_constructible<T, T> {};
+
+    template <typename T>
+    struct is_copy_assignable : is_assignable<add_lvalue_reference_t<T>, add_lvalue_reference_t<const T>> {};
+
+    template <typename T>
+    struct is_move_assignable : is_assignable<add_lvalue_reference_t<T>, T> {};
+
+    template <typename T>
+    struct is_trivially_default_constructible : is_trivially_constructible<T> {};
+
+    template <typename T>
+    struct is_trivially_copy_constructible : is_trivially_constructible<T, add_lvalue_reference_t<const T>> {};
+
+    template <typename T>
+    struct is_trivially_move_constructible : is_trivially_constructible<T, T> {};
+
+    template <typename T>
+    struct is_trivially_copy_assignable : is_trivially_assignable<add_lvalue_reference_t<T>, add_lvalue_reference_t<const T>> {};
+
+    template <typename T>
+    struct is_trivially_move_assignable : is_trivially_assignable<add_lvalue_reference_t<T>, T> {};
+
+    template <typename T>
+    struct is_nothrow_default_constructible : is_nothrow_constructible<T> {};
+
+    template <typename T>
+    struct is_nothrow_copy_constructible : is_nothrow_constructible<T, add_lvalue_reference_t<const T>> {};
+
+    template <typename T>
+    struct is_nothrow_move_constructible : is_nothrow_constructible<T, T> {};
+
+    template <typename T>
+    struct is_nothrow_copy_assignable : is_nothrow_assignable<add_lvalue_reference_t<T>, add_lvalue_reference_t<const T>> {};
+
+    template <typename T>
+    struct is_nothrow_move_assignable : is_nothrow_assignable<add_lvalue_reference_t<T>, T> {};
 
     template <typename T, typename ... Args>
     inline constexpr bool is_constructible_v = is_constructible<T, Args...>::value;
