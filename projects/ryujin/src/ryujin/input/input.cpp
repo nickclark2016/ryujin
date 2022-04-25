@@ -8,19 +8,19 @@ namespace ryujin
 {
     namespace detail
     {
-        size_t input_hasher::operator()(const std::reference_wrapper<const unique_ptr<window>>& win) const noexcept
+        size_t input_hasher::operator()(const reference_wrapper<const unique_ptr<window>>& win) const noexcept
         {
             return std::hash<window*>()(win.get().get());
         }
 
-        bool input_hasher::operator()(const std::reference_wrapper<const unique_ptr<window>>& lhs, const std::reference_wrapper<const unique_ptr<window>>& rhs) const
+        bool input_hasher::operator()(const reference_wrapper<const unique_ptr<window>>& lhs, const reference_wrapper<const unique_ptr<window>>& rhs) const
         {
             return lhs.get().get() == rhs.get().get();
         }
     }
 
-    std::unordered_map<std::reference_wrapper<const unique_ptr<window>>, input, detail::input_hasher, detail::input_hasher> input::_inputs = {};
-    optional<std::reference_wrapper<const unique_ptr<window>>> input::_active = nullopt;
+    std::unordered_map<reference_wrapper<const unique_ptr<window>>, input, detail::input_hasher, detail::input_hasher> input::_inputs = {};
+    optional<reference_wrapper<const unique_ptr<window>>> input::_active = nullopt;
 
     input::input(const input& i)
         : _win(i._win)
@@ -54,7 +54,7 @@ namespace ryujin
 
     input input::register_window(const unique_ptr<window>& win)
     {
-        std::reference_wrapper<const unique_ptr<window>> w = std::cref(win);
+        reference_wrapper<const unique_ptr<window>> w = ryujin::cref(win);
         input in(win);
 
         if (!_inputs.contains(w))

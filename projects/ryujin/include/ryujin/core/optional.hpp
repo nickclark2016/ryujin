@@ -259,7 +259,7 @@ namespace ryujin
     template <typename ... Args>
     inline constexpr T& optional<T>::emplace(Args&& ... args)
     {
-        _storage = T(std::forward<Args>(args)...);
+        _storage = T(ryujin::forward<Args>(args)...);
         return ryujin::get<T>(_storage);
     }
 

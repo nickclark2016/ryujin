@@ -4,6 +4,7 @@
 #include "keyboard.hpp"
 #include "mouse.hpp"
 
+#include "../core/functional.hpp"
 #include "../core/optional.hpp"
 #include "../core/smart_pointers.hpp"
 #include "../graphics/window.hpp"
@@ -18,8 +19,8 @@ namespace ryujin
     {
         struct input_hasher
         {
-            size_t operator()(const std::reference_wrapper<const unique_ptr<window>>& win) const noexcept;
-            bool operator()(const std::reference_wrapper<const unique_ptr<window>>& lhs, const std::reference_wrapper<const unique_ptr<window>>& rhs) const;
+            size_t operator()(const reference_wrapper<const unique_ptr<window>>& win) const noexcept;
+            bool operator()(const reference_wrapper<const unique_ptr<window>>& lhs, const reference_wrapper<const unique_ptr<window>>& rhs) const;
         };
     }
 
@@ -38,12 +39,12 @@ namespace ryujin
         static input* get_input();
 
     private:
-        static std::unordered_map<std::reference_wrapper<const unique_ptr<window>>, input, detail::input_hasher, detail::input_hasher> _inputs;
-        static optional<std::reference_wrapper<const unique_ptr<window>>> _active;
+        static std::unordered_map<reference_wrapper<const unique_ptr<window>>, input, detail::input_hasher, detail::input_hasher> _inputs;
+        static optional<reference_wrapper<const unique_ptr<window>>> _active;
 
         explicit input(const unique_ptr<window>& win);
 
-        std::reference_wrapper<const unique_ptr<window>> _win;
+        reference_wrapper<const unique_ptr<window>> _win;
         keyboard _keys = {};
         mouse _mouse = {};
     };
