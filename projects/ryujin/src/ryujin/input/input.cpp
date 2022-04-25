@@ -20,7 +20,7 @@ namespace ryujin
     }
 
     std::unordered_map<std::reference_wrapper<const unique_ptr<window>>, input, detail::input_hasher, detail::input_hasher> input::_inputs = {};
-    std::optional<std::reference_wrapper<const unique_ptr<window>>> input::_active = std::nullopt;
+    optional<std::reference_wrapper<const unique_ptr<window>>> input::_active = nullopt;
 
     input::input(const input& i)
         : _win(i._win)
@@ -69,7 +69,7 @@ namespace ryujin
                 }
                 else if (w.get() == _active->get())
                 {
-                    _active = std::nullopt;
+                    _active = nullopt;
                 }
             });
 

@@ -4,6 +4,7 @@
 #include "keyboard.hpp"
 #include "mouse.hpp"
 
+#include "../core/optional.hpp"
 #include "../core/smart_pointers.hpp"
 #include "../graphics/window.hpp"
 
@@ -38,7 +39,7 @@ namespace ryujin
 
     private:
         static std::unordered_map<std::reference_wrapper<const unique_ptr<window>>, input, detail::input_hasher, detail::input_hasher> _inputs;
-        static std::optional<std::reference_wrapper<const unique_ptr<window>>> _active;
+        static optional<std::reference_wrapper<const unique_ptr<window>>> _active;
 
         explicit input(const unique_ptr<window>& win);
 

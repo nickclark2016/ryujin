@@ -360,7 +360,7 @@ namespace ryujin
         {
             detail::variant_assignment_helper<Ts...>::destroy(_heldIndex, _data);
             _heldIndex = idx;
-            detail::variant_assignment_helper<Ts...>::copy(_heldIndex, rhs._data, _data);
+            ::new (_data) T(rhs);
         }
 
         return *this;
@@ -380,7 +380,7 @@ namespace ryujin
         {
             detail::variant_assignment_helper<Ts...>::destroy(_heldIndex, _data);
             _heldIndex = idx;
-            detail::variant_assignment_helper<Ts...>::move(_heldIndex, rhs._data, _data);
+            ::new (_data) T(ryujin::forward<T>(rhs));
         }
 
         return *this;
