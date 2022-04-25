@@ -73,7 +73,7 @@ namespace ryujin
             };
 
             render_pass_begin_info beginInfo = {
-                .attachmentBegin = std::nullopt,
+                .attachmentBegin = nullopt,
                 .pass = _scenePass,
                 .buffer = _activeRenderTarget.fbo,
                 .x = 0,
@@ -616,7 +616,7 @@ namespace ryujin
         const image_view attachments[] = { *colorViewRes, *depthViewRes };
 
         frame_buffer_create_info fboInfo = {
-            .attachments = attachments,
+            .attachments = span(attachments),
             .pass = _scenePass,
             .width = info.width,
             .height = info.height,

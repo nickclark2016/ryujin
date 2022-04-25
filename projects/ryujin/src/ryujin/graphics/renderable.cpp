@@ -31,7 +31,7 @@ namespace ryujin
             .mipLodBias = 0.0f,
             .enableAnisotropy = false,
             .maxAnisotropy = 0.0f,
-            .compare = std::nullopt,
+            .compare = nullopt,
             .minLod = 0.0f,
             .maxLod = 0.0f,
             .unnormalizedCoordinates = false,
@@ -141,7 +141,7 @@ namespace ryujin
         }
 
         const image_view_create_info vinfo = {
-            .usage = std::nullopt,
+            .usage = nullopt,
             .img = *imageResult,
             .type = image_view_type::TYPE_2D,
             .fmt = cinfo.format,
@@ -336,24 +336,24 @@ namespace ryujin
         return key;
     }
 
-    std::optional<texture> renderable_manager::try_fetch_texture(const std::string& name)
+    optional<texture> renderable_manager::try_fetch_texture(const std::string& name)
     {
         auto it = _textureNameLut.find(name);
         if (it != _textureNameLut.end())
         {
             return try_fetch_texture(it->second);
         }
-        return std::nullopt;
+        return nullopt;
     }
 
-    std::optional<texture> renderable_manager::try_fetch_texture(const slot_map_key& key)
+    optional<texture> renderable_manager::try_fetch_texture(const slot_map_key& key)
     {
         auto tex = _textures.try_get(key);
         if (tex)
         {
             return *tex;
         }
-        return std::nullopt;
+        return nullopt;
     }
 
     void renderable_manager::unload_texture(const slot_map_key& key)

@@ -103,7 +103,7 @@ namespace ryujin
 				.poly = polygon_rasterization_mode::FILL,
 				.cull = cull_mode::BACK,
 				.front = vertex_winding_order::COUNTER_CLOCKWISE,
-				.depthBias = std::nullopt,
+				.depthBias = nullopt,
 				.lineWidth = 1.0f
 			},
 			.multisampleState = {
@@ -114,9 +114,9 @@ namespace ryujin
 				.alphaToCoverageEnabled = false,
 				.alphaToOneEnabled = false
 			},
-			.depthStencilState = std::nullopt,
+			.depthStencilState = nullopt,
 			.blendState = {
-				.logicOp = std::nullopt,
+				.logicOp = nullopt,
 				.attachments = span(blendStates),
 				.blendConstants = { 1.0f, 1.0f, 1.0f, 1.0f }
 			},

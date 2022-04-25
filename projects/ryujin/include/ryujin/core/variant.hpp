@@ -5,6 +5,7 @@
 #include "utility.hpp"
 
 #include <cassert>
+#include <cstring>
 #include <new>
 #include <type_traits>
 
@@ -13,9 +14,7 @@ namespace ryujin
     namespace detail
     {
         template <typename T, typename ...Ts>
-        struct variant_index_helper
-        {
-        };
+        struct variant_index_helper;
 
         template <typename T, typename ... Ts>
         struct variant_index_helper<T, T, Ts...> : public std::integral_constant<sz, 0> {};
@@ -24,7 +23,7 @@ namespace ryujin
         struct variant_index_helper<T, U, Ts...> : public std::integral_constant<sz, 1 + variant_index_helper<T, Ts...>::value> {};
 
         template <typename ... Ts>
-        inline constexpr  sz variant_index_helper_v = variant_index_helper<Ts...>::value;
+        inline constexpr sz variant_index_helper_v = variant_index_helper<Ts...>::value;
 
         template <sz arg1, sz... others>
         struct max_value;
@@ -52,31 +51,31 @@ namespace ryujin
         {
             inline static void destroy(const sz index, void* addr)
             {
-                if (index == sizeof...(Ts))
+                if (index == 0)
                 {
                     reinterpret_cast<T*>(addr)->~T();
                 }
                 else
                 {
-                    variant_assignment_helper<Ts...>::destroy(index, addr);
+                    variant_assignment_helper<Ts...>::destroy(index - 1, addr);
                 }
             }
 
             inline static void copy(const sz index, const void* oldAddr, void* newAddr)
             {
-                if (index == sizeof...(Ts))
+                if (index == 0)
                 {
                     ::new(newAddr) T(*reinterpret_cast<const T*>(oldAddr));
                 }
                 else
                 {
-                    variant_assignment_helper<Ts...>::copy(index, oldAddr, newAddr);
+                    variant_assignment_helper<Ts...>::copy(index - 1, oldAddr, newAddr);
                 }
             }
 
             inline static void copy_assign(const sz index, const void* oldAddr, void* newAddr) noexcept
             {
-                if (index == sizeof...(Ts))
+                if (index == 0)
                 {
                     const T& oldRef = *reinterpret_cast<const T*>(oldAddr);
                     T& newRef = *reinterpret_cast<T*>(newAddr);
@@ -84,32 +83,32 @@ namespace ryujin
                 }
                 else
                 {
-                    variant_assignment_helper<Ts...>::copy_assign(index, oldAddr, newAddr);
+                    variant_assignment_helper<Ts...>::copy_assign(index - 1, oldAddr, newAddr);
                 }
             }
 
             inline static void move(const sz index, void* oldAddr, void* newAddr)
             {
-                if (index == sizeof...(Ts))
+                if (index == 0)
                 {
                     ::new(newAddr) T(ryujin::move(*reinterpret_cast<T*>(oldAddr)));
                 }
                 else
                 {
-                    variant_assignment_helper<Ts...>::move(index, oldAddr, newAddr);
+                    variant_assignment_helper<Ts...>::move(index - 1, oldAddr, newAddr);
                 }
             }
 
             inline static void move_assign(const sz index, void* oldAddr, void* newAddr) noexcept
             {
-                if (index == sizeof...(Ts))
+                if (index == 0)
                 {
                     T& newRef = *reinterpret_cast<T*>(newAddr);
                     newRef = ryujin::move(*reinterpret_cast<T*>(oldAddr));
                 }
                 else
                 {
-                    variant_assignment_helper<Ts...>::move_assign(index, oldAddr, newAddr);
+                    variant_assignment_helper<Ts...>::move_assign(index - 1, oldAddr, newAddr);
                 }
             }
         };
@@ -117,11 +116,11 @@ namespace ryujin
         template <>
         struct variant_assignment_helper<>
         {
-            inline static void destroy(const sz, void*) {}
-            inline static void copy(const sz, const void*, void*) {}
-            inline static void copy_assign(const sz index, const void* oldAddr, void* newAddr) {}
-            inline static void move(const sz, void*, void*) noexcept {}
-            inline static void move_assign(const sz index, void* oldAddr, void* newAddr) noexcept {}
+            inline static void destroy(const sz, void*) { assert(false && "Invalid index"); }
+            inline static void copy(const sz, const void*, void*) { assert(false && "Invalid index");  }
+            inline static void copy_assign(const sz index, const void* oldAddr, void* newAddr) { assert(false && "Invalid index");  }
+            inline static void move(const sz, void*, void*) noexcept { assert(false && "Invalid index"); }
+            inline static void move_assign(const sz index, void* oldAddr, void* newAddr) noexcept { assert(false && "Invalid index"); }
         };
     }
 
@@ -258,30 +257,33 @@ namespace ryujin
     template <typename T>
     inline constexpr variant<Ts...>::variant(const T& t) noexcept(std::is_nothrow_copy_constructible_v<T>)
     {
+        using type = std::remove_cv_t<std::remove_reference_t<T>>;
         constexpr sz idx = detail::variant_index_helper_v<T, Ts...>;
         static_assert(idx < sizeof...(Ts), "Illegal type specified in variant construction.");
         _heldIndex = idx;
-        ::new(_data) T(t);
+        ::new(_data) type(t);
     }
 
     template <typename ... Ts>
     template <typename T>
     inline constexpr variant<Ts...>::variant(T&& t) noexcept(std::is_nothrow_move_constructible_v<T>)
     {
-        constexpr sz idx = detail::variant_index_helper_v<T, Ts...>;
+        using type = std::remove_cv_t<std::remove_reference_t<T>>;
+        constexpr sz idx = detail::variant_index_helper_v<type, Ts...>;
         static_assert(idx < sizeof...(Ts), "Illegal type specified in variant construction.");
         _heldIndex = idx;
-        ::new(_data) T(ryujin::forward<T>(t));
+        ::new(_data) type(ryujin::forward<T>(t));
     }
 
     template <typename ... Ts>
     template <typename T, typename ... Args>
     inline constexpr variant<Ts...>::variant(ryujin::in_place_type_t<T>, Args&& ... args) noexcept(std::is_nothrow_constructible_v<T, Args...>)
     {
-        constexpr sz idx = detail::variant_index_helper_v<T, Ts...>;
+        using type = std::remove_cv_t<std::remove_reference_t<T>>;
+        constexpr sz idx = detail::variant_index_helper_v<type, Ts...>;
         static_assert(idx < sizeof...(Ts), "Illegal index specified in variant construction.");
         _heldIndex = idx;
-        ::new(_data) T(ryujin::forward<Args>(args)...);
+        ::new(_data) type(ryujin::forward<Args>(args)...);
     }
 
     template <typename ... Ts>
@@ -350,17 +352,18 @@ namespace ryujin
     template <typename T>
     inline constexpr variant<Ts...>& variant<Ts...>::operator=(const T& rhs) noexcept(std::is_nothrow_copy_assignable_v<T> && all_nothrow_destructible_v<Ts...>)
     {
-        constexpr sz idx = detail::variant_index_helper_v<T, Ts...>;
+        using type = std::remove_cv_t<std::remove_reference_t<T>>;
+        constexpr sz idx = detail::variant_index_helper_v<type, Ts...>;
         static_assert(idx < sizeof...(Ts), "Illegal type specified in variant assignment.");
         if (idx == index())
         {
-            *reinterpret_cast<T*>(_data) = rhs;
+            *reinterpret_cast<type*>(_data) = rhs;
         }
         else
         {
             detail::variant_assignment_helper<Ts...>::destroy(_heldIndex, _data);
             _heldIndex = idx;
-            ::new (_data) T(rhs);
+            ::new (_data) type(rhs);
         }
 
         return *this;
@@ -370,17 +373,18 @@ namespace ryujin
     template <typename T>
     inline constexpr variant<Ts...>& variant<Ts...>::operator=(T&& rhs) noexcept(std::is_nothrow_move_assignable_v<T> && all_nothrow_destructible_v<Ts...>)
     {
-        constexpr sz idx = detail::variant_index_helper_v<T, Ts...>;
+        using type = std::remove_cv_t<std::remove_reference_t<T>>;
+        constexpr sz idx = detail::variant_index_helper_v<type, Ts...>;
         static_assert(idx < sizeof...(Ts), "Illegal type specified in variant assignment.");
         if (idx == index())
         {
-            *reinterpret_cast<T*>(_data) = ryujin::move(rhs);
+            *reinterpret_cast<type*>(_data) = ryujin::move(rhs);
         }
         else
         {
             detail::variant_assignment_helper<Ts...>::destroy(_heldIndex, _data);
             _heldIndex = idx;
-            ::new (_data) T(ryujin::forward<T>(rhs));
+            ::new (_data) type(ryujin::forward<T>(rhs));
         }
 
         return *this;

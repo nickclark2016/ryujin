@@ -171,7 +171,7 @@ namespace ryujin
                 .poly = polygon_rasterization_mode::FILL,
                 .cull = cull_mode::BACK,
                 .front = vertex_winding_order::COUNTER_CLOCKWISE,
-                .depthBias = std::nullopt,
+                .depthBias = nullopt,
                 .lineWidth = 1.0f
             },
             .multisampleState = {
@@ -184,7 +184,7 @@ namespace ryujin
             },
             .depthStencilState = depthState,
             .blendState = {
-                .logicOp = std::nullopt,
+                .logicOp = nullopt,
                 .attachments = span(colorBlends),
                 .blendConstants = { 1.0f, 1.0f, 1.0f, 1.0f }
             },

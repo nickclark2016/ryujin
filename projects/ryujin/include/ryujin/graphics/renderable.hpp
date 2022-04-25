@@ -5,14 +5,13 @@
 #include "types.hpp"
 
 #include "../core/assets.hpp"
+#include "../core/optional.hpp"
 #include "../core/primitives.hpp"
 #include "../core/slot_map.hpp"
 #include "../core/vector.hpp"
 #include "../entities/registry.hpp"
 
 #include <map>
-#include <memory>
-#include <optional>
 #include <unordered_map>
 
 namespace ryujin
@@ -150,8 +149,8 @@ namespace ryujin
         explicit renderable_manager(render_manager* manager, registry* reg);
         slot_map_key load_texture(const std::string& name, const texture_asset& asset);
         slot_map_key load_texture(const std::string& name, const image img, const image_view view);
-        std::optional<texture> try_fetch_texture(const std::string& name);
-        std::optional<texture> try_fetch_texture(const slot_map_key& key);
+        optional<texture> try_fetch_texture(const std::string& name);
+        optional<texture> try_fetch_texture(const slot_map_key& key);
         void unload_texture(const slot_map_key& key);
 
         entity_handle<registry::entity_type> load_to_entities(const asset_manager& mgr, const model_asset& asset);

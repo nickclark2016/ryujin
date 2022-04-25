@@ -105,7 +105,7 @@ namespace ryujin
 			.inputs = span<attachment_reference>(),
 			.colors = span(resolveColorAttachments),
 			.resolves = span<attachment_reference>(),
-			.depthStencil = std::nullopt,
+			.depthStencil = nullopt,
 			.preserveIndices = span<u32>()
 		};
 
@@ -250,7 +250,7 @@ namespace ryujin
 				.poly = polygon_rasterization_mode::FILL,
 				.cull = cull_mode::NONE,
 				.front = vertex_winding_order::CLOCKWISE,
-				.depthBias = std::nullopt,
+				.depthBias = nullopt,
 				.lineWidth = 1.0f
 			},
 			.multisampleState = {
@@ -261,9 +261,9 @@ namespace ryujin
 				.alphaToCoverageEnabled = false,
 				.alphaToOneEnabled = false
 			},
-			.depthStencilState = std::nullopt,
+			.depthStencilState = nullopt,
 			.blendState = {
-				.logicOp = std::nullopt,
+				.logicOp = nullopt,
 				.attachments = span(blendStates),
 				.blendConstants = { 1.0f, 1.0f, 1.0f, 1.0f }
 			},
@@ -292,7 +292,7 @@ namespace ryujin
 			.mipLodBias = 0.0f,
 			.enableAnisotropy = false,
 			.maxAnisotropy = 0.0f,
-			.compare = std::nullopt,
+			.compare = nullopt,
 			.minLod = 0.0f,
 			.maxLod = 1.0f,
 			.unnormalizedCoordinates = false,

@@ -2,10 +2,10 @@
 #define span_hpp__
 
 #include "as.hpp"
+#include "optional.hpp"
 #include "primitives.hpp"
 
 #include <cstddef>
-#include <optional>
 
 namespace ryujin
 {
@@ -20,7 +20,7 @@ namespace ryujin
         constexpr span(const T& value);
         constexpr span(const T* begin, const T* end);
         constexpr span(const T* begin, const sz length);
-        constexpr span(const std::optional<T>& opt);
+        constexpr span(const optional<T>& opt);
 
         template <sz N>
         constexpr span(const T(&d)[N]);
@@ -39,7 +39,7 @@ namespace ryujin
     };
 
     template <typename T>
-    span(const std::optional<T>&)->span<T>;
+    span(const optional<T>&)->span<T>;
 
     template <typename T>
     span(const T*, const T*) -> span<T>;
@@ -89,7 +89,7 @@ namespace ryujin
     }
 
     template<typename T>
-    inline constexpr span<T>::span(const std::optional<T>& opt)
+    inline constexpr span<T>::span(const optional<T>& opt)
         : _ptr(opt.has_value() ? &opt.value() : nullptr), _length(opt.has_value() ? 1 : 0)
     {
     }

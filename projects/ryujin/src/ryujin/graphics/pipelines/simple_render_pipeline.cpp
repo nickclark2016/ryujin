@@ -36,7 +36,7 @@ namespace ryujin::detail
 		};
 
 		render_pass_begin_info beginInfo = {
-			.attachmentBegin = std::nullopt,
+			.attachmentBegin = nullopt,
 			.pass = _simplePass,
 			.buffer = _renderTarget,
 			.x = 0,
@@ -98,7 +98,7 @@ namespace ryujin::detail
 			span<attachment_reference>(),
 			span(resolveColorAttachments),
 			span<attachment_reference>(),
-			std::nullopt,
+			nullopt,
 			span<u32>()
 		};
 
@@ -183,7 +183,7 @@ namespace ryujin::detail
 		const image_view attachments[] = { _targetView };
 
 		frame_buffer_create_info fboInfo = {
-			attachments,
+			span(attachments),
 			_simplePass,
 			1920,
 			1080,

@@ -2,16 +2,16 @@
 #define types_hpp__
 
 #include "../core/as.hpp"
+#include "../core/optional.hpp"
 #include "../core/primitives.hpp"
 #include "../core/span.hpp"
+#include "../core/variant.hpp"
 
 #include <VkBootstrap.h>
 #include <vma/vk_mem_alloc.h>
 #include <vulkan/vulkan.h>
 
 #include <cstddef>
-#include <optional>
-#include <variant>
 
 namespace ryujin
 {
@@ -574,7 +574,7 @@ namespace ryujin
         span<attachment_reference> inputs;
         span<attachment_reference> colors;
         span<attachment_reference> resolves;
-        std::optional<attachment_reference> depthStencil;
+        optional<attachment_reference> depthStencil;
         span<u32> preserveIndices;
     };
 
@@ -609,7 +609,7 @@ namespace ryujin
 
     struct frame_buffer_create_info
     {
-        std::variant<frame_buffer_attachment_create_info, span<image_view>> attachments;
+        variant<frame_buffer_attachment_create_info, span<image_view>> attachments;
         render_pass pass;
         u32 width;
         u32 height;
@@ -693,7 +693,7 @@ namespace ryujin
         polygon_rasterization_mode poly;
         cull_mode cull;
         vertex_winding_order front;
-        std::optional<depth_bias_state_info> depthBias;
+        optional<depth_bias_state_info> depthBias;
         float lineWidth;
     };
 
@@ -732,9 +732,9 @@ namespace ryujin
 
     struct depth_stencil_state_info
     {
-        std::optional<depth_test_state> depthTest;
-        std::optional<depth_bounds_state> depthBoundsTest;
-        std::optional<stencil_test_state> stencilTest;
+        optional<depth_test_state> depthTest;
+        optional<depth_bounds_state> depthBoundsTest;
+        optional<stencil_test_state> stencilTest;
     };
 
     struct component_attachment_blend_state
@@ -753,7 +753,7 @@ namespace ryujin
 
     struct color_blend_state_info
     {
-        std::optional<logic_op> logicOp;
+        optional<logic_op> logicOp;
         span<color_attachment_blend_state> attachments;
         float blendConstants[4];
     };
@@ -766,7 +766,7 @@ namespace ryujin
         viewport_state_info viewport;
         rasterization_state_info rasterizationState;
         multisample_state_info multisampleState;
-        std::optional<depth_stencil_state_info> depthStencilState;
+        optional<depth_stencil_state_info> depthStencilState;
         color_blend_state_info blendState;
         span<dynamic_pipeline_state> dynamicStates;
         pipeline_layout layout;
@@ -803,7 +803,7 @@ namespace ryujin
 
     struct image_view_create_info
     {
-        std::optional<image_view_usage> usage;
+        optional<image_view_usage> usage;
 
         image img;
         image_view_type type;
@@ -865,7 +865,7 @@ namespace ryujin
         float mipLodBias;
         bool enableAnisotropy;
         float maxAnisotropy;
-        std::optional<compare_op> compare;
+        optional<compare_op> compare;
         float minLod;
         float maxLod;
         bool unnormalizedCoordinates;
@@ -915,7 +915,7 @@ namespace ryujin
         descriptor_type type;
         u32 binding;
         u32 element;
-        std::variant<span<descriptor_buffer_info>, span<descriptor_image_info>> info;
+        variant<span<descriptor_buffer_info>, span<descriptor_image_info>> info;
     };
 
     struct render_pass_attachment_begin_info
@@ -925,7 +925,7 @@ namespace ryujin
 
     struct render_pass_begin_info
     {
-        std::optional<render_pass_attachment_begin_info> attachmentBegin;
+        optional<render_pass_attachment_begin_info> attachmentBegin;
         render_pass pass;
         frame_buffer buffer;
         int32_t x;

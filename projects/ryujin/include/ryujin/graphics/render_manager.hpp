@@ -8,6 +8,7 @@
 #include "pipelines/base_render_pipeline.hpp"
 
 #include "../core/linear_allocator.hpp"
+#include "../core/optional.hpp"
 #include "../core/primitives.hpp"
 #include "../core/smart_pointers.hpp"
 #include "../core/vector.hpp"

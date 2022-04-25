@@ -45,8 +45,8 @@ namespace ryujin
         template <sz N>
         result<VkWriteDescriptorSet, vulkan_build_errors> build_write(const descriptor_write_info& info, inline_linear_allocator<N>& allocator)
         {
-            auto bufs = std::get_if<span<descriptor_buffer_info>>(&info.info);
-            auto imgs = std::get_if<span<descriptor_image_info>>(&info.info);
+            auto bufs = ryujin::get_if<span<descriptor_buffer_info>>(&info.info);
+            auto imgs = ryujin::get_if<span<descriptor_image_info>>(&info.info);
 
             auto bufInfos = allocator.template typed_allocate<VkDescriptorBufferInfo>(bufs ? bufs->length() : 0);
             auto imgInfos = allocator.template typed_allocate<VkDescriptorImageInfo>(imgs ? imgs->length() : 0);
@@ -438,9 +438,9 @@ namespace ryujin
         VkImageView* imageAttachments = nullptr;
         u32 attachmentCount = 0;
 
-        if (std::holds_alternative<frame_buffer_attachment_create_info>(framebufferInfo.attachments))
+        if (ryujin::holds_alternative<frame_buffer_attachment_create_info>(framebufferInfo.attachments))
         {
-            auto& attachments = std::get<frame_buffer_attachment_create_info>(framebufferInfo.attachments);
+            auto& attachments = ryujin::get<frame_buffer_attachment_create_info>(framebufferInfo.attachments);
             imagelessAttachments = _inlineScratchBuffer.typed_allocate<VkFramebufferAttachmentsCreateInfo>(1);
             imagelessAttachments->sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENTS_CREATE_INFO;
             imagelessAttachments->pNext = nullptr;
@@ -471,9 +471,9 @@ namespace ryujin
             imagelessAttachments->pAttachmentImageInfos = vkAttachments;
             attachmentCount = imagelessAttachments->attachmentImageInfoCount;
         }
-        else if (std::holds_alternative<span<image_view>>(framebufferInfo.attachments))
+        else if (ryujin::holds_alternative<span<image_view>>(framebufferInfo.attachments))
         {
-            auto& attachments = std::get<span<image_view>>(framebufferInfo.attachments);
+            auto& attachments = ryujin::get<span<image_view>>(framebufferInfo.attachments);
             auto vkAttachments = _inlineScratchBuffer.typed_allocate<VkImageView>(attachments.length());
 
             for (sz i = 0; i < attachments.length(); ++i)
