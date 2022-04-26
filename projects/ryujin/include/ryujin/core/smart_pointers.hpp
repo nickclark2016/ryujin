@@ -4,6 +4,9 @@
 #include "nullptr.hpp"
 #include "utility.hpp"
 
+#include <cstdlib>
+#include <type_traits>
+
 namespace ryujin
 {
     template <typename T>
@@ -105,6 +108,63 @@ namespace ryujin
         Deleter _dtr = {};
     };
 
+    namespace detail
+    {
+        template <typename T, typename Deleter>
+        struct alignas(alignof(T)) control_block
+        {
+            char data[sizeof(T)];
+            T* externalAllocatedPtr = nullptr;
+            sz owning = 0;
+            Deleter dtr;
+        };
+    }
+
+    template <typename T, typename Deleter = default_delete<T>>
+    class shared_ptr
+    {
+    public:
+        using pointer = T*;
+        using element_type = std::remove_extent_t<T>;
+
+        shared_ptr();
+        shared_ptr(nullptr_t);
+        shared_ptr(const shared_ptr& ptr);
+        shared_ptr(shared_ptr&& ptr) noexcept;
+
+        template <typename U, std::enable_if_t<std::is_convertible_v<U*, T*>, int> = 0>
+        shared_ptr(U* ptr);
+
+        ~shared_ptr();
+
+        shared_ptr& operator=(const shared_ptr& rhs) noexcept;
+        shared_ptr& operator=(shared_ptr&& rhs) noexcept;
+        shared_ptr& operator=(nullptr_t) noexcept;
+
+        template <typename U, std::enable_if_t<std::is_convertible_v<U*, T*>, int> = 0>
+        shared_ptr& operator=(U* ptr);
+
+        void reset();
+        
+        template <typename U, std::enable_if_t<std::is_convertible_v<U*, T*>, int> = 0>
+        void reset(U* ptr);
+
+        void swap(shared_ptr& s);
+
+        element_type* get() const noexcept;
+        element_type* operator->() const noexcept;
+        element_type& operator*() noexcept;
+        const element_type& operator*() const noexcept;
+    private:
+        detail::control_block<T, Deleter>* _ctrl = {};
+
+        void _decrement_ownership();
+        void _increment_ownership();
+
+        template <typename ... Args>
+        friend shared_ptr<T> make_shared(Args&& ... args);
+    };
+
     template<typename T, typename Deleter>
     inline constexpr unique_ptr<T, Deleter>::unique_ptr(nullptr_t) noexcept
         : _ptr(nullptr)
@@ -145,8 +205,7 @@ namespace ryujin
 
         return *this;
     }
-    
-    
+     
     template <typename T, typename Deleter>
     inline constexpr unique_ptr<T, Deleter>& unique_ptr<T, Deleter>::operator=(pointer p) noexcept
     {
@@ -290,7 +349,6 @@ namespace ryujin
         return *this;
     }
 
-
     template <typename T, typename Deleter>
     inline constexpr unique_ptr<T[], Deleter>& unique_ptr<T[], Deleter>::operator=(pointer p) noexcept
     {
@@ -403,6 +461,210 @@ namespace ryujin
     inline constexpr auto operator<=>(const unique_ptr<T[], Deleter>& a, const unique_ptr<T[], Deleter>& b)
     {
         return a.get() <=> b.get();
+    }
+
+    template <typename T, typename Deleter>
+    inline shared_ptr<T, Deleter>::shared_ptr()
+    {
+    }
+
+    template <typename T, typename Deleter>
+    inline shared_ptr<T, Deleter>::shared_ptr(const shared_ptr& ptr)
+        : _ctrl(ptr._ctrl)
+    {
+        _increment_ownership();
+    }
+
+    template <typename T, typename Deleter>
+    inline shared_ptr<T, Deleter>::shared_ptr(shared_ptr&& ptr) noexcept
+        : _ctrl(ptr._ctrl)
+    {
+        ptr._ctrl = nullptr;
+    }
+
+    template <typename T, typename Deleter>
+    inline shared_ptr<T, Deleter>::shared_ptr(nullptr_t)
+    {
+    }
+
+    template<typename T, typename Deleter>
+    template<typename U, std::enable_if_t<std::is_convertible_v<U*, T*>, int>>
+    inline shared_ptr<T, Deleter>::shared_ptr(U* ptr)
+    {
+        if (ptr)
+        {
+            detail::control_block<T, Deleter>* control = new detail::control_block<T, Deleter>;
+            control->externalAllocatedPtr = static_cast<T*>(ptr);
+            ++control->owning;
+
+            _ctrl = control;
+        }
+    }
+
+    template<typename T, typename Deleter>
+    inline shared_ptr<T, Deleter>::~shared_ptr()
+    {
+        _decrement_ownership();
+        _ctrl = nullptr;
+    }
+
+    template<typename T, typename Deleter>
+    inline shared_ptr<T, Deleter>& shared_ptr<T, Deleter>::operator=(const shared_ptr& rhs) noexcept
+    {
+        if (&rhs == this || rhs._ctrl == _ctrl)
+        {
+            return *this;
+        }
+
+        _decrement_ownership();
+        _ctrl = rhs._ctrl;
+        ++_ctrl->owning;
+
+        return *this;
+    }
+
+    template<typename T, typename Deleter>
+    inline shared_ptr<T, Deleter>& shared_ptr<T, Deleter>::operator=(shared_ptr&& rhs) noexcept
+    {
+        if (&rhs == this || rhs._ctrl == _ctrl)
+        {
+            return *this;
+        }
+
+        _decrement_ownership();
+        _ctrl = rhs._ctrl;
+
+        return *this;
+    }
+
+    template<typename T, typename Deleter>
+    inline shared_ptr<T, Deleter>& shared_ptr<T, Deleter>::operator=(nullptr_t) noexcept
+    {
+        if (_ctrl == nullptr)
+        {
+            return *this;
+        }
+
+        _decrement_ownership();
+
+        return *this;
+    }
+
+    template<typename T, typename Deleter>
+    template <typename U, std::enable_if_t<std::is_convertible_v<U*, T*>, int>>
+    inline shared_ptr<T, Deleter>& shared_ptr<T, Deleter>::operator=(U* ptr)
+    {
+        if (ptr == this->_ctrl->externalAllocatedPtr)
+        {
+            return *this;
+        }
+
+        _decrement_ownership();
+        
+        detail::control_block<T, Deleter>* control = new detail::control_block<T, Deleter>;
+        control->externalAllocatedPtr = ptr;
+        ++control->owning;
+
+        return *this;
+    }
+
+    template<typename T, typename Deleter>
+    inline void shared_ptr<T, Deleter>::reset()
+    {
+        _decrement_ownership();
+    }
+
+    template<typename T, typename Deleter>
+    template<typename U, std::enable_if_t<std::is_convertible_v<U*, T*>, int>>
+    inline void shared_ptr<T, Deleter>::reset(U* ptr)
+    {
+        if (ptr == this->_ctrl->externalAllocatedPtr)
+        {
+            return;
+        }
+
+        _decrement_ownership();
+
+        detail::control_block<T, Deleter>* control = new detail::control_block<T, Deleter>;
+        control->externalAllocatedPtr = ptr;
+        ++control->owning;
+    }
+
+    template<typename T, typename Deleter>
+    inline void shared_ptr<T, Deleter>::swap(shared_ptr& s)
+    {
+        ryujin::move_swap(_ctrl, s._ctrl);
+    }
+
+    template<typename T, typename Deleter>
+    inline typename shared_ptr<T, Deleter>::element_type* shared_ptr<T, Deleter>::get() const noexcept
+    {
+        if (_ctrl)
+        {
+            return _ctrl->externalAllocatedPtr ? _ctrl->externalAllocatedPtr : reinterpret_cast<element_type*>(_ctrl->data);
+        }
+        return nullptr;
+    }
+
+    template<typename T, typename Deleter>
+    inline typename shared_ptr<T, Deleter>::element_type* shared_ptr<T, Deleter>::operator->() const noexcept
+    {
+        return get();
+    }
+
+    template<typename T, typename Deleter>
+    inline const typename shared_ptr<T, Deleter>::element_type& shared_ptr<T, Deleter>::operator*() const noexcept
+    {
+        return *get();
+    }
+
+    template<typename T, typename Deleter>
+    inline typename shared_ptr<T, Deleter>::element_type& shared_ptr<T, Deleter>::operator*() noexcept
+    {
+        return *get();
+    }
+
+    template<typename T, typename Deleter>
+    inline void shared_ptr<T, Deleter>::_decrement_ownership()
+    {
+        if (_ctrl)
+        {
+            --_ctrl->owning;
+            if (_ctrl->owning == 0)
+            {
+                if (_ctrl->externalAllocatedPtr)
+                {
+                    _ctrl->dtr(_ctrl->externalAllocatedPtr);
+                }
+                else
+                {
+                    reinterpret_cast<T*>(_ctrl->data)->~T();
+                }
+                delete _ctrl;
+                _ctrl = nullptr;
+            }
+        }
+    }
+    
+    template<typename T, typename Deleter>
+    inline void shared_ptr<T, Deleter>::_increment_ownership()
+    {
+        if (_ctrl)
+        {
+            ++_ctrl->owning;
+        }
+    }
+
+    template <typename T, typename ... Args>
+    inline shared_ptr<T> make_shared(Args&& ... args)
+    {
+        shared_ptr<T> ptr;
+        ptr._ctrl = new detail::control_block<T, default_delete<T>>();
+        ::new (ptr._ctrl->data) T(ryujin::forward<Args>(args)...);
+        ptr._ctrl->owning = 1;
+        ptr._ctrl->externalAllocatedPtr = nullptr;
+
+        return ptr;
     }
 }
 
