@@ -666,6 +666,12 @@ namespace ryujin
 
         return ptr;
     }
+
+    template <typename T, typename Deleter>
+    inline constexpr auto operator<=>(const shared_ptr<T, Deleter>& lhs, const shared_ptr<T, Deleter>& rhs)
+    {
+        return lhs.get() <=> rhs.get();
+    }
 }
 
 #endif // smart_pointers_hpp__

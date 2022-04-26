@@ -418,8 +418,14 @@ namespace ryujin
     {
         for (auto pool : _pools)
         {
-            pool.fn.delete_map(&pool);
-            pool.fn.default_table.dtor(&pool);
+            if (pool.fn.delete_map)
+            {
+                pool.fn.delete_map(&pool);
+            }
+            if (pool.fn.default_table.dtor)
+            {
+                pool.fn.default_table.dtor(&pool);
+            }
         }
     }
 
@@ -660,6 +666,7 @@ namespace ryujin
             detail::pool p;
             p.sparse_map = nullptr;
             p.identifier = ~sz(0);
+            p.fn = {};
 
             _pools.push_back(p);
         }

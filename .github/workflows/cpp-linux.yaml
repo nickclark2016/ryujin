@@ -8,6 +8,7 @@ on:
 
 jobs:
   cpp-build:
+    name: Build
     runs-on: ${{ matrix.os }}
   
     strategy:
@@ -16,25 +17,48 @@ jobs:
         config: [ debug, release ]
 
     steps:
-      - uses: actions/checkout@v2
-      - name: artifacts cache
-        id: artifacts-cache
-        uses: actions/cache@v2
-        with:
-          path: bin
-          key: ${{ matrix.os }}-${{ matrix.config }}-artifact-cache
-      - name: configure libraries
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Configure Ubuntu Libraries
         run: sudo apt-get install -y libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev mesa-common-dev
-      - name: configure gcc
+      - name: Configure GCC 11
         uses: egor-tensin/setup-gcc@v1
         with:
           version: 11
           platform: x64
-      - name: vulkan sdk install
+      - name: Install Vulkan SDK
         run: wget -qO - https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo apt-key add - && sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-1.3.211-bionic.list https://packages.lunarg.com/vulkan/1.3.211/lunarg-vulkan-1.3.211-bionic.list && sudo apt-get -y update && sudo apt-get -y install vulkan-sdk
-      - name: set up makefile
+      - name: Premake Actions
         run: ./dependencies/premake/premake5 gmake2
-      - name: clean
-        run: rm -rf bin bin-int && make clean
-      - name: build
+      - name: Build ${{ matrix.config }}
         run: make config=${{ matrix.config }}_x64 -j$(nproc)
+      - name: Upload Binaries
+        uses: actions/upload-artifact@v2
+        with:
+          name: binaries
+          path: ./bin
+  cpp-test:
+    name: Test
+    needs: cpp-build
+    runs-on: ${{ matrix.os }}
+    
+    strategy:
+      matrix:
+        os: [ ubuntu-20.04 ]
+        config: [ debug, release ]
+    
+    steps:
+      - name: Download Binaries
+        uses: actions/download-artifact@v2
+        with:
+          name: binaries
+          path: ./bin
+
+      - name: Update libc++6
+        run: sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test; sudo apt-get update -y; sudo apt-get -y install libstdc++6
+
+      - name: Fix Permissions
+        run: name=${{ matrix.config }}; capitalized=${name^}; sudo chmod 755 ./bin/${capitalized}/linux/x86_64/ryujin-test
+
+      - name: Run Tests
+        run: name=${{ matrix.config }}; capitalized=${name^}; ./bin/${capitalized}/linux/x86_64/ryujin-test
