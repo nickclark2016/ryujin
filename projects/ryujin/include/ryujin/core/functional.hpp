@@ -25,37 +25,76 @@ namespace ryujin
     template <typename T>
     reference_wrapper(T&)->reference_wrapper<T>;
 
+    namespace detail
+    {
+        template <sz FnSize = 2 * sizeof(void*)>
+        union functor_storage_align
+        {
+            static constexpr sz stack_size = FnSize;
+            char inlineMem[FnSize];
+            char* heapAllocated = nullptr;
+        };
+
+        template <typename Fn, sz FnSize>
+        struct is_functor_stack_allocatable
+        {
+            static constexpr bool value = sizeof(Fn) <= FnSize && alignof(functor_storage_align<FnSize>) % alignof(Fn) == 0;
+        };
+
+        template <typename Fn, sz FnSize>
+        inline constexpr bool is_functor_stack_allocatable_v = is_functor_stack_allocatable<Fn, FnSize>::value;
+    }
+
     template <typename T>
-    class no_move_function;
+    class move_only_function;
 
     template <typename Ret, typename ... Args>
-    class no_move_function<Ret(Args...)>
+    class move_only_function<Ret(Args...)>
     {
         // Type erase the invoke and delete. No copy construction, so no copy constructor
         typedef Ret(*invoke_fn_t)(void*, Args&&...);
         typedef void(*construct_fn_t)(void*, void*);
         typedef void(*destroy_fn_t)(void*);
     public:
-        no_move_function() noexcept;
-        no_move_function(const no_move_function&) = delete;
-        no_move_function(no_move_function&& fn) noexcept;
+        move_only_function() noexcept;
+        move_only_function(const move_only_function&) = delete;
+        move_only_function(move_only_function&& fn) noexcept;
+        move_only_function(nullptr_t) noexcept;
 
-        template <typename Fn>
-        no_move_function(Fn f);
+        template <typename Fn, std::enable_if_t<!std::is_same_v<std::remove_cvref_t<Fn>, move_only_function<Ret(Args...)>>, bool> = true>
+        move_only_function(Fn&& f);
 
-        ~no_move_function();
+        ~move_only_function();
 
-        no_move_function& operator=(const no_move_function&) = delete;
-        no_move_function& operator=(no_move_function&& rhs) noexcept;
+        move_only_function& operator=(const move_only_function&) = delete;
+        move_only_function& operator=(move_only_function&& rhs) noexcept;
+        move_only_function& operator=(nullptr_t) noexcept;
+
+        template <typename Fn, std::enable_if_t<!std::is_same_v<std::remove_cvref_t<Fn>, move_only_function<Ret(Args...)>>, bool> = true>
+        move_only_function& operator=(Fn&& f);
 
         Ret operator()(Args ... args) const;
 
+        operator bool() const noexcept;
+
     private:
+        template <typename Fn, typename Arg0, typename ... ArgRest>
+        inline static Ret invoke_member_fn(Fn fn, Arg0 value, ArgRest&& ... args)
+        {
+            return (value.*fn)(ryujin::forward<ArgRest>(args)...);
+        }
 
         template <typename Fn>
         inline static Ret invoke_fn(Fn* fn, Args&& ... args)
         {
-            return (*fn)(ryujin::forward<Args>(args)...);
+            if constexpr (std::is_member_function_pointer_v<Fn>)
+            {
+                return invoke_member_fn(*fn, std::forward<Args>(args)...);
+            }
+            else
+            {
+                return (*fn)(ryujin::forward<Args>(args)...);
+            }
         }
 
         template <typename Fn>
@@ -71,12 +110,56 @@ namespace ryujin
             f->~Fn();
         }
 
+        void* get_fn_ptr() const noexcept;
+        void release_held_fn();
+
         invoke_fn_t _invoker;
         construct_fn_t _constructor;
         destroy_fn_t _destructor;
-        unique_ptr<char[]> _data;
-        sz _dataSize;
+        detail::functor_storage_align<> _storage = { .heapAllocated = nullptr };
+        bool _isInline = false;
     };
+
+    namespace detail
+    {
+        template <typename>
+        struct function_signature_extractor
+        {
+        };
+
+        template <typename Res, typename Tp, typename ... Args>
+        struct function_signature_extractor<Res(Tp::*)(Args...)>
+        {
+            using type = Res(Args...);
+        };
+
+        template <typename Res, typename Tp, typename ... Args>
+        struct function_signature_extractor<Res(Tp::*)(Args...) &>
+        {
+            using type = Res(Args...);
+        };
+
+        template <typename Res, typename Tp, typename ... Args>
+        struct function_signature_extractor<Res(Tp::*)(Args...) const>
+        {
+            using type = Res(Args...);
+        };
+
+        template <typename Res, typename Tp, typename ... Args>
+        struct function_signature_extractor<Res(Tp::*)(Args...) const &>
+        {
+            using type = Res(Args...);
+        };
+    }
+
+    template <typename Fn, typename Signature = typename detail::function_signature_extractor<decltype(&Fn::operator())>::type>
+    move_only_function(Fn&&)->move_only_function<Signature>;
+
+    template <typename Ret, typename ... Args>
+    move_only_function(Ret(*)(Args...))->move_only_function<Ret(Args...)>;
+
+    template <typename Ret, typename Type, typename ... Args>
+    move_only_function(Ret(Type::*)(Args...))->move_only_function<Ret(Type, Args...)>;
 
     template<typename T>
     template<typename U>
@@ -130,75 +213,150 @@ namespace ryujin
     void cref(const T&&) = delete;
     
     template<typename Ret, typename ...Args>
-    inline no_move_function<Ret(Args...)>::no_move_function() noexcept
-        : _invoker(nullptr), _destructor(nullptr), _data(nullptr), _dataSize(0)
+    inline move_only_function<Ret(Args...)>::move_only_function() noexcept
+        : _invoker(nullptr), _destructor(nullptr), _constructor(nullptr)
     {
+        _isInline = false;
+        _storage.heapAllocated = nullptr;
     }
 
     template<typename Ret, typename ...Args>
-    inline no_move_function<Ret(Args...)>::no_move_function(no_move_function&& fn) noexcept
-        : _invoker(fn._invoker), _constructor(fn._constructor), _destructor(fn._destructor), _data(ryujin::move(fn._data)), _dataSize(fn._dataSize)
+    inline move_only_function<Ret(Args...)>::move_only_function(move_only_function&& fn) noexcept
+        : _invoker(fn._invoker), _constructor(fn._constructor), _destructor(fn._destructor), _storage(ryujin::move(fn._storage)), _isInline(fn._isInline)
     {
         fn._invoker = nullptr;
         fn._constructor = nullptr;
         fn._destructor = nullptr;
-        fn._data = nullptr;
-        fn._dataSize = 0;
+        fn._isInline = false;
+        fn._storage.heapAllocated = nullptr;
     }
 
     template<typename Ret, typename ...Args>
-    inline no_move_function<Ret(Args...)>::~no_move_function()
+    inline move_only_function<Ret(Args...)>::move_only_function(nullptr_t) noexcept
+        : move_only_function()
     {
-        if (_data)
+    }
+
+    template<typename Ret, typename ...Args>
+    template<typename Fn, std::enable_if_t<!std::is_same_v<std::remove_cvref_t<Fn>, move_only_function<Ret(Args...)>>, bool>>
+    inline move_only_function<Ret(Args...)>::move_only_function(Fn&& f)
+        : _invoker(reinterpret_cast<invoke_fn_t>(invoke_fn<Fn>)),
+        _constructor(reinterpret_cast<construct_fn_t>(construct_fn<Fn>)),
+        _destructor(reinterpret_cast<destroy_fn_t>(destroy_fn<Fn>))
+    {
+        if constexpr (detail::is_functor_stack_allocatable_v<Fn, decltype(_storage)::stack_size>)
         {
-            _destructor(_data.get());
+            _constructor(_storage.inlineMem, &f);
+            _isInline = true;
+        }
+        else
+        {
+            _storage.heapAllocated = new char[sizeof(Fn)];
+            _constructor(_storage.heapAllocated, &f);
+            _isInline = false;
         }
     }
 
     template<typename Ret, typename ...Args>
-    inline no_move_function<Ret(Args...)>& no_move_function<Ret(Args...)>::operator=(no_move_function&& rhs) noexcept
+    template <typename Fn, std::enable_if_t<!std::is_same_v<std::remove_cvref_t<Fn>, move_only_function<Ret(Args...)>>, bool>>
+    inline move_only_function<Ret(Args...)>& move_only_function<Ret(Args...)>::operator=(Fn&& f)
     {
-        if (&rhs == this || _data.get() == rhs._data.get())
+        release_held_fn();
+
+        if constexpr (detail::is_functor_stack_allocatable_v<Fn, decltype(_storage)::stack_size>)
         {
-            return *this;
+            _constructor(_storage.inlineMem, &f);
+            _isInline = true;
         }
-
-        if (_data)
+        else
         {
-            _destructor(_data.get());
+            _storage.heapAllocated = new char[sizeof(Fn)];
+            _constructor(_storage.heapAllocated, &f);
+            _isInline = false;
         }
-
-        _invoker = rhs._invoker;
-        _constructor = rhs._constructor;
-        _destructor = rhs._destructor;
-        _data = ryujin::move(rhs._data);
-        _dataSize = rhs._dataSize;
-
-        rhs._invoker = nullptr;
-        rhs._constructor = nullptr;
-        rhs._destructor = nullptr;
-        rhs._data = nullptr; // should be handled by the move, just a sanity check
-        rhs._dataSize = 0;
 
         return *this;
     }
 
     template<typename Ret, typename ...Args>
-    inline Ret no_move_function<Ret(Args...)>::operator()(Args ...args) const
+    inline move_only_function<Ret(Args...)>::~move_only_function()
     {
-        return _invoker(_data.get(), ryujin::forward<Args>(args)...);
+        release_held_fn();
     }
-        
+
     template<typename Ret, typename ...Args>
-    template<typename Fn>
-    inline no_move_function<Ret(Args...)>::no_move_function(Fn f)
-        : _invoker(reinterpret_cast<invoke_fn_t>(invoke_fn<Fn>)),
-        _constructor(reinterpret_cast<construct_fn_t>(construct_fn<Fn>)),
-        _destructor(reinterpret_cast<destroy_fn_t>(destroy_fn<Fn>)),
-        _data(new char[sizeof(Fn)]),
-        _dataSize(sizeof(Fn))
+    inline move_only_function<Ret(Args...)>& move_only_function<Ret(Args...)>::operator=(move_only_function&& rhs) noexcept
     {
-        _constructor(_data.get(), &f);
+        if (&rhs == this || get_fn_ptr() == rhs.get_fn_ptr())
+        {
+            return *this;
+        }
+
+        release_held_fn();
+
+        _invoker = rhs._invoker;
+        _constructor = rhs._constructor;
+        _destructor = rhs._destructor;
+        _storage = ryujin::move(rhs._storage);
+        _isInline = rhs._isInline;
+
+        rhs._invoker = nullptr;
+        rhs._constructor = nullptr;
+        rhs._destructor = nullptr;
+        rhs._storage.heapAllocated = nullptr;
+        rhs._isInline = false;
+
+        return *this;
+    }
+
+    template<typename Ret, typename ...Args>
+    inline move_only_function<Ret(Args...)>& move_only_function<Ret(Args...)>::operator=(nullptr_t) noexcept
+    {
+        release_held_fn();
+
+        _invoker = nullptr;
+        _constructor = nullptr;
+        _destructor = nullptr;
+
+        return *this;
+    }
+
+    template<typename Ret, typename ...Args>
+    inline Ret move_only_function<Ret(Args...)>::operator()(Args ...args) const
+    {
+        return _invoker(get_fn_ptr(), ryujin::forward<Args>(args)...);
+    }
+
+    template<typename Ret, typename ...Args>
+    inline move_only_function<Ret(Args...)>::operator bool() const noexcept
+    {
+        return get_fn_ptr() != nullptr;
+    }
+    
+    template<typename Ret, typename ...Args>
+    inline void* move_only_function<Ret(Args...)>::get_fn_ptr() const noexcept
+    {
+        if (_isInline)
+        {
+            return const_cast<char*>(_storage.inlineMem);
+        }
+        return _storage.heapAllocated;
+    }
+    
+    template<typename Ret, typename ...Args>
+    inline void move_only_function<Ret(Args...)>::release_held_fn()
+    {
+        void* ptr = get_fn_ptr();
+        if (ptr)
+        {
+            _destructor(ptr);
+            if (!_isInline)
+            {
+                delete[] _storage.heapAllocated;
+                _isInline = false;
+            }
+            _storage.heapAllocated = nullptr;
+        }
     }
 }
 
