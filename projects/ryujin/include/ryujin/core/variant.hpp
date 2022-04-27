@@ -151,21 +151,21 @@ namespace ryujin
     class alignas(detail::max_value_v<8, alignof(Ts)...>) variant
     {
     public:
-        constexpr variant() noexcept(std::is_nothrow_default_constructible_v<variant_alternative_t<0, variant<Ts...>>>);
+        constexpr variant() noexcept(ryujin::is_nothrow_default_constructible_v<variant_alternative_t<0, variant<Ts...>>>);
         constexpr variant(const variant& other) noexcept(all_nothrow_copy_constructible_v<Ts...>);
         constexpr variant(variant&& other) noexcept(all_nothrow_move_constructible_v<Ts...>);
         
         template <typename T>
-        constexpr variant(const T& t) noexcept(std::is_nothrow_copy_constructible_v<T>);
+        constexpr variant(const T& t) noexcept(ryujin::is_nothrow_copy_constructible_v<T>);
 
         template <typename T>
         constexpr variant(T&& t) noexcept(std::is_nothrow_move_constructible_v<T>);
 
         template <typename T, typename ... Args>
-        constexpr explicit variant(ryujin::in_place_type_t<T>, Args&& ... args) noexcept(std::is_nothrow_constructible_v<T, Args...>);
+        constexpr explicit variant(ryujin::in_place_type_t<T>, Args&& ... args) noexcept(ryujin::is_nothrow_constructible_v<T, Args...>);
 
         template <sz I, typename ... Args>
-        constexpr explicit variant(ryujin::in_place_index_t<I>, Args&& ... args) noexcept(std::is_nothrow_constructible_v<variant_alternative_t<I, variant<Ts...>>, Args...>);
+        constexpr explicit variant(ryujin::in_place_index_t<I>, Args&& ... args) noexcept(ryujin::is_nothrow_constructible_v<variant_alternative_t<I, variant<Ts...>>, Args...>);
 
         constexpr ~variant() noexcept(all_nothrow_destructible_v<Ts...>);
 
@@ -181,10 +181,10 @@ namespace ryujin
         constexpr sz index() const noexcept;
 
         template <typename T, typename ... Args>
-        constexpr T& emplace(Args&& ... args) noexcept(std::is_nothrow_constructible_v<T, Args...> && all_nothrow_destructible_v<Ts...>);
+        constexpr T& emplace(Args&& ... args) noexcept(ryujin::is_nothrow_constructible_v<T, Args...> && all_nothrow_destructible_v<Ts...>);
 
         template <sz I, typename ... Args>
-        constexpr variant_alternative_t<I, variant>& emplace(Args&& ... args) noexcept(std::is_nothrow_constructible_v<variant_alternative_t<I, variant<Ts...>>, Args...> && all_nothrow_destructible_v<Ts...>);
+        constexpr variant_alternative_t<I, variant>& emplace(Args&& ... args) noexcept(ryujin::is_nothrow_constructible_v<variant_alternative_t<I, variant<Ts...>>, Args...> && all_nothrow_destructible_v<Ts...>);
 
         constexpr void swap(variant& rhs) noexcept(all_nothrow_move_constructible_v<Ts...>);
 
@@ -232,7 +232,7 @@ namespace ryujin
     };
 
     template <typename ... Ts>
-    inline constexpr variant<Ts...>::variant() noexcept(std::is_nothrow_default_constructible_v<variant_alternative_t<0, variant<Ts...>>>)
+    inline constexpr variant<Ts...>::variant() noexcept(ryujin::is_nothrow_default_constructible_v<variant_alternative_t<0, variant<Ts...>>>)
     {
         using first_type = variant_alternative_t<0, variant<Ts...>>;
         ::new(_data) first_type();
@@ -255,7 +255,7 @@ namespace ryujin
 
     template <typename ... Ts>
     template <typename T>
-    inline constexpr variant<Ts...>::variant(const T& t) noexcept(std::is_nothrow_copy_constructible_v<T>)
+    inline constexpr variant<Ts...>::variant(const T& t) noexcept(ryujin::is_nothrow_copy_constructible_v<T>)
     {
         using type = std::remove_cv_t<std::remove_reference_t<T>>;
         constexpr sz idx = detail::variant_index_helper_v<T, Ts...>;
@@ -277,7 +277,7 @@ namespace ryujin
 
     template <typename ... Ts>
     template <typename T, typename ... Args>
-    inline constexpr variant<Ts...>::variant(ryujin::in_place_type_t<T>, Args&& ... args) noexcept(std::is_nothrow_constructible_v<T, Args...>)
+    inline constexpr variant<Ts...>::variant(ryujin::in_place_type_t<T>, Args&& ... args) noexcept(ryujin::is_nothrow_constructible_v<T, Args...>)
     {
         using type = std::remove_cv_t<std::remove_reference_t<T>>;
         constexpr sz idx = detail::variant_index_helper_v<type, Ts...>;
@@ -288,7 +288,7 @@ namespace ryujin
 
     template <typename ... Ts>
     template <sz I, typename ... Args>
-    inline constexpr variant<Ts...>::variant(ryujin::in_place_index_t<I>, Args&& ... args) noexcept(std::is_nothrow_constructible_v<variant_alternative_t<I, variant<Ts...>>, Args...>)
+    inline constexpr variant<Ts...>::variant(ryujin::in_place_index_t<I>, Args&& ... args) noexcept(ryujin::is_nothrow_constructible_v<variant_alternative_t<I, variant<Ts...>>, Args...>)
     {
         static_assert(I < sizeof...(Ts), "Illegal index specified in variant construction.");
         using T = variant_alternative_t<I, variant<Ts...>>;
@@ -398,7 +398,7 @@ namespace ryujin
 
     template <typename ... Ts>
     template <typename T, typename ... Args>
-    constexpr T& variant<Ts...>::emplace(Args&& ... args) noexcept(std::is_nothrow_constructible_v<T, Args...>&& all_nothrow_destructible_v<Ts...>)
+    constexpr T& variant<Ts...>::emplace(Args&& ... args) noexcept(ryujin::is_nothrow_constructible_v<T, Args...>&& all_nothrow_destructible_v<Ts...>)
     {
         constexpr sz idx = detail::variant_index_helper_v<T, Ts...>;
         static_assert(idx < sizeof...(Ts), "Illegal type specified in variant emplace.");
@@ -410,7 +410,7 @@ namespace ryujin
 
     template <typename ... Ts>
     template <sz I, typename ... Args>
-    constexpr variant_alternative_t<I, variant<Ts...>>& variant<Ts...>::emplace(Args&& ... args) noexcept(std::is_nothrow_constructible_v<variant_alternative_t<I, variant<Ts...>>, Args...> && all_nothrow_destructible_v<Ts...>)
+    constexpr variant_alternative_t<I, variant<Ts...>>& variant<Ts...>::emplace(Args&& ... args) noexcept(ryujin::is_nothrow_constructible_v<variant_alternative_t<I, variant<Ts...>>, Args...> && all_nothrow_destructible_v<Ts...>)
     {
         static_assert(I < sizeof...(Ts), "Illegal type specified in variant emplace.");
         detail::variant_assignment_helper<Ts...>::destroy(_heldIndex, _data);
