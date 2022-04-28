@@ -392,6 +392,15 @@ namespace ryujin
     template <typename ...>
     class move_only_function;
 
+    namespace detail
+    {
+        template <typename T>
+        struct is_function_object : public false_type {};
+
+        template <typename T>
+        struct is_function_object<move_only_function<T>> : public true_type {};
+    }
+
     template <typename Ret, typename ... Args>
     class move_only_function<Ret(Args...)> : public detail::move_only_function_impl<Ret(Args...)>
     {
@@ -411,7 +420,7 @@ namespace ryujin
         {
         }
 
-        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...)>>, bool> = true>
+        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...)>> && !detail::is_function_object<remove_cvref_t<Fn>>::value, bool> = true>
         inline move_only_function(Fn&& f)
         {
             this->construct_from_functor(ryujin::forward<Fn>(f));
@@ -423,7 +432,7 @@ namespace ryujin
             return *this;
         }
 
-        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...)>>, bool> = true>
+        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...)>> && !detail::is_function_object<remove_cvref_t<Fn>>::value, bool> = true>
         inline move_only_function& operator=(Fn&& f) noexcept
         {
             this->move_assign_from_functor(ryujin::forward<Fn>(f));
@@ -645,7 +654,7 @@ namespace ryujin
         {
         }
 
-        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
+        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...)>> && !detail::is_function_object<Fn>::value, bool> = true>
         inline move_only_function(Fn&& f)
         {
             this->construct_from_functor(ryujin::forward<Fn>(f));
@@ -657,7 +666,7 @@ namespace ryujin
             return *this;
         }
 
-        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
+        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...)>> && !detail::is_function_object<Fn>::value, bool> = true>
         inline move_only_function& operator=(Fn&& f) noexcept
         {
             this->move_assign_from_functor(ryujin::forward<Fn>(f));
@@ -723,7 +732,7 @@ namespace ryujin
         {
         }
 
-        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
+        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...)>>, bool> = true>
         inline move_only_function(Fn&& f)
         {
             this->construct_from_functor(ryujin::forward<Fn>(f));
@@ -735,7 +744,7 @@ namespace ryujin
             return *this;
         }
 
-        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
+        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...)>>, bool> = true>
         inline move_only_function& operator=(Fn&& f) noexcept
         {
             this->move_assign_from_functor(ryujin::forward<Fn>(f));
@@ -801,7 +810,7 @@ namespace ryujin
         {
         }
 
-        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
+        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...)>>, bool> = true>
         inline move_only_function(Fn&& f)
         {
             this->construct_from_functor(ryujin::forward<Fn>(f));
@@ -813,7 +822,7 @@ namespace ryujin
             return *this;
         }
 
-        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
+        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...)>>, bool> = true>
         inline move_only_function& operator=(Fn&& f) noexcept
         {
             this->move_assign_from_functor(ryujin::forward<Fn>(f));

@@ -13,7 +13,7 @@ namespace invocable
             return a + b;
         }
 
-        move_only_function<int(int, int)> sum_fn()
+        move_only_function<int(int, int) const> sum_fn()
         {
             return move_only_function([](int a, int b) { return a + b; });
         }
@@ -39,9 +39,9 @@ namespace invocable_noexcept
             return a + b;
         }
 
-        move_only_function<int(int, int) noexcept> sum_fn()
+        move_only_function<int(int, int) const noexcept> sum_fn()
         {
-            return move_only_function<int(int, int) noexcept>([](int a, int b) noexcept { return a + b; });
+            return move_only_function([](int a, int b) noexcept { return a + b; });
         }
 
         int operator()(int a, int b) noexcept
@@ -58,7 +58,7 @@ namespace invocable_noexcept
 
 TEST(MoveOnlyFunction, SimpleInvokeFromLambdaByRValueReference)
 {
-    move_only_function<int(int, int)> sum = [](int a, int b) { return a + b; };
+    move_only_function<int(int, int) const> sum([](int a, int b) { return a + b; });
     int expected = 3;
     int actual = sum(1, 2);
     ASSERT_EQ(actual, expected);
