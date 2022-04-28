@@ -130,6 +130,7 @@ TEST(MoveOnlyFunction, TemplateDeductionFromFreeFunction)
 
 TEST(MoveOnlyFunction, TemplateDeductionFromMemberFunction)
 {
+    static_assert(ryujin::is_member_function_pointer<decltype(& invocable::Invocable::sum)>::value, "Not a member function pointer");
     move_only_function sum = &invocable::Invocable::sum;
     int expected = 3;
     invocable::Invocable instance;

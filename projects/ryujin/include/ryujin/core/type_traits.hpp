@@ -5,6 +5,20 @@
 
 namespace ryujin
 {
+    template <bool B, typename T = void>
+    struct enable_if
+    {
+    };
+
+    template <class T>
+    struct enable_if<true, T>
+    {
+        using type = T;
+    };
+
+    template <bool B, typename T>
+    using enable_if_t = typename enable_if<B, T>::type;
+
     template <typename T>
     struct type_identity
     {
@@ -106,6 +120,27 @@ namespace ryujin
     inline constexpr bool is_void_v = is_void<T>::value;
 
     template <typename T>
+    struct remove_extent
+    {
+        using type = T;
+    };
+
+    template <typename T>
+    struct remove_extent<T[]>
+    {
+        using type = T;
+    };
+
+    template <typename T, sz N>
+    struct remove_extent<T[N]>
+    {
+        using type = T;
+    };
+
+    template <typename T>
+    using remove_extent_t = typename remove_extent<T>::type;
+
+    template <typename T>
     struct remove_all_extents
     {
         using type = T;
@@ -127,6 +162,75 @@ namespace ryujin
     using remove_all_extents_t = typename remove_all_extents<T>::type;
 
     template <typename T>
+    struct remove_reference
+    {
+        using type = T;
+    };
+
+    template <typename T>
+    struct remove_reference<T&>
+    {
+        using type = T;
+    };
+
+    template <typename T>
+    struct remove_reference<T&&>
+    {
+        using type = T;
+    };
+
+    template <typename T>
+    using remove_reference_t = typename remove_reference<T>::type;
+
+    template <typename T>
+    struct remove_const
+    {
+        using type = T;
+    };
+
+    template <typename T>
+    struct remove_const<const T>
+    {
+        using type = T;
+    };
+
+    template <typename T>
+    using remove_const_t = typename remove_const<T>::type;
+
+    template <typename T>
+    struct remove_volatile
+    {
+        using type = T;
+    };
+
+    template <typename T>
+    struct remove_volatile<volatile T>
+    {
+        using type = T;
+    };
+
+    template <typename T>
+    using remove_volatile_t = typename remove_volatile<T>::type;
+
+    template <typename T>
+    struct remove_cv
+    {
+        using type = remove_const_t<remove_volatile_t<T>>;
+    };
+
+    template <typename T>
+    using remove_cv_t = typename remove_cv<T>::type;
+
+    template <typename T>
+    struct remove_cvref
+    {
+        using type = remove_cv_t<remove_reference_t<T>>;
+    };
+
+    template <typename T>
+    using remove_cvref_t = typename remove_cvref<T>::type;
+
+    template <typename T>
     struct is_const : public false_type
     {
     };
@@ -139,13 +243,71 @@ namespace ryujin
     template <typename T>
     inline constexpr bool is_const_v = is_const<T>::value;
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4180)
+#endif
     template <typename T>
-    struct is_function : public bool_constant<!(is_reference_v<T> || !is_const_v<const T>)>
+    struct is_function : public bool_constant<!(is_reference<T>::value || is_const<const T>::value)>
+    {
+    };
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+
+    template <typename T>
+    inline constexpr bool is_function_v = is_function<T>::value;
+
+    namespace detail
+    {
+        template <typename T>
+        struct is_member_pointer_impl
+        {
+            enum
+            {
+                is_member = false,
+                is_func = false,
+                is_obj = false
+            };
+        };
+
+        template <typename T, typename U>
+        struct is_member_pointer_impl<T U::*>
+        {
+            enum
+            {
+                is_member = true,
+                is_func = is_function_v<T>,
+                is_obj = !is_func
+            };
+        };
+    }
+
+    template <typename T>
+    struct is_member_function_pointer : public bool_constant<detail::is_member_pointer_impl<remove_cv_t<T>>::is_func>
     {
     };
 
     template <typename T>
-    inline constexpr bool is_function_v = is_function<T>::value;
+    inline constexpr bool is_member_function_pointer_v = is_member_function_pointer<T>::value;
+
+    template <typename T>
+    struct is_array : public false_type
+    {
+    };
+
+    template <typename T>
+    struct is_array<T[]> : public true_type
+    {
+    };
+
+    template <typename T, sz N>
+    struct is_array<T[N]> : public true_type
+    {
+    };
+
+    template <typename T>
+    inline constexpr bool is_array_v = is_array<T>::value;
 
     namespace detail
     {
@@ -278,6 +440,125 @@ namespace ryujin
 
         template <typename T>
         struct is_nothrow_destructible_impl<true, T> : public bool_constant<noexcept(declval<T>().~T())>
+        {
+        };
+
+        template <typename T>
+        void test_conversion(T);
+
+        template <typename From, typename To, typename = void>
+        struct is_convertible_test : public false_type
+        {
+        };
+
+        template <typename From, typename To>
+        struct is_convertible_test<From, To, decltype(test_conversion<To>(declval<From>()))> : public true_type
+        {
+        };
+
+        template <typename T, bool IsArray = is_array_v<T>, bool IsFunction = is_function_v<T>, bool IsVoid = is_void_v<T>>
+        struct is_array_fn_void : public integral_constant<sz, 0>
+        {
+        };
+
+        template <typename T>
+        struct is_array_fn_void<T, true, false, false> : public integral_constant<sz, 1>
+        {
+        };
+
+        template <typename T>
+        struct is_array_fn_void<T, false, true, false> : public integral_constant<sz, 2>
+        {
+        };
+
+        template <typename T>
+        struct is_array_fn_void<T, false, false, true> : public integral_constant<sz, 3>
+        {
+        };
+
+        template <typename T, sz v = is_array_fn_void<remove_reference_t<T>>::value>
+        struct is_convertible_check : public integral_constant<sz, 0>
+        {
+        };
+
+        template <typename T>
+        struct is_convertible_check<T, 0> : public integral_constant<sz, sizeof(T)>
+        {
+        };
+
+        template <typename From, typename To, sz FromArrayFnVoid = is_array_fn_void<From>::value, sz ToArrayFnVoid = is_array_fn_void<To>::value>
+        struct is_convertible_impl : public bool_constant<is_convertible_test<From, To>::value>
+        {
+        };
+
+        template <typename From, typename To>
+        struct is_convertible_impl<From, To, 0, 1> : public false_type 
+        {
+        };
+
+        template <typename From, typename To>
+        struct is_convertible_impl<From, To, 1, 1> : public false_type
+        {
+        };
+
+        template <typename From, typename To>
+        struct is_convertible_impl<From, To, 2, 1> : public false_type
+        {
+        };
+
+        template <typename From, typename To>
+        struct is_convertible_impl<From, To, 3, 1> : public false_type
+        {
+        };
+
+        template <typename From, typename To>
+        struct is_convertible_impl<From, To, 0, 2> : public false_type
+        {
+        };
+
+        template <typename From, typename To>
+        struct is_convertible_impl<From, To, 1, 2> : public false_type
+        {
+        };
+
+        template <typename From, typename To>
+        struct is_convertible_impl<From, To, 2, 2> : public false_type
+        {
+        };
+
+        template <typename From, typename To>
+        struct is_convertible_impl<From, To, 3, 2> : public false_type
+        {
+        };
+
+        template <typename From, typename To>
+        struct is_convertible_impl<From, To, 0, 3> : public false_type
+        {
+        };
+
+        template <typename From, typename To>
+        struct is_convertible_impl<From, To, 1, 3> : public false_type
+        {
+        };
+
+        template <typename From, typename To>
+        struct is_convertible_impl<From, To, 2, 3> : public false_type
+        {
+        };
+
+        template <typename From, typename To>
+        struct is_convertible_impl<From, To, 3, 3> : public true_type
+        {
+        };
+
+        template <typename T>
+        static void test_noexcept(T) noexcept;
+
+        template <typename From, typename To>
+        static bool_constant<noexcept(test_noexcept<To>(declval<From>()))> is_nothrow_convertible_test();
+
+        template <typename From, typename To>
+        struct is_nothrow_convertible_impl : decltype(is_nothrow_convertible_test<From, To>())
         {
         };
     }
@@ -434,6 +715,25 @@ namespace ryujin
 
     template <typename T>
     inline constexpr bool is_nothrow_destructible_v = is_nothrow_destructible<T>::value;
+
+    template <typename From, typename To>
+    struct is_convertible : public is_constructible<From, To>
+    {
+    private:
+        static constexpr sz checkFrom = detail::is_convertible_check<From>::value;
+        static constexpr sz checkTo = detail::is_convertible_check<To>::value;
+    };
+    
+    template <typename From, typename To>
+    inline constexpr bool is_convertible_v = is_convertible<From, To>::value;
+
+    template <typename From, typename To>
+    struct is_nothrow_convertible : public bool_constant<(is_void_v<To> && is_void_v<From>) || (is_convertible_v<From, To> && detail::is_nothrow_convertible_impl<From, To>::value)>
+    {
+    };
+
+    template <typename From, typename To>
+    inline constexpr bool is_nothrow_convertible_v = is_nothrow_convertible<From, To>::value;
 
     template <typename ... Ts>
     struct all_nothrow_copy_constructible : bool_constant<(is_nothrow_copy_constructible_v<Ts> && ...)>

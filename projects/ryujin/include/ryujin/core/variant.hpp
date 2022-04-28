@@ -257,7 +257,7 @@ namespace ryujin
     template <typename T>
     inline constexpr variant<Ts...>::variant(const T& t) noexcept(ryujin::is_nothrow_copy_constructible_v<T>)
     {
-        using type = std::remove_cv_t<std::remove_reference_t<T>>;
+        using type = remove_cvref_t<T>;
         constexpr sz idx = detail::variant_index_helper_v<T, Ts...>;
         static_assert(idx < sizeof...(Ts), "Illegal type specified in variant construction.");
         _heldIndex = idx;
@@ -268,7 +268,7 @@ namespace ryujin
     template <typename T>
     inline constexpr variant<Ts...>::variant(T&& t) noexcept(ryujin::is_nothrow_move_constructible_v<T>)
     {
-        using type = std::remove_cv_t<std::remove_reference_t<T>>;
+        using type = remove_cvref_t<T>;
         constexpr sz idx = detail::variant_index_helper_v<type, Ts...>;
         static_assert(idx < sizeof...(Ts), "Illegal type specified in variant construction.");
         _heldIndex = idx;
@@ -279,7 +279,7 @@ namespace ryujin
     template <typename T, typename ... Args>
     inline constexpr variant<Ts...>::variant(ryujin::in_place_type_t<T>, Args&& ... args) noexcept(ryujin::is_nothrow_constructible_v<T, Args...>)
     {
-        using type = std::remove_cv_t<std::remove_reference_t<T>>;
+        using type = remove_cvref_t<T>;
         constexpr sz idx = detail::variant_index_helper_v<type, Ts...>;
         static_assert(idx < sizeof...(Ts), "Illegal index specified in variant construction.");
         _heldIndex = idx;
@@ -352,7 +352,7 @@ namespace ryujin
     template <typename T>
     inline constexpr variant<Ts...>& variant<Ts...>::operator=(const T& rhs) noexcept(ryujin::is_nothrow_copy_assignable_v<T> && all_nothrow_destructible_v<Ts...>)
     {
-        using type = std::remove_cv_t<std::remove_reference_t<T>>;
+        using type = remove_cvref_t<T>;
         constexpr sz idx = detail::variant_index_helper_v<type, Ts...>;
         static_assert(idx < sizeof...(Ts), "Illegal type specified in variant assignment.");
         if (idx == index())
@@ -373,7 +373,7 @@ namespace ryujin
     template <typename T>
     inline constexpr variant<Ts...>& variant<Ts...>::operator=(T&& rhs) noexcept(ryujin::is_nothrow_move_assignable_v<T> && all_nothrow_destructible_v<Ts...>)
     {
-        using type = std::remove_cv_t<std::remove_reference_t<T>>;
+        using type = remove_cvref_t<T>;
         constexpr sz idx = detail::variant_index_helper_v<type, Ts...>;
         static_assert(idx < sizeof...(Ts), "Illegal type specified in variant assignment.");
         if (idx == index())

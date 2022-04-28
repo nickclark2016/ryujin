@@ -125,14 +125,14 @@ namespace ryujin
     {
     public:
         using pointer = T*;
-        using element_type = std::remove_extent_t<T>;
+        using element_type = remove_extent_t<T>;
 
         shared_ptr();
         shared_ptr(nullptr_t);
         shared_ptr(const shared_ptr& ptr);
         shared_ptr(shared_ptr&& ptr) noexcept;
 
-        template <typename U, std::enable_if_t<std::is_convertible_v<U*, T*>, int> = 0>
+        template <typename U, enable_if_t<is_convertible_v<U*, T*>, int> = 0>
         shared_ptr(U* ptr);
 
         ~shared_ptr();
@@ -141,12 +141,12 @@ namespace ryujin
         shared_ptr& operator=(shared_ptr&& rhs) noexcept;
         shared_ptr& operator=(nullptr_t) noexcept;
 
-        template <typename U, std::enable_if_t<std::is_convertible_v<U*, T*>, int> = 0>
+        template <typename U, enable_if_t<is_convertible_v<U*, T*>, int> = 0>
         shared_ptr& operator=(U* ptr);
 
         void reset();
         
-        template <typename U, std::enable_if_t<std::is_convertible_v<U*, T*>, int> = 0>
+        template <typename U, enable_if_t<is_convertible_v<U*, T*>, int> = 0>
         void reset(U* ptr);
 
         void swap(shared_ptr& s);
@@ -289,7 +289,7 @@ namespace ryujin
         return *_ptr;
     }
 
-    template <typename T, typename ... Args, std::enable_if_t<!std::is_array_v<T>, int> = 0>
+    template <typename T, typename ... Args, enable_if_t<!is_array_v<T>, int> = 0>
     inline constexpr unique_ptr<T> make_unique(Args&& ... args)
     {
         T* ptr = new T(ryujin::forward<Args>(args)...);
@@ -444,10 +444,10 @@ namespace ryujin
         return _ptr[idx];
     }
 
-    template <typename T, std::enable_if_t<std::is_array_v<T>, int> = 0>
+    template <typename T, enable_if_t<is_array_v<T>, int> = 0>
     inline constexpr unique_ptr<T> make_unique(sz count)
     {
-        using base = std::remove_extent_t<T>;
+        using base = remove_extent_t<T>;
         return unique_ptr<base[]>(new base[count]());
     }
 
@@ -488,7 +488,7 @@ namespace ryujin
     }
 
     template<typename T, typename Deleter>
-    template<typename U, std::enable_if_t<std::is_convertible_v<U*, T*>, int>>
+    template<typename U, enable_if_t<is_convertible_v<U*, T*>, int>>
     inline shared_ptr<T, Deleter>::shared_ptr(U* ptr)
     {
         if (ptr)
@@ -551,7 +551,7 @@ namespace ryujin
     }
 
     template<typename T, typename Deleter>
-    template <typename U, std::enable_if_t<std::is_convertible_v<U*, T*>, int>>
+    template <typename U, enable_if_t<is_convertible_v<U*, T*>, int>>
     inline shared_ptr<T, Deleter>& shared_ptr<T, Deleter>::operator=(U* ptr)
     {
         if (ptr == this->_ctrl->externalAllocatedPtr)
@@ -575,7 +575,7 @@ namespace ryujin
     }
 
     template<typename T, typename Deleter>
-    template<typename U, std::enable_if_t<std::is_convertible_v<U*, T*>, int>>
+    template<typename U, enable_if_t<is_convertible_v<U*, T*>, int>>
     inline void shared_ptr<T, Deleter>::reset(U* ptr)
     {
         if (ptr == this->_ctrl->externalAllocatedPtr)
