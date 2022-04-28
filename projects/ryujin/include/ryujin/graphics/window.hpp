@@ -1,12 +1,12 @@
 #ifndef window_hpp__
 #define window_hpp__
 
+#include "../core/functional.hpp"
 #include "../core/primitives.hpp"
 #include "../core/result.hpp"
 #include "../core/smart_pointers.hpp"
 #include "../core/vector.hpp"
 
-#include <functional>
 #include <string_view>
 #include <tuple>
 
@@ -59,22 +59,22 @@ namespace ryujin
         void should_close(bool close) noexcept;
         void show() noexcept;
 
-        void on_focus(const std::function<void(bool)>& fn);
-        void on_close(const std::function<void()>& fn);
-        void on_resize(const std::function<void(u32, u32)>& fn);
-        void on_iconify(const std::function<void()>& fn);
-        void on_restore(const std::function<void()>& fn);
-        void on_maximize(const std::function<void()>& fn);
+        void on_focus(move_only_function<void(bool)>&& fn);
+        void on_close(move_only_function<void()>&& fn);
+        void on_resize(move_only_function<void(u32, u32)>&& fn);
+        void on_iconify(move_only_function<void()>&& fn);
+        void on_restore(move_only_function<void()>&& fn);
+        void on_maximize(move_only_function<void()>&& fn);
 
-        void on_keystroke(const std::function<void(i32, i32, i32, i32)>& fn);
-        void on_cursor_move(const std::function<void(f64, f64)>& fn);
-        void on_scroll(const std::function<void(f64, f64)>& fn);
-        void on_buttonstroke(const std::function<void(i32, i32, i32)>& fn);
+        void on_keystroke(move_only_function<void(i32, i32, i32, i32)>&& fn);
+        void on_cursor_move(move_only_function<void(f64, f64)>&& fn);
+        void on_scroll(move_only_function<void(f64, f64)>&& fn);
+        void on_buttonstroke(move_only_function<void(i32, i32, i32)>&& fn);
 
         void capture_cursor();
         void release_cursor();
 
-        void after_close(const std::function<void()>& fn);
+        void after_close(move_only_function<void()>&& fn);
 
         bool is_cursor_captured() const;
 
@@ -83,34 +83,34 @@ namespace ryujin
         bool _focused = true;
 
         GLFWwindowfocusfun _focusCb;
-        vector<std::function<void(bool)>> _userFocusCallbacks;
+        vector<move_only_function<void(bool)>> _userFocusCallbacks;
 
         GLFWwindowclosefun _closeCb;
-        vector<std::function<void()>> _userCloseCallbacks;
+        vector<move_only_function<void()>> _userCloseCallbacks;
 
         GLFWwindowsizefun _resizeCb;
-        vector<std::function<void(u32, u32)>> _userResizeCallbacks;
+        vector<move_only_function<void(u32, u32)>> _userResizeCallbacks;
 
         GLFWwindowiconifyfun _iconifyCb;
         GLFWwindowmaximizefun _maximizeCb;
 
-        vector<std::function<void()>> _userIconifyCallbacks;
-        vector<std::function<void()>> _userRestoreCallbacks;
-        vector<std::function<void()>> _userMaximizeCallbacks;
+        vector<move_only_function<void()>> _userIconifyCallbacks;
+        vector<move_only_function<void()>> _userRestoreCallbacks;
+        vector<move_only_function<void()>> _userMaximizeCallbacks;
 
         GLFWkeyfun _keyboardCb;
-        vector<std::function<void(int, int, int, int)>> _userKeyCallbacks;
+        vector<move_only_function<void(int, int, int, int)>> _userKeyCallbacks;
 
         GLFWcursorposfun _cursorPosCb;
-        vector<std::function<void(f64, f64)>> _userCursorPosCallbacks;
+        vector<move_only_function<void(f64, f64)>> _userCursorPosCallbacks;
 
         GLFWscrollfun _scrollCb;
-        vector<std::function<void(f64, f64)>> _userScrollCallbacks;
+        vector<move_only_function<void(f64, f64)>> _userScrollCallbacks;
 
         GLFWmousebuttonfun _mouseBtnCb;
-        vector<std::function<void(i32, i32, i32)>> _userMouseBtnCallbacks;
+        vector<move_only_function<void(i32, i32, i32)>> _userMouseBtnCallbacks;
 
-        std::function<void()> _afterCloseCb = []() {};
+        move_only_function<void()> _afterCloseCb = []() {};
 
         friend void detail::focusCallback(GLFWwindow*, int);
         friend void detail::closeCallback(GLFWwindow*);

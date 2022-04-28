@@ -217,59 +217,59 @@ namespace ryujin
 		glfwShowWindow(_native);
 	}
 	
-	void window::on_focus(const std::function<void(bool)>& fn)
+	void window::on_focus(move_only_function<void(bool)>&& fn)
 	{
-		_userFocusCallbacks.push_back(fn);
+		_userFocusCallbacks.push_back(ryujin::move(fn));
 	}
 	
-	void window::on_close(const std::function<void()>& fn)
+	void window::on_close(move_only_function<void()>&& fn)
 	{
-		_userCloseCallbacks.push_back(fn);
+		_userCloseCallbacks.push_back(ryujin::move(fn));
 	}
 
-	void window::on_resize(const std::function<void(u32, u32)>& fn)
+	void window::on_resize(move_only_function<void(u32, u32)>&& fn)
 	{
-		_userResizeCallbacks.push_back(fn);
+		_userResizeCallbacks.push_back(ryujin::move(fn));
 	}
 
-	void window::on_iconify(const std::function<void()>& fn)
+	void window::on_iconify(move_only_function<void()>&& fn)
 	{
-		_userIconifyCallbacks.push_back(fn);
+		_userIconifyCallbacks.push_back(ryujin::move(fn));
 	}
 
-	void window::on_restore(const std::function<void()>& fn)
+	void window::on_restore(move_only_function<void()>&& fn)
 	{
-		_userRestoreCallbacks.push_back(fn);
+		_userRestoreCallbacks.push_back(ryujin::move(fn));
 	}
 
-	void window::on_maximize(const std::function<void()>& fn)
+	void window::on_maximize(move_only_function<void()>&& fn)
 	{
-		_userMaximizeCallbacks.push_back(fn);
+		_userMaximizeCallbacks.push_back(ryujin::move(fn));
 	}
 	
-	void window::on_keystroke(const std::function<void(int, int, int, int)>& fn)
+	void window::on_keystroke(move_only_function<void(int, int, int, int)>&& fn)
 	{
-		_userKeyCallbacks.push_back(fn);
+		_userKeyCallbacks.push_back(ryujin::move(fn));
 	}
 	
-	void window::on_cursor_move(const std::function<void(f64, f64)>& fn)
+	void window::on_cursor_move(move_only_function<void(f64, f64)>&& fn)
 	{
-		_userCursorPosCallbacks.push_back(fn);
+		_userCursorPosCallbacks.push_back(ryujin::move(fn));
 	}
 
-	void window::on_scroll(const std::function<void(f64, f64)>& fn)
+	void window::on_scroll(move_only_function<void(f64, f64)>&& fn)
 	{
-		_userScrollCallbacks.push_back(fn);
+		_userScrollCallbacks.push_back(ryujin::move(fn));
 	}
 
-	void window::on_buttonstroke(const std::function<void(i32, i32, i32)>& fn)
+	void window::on_buttonstroke(move_only_function<void(i32, i32, i32)>&& fn)
 	{
-		_userMouseBtnCallbacks.push_back(fn);
+		_userMouseBtnCallbacks.push_back(ryujin::move(fn));
 	}
 
-	void window::after_close(const std::function<void()>& fn)
+	void window::after_close(move_only_function<void()>&& fn)
 	{
-		_afterCloseCb = fn;
+		_afterCloseCb = ryujin::move(fn);
 	}
 
 	bool window::is_cursor_captured() const
