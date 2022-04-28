@@ -17,10 +17,10 @@ namespace ryujin
         struct variant_index_helper;
 
         template <typename T, typename ... Ts>
-        struct variant_index_helper<T, T, Ts...> : public std::integral_constant<sz, 0> {};
+        struct variant_index_helper<T, T, Ts...> : public ryujin::integral_constant<sz, 0> {};
 
         template <typename T, typename U, typename... Ts>
-        struct variant_index_helper<T, U, Ts...> : public std::integral_constant<sz, 1 + variant_index_helper<T, Ts...>::value> {};
+        struct variant_index_helper<T, U, Ts...> : public ryujin::integral_constant<sz, 1 + variant_index_helper<T, Ts...>::value> {};
 
         template <typename ... Ts>
         inline constexpr sz variant_index_helper_v = variant_index_helper<Ts...>::value;
@@ -159,7 +159,7 @@ namespace ryujin
         constexpr variant(const T& t) noexcept(ryujin::is_nothrow_copy_constructible_v<T>);
 
         template <typename T>
-        constexpr variant(T&& t) noexcept(std::is_nothrow_move_constructible_v<T>);
+        constexpr variant(T&& t) noexcept(ryujin::is_nothrow_move_constructible_v<T>);
 
         template <typename T, typename ... Args>
         constexpr explicit variant(ryujin::in_place_type_t<T>, Args&& ... args) noexcept(ryujin::is_nothrow_constructible_v<T, Args...>);
@@ -173,10 +173,10 @@ namespace ryujin
         constexpr variant& operator=(variant&& rhs) noexcept(all_nothrow_move_assignable_v<Ts...> && all_nothrow_destructible_v<Ts...>);
 
         template <typename T>
-        constexpr variant& operator=(const T& rhs) noexcept(std::is_nothrow_copy_assignable_v<T> && all_nothrow_destructible_v<Ts...>);
+        constexpr variant& operator=(const T& rhs) noexcept(ryujin::is_nothrow_copy_assignable_v<T> && all_nothrow_destructible_v<Ts...>);
 
         template <typename T>
-        constexpr variant& operator=(T&& rhs) noexcept(std::is_nothrow_move_assignable_v<T> && all_nothrow_destructible_v<Ts...>);
+        constexpr variant& operator=(T&& rhs) noexcept(ryujin::is_nothrow_move_assignable_v<T> && all_nothrow_destructible_v<Ts...>);
 
         constexpr sz index() const noexcept;
 
@@ -266,7 +266,7 @@ namespace ryujin
 
     template <typename ... Ts>
     template <typename T>
-    inline constexpr variant<Ts...>::variant(T&& t) noexcept(std::is_nothrow_move_constructible_v<T>)
+    inline constexpr variant<Ts...>::variant(T&& t) noexcept(ryujin::is_nothrow_move_constructible_v<T>)
     {
         using type = std::remove_cv_t<std::remove_reference_t<T>>;
         constexpr sz idx = detail::variant_index_helper_v<type, Ts...>;
@@ -350,7 +350,7 @@ namespace ryujin
 
     template <typename ... Ts>
     template <typename T>
-    inline constexpr variant<Ts...>& variant<Ts...>::operator=(const T& rhs) noexcept(std::is_nothrow_copy_assignable_v<T> && all_nothrow_destructible_v<Ts...>)
+    inline constexpr variant<Ts...>& variant<Ts...>::operator=(const T& rhs) noexcept(ryujin::is_nothrow_copy_assignable_v<T> && all_nothrow_destructible_v<Ts...>)
     {
         using type = std::remove_cv_t<std::remove_reference_t<T>>;
         constexpr sz idx = detail::variant_index_helper_v<type, Ts...>;
@@ -371,7 +371,7 @@ namespace ryujin
 
     template <typename ... Ts>
     template <typename T>
-    inline constexpr variant<Ts...>& variant<Ts...>::operator=(T&& rhs) noexcept(std::is_nothrow_move_assignable_v<T> && all_nothrow_destructible_v<Ts...>)
+    inline constexpr variant<Ts...>& variant<Ts...>::operator=(T&& rhs) noexcept(ryujin::is_nothrow_move_assignable_v<T> && all_nothrow_destructible_v<Ts...>)
     {
         using type = std::remove_cv_t<std::remove_reference_t<T>>;
         constexpr sz idx = detail::variant_index_helper_v<type, Ts...>;
