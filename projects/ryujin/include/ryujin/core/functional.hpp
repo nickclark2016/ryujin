@@ -50,9 +50,9 @@ namespace ryujin
         {
         protected:
             // Type erase the invoke and delete. No copy construction, so no copy constructor
-            typedef Ret(*invoke_fn_t)(void*, Args&&...);
-            typedef void(*construct_fn_t)(void*, void*);
-            typedef void(*destroy_fn_t)(void*);
+            using invoke_fn_t = Ret(*)(void*, Args&&...);
+            using construct_fn_t = void(*)(void*, void*);
+            using destroy_fn_t = void(*)(void*);
 
             invoke_fn_t _invoker;
             construct_fn_t _constructor;
@@ -128,9 +128,9 @@ namespace ryujin
             template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function_base<Ret, Nx, Args...>>, bool> = true>
             inline void construct_from_functor(Fn&& f)
             {
-                _invoker = reinterpret_cast<invoke_fn_t>(invoke_fn<Fn>);
-                _constructor = reinterpret_cast<construct_fn_t>(construct_fn<Fn>);
-                _destructor = reinterpret_cast<destroy_fn_t>(destroy_fn<Fn>);
+                _invoker = reinterpret_cast<invoke_fn_t>(invoke_fn<remove_cvref_t<Fn>>);
+                _constructor = reinterpret_cast<construct_fn_t>(construct_fn<remove_cvref_t<Fn>>);
+                _destructor = reinterpret_cast<destroy_fn_t>(destroy_fn<remove_cvref_t<Fn>>);
 
                 if constexpr (detail::is_functor_stack_allocatable_v<Fn, decltype(_storage)::stack_size>)
                 {
@@ -282,7 +282,107 @@ namespace ryujin
         class move_only_function_impl<Ret(Args...) noexcept> : public move_only_function_base<Ret, true, Args...>
         {
         public:
-            inline Ret operator()(Args... args)
+            inline Ret operator()(Args... args) noexcept
+            {
+                return this->_invoker(this->get_fn_ptr(), ryujin::forward<Args>(args)...);
+            }
+        };
+
+        template <typename Ret, typename ... Args>
+        class move_only_function_impl<Ret(Args...) &> : public move_only_function_base<Ret, false, Args...>
+        {
+        public:
+            inline Ret operator()(Args... args) &
+            {
+                return this->_invoker(this->get_fn_ptr(), ryujin::forward<Args>(args)...);
+            }
+        };
+
+        template <typename Ret, typename ... Args>
+        class move_only_function_impl<Ret(Args...) & noexcept> : public move_only_function_base<Ret, true, Args...>
+        {
+        public:
+            inline Ret operator()(Args... args) & noexcept
+            {
+                return this->_invoker(this->get_fn_ptr(), ryujin::forward<Args>(args)...);
+            }
+        };
+
+        template <typename Ret, typename ... Args>
+        class move_only_function_impl<Ret(Args...) &&> : public move_only_function_base<Ret, false, Args...>
+        {
+        public:
+            inline Ret operator()(Args... args) &&
+            {
+                return this->_invoker(this->get_fn_ptr(), ryujin::forward<Args>(args)...);
+            }
+        };
+
+        template <typename Ret, typename ... Args>
+        class move_only_function_impl<Ret(Args...) && noexcept> : public move_only_function_base<Ret, true, Args...>
+        {
+        public:
+            inline Ret operator()(Args... args) && noexcept
+            {
+                return this->_invoker(this->get_fn_ptr(), ryujin::forward<Args>(args)...);
+            }
+        };
+
+        template <typename Ret, typename ... Args>
+        class move_only_function_impl<Ret(Args...) const> : public move_only_function_base<Ret, false, Args...>
+        {
+        public:
+            inline Ret operator()(Args... args) const
+            {
+                return this->_invoker(this->get_fn_ptr(), ryujin::forward<Args>(args)...);
+            }
+        };
+
+        template <typename Ret, typename ... Args>
+        class move_only_function_impl<Ret(Args...) const noexcept> : public move_only_function_base<Ret, true, Args...>
+        {
+        public:
+            inline Ret operator()(Args... args) const noexcept
+            {
+                return this->_invoker(this->get_fn_ptr(), ryujin::forward<Args>(args)...);
+            }
+        };
+
+        template <typename Ret, typename ... Args>
+        class move_only_function_impl<Ret(Args...) const &> : public move_only_function_base<Ret, false, Args...>
+        {
+        public:
+            inline Ret operator()(Args... args) const &
+            {
+                return this->_invoker(this->get_fn_ptr(), ryujin::forward<Args>(args)...);
+            }
+        };
+
+        template <typename Ret, typename ... Args>
+        class move_only_function_impl<Ret(Args...) const & noexcept> : public move_only_function_base<Ret, true, Args...>
+        {
+        public:
+            inline Ret operator()(Args... args) const & noexcept
+            {
+                return this->_invoker(this->get_fn_ptr(), ryujin::forward<Args>(args)...);
+            }
+        };
+
+        template <typename Ret, typename ... Args>
+        class move_only_function_impl<Ret(Args...) const &&> : public move_only_function_base<Ret, false, Args...>
+        {
+        public:
+            inline Ret operator()(Args... args) const &&
+            {
+                return this->_invoker(this->get_fn_ptr(), ryujin::forward<Args>(args)...);
+            }
+        };
+
+        template <typename Ret, typename ... Args>
+        class move_only_function_impl<Ret(Args...) const && noexcept> : public move_only_function_base<Ret, true, Args...>
+        {
+        public:
+            inline Ret operator()(Args... args) const && noexcept
             {
                 return this->_invoker(this->get_fn_ptr(), ryujin::forward<Args>(args)...);
             }
@@ -370,12 +470,400 @@ namespace ryujin
         }
     };
 
+    template <typename Ret, typename ... Args>
+    class move_only_function<Ret(Args...) &> : public detail::move_only_function_impl<Ret(Args...) &>
+    {
+    public:
+        inline move_only_function()
+        {
+            this->construct_empty();
+        }
+
+        inline move_only_function(move_only_function&& fn) noexcept
+        {
+            this->construct_move(ryujin::forward<move_only_function>(fn));
+        }
+
+        inline move_only_function(nullptr_t) noexcept
+            : move_only_function()
+        {
+        }
+
+        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...)>>, bool> = true>
+        inline move_only_function(Fn&& f)
+        {
+            this->construct_from_functor(ryujin::forward<Fn>(f));
+        }
+
+        inline move_only_function& operator=(move_only_function&& rhs) noexcept
+        {
+            this->move_assign(ryujin::forward<move_only_function&&>(rhs));
+            return *this;
+        }
+
+        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...)>>, bool> = true>
+        inline move_only_function& operator=(Fn&& f) noexcept
+        {
+            this->move_assign_from_functor(ryujin::forward<Fn>(f));
+            return *this;
+        }
+    };
+
+    template <typename Ret, typename ... Args>
+    class move_only_function<Ret(Args...) & noexcept> : public detail::move_only_function_impl<Ret(Args...) & noexcept>
+    {
+    public:
+        inline move_only_function()
+        {
+            this->construct_empty();
+        }
+
+        inline move_only_function(move_only_function&& fn) noexcept
+        {
+            this->construct_move(ryujin::forward<move_only_function>(fn));
+        }
+
+        inline move_only_function(nullptr_t) noexcept
+            : move_only_function()
+        {
+        }
+
+        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
+        inline move_only_function(Fn&& f)
+        {
+            this->construct_from_functor(ryujin::forward<Fn>(f));
+        }
+
+        inline move_only_function& operator=(move_only_function&& rhs) noexcept
+        {
+            this->move_assign(ryujin::forward<move_only_function&&>(rhs));
+            return *this;
+        }
+
+        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
+        inline move_only_function& operator=(Fn&& f) noexcept
+        {
+            this->move_assign_from_functor(ryujin::forward<Fn>(f));
+            return *this;
+        }
+    };
+
+    template <typename Ret, typename ... Args>
+    class move_only_function<Ret(Args...) &&> : public detail::move_only_function_impl<Ret(Args...) &&>
+    {
+    public:
+        inline move_only_function()
+        {
+            this->construct_empty();
+        }
+
+        inline move_only_function(move_only_function&& fn) noexcept
+        {
+            this->construct_move(ryujin::forward<move_only_function>(fn));
+        }
+
+        inline move_only_function(nullptr_t) noexcept
+            : move_only_function()
+        {
+        }
+
+        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...)>>, bool> = true>
+        inline move_only_function(Fn&& f)
+        {
+            this->construct_from_functor(ryujin::forward<Fn>(f));
+        }
+
+        inline move_only_function& operator=(move_only_function&& rhs) noexcept
+        {
+            this->move_assign(ryujin::forward<move_only_function&&>(rhs));
+            return *this;
+        }
+
+        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...)>>, bool> = true>
+        inline move_only_function& operator=(Fn&& f) noexcept
+        {
+            this->move_assign_from_functor(ryujin::forward<Fn>(f));
+            return *this;
+        }
+    };
+
+    template <typename Ret, typename ... Args>
+    class move_only_function<Ret(Args...) && noexcept> : public detail::move_only_function_impl<Ret(Args...) && noexcept>
+    {
+    public:
+        inline move_only_function()
+        {
+            this->construct_empty();
+        }
+
+        inline move_only_function(move_only_function&& fn) noexcept
+        {
+            this->construct_move(ryujin::forward<move_only_function>(fn));
+        }
+
+        inline move_only_function(nullptr_t) noexcept
+            : move_only_function()
+        {
+        }
+
+        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
+        inline move_only_function(Fn&& f)
+        {
+            this->construct_from_functor(ryujin::forward<Fn>(f));
+        }
+
+        inline move_only_function& operator=(move_only_function&& rhs) noexcept
+        {
+            this->move_assign(ryujin::forward<move_only_function&&>(rhs));
+            return *this;
+        }
+
+        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
+        inline move_only_function& operator=(Fn&& f) noexcept
+        {
+            this->move_assign_from_functor(ryujin::forward<Fn>(f));
+            return *this;
+        }
+    };
+
+    template <typename Ret, typename ... Args>
+    class move_only_function<Ret(Args...) const> : public detail::move_only_function_impl<Ret(Args...) const>
+    {
+    public:
+        inline move_only_function()
+        {
+            this->construct_empty();
+        }
+
+        inline move_only_function(move_only_function&& fn) noexcept
+        {
+            this->construct_move(ryujin::forward<move_only_function>(fn));
+        }
+
+        inline move_only_function(nullptr_t) noexcept
+            : move_only_function()
+        {
+        }
+
+        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
+        inline move_only_function(Fn&& f)
+        {
+            this->construct_from_functor(ryujin::forward<Fn>(f));
+        }
+
+        inline move_only_function& operator=(move_only_function&& rhs) noexcept
+        {
+            this->move_assign(ryujin::forward<move_only_function&&>(rhs));
+            return *this;
+        }
+
+        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
+        inline move_only_function& operator=(Fn&& f) noexcept
+        {
+            this->move_assign_from_functor(ryujin::forward<Fn>(f));
+            return *this;
+        }
+    };
+
+    template <typename Ret, typename ... Args>
+    class move_only_function<Ret(Args...) const noexcept> : public detail::move_only_function_impl<Ret(Args...) const noexcept>
+    {
+    public:
+        inline move_only_function()
+        {
+            this->construct_empty();
+        }
+
+        inline move_only_function(move_only_function&& fn) noexcept
+        {
+            this->construct_move(ryujin::forward<move_only_function>(fn));
+        }
+
+        inline move_only_function(nullptr_t) noexcept
+            : move_only_function()
+        {
+        }
+
+        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
+        inline move_only_function(Fn&& f)
+        {
+            this->construct_from_functor(ryujin::forward<Fn>(f));
+        }
+
+        inline move_only_function& operator=(move_only_function&& rhs) noexcept
+        {
+            this->move_assign(ryujin::forward<move_only_function&&>(rhs));
+            return *this;
+        }
+
+        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
+        inline move_only_function& operator=(Fn&& f) noexcept
+        {
+            this->move_assign_from_functor(ryujin::forward<Fn>(f));
+            return *this;
+        }
+    };
+
+    template <typename Ret, typename ... Args>
+    class move_only_function<Ret(Args...) const &> : public detail::move_only_function_impl<Ret(Args...) const &>
+    {
+    public:
+        inline move_only_function()
+        {
+            this->construct_empty();
+        }
+
+        inline move_only_function(move_only_function&& fn) noexcept
+        {
+            this->construct_move(ryujin::forward<move_only_function>(fn));
+        }
+
+        inline move_only_function(nullptr_t) noexcept
+            : move_only_function()
+        {
+        }
+
+        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
+        inline move_only_function(Fn&& f)
+        {
+            this->construct_from_functor(ryujin::forward<Fn>(f));
+        }
+
+        inline move_only_function& operator=(move_only_function&& rhs) noexcept
+        {
+            this->move_assign(ryujin::forward<move_only_function&&>(rhs));
+            return *this;
+        }
+
+        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
+        inline move_only_function& operator=(Fn&& f) noexcept
+        {
+            this->move_assign_from_functor(ryujin::forward<Fn>(f));
+            return *this;
+        }
+    };
+
+    template <typename Ret, typename ... Args>
+    class move_only_function<Ret(Args...) const & noexcept> : public detail::move_only_function_impl<Ret(Args...) const & noexcept>
+    {
+    public:
+        inline move_only_function()
+        {
+            this->construct_empty();
+        }
+
+        inline move_only_function(move_only_function&& fn) noexcept
+        {
+            this->construct_move(ryujin::forward<move_only_function>(fn));
+        }
+
+        inline move_only_function(nullptr_t) noexcept
+            : move_only_function()
+        {
+        }
+
+        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
+        inline move_only_function(Fn&& f)
+        {
+            this->construct_from_functor(ryujin::forward<Fn>(f));
+        }
+
+        inline move_only_function& operator=(move_only_function&& rhs) noexcept
+        {
+            this->move_assign(ryujin::forward<move_only_function&&>(rhs));
+            return *this;
+        }
+
+        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
+        inline move_only_function& operator=(Fn&& f) noexcept
+        {
+            this->move_assign_from_functor(ryujin::forward<Fn>(f));
+            return *this;
+        }
+    };
+
+    template <typename Ret, typename ... Args>
+    class move_only_function<Ret(Args...) const &&> : public detail::move_only_function_impl<Ret(Args...) const &&>
+    {
+    public:
+        inline move_only_function()
+        {
+            this->construct_empty();
+        }
+
+        inline move_only_function(move_only_function&& fn) noexcept
+        {
+            this->construct_move(ryujin::forward<move_only_function>(fn));
+        }
+
+        inline move_only_function(nullptr_t) noexcept
+            : move_only_function()
+        {
+        }
+
+        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
+        inline move_only_function(Fn&& f)
+        {
+            this->construct_from_functor(ryujin::forward<Fn>(f));
+        }
+
+        inline move_only_function& operator=(move_only_function&& rhs) noexcept
+        {
+            this->move_assign(ryujin::forward<move_only_function&&>(rhs));
+            return *this;
+        }
+
+        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
+        inline move_only_function& operator=(Fn&& f) noexcept
+        {
+            this->move_assign_from_functor(ryujin::forward<Fn>(f));
+            return *this;
+        }
+    };
+
+    template <typename Ret, typename ... Args>
+    class move_only_function<Ret(Args...) const && noexcept> : public detail::move_only_function_impl<Ret(Args...) const && noexcept>
+    {
+    public:
+        inline move_only_function()
+        {
+            this->construct_empty();
+        }
+
+        inline move_only_function(move_only_function&& fn) noexcept
+        {
+            this->construct_move(ryujin::forward<move_only_function>(fn));
+        }
+
+        inline move_only_function(nullptr_t) noexcept
+            : move_only_function()
+        {
+        }
+
+        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
+        inline move_only_function(Fn&& f)
+        {
+            this->construct_from_functor(ryujin::forward<Fn>(f));
+        }
+
+        inline move_only_function& operator=(move_only_function&& rhs) noexcept
+        {
+            this->move_assign(ryujin::forward<move_only_function&&>(rhs));
+            return *this;
+        }
+
+        template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
+        inline move_only_function& operator=(Fn&& f) noexcept
+        {
+            this->move_assign_from_functor(ryujin::forward<Fn>(f));
+            return *this;
+        }
+    };
+
     namespace detail
     {
         template <typename>
-        struct function_signature_extractor
-        {
-        };
+        struct function_signature_extractor;
 
         template <typename Res, typename Tp, typename ... Args>
         struct function_signature_extractor<Res(Tp::*)(Args...)>
@@ -386,25 +874,67 @@ namespace ryujin
         template <typename Res, typename Tp, typename ... Args>
         struct function_signature_extractor<Res(Tp::*)(Args...) noexcept>
         {
-            using type = Res(Args...);
+            using type = Res(Args...) noexcept;
         };
 
         template <typename Res, typename Tp, typename ... Args>
         struct function_signature_extractor<Res(Tp::*)(Args...) &>
         {
-            using type = Res(Args...);
+            using type = Res(Args...) &;
+        };
+
+        template <typename Res, typename Tp, typename ... Args>
+        struct function_signature_extractor<Res(Tp::*)(Args...) & noexcept>
+        {
+            using type = Res(Args...) & noexcept;
+        };
+
+        template <typename Res, typename Tp, typename ... Args>
+        struct function_signature_extractor<Res(Tp::*)(Args...) &&>
+        {
+            using type = Res(Args...) &&;
+        };
+
+        template <typename Res, typename Tp, typename ... Args>
+        struct function_signature_extractor<Res(Tp::*)(Args...) && noexcept>
+        {
+            using type = Res(Args...) && noexcept;
         };
 
         template <typename Res, typename Tp, typename ... Args>
         struct function_signature_extractor<Res(Tp::*)(Args...) const>
         {
-            using type = Res(Args...);
+            using type = Res(Args...) const;
+        };
+
+        template <typename Res, typename Tp, typename ... Args>
+        struct function_signature_extractor<Res(Tp::*)(Args...) const noexcept>
+        {
+            using type = Res(Args...) const noexcept;
         };
 
         template <typename Res, typename Tp, typename ... Args>
         struct function_signature_extractor<Res(Tp::*)(Args...) const &>
         {
-            using type = Res(Args...);
+            using type = Res(Args...) const &;
+        };
+
+        template <typename Res, typename Tp, typename ... Args>
+        struct function_signature_extractor<Res(Tp::*)(Args...) const & noexcept>
+        {
+            using type = Res(Args...) const & noexcept;
+        };
+
+        template <typename Res, typename Tp, typename ... Args>
+        struct function_signature_extractor<Res(Tp::*)(Args...) const &&>
+        {
+            using type = Res(Args...) const &&;
+        };
+
+        template <typename Res, typename Tp, typename ... Args>
+        struct function_signature_extractor<Res(Tp::*)(Args...) const && noexcept>
+        {
+            using type = Res(Args...) const && noexcept;
         };
     }
 

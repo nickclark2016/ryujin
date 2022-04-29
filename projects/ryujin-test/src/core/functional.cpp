@@ -146,7 +146,7 @@ TEST(MoveOnlyFunction, TemplateDeductionFromLambda)
 
 TEST(MoveOnlyFunctionNoexcept, SimpleInvokeFromLambdaByRValueReference)
 {
-    move_only_function<int(int, int) noexcept> sum = [](int a, int b) noexcept { return a + b; };
+    move_only_function<int(int, int)> sum = [](int a, int b) { return a + b; };
     int expected = 3;
     int actual = sum(1, 2);
     ASSERT_EQ(actual, expected);
@@ -154,7 +154,7 @@ TEST(MoveOnlyFunctionNoexcept, SimpleInvokeFromLambdaByRValueReference)
 
 TEST(MoveOnlyFunctionNoexcept, SimpleInvokeFromLambdaByLValueReference)
 {
-    move_only_function<int(int, int) noexcept> sum = [](int a, int b) noexcept { return a + b; };
+    move_only_function<int(int, int)> sum = [](int a, int b) { return a + b; };
     int a = 1;
     int b = 2;
     int expected = 3;
@@ -164,8 +164,8 @@ TEST(MoveOnlyFunctionNoexcept, SimpleInvokeFromLambdaByLValueReference)
 
 TEST(MoveOnlyFunctionNoexcept, SimpleInvokeFromMovedLambdaByLValueReference)
 {
-    move_only_function<int(int, int) noexcept> src = [](int a, int b) noexcept { return a + b; };
-    move_only_function<int(int, int) noexcept> sum = ryujin::move(src);
+    move_only_function<int(int, int)> src = [](int a, int b) noexcept { return a + b; };
+    move_only_function<int(int, int)> sum = ryujin::move(src);
     int a = 1;
     int b = 2;
     int expected = 3;
@@ -175,7 +175,7 @@ TEST(MoveOnlyFunctionNoexcept, SimpleInvokeFromMovedLambdaByLValueReference)
 
 TEST(MoveOnlyFunctionNoexcept, InvokeFromObject)
 {
-    move_only_function<int(int, int) noexcept> sum = invocable_noexcept::Invocable();
+    move_only_function<int(int, int)> sum = invocable_noexcept::Invocable();
     int expected = 3;
     ASSERT_EQ(sum(1, 2), expected);
 }
@@ -226,7 +226,7 @@ TEST(MoveOnlyFunctionNoexcept, TemplateDeductionFromMemberFunction)
 
 TEST(MoveOnlyFunctionNoexcept, TemplateDeductionFromLambda)
 {
-    move_only_function<int(int, int) noexcept> sum = [](int a, int b) noexcept { return a + b; };
+    move_only_function sum = [](int a, int b) noexcept { return a + b; };
     int expected = 3;
     ASSERT_EQ(sum(1, 2), expected);
 }
