@@ -1,4 +1,4 @@
-name: Linux
+name: Documentation
 
 on:
   push:
@@ -17,10 +17,10 @@ jobs:
       - name: Fetch Doxygen
         run: sudo apt-get install -y doxygen
       - name: Build Documentation
-        run: doxygen ./projects/ryujin/Doxygen && ./docs/.nojekyll
+        run: doxygen && touch ./docs/.nojekyll
         shell: bash
       - name: Upload Documentation Artifacts
-        uses: actions/upload-artifacts@v2
+        uses: actions/upload-artifact@v2
         with:
           name: documentation-files
           path: ./docs
@@ -29,10 +29,10 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
 
-    if: github-ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master'
     steps:
       - name: Downlod Documentation Artifacts
-        uses: actions/download-artifacts@v2
+        uses: actions/download-artifact@v2
         with:
           name: documentation-files
           path: ./docs
