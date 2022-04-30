@@ -3,6 +3,9 @@
 
 namespace ryujin
 {
+    /// <summary>
+    /// Type of a null pointer.
+    /// </summary>
     using nullptr_t = decltype(nullptr);
 }
 

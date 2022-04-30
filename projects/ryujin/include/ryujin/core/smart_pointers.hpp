@@ -4,9 +4,6 @@
 #include "nullptr.hpp"
 #include "utility.hpp"
 
-#include <cstdlib>
-#include <type_traits>
-
 namespace ryujin
 {
     template <typename T>
@@ -672,6 +669,32 @@ namespace ryujin
     {
         return lhs.get() <=> rhs.get();
     }
+
+    /// <summary>
+    /// Specialization of hash for a unique pointer.
+    /// </summary>
+    /// \ingroup hashes
+    template <typename T, typename Deleter>
+    struct hash<unique_ptr<T, Deleter>>
+    {
+        inline constexpr sz operator()(const unique_ptr<T, Deleter>& v) noexcept
+        {
+            return hash<sz>()(v.get());
+        }
+    };
+
+    /// <summary>
+    /// Specialization of hash for a shared pointer.
+    /// </summary>
+    /// \ingroup hashes
+    template <typename T, typename Deleter>
+    struct hash<shared_ptr<T, Deleter>>
+    {
+        inline constexpr sz operator()(const shared_ptr<T, Deleter>& v) noexcept
+        {
+            return hash<sz>()(v.get());
+        }
+    };
 }
 
 #endif // smart_pointers_hpp__
