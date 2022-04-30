@@ -17,7 +17,7 @@ jobs:
       - name: Fetch Doxygen
         run: sudo apt-get install -y doxygen
       - name: Build Documentation
-        run: doxygen && touch ./docs/.nojekyll
+        run: doxygen && touch ./docs/html/.nojekyll
         shell: bash
       - name: Upload Documentation Artifacts
         uses: actions/upload-artifact@v2
@@ -41,4 +41,4 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
+          publish_dir: ./docs/html
