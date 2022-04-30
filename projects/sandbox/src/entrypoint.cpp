@@ -3,6 +3,8 @@
 #include <ryujin/input/input.hpp>
 #include <ryujin/graphics/pipelines/pbr_render_pipeline.hpp>
 
+#include <ryujin/core/string.hpp>
+
 #include <cmath>
 #include <iostream>
 
