@@ -83,10 +83,52 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1in__place__t.html">ryujin::in_place_t</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type used to tag for in-place construction.  <a href="structryujin_1_1in__place__t.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1in__place__type__t.html">ryujin::in_place_type_t&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type used to tag for in-place construction of a given type.  <a href="structryujin_1_1in__place__type__t.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1in__place__index__t.html">ryujin::in_place_index_t&lt; I &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type used to tag for in-place construction of the type at the given index of a parameter pack.  <a href="structryujin_1_1in__place__index__t.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1hash.html">ryujin::hash&lt; K &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functor type that hashes a value and returns the hash. Specializations should implement an overload of operator() that takes a single element of the key type and returns a sz variable representing the hash. If two objects are equal, their hash value must be equal. If two objects are not equal, the chance that their hashes are equivalent should be minimal (approaching 0).  <a href="structryujin_1_1hash.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1hash_3_01bool_01_4.html">ryujin::hash&lt; bool &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of hash for a bool.  <a href="structryujin_1_1hash_3_01bool_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1hash_3_01i8_01_4.html">ryujin::hash&lt; i8 &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of hash for an 8 bit integer.  <a href="structryujin_1_1hash_3_01i8_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1hash_3_01u8_01_4.html">ryujin::hash&lt; u8 &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of hash for an 8 bit unsigned integer.  <a href="structryujin_1_1hash_3_01u8_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1hash_3_01i16_01_4.html">ryujin::hash&lt; i16 &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of hash for an 16 bit integer.  <a href="structryujin_1_1hash_3_01i16_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1hash_3_01u16_01_4.html">ryujin::hash&lt; u16 &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of hash for an 16 bit unsigned integer.  <a href="structryujin_1_1hash_3_01u16_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1hash_3_01i32_01_4.html">ryujin::hash&lt; i32 &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of hash for an 32 bit integer.  <a href="structryujin_1_1hash_3_01i32_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1hash_3_01u32_01_4.html">ryujin::hash&lt; u32 &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of hash for an 32 bit unsigned integer.  <a href="structryujin_1_1hash_3_01u32_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1hash_3_01i64_01_4.html">ryujin::hash&lt; i64 &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of hash for an 64 bit integer.  <a href="structryujin_1_1hash_3_01i64_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1hash_3_01u64_01_4.html">ryujin::hash&lt; u64 &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of hash for an 64 bit unsigned integer.  <a href="structryujin_1_1hash_3_01u64_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1hash_3_01f32_01_4.html">ryujin::hash&lt; f32 &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of hash for a single precision float.  <a href="structryujin_1_1hash_3_01f32_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1hash_3_01f64_01_4.html">ryujin::hash&lt; f64 &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of hash for a double precision float.  <a href="structryujin_1_1hash_3_01f64_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1hash_3_01_t_01_5_01_4.html">ryujin::hash&lt; T * &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of hash for a pointer.  <a href="structryujin_1_1hash_3_01_t_01_5_01_4.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
@@ -98,29 +140,37 @@ Namespaces</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:a865ddc672e77eb76be36f0da7d7829fe"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a865ddc672e77eb76be36f0da7d7829fe"><td class="memTemplItemLeft" align="right" valign="top">constexpr T &amp;&amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a865ddc672e77eb76be36f0da7d7829fe">ryujin::forward</a> (std::remove_reference_t&lt; T &gt; &amp;t) noexcept</td></tr>
+<tr class="memdesc:a865ddc672e77eb76be36f0da7d7829fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forwards an l-value reference as an r-value.  <a href="namespaceryujin.html#a865ddc672e77eb76be36f0da7d7829fe">More...</a><br /></td></tr>
 <tr class="separator:a865ddc672e77eb76be36f0da7d7829fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a18b6791b87d78175b3da01efb18cecc8"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a18b6791b87d78175b3da01efb18cecc8"><td class="memTemplItemLeft" align="right" valign="top">constexpr T &amp;&amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a18b6791b87d78175b3da01efb18cecc8">ryujin::forward</a> (std::remove_reference_t&lt; T &gt; &amp;&amp;t) noexcept</td></tr>
+<tr class="memdesc:a18b6791b87d78175b3da01efb18cecc8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forwards an r-value reference as an r-value.  <a href="namespaceryujin.html#a18b6791b87d78175b3da01efb18cecc8">More...</a><br /></td></tr>
 <tr class="separator:a18b6791b87d78175b3da01efb18cecc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa63c708049399a43557e4f22faff9f95"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:aa63c708049399a43557e4f22faff9f95"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::remove_reference_t&lt; T &gt; &amp;&amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#aa63c708049399a43557e4f22faff9f95">ryujin::move</a> (T &amp;&amp;t) noexcept</td></tr>
+<tr class="memdesc:aa63c708049399a43557e4f22faff9f95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Moves a r-value reference.  <a href="namespaceryujin.html#aa63c708049399a43557e4f22faff9f95">More...</a><br /></td></tr>
 <tr class="separator:aa63c708049399a43557e4f22faff9f95"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5dd7ea8342b826e1a1d8021875501203"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a5dd7ea8342b826e1a1d8021875501203"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a5dd7ea8342b826e1a1d8021875501203">ryujin::move_swap</a> (T &amp;a, T &amp;b)</td></tr>
+<tr class="memdesc:a5dd7ea8342b826e1a1d8021875501203"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of move using swap semantics.  <a href="namespaceryujin.html#a5dd7ea8342b826e1a1d8021875501203">More...</a><br /></td></tr>
 <tr class="separator:a5dd7ea8342b826e1a1d8021875501203"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6cc528f96fbd663b613fc1d0c5cd55f6"><td class="memTemplParams" colspan="2">template&lt;typename T , sz N&gt; </td></tr>
 <tr class="memitem:a6cc528f96fbd663b613fc1d0c5cd55f6"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a6cc528f96fbd663b613fc1d0c5cd55f6">ryujin::move_swap</a> (T(&amp;a)[N], T(&amp;b)[N])</td></tr>
+<tr class="memdesc:a6cc528f96fbd663b613fc1d0c5cd55f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of move using swap semantics for an array type.  <a href="namespaceryujin.html#a6cc528f96fbd663b613fc1d0c5cd55f6">More...</a><br /></td></tr>
 <tr class="separator:a6cc528f96fbd663b613fc1d0c5cd55f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
 <tr class="memitem:ad72aa484b527014ac7770ab4d07a0c6a"><td class="memItemLeft" align="right" valign="top">constexpr in_place_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#ad72aa484b527014ac7770ab4d07a0c6a">ryujin::in_place</a> {}</td></tr>
+<tr class="memdesc:ad72aa484b527014ac7770ab4d07a0c6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default in place tag.  <a href="namespaceryujin.html#ad72aa484b527014ac7770ab4d07a0c6a">More...</a><br /></td></tr>
 <tr class="separator:ad72aa484b527014ac7770ab4d07a0c6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa74ef6d9218df787c3684f1f2dd69ce2"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:aa74ef6d9218df787c3684f1f2dd69ce2"><td class="memTemplItemLeft" align="right" valign="top">constexpr in_place_type_t&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#aa74ef6d9218df787c3684f1f2dd69ce2">ryujin::in_place_type</a> {}</td></tr>
+<tr class="memdesc:aa74ef6d9218df787c3684f1f2dd69ce2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default in place type tag.  <a href="namespaceryujin.html#aa74ef6d9218df787c3684f1f2dd69ce2">More...</a><br /></td></tr>
 <tr class="separator:aa74ef6d9218df787c3684f1f2dd69ce2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa4b6fa0ff58ff47280fdaefdc8f3b603"><td class="memTemplParams" colspan="2">template&lt;sz I&gt; </td></tr>
 <tr class="memitem:aa4b6fa0ff58ff47280fdaefdc8f3b603"><td class="memTemplItemLeft" align="right" valign="top">constexpr in_place_index_t&lt; I &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#aa4b6fa0ff58ff47280fdaefdc8f3b603">ryujin::in_place_index</a> {}</td></tr>
+<tr class="memdesc:aa4b6fa0ff58ff47280fdaefdc8f3b603"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default in place index tag.  <a href="namespaceryujin.html#aa4b6fa0ff58ff47280fdaefdc8f3b603">More...</a><br /></td></tr>
 <tr class="separator:aa4b6fa0ff58ff47280fdaefdc8f3b603"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->

@@ -240,6 +240,51 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1graphics__pipeline__create__info.html">graphics_pipeline_create_info</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1hash.html">hash</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functor type that hashes a value and returns the hash. Specializations should implement an overload of operator() that takes a single element of the key type and returns a sz variable representing the hash. If two objects are equal, their hash value must be equal. If two objects are not equal, the chance that their hashes are equivalent should be minimal (approaching 0).  <a href="structryujin_1_1hash.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1hash_3_01bool_01_4.html">hash&lt; bool &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of hash for a bool.  <a href="structryujin_1_1hash_3_01bool_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1hash_3_01f32_01_4.html">hash&lt; f32 &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of hash for a single precision float.  <a href="structryujin_1_1hash_3_01f32_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1hash_3_01f64_01_4.html">hash&lt; f64 &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of hash for a double precision float.  <a href="structryujin_1_1hash_3_01f64_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1hash_3_01i16_01_4.html">hash&lt; i16 &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of hash for an 16 bit integer.  <a href="structryujin_1_1hash_3_01i16_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1hash_3_01i32_01_4.html">hash&lt; i32 &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of hash for an 32 bit integer.  <a href="structryujin_1_1hash_3_01i32_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1hash_3_01i64_01_4.html">hash&lt; i64 &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of hash for an 64 bit integer.  <a href="structryujin_1_1hash_3_01i64_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1hash_3_01i8_01_4.html">hash&lt; i8 &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of hash for an 8 bit integer.  <a href="structryujin_1_1hash_3_01i8_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1hash_3_01shared__ptr_3_01_t_00_01_deleter_01_4_01_4.html">hash&lt; shared_ptr&lt; T, Deleter &gt; &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of hash for a shared pointer.  <a href="structryujin_1_1hash_3_01shared__ptr_3_01_t_00_01_deleter_01_4_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1hash_3_01_t_01_5_01_4.html">hash&lt; T * &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of hash for a pointer.  <a href="structryujin_1_1hash_3_01_t_01_5_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1hash_3_01u16_01_4.html">hash&lt; u16 &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of hash for an 16 bit unsigned integer.  <a href="structryujin_1_1hash_3_01u16_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1hash_3_01u32_01_4.html">hash&lt; u32 &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of hash for an 32 bit unsigned integer.  <a href="structryujin_1_1hash_3_01u32_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1hash_3_01u64_01_4.html">hash&lt; u64 &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of hash for an 64 bit unsigned integer.  <a href="structryujin_1_1hash_3_01u64_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1hash_3_01u8_01_4.html">hash&lt; u8 &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of hash for an 8 bit unsigned integer.  <a href="structryujin_1_1hash_3_01u8_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1hash_3_01unique__ptr_3_01_t_00_01_deleter_01_4_01_4.html">hash&lt; unique_ptr&lt; T, Deleter &gt; &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of hash for a unique pointer.  <a href="structryujin_1_1hash_3_01unique__ptr_3_01_t_00_01_deleter_01_4_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1image.html">image</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1image__create__info.html">image_create_info</a></td></tr>
@@ -255,10 +300,13 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1image__view__usage.html">image_view_usage</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1in__place__index__t.html">in_place_index_t</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type used to tag for in-place construction of the type at the given index of a parameter pack.  <a href="structryujin_1_1in__place__index__t.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1in__place__t.html">in_place_t</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type used to tag for in-place construction.  <a href="structryujin_1_1in__place__t.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1in__place__type__t.html">in_place_type_t</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type used to tag for in-place construction of a given type.  <a href="structryujin_1_1in__place__type__t.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classryujin_1_1inline__linear__allocator.html">inline_linear_allocator</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -559,23 +607,24 @@ Classes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:a75c581c14b44f92a2853f85bf0801368"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a75c581c14b44f92a2853f85bf0801368">nullptr_t</a> = decltype(nullptr)</td></tr>
+<tr class="memdesc:a75c581c14b44f92a2853f85bf0801368"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type of a null pointer.  <a href="namespaceryujin.html#a75c581c14b44f92a2853f85bf0801368">More...</a><br /></td></tr>
 <tr class="separator:a75c581c14b44f92a2853f85bf0801368"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec68471309b8483f67b2cecb5c96c8c1"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#aec68471309b8483f67b2cecb5c96c8c1">u8</a> = std::uint8_t</td></tr>
-<tr class="separator:aec68471309b8483f67b2cecb5c96c8c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aedb18376edf7c7bc47557e8333960f6e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#aedb18376edf7c7bc47557e8333960f6e">u16</a> = std::uint16_t</td></tr>
-<tr class="separator:aedb18376edf7c7bc47557e8333960f6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5f26fb8abf892c0e794f2fa0b7a094ad"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a> = std::uint32_t</td></tr>
-<tr class="separator:a5f26fb8abf892c0e794f2fa0b7a094ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af372b3a5fbb94a8d86b4b03be533c553"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#af372b3a5fbb94a8d86b4b03be533c553">u64</a> = std::uint64_t</td></tr>
-<tr class="separator:af372b3a5fbb94a8d86b4b03be533c553"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a94ebb3e6dd0cde9ad03f851ffa75fb99"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a94ebb3e6dd0cde9ad03f851ffa75fb99">i8</a> = std::int8_t</td></tr>
-<tr class="separator:a94ebb3e6dd0cde9ad03f851ffa75fb99"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c75c7dbab9a7d76d448f3e48c97fe76"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a3c75c7dbab9a7d76d448f3e48c97fe76">i16</a> = std::int16_t</td></tr>
-<tr class="separator:a3c75c7dbab9a7d76d448f3e48c97fe76"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a705aec1fd9b8ebb006e5ee1e3e419ff3"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a705aec1fd9b8ebb006e5ee1e3e419ff3">i32</a> = std::int32_t</td></tr>
-<tr class="separator:a705aec1fd9b8ebb006e5ee1e3e419ff3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ace778d9c15d9dbf31086c100a1a2895f"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#ace778d9c15d9dbf31086c100a1a2895f">i64</a> = std::int64_t</td></tr>
-<tr class="separator:ace778d9c15d9dbf31086c100a1a2895f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4fdd9d0598161de847155dcd0d0058ac"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a4fdd9d0598161de847155dcd0d0058ac">u8</a> = unsigned char</td></tr>
+<tr class="separator:a4fdd9d0598161de847155dcd0d0058ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10185cea8b7d65241ee94892e50f23f8"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a10185cea8b7d65241ee94892e50f23f8">u16</a> = unsigned short</td></tr>
+<tr class="separator:a10185cea8b7d65241ee94892e50f23f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a712172a56e6e235d857a717144f9bf"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a> = unsigned int</td></tr>
+<tr class="separator:a9a712172a56e6e235d857a717144f9bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e143684101f7c548db9e81ad0deb9fe"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a3e143684101f7c548db9e81ad0deb9fe">u64</a> = unsigned long long</td></tr>
+<tr class="separator:a3e143684101f7c548db9e81ad0deb9fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9b24c05c67b846202fae20d81993c82"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#ac9b24c05c67b846202fae20d81993c82">i8</a> = char</td></tr>
+<tr class="separator:ac9b24c05c67b846202fae20d81993c82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f144b1d1839f4c7030b44472ba8eaab"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a1f144b1d1839f4c7030b44472ba8eaab">i16</a> = short</td></tr>
+<tr class="separator:a1f144b1d1839f4c7030b44472ba8eaab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab2e7be3891da84c750c86b7cd517ba3a"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#ab2e7be3891da84c750c86b7cd517ba3a">i32</a> = int</td></tr>
+<tr class="separator:ab2e7be3891da84c750c86b7cd517ba3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f98a92be42ef53d01792c0cd0ed2524"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a8f98a92be42ef53d01792c0cd0ed2524">i64</a> = long</td></tr>
+<tr class="separator:a8f98a92be42ef53d01792c0cd0ed2524"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8929b6fecbd9088f57cbc586fe029b6a"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a8929b6fecbd9088f57cbc586fe029b6a">f32</a> = float</td></tr>
 <tr class="separator:a8929b6fecbd9088f57cbc586fe029b6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49f4c01be5822046d95444d01e8cf177"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a49f4c01be5822046d95444d01e8cf177">f64</a> = double</td></tr>
@@ -635,7 +684,7 @@ Typedefs</h2></td></tr>
 <tr class="memitem:a5e37ebdea90c1eb9b87062af1857455d"><td class="memTemplParams" colspan="2">template&lt;sz I, typename T &gt; </td></tr>
 <tr class="memitem:a5e37ebdea90c1eb9b87062af1857455d"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a5e37ebdea90c1eb9b87062af1857455d">variant_alternative_t</a> = typename <a class="el" href="structryujin_1_1variant__alternative.html">variant_alternative</a>&lt; I, T &gt;::type</td></tr>
 <tr class="separator:a5e37ebdea90c1eb9b87062af1857455d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe984a3fec394b915edd27c4a76aa31f"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#afe984a3fec394b915edd27c4a76aa31f">registry</a> = <a class="el" href="classryujin_1_1base__registry.html">base_registry</a>&lt; <a class="el" href="structryujin_1_1entity.html">entity</a>&lt; std::conditional_t&lt; sizeof(<a class="el" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a>)==8, <a class="el" href="namespaceryujin.html#af372b3a5fbb94a8d86b4b03be533c553">u64</a>, <a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a> &gt; &gt;&gt;</td></tr>
+<tr class="memitem:afe984a3fec394b915edd27c4a76aa31f"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#afe984a3fec394b915edd27c4a76aa31f">registry</a> = <a class="el" href="classryujin_1_1base__registry.html">base_registry</a>&lt; <a class="el" href="structryujin_1_1entity.html">entity</a>&lt; std::conditional_t&lt; sizeof(<a class="el" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a>)==8, <a class="el" href="namespaceryujin.html#a3e143684101f7c548db9e81ad0deb9fe">u64</a>, <a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a> &gt; &gt;&gt;</td></tr>
 <tr class="separator:afe984a3fec394b915edd27c4a76aa31f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba1d6f55a037fdf499f243b599c11d39"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#aba1d6f55a037fdf499f243b599c11d39">clear_value</a> = VkClearValue</td></tr>
 <tr class="separator:aba1d6f55a037fdf499f243b599c11d39"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1351,18 +1400,23 @@ Functions</h2></td></tr>
 <tr class="separator:a394f278b474d37298e0e0824fddd3335"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a865ddc672e77eb76be36f0da7d7829fe"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a865ddc672e77eb76be36f0da7d7829fe"><td class="memTemplItemLeft" align="right" valign="top">constexpr T &amp;&amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a865ddc672e77eb76be36f0da7d7829fe">forward</a> (std::remove_reference_t&lt; T &gt; &amp;t) noexcept</td></tr>
+<tr class="memdesc:a865ddc672e77eb76be36f0da7d7829fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forwards an l-value reference as an r-value.  <a href="namespaceryujin.html#a865ddc672e77eb76be36f0da7d7829fe">More...</a><br /></td></tr>
 <tr class="separator:a865ddc672e77eb76be36f0da7d7829fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a18b6791b87d78175b3da01efb18cecc8"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a18b6791b87d78175b3da01efb18cecc8"><td class="memTemplItemLeft" align="right" valign="top">constexpr T &amp;&amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a18b6791b87d78175b3da01efb18cecc8">forward</a> (std::remove_reference_t&lt; T &gt; &amp;&amp;t) noexcept</td></tr>
+<tr class="memdesc:a18b6791b87d78175b3da01efb18cecc8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forwards an r-value reference as an r-value.  <a href="namespaceryujin.html#a18b6791b87d78175b3da01efb18cecc8">More...</a><br /></td></tr>
 <tr class="separator:a18b6791b87d78175b3da01efb18cecc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa63c708049399a43557e4f22faff9f95"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:aa63c708049399a43557e4f22faff9f95"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::remove_reference_t&lt; T &gt; &amp;&amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#aa63c708049399a43557e4f22faff9f95">move</a> (T &amp;&amp;t) noexcept</td></tr>
+<tr class="memdesc:aa63c708049399a43557e4f22faff9f95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Moves a r-value reference.  <a href="namespaceryujin.html#aa63c708049399a43557e4f22faff9f95">More...</a><br /></td></tr>
 <tr class="separator:aa63c708049399a43557e4f22faff9f95"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5dd7ea8342b826e1a1d8021875501203"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a5dd7ea8342b826e1a1d8021875501203"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a5dd7ea8342b826e1a1d8021875501203">move_swap</a> (T &amp;a, T &amp;b)</td></tr>
+<tr class="memdesc:a5dd7ea8342b826e1a1d8021875501203"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of move using swap semantics.  <a href="namespaceryujin.html#a5dd7ea8342b826e1a1d8021875501203">More...</a><br /></td></tr>
 <tr class="separator:a5dd7ea8342b826e1a1d8021875501203"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6cc528f96fbd663b613fc1d0c5cd55f6"><td class="memTemplParams" colspan="2">template&lt;typename T , sz N&gt; </td></tr>
 <tr class="memitem:a6cc528f96fbd663b613fc1d0c5cd55f6"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a6cc528f96fbd663b613fc1d0c5cd55f6">move_swap</a> (T(&amp;a)[N], T(&amp;b)[N])</td></tr>
+<tr class="memdesc:a6cc528f96fbd663b613fc1d0c5cd55f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of move using swap semantics for an array type.  <a href="namespaceryujin.html#a6cc528f96fbd663b613fc1d0c5cd55f6">More...</a><br /></td></tr>
 <tr class="separator:a6cc528f96fbd663b613fc1d0c5cd55f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5d59649cd03d5fab9cc57d5448500d1c"><td class="memTemplParams" colspan="2">template&lt;typename T , typename ... Ts&gt; </td></tr>
 <tr class="memitem:a5d59649cd03d5fab9cc57d5448500d1c"><td class="memTemplItemLeft" align="right" valign="top">constexpr T &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a5d59649cd03d5fab9cc57d5448500d1c">get</a> (<a class="el" href="classryujin_1_1variant.html">ryujin::variant</a>&lt; Ts... &gt; &amp;v)</td></tr>
@@ -1552,9 +1606,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ae822c8292cb9ef774a12f22cb9b01267"><td class="memTemplParams" colspan="2">template&lt;numeric T&gt; </td></tr>
 <tr class="memitem:ae822c8292cb9ef774a12f22cb9b01267"><td class="memTemplItemLeft" align="right" valign="top">constexpr T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#ae822c8292cb9ef774a12f22cb9b01267">as_degrees</a> (const T radians) noexcept</td></tr>
 <tr class="separator:ae822c8292cb9ef774a12f22cb9b01267"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afd478987c1b9de30a231ca9ae36b0b44"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="namespaceryujin.html#aedb18376edf7c7bc47557e8333960f6e">u16</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#afd478987c1b9de30a231ca9ae36b0b44">compress_to_half</a> (const <a class="el" href="namespaceryujin.html#a8929b6fecbd9088f57cbc586fe029b6a">f32</a> value)</td></tr>
+<tr class="memitem:afd478987c1b9de30a231ca9ae36b0b44"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="namespaceryujin.html#a10185cea8b7d65241ee94892e50f23f8">u16</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#afd478987c1b9de30a231ca9ae36b0b44">compress_to_half</a> (const <a class="el" href="namespaceryujin.html#a8929b6fecbd9088f57cbc586fe029b6a">f32</a> value)</td></tr>
 <tr class="separator:afd478987c1b9de30a231ca9ae36b0b44"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f2591e6b816d5ca69727eb90a58d92e"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="namespaceryujin.html#a8929b6fecbd9088f57cbc586fe029b6a">f32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a0f2591e6b816d5ca69727eb90a58d92e">inflate_to_float</a> (const <a class="el" href="namespaceryujin.html#aedb18376edf7c7bc47557e8333960f6e">u16</a> value)</td></tr>
+<tr class="memitem:a0f2591e6b816d5ca69727eb90a58d92e"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="namespaceryujin.html#a8929b6fecbd9088f57cbc586fe029b6a">f32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a0f2591e6b816d5ca69727eb90a58d92e">inflate_to_float</a> (const <a class="el" href="namespaceryujin.html#a10185cea8b7d65241ee94892e50f23f8">u16</a> value)</td></tr>
 <tr class="separator:a0f2591e6b816d5ca69727eb90a58d92e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb6632cba304aa453985dbcd3dc9638d"><td class="memTemplParams" colspan="2">template&lt;numeric T&gt; </td></tr>
 <tr class="memitem:aeb6632cba304aa453985dbcd3dc9638d"><td class="memTemplItemLeft" align="right" valign="top">constexpr T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#aeb6632cba304aa453985dbcd3dc9638d">inverse_lerp</a> (const T value, const T low, const T high)</td></tr>
@@ -1802,7 +1856,7 @@ Variables</h2></td></tr>
 <tr class="separator:ac19e7d43f2fd0c2ec6afdde295f282e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01b55c55c2c713e9eb95899a9940904d"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="structryujin_1_1nullopt__t.html">nullopt_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a01b55c55c2c713e9eb95899a9940904d">nullopt</a> = <a class="el" href="structryujin_1_1nullopt__t.html">nullopt_t</a>{ 0 }</td></tr>
 <tr class="separator:a01b55c55c2c713e9eb95899a9940904d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a73a5c4c8cf82e8a7eef6db8c273b0535"><td class="memItemLeft" align="right" valign="top">static constexpr <a class="el" href="structryujin_1_1slot__map__key.html">slot_map_key</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a73a5c4c8cf82e8a7eef6db8c273b0535">invalid_slot_map_key</a> = { .index = std::numeric_limits&lt;<a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a>&gt;::max(), .generation = std::numeric_limits&lt;<a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a>&gt;::max() }</td></tr>
+<tr class="memitem:a73a5c4c8cf82e8a7eef6db8c273b0535"><td class="memItemLeft" align="right" valign="top">static constexpr <a class="el" href="structryujin_1_1slot__map__key.html">slot_map_key</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a73a5c4c8cf82e8a7eef6db8c273b0535">invalid_slot_map_key</a> = { .index = std::numeric_limits&lt;<a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a>&gt;::max(), .generation = std::numeric_limits&lt;<a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a>&gt;::max() }</td></tr>
 <tr class="separator:a73a5c4c8cf82e8a7eef6db8c273b0535"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab43570e23023f9b26d7f2ee265f711b7"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ab43570e23023f9b26d7f2ee265f711b7"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#ab43570e23023f9b26d7f2ee265f711b7">is_reference_v</a> = <a class="el" href="structryujin_1_1is__reference.html">is_reference</a>&lt;T&gt;::value</td></tr>
@@ -1895,12 +1949,15 @@ Variables</h2></td></tr>
 <tr class="memitem:af09f405ab38488b1aef5b43f9f680900"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#af09f405ab38488b1aef5b43f9f680900">all_nothrow_destructible_v</a> = <a class="el" href="structryujin_1_1all__nothrow__destructible.html">all_nothrow_destructible</a>&lt;Ts...&gt;::value</td></tr>
 <tr class="separator:af09f405ab38488b1aef5b43f9f680900"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad72aa484b527014ac7770ab4d07a0c6a"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="structryujin_1_1in__place__t.html">in_place_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#ad72aa484b527014ac7770ab4d07a0c6a">in_place</a> {}</td></tr>
+<tr class="memdesc:ad72aa484b527014ac7770ab4d07a0c6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default in place tag.  <a href="namespaceryujin.html#ad72aa484b527014ac7770ab4d07a0c6a">More...</a><br /></td></tr>
 <tr class="separator:ad72aa484b527014ac7770ab4d07a0c6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa74ef6d9218df787c3684f1f2dd69ce2"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:aa74ef6d9218df787c3684f1f2dd69ce2"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="structryujin_1_1in__place__type__t.html">in_place_type_t</a>&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#aa74ef6d9218df787c3684f1f2dd69ce2">in_place_type</a> {}</td></tr>
+<tr class="memdesc:aa74ef6d9218df787c3684f1f2dd69ce2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default in place type tag.  <a href="namespaceryujin.html#aa74ef6d9218df787c3684f1f2dd69ce2">More...</a><br /></td></tr>
 <tr class="separator:aa74ef6d9218df787c3684f1f2dd69ce2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa4b6fa0ff58ff47280fdaefdc8f3b603"><td class="memTemplParams" colspan="2">template&lt;sz I&gt; </td></tr>
 <tr class="memitem:aa4b6fa0ff58ff47280fdaefdc8f3b603"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="structryujin_1_1in__place__index__t.html">in_place_index_t</a>&lt; I &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#aa4b6fa0ff58ff47280fdaefdc8f3b603">in_place_index</a> {}</td></tr>
+<tr class="memdesc:aa4b6fa0ff58ff47280fdaefdc8f3b603"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default in place index tag.  <a href="namespaceryujin.html#aa4b6fa0ff58ff47280fdaefdc8f3b603">More...</a><br /></td></tr>
 <tr class="separator:aa4b6fa0ff58ff47280fdaefdc8f3b603"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab6ad19c6e758e20f69fa645ee7914fe9"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#ab6ad19c6e758e20f69fa645ee7914fe9">variant_npos</a> = static_cast&lt;<a class="el" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a>&gt;(-1)</td></tr>
 <tr class="separator:ab6ad19c6e758e20f69fa645ee7914fe9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -2124,56 +2181,56 @@ template&lt;bool B, typename T &gt; </div>
 
 </div>
 </div>
-<a id="a3c75c7dbab9a7d76d448f3e48c97fe76"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3c75c7dbab9a7d76d448f3e48c97fe76">&#9670;&nbsp;</a></span>i16</h2>
+<a id="a1f144b1d1839f4c7030b44472ba8eaab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f144b1d1839f4c7030b44472ba8eaab">&#9670;&nbsp;</a></span>i16</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="namespaceryujin.html#a3c75c7dbab9a7d76d448f3e48c97fe76">ryujin::i16</a> = typedef std::int16_t</td>
+          <td class="memname">using <a class="el" href="namespaceryujin.html#a1f144b1d1839f4c7030b44472ba8eaab">ryujin::i16</a> = typedef short</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a705aec1fd9b8ebb006e5ee1e3e419ff3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a705aec1fd9b8ebb006e5ee1e3e419ff3">&#9670;&nbsp;</a></span>i32</h2>
+<a id="ab2e7be3891da84c750c86b7cd517ba3a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab2e7be3891da84c750c86b7cd517ba3a">&#9670;&nbsp;</a></span>i32</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="namespaceryujin.html#a705aec1fd9b8ebb006e5ee1e3e419ff3">ryujin::i32</a> = typedef std::int32_t</td>
+          <td class="memname">using <a class="el" href="namespaceryujin.html#ab2e7be3891da84c750c86b7cd517ba3a">ryujin::i32</a> = typedef int</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="ace778d9c15d9dbf31086c100a1a2895f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ace778d9c15d9dbf31086c100a1a2895f">&#9670;&nbsp;</a></span>i64</h2>
+<a id="a8f98a92be42ef53d01792c0cd0ed2524"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f98a92be42ef53d01792c0cd0ed2524">&#9670;&nbsp;</a></span>i64</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="namespaceryujin.html#ace778d9c15d9dbf31086c100a1a2895f">ryujin::i64</a> = typedef std::int64_t</td>
+          <td class="memname">using <a class="el" href="namespaceryujin.html#a8f98a92be42ef53d01792c0cd0ed2524">ryujin::i64</a> = typedef long</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a94ebb3e6dd0cde9ad03f851ffa75fb99"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a94ebb3e6dd0cde9ad03f851ffa75fb99">&#9670;&nbsp;</a></span>i8</h2>
+<a id="ac9b24c05c67b846202fae20d81993c82"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac9b24c05c67b846202fae20d81993c82">&#9670;&nbsp;</a></span>i8</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="namespaceryujin.html#a94ebb3e6dd0cde9ad03f851ffa75fb99">ryujin::i8</a> = typedef std::int8_t</td>
+          <td class="memname">using <a class="el" href="namespaceryujin.html#ac9b24c05c67b846202fae20d81993c82">ryujin::i8</a> = typedef char</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2220,6 +2277,8 @@ template&lt;bool B, typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
+<p>Type of a null pointer. </p>
+
 </div>
 </div>
 <a id="ab3f615715473f5ede0e324cd51786354"></a>
@@ -2257,7 +2316,7 @@ template&lt;bool B, typename T &gt; </div>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="namespaceryujin.html#afe984a3fec394b915edd27c4a76aa31f">ryujin::registry</a> = typedef <a class="el" href="classryujin_1_1base__registry.html">base_registry</a>&lt;<a class="el" href="structryujin_1_1entity.html">entity</a>&lt;std::conditional_t&lt;sizeof(<a class="el" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a>) == 8, <a class="el" href="namespaceryujin.html#af372b3a5fbb94a8d86b4b03be533c553">u64</a>, <a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a>&gt; &gt;&gt;</td>
+          <td class="memname">using <a class="el" href="namespaceryujin.html#afe984a3fec394b915edd27c4a76aa31f">ryujin::registry</a> = typedef <a class="el" href="classryujin_1_1base__registry.html">base_registry</a>&lt;<a class="el" href="structryujin_1_1entity.html">entity</a>&lt;std::conditional_t&lt;sizeof(<a class="el" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a>) == 8, <a class="el" href="namespaceryujin.html#a3e143684101f7c548db9e81ad0deb9fe">u64</a>, <a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a>&gt; &gt;&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2476,56 +2535,56 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a id="aedb18376edf7c7bc47557e8333960f6e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aedb18376edf7c7bc47557e8333960f6e">&#9670;&nbsp;</a></span>u16</h2>
+<a id="a10185cea8b7d65241ee94892e50f23f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10185cea8b7d65241ee94892e50f23f8">&#9670;&nbsp;</a></span>u16</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="namespaceryujin.html#aedb18376edf7c7bc47557e8333960f6e">ryujin::u16</a> = typedef std::uint16_t</td>
+          <td class="memname">using <a class="el" href="namespaceryujin.html#a10185cea8b7d65241ee94892e50f23f8">ryujin::u16</a> = typedef unsigned short</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a5f26fb8abf892c0e794f2fa0b7a094ad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5f26fb8abf892c0e794f2fa0b7a094ad">&#9670;&nbsp;</a></span>u32</h2>
+<a id="a9a712172a56e6e235d857a717144f9bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a712172a56e6e235d857a717144f9bf">&#9670;&nbsp;</a></span>u32</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">ryujin::u32</a> = typedef std::uint32_t</td>
+          <td class="memname">using <a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">ryujin::u32</a> = typedef unsigned int</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="af372b3a5fbb94a8d86b4b03be533c553"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af372b3a5fbb94a8d86b4b03be533c553">&#9670;&nbsp;</a></span>u64</h2>
+<a id="a3e143684101f7c548db9e81ad0deb9fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e143684101f7c548db9e81ad0deb9fe">&#9670;&nbsp;</a></span>u64</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="namespaceryujin.html#af372b3a5fbb94a8d86b4b03be533c553">ryujin::u64</a> = typedef std::uint64_t</td>
+          <td class="memname">using <a class="el" href="namespaceryujin.html#a3e143684101f7c548db9e81ad0deb9fe">ryujin::u64</a> = typedef unsigned long long</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="aec68471309b8483f67b2cecb5c96c8c1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aec68471309b8483f67b2cecb5c96c8c1">&#9670;&nbsp;</a></span>u8</h2>
+<a id="a4fdd9d0598161de847155dcd0d0058ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4fdd9d0598161de847155dcd0d0058ac">&#9670;&nbsp;</a></span>u8</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="namespaceryujin.html#aec68471309b8483f67b2cecb5c96c8c1">ryujin::u8</a> = typedef std::uint8_t</td>
+          <td class="memname">using <a class="el" href="namespaceryujin.html#a4fdd9d0598161de847155dcd0d0058ac">ryujin::u8</a> = typedef unsigned char</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2589,7 +2648,7 @@ template&lt;typename... &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="namespaceryujin.html#aa7125c7a34d0c1880de2a342e0a84828">ryujin::access_type</a> : <a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a></td>
+          <td class="memname">enum <a class="el" href="namespaceryujin.html#aa7125c7a34d0c1880de2a342e0a84828">ryujin::access_type</a> : <a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a></td>
         </tr>
       </table>
   </td>
@@ -2631,7 +2690,7 @@ template&lt;typename... &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="namespaceryujin.html#a876bf1432134ccd1c0418353e3620ddc">ryujin::address_mode</a> : <a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a></td>
+          <td class="memname">enum <a class="el" href="namespaceryujin.html#a876bf1432134ccd1c0418353e3620ddc">ryujin::address_mode</a> : <a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a></td>
         </tr>
       </table>
   </td>
@@ -2686,7 +2745,7 @@ template&lt;typename... &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="namespaceryujin.html#a738d454aee57aebb2b729b85efe73178">ryujin::attachment_load_op</a> : <a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a></td>
+          <td class="memname">enum <a class="el" href="namespaceryujin.html#a738d454aee57aebb2b729b85efe73178">ryujin::attachment_load_op</a> : <a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a></td>
         </tr>
       </table>
   </td>
@@ -2713,7 +2772,7 @@ template&lt;typename... &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="namespaceryujin.html#a679ef100084bb39426ffe7f9a30cba69">ryujin::attachment_store_op</a> : <a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a></td>
+          <td class="memname">enum <a class="el" href="namespaceryujin.html#a679ef100084bb39426ffe7f9a30cba69">ryujin::attachment_store_op</a> : <a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a></td>
         </tr>
       </table>
   </td>
@@ -2807,7 +2866,7 @@ template&lt;typename... &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="namespaceryujin.html#a41efa9b8589a36b4e44503bb08dc0385">ryujin::buffer_usage</a> : <a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a></td>
+          <td class="memname">enum <a class="el" href="namespaceryujin.html#a41efa9b8589a36b4e44503bb08dc0385">ryujin::buffer_usage</a> : <a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a></td>
         </tr>
       </table>
   </td>
@@ -2840,7 +2899,7 @@ template&lt;typename... &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="namespaceryujin.html#ab11aefc182ba008962c8c807189c933c">ryujin::compare_op</a> : <a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a></td>
+          <td class="memname">enum <a class="el" href="namespaceryujin.html#ab11aefc182ba008962c8c807189c933c">ryujin::compare_op</a> : <a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a></td>
         </tr>
       </table>
   </td>
@@ -2872,7 +2931,7 @@ template&lt;typename... &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="namespaceryujin.html#ae40767da624e1b7fc1852c41ba24a594">ryujin::cull_mode</a> : <a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a></td>
+          <td class="memname">enum <a class="el" href="namespaceryujin.html#ae40767da624e1b7fc1852c41ba24a594">ryujin::cull_mode</a> : <a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a></td>
         </tr>
       </table>
   </td>
@@ -2899,7 +2958,7 @@ template&lt;typename... &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="namespaceryujin.html#aa5c888d9a37512df2eefd85ec3765244">ryujin::data_format</a> : <a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a></td>
+          <td class="memname">enum <a class="el" href="namespaceryujin.html#aa5c888d9a37512df2eefd85ec3765244">ryujin::data_format</a> : <a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a></td>
         </tr>
       </table>
   </td>
@@ -3108,7 +3167,7 @@ template&lt;typename... &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="namespaceryujin.html#a334030469fc54ade2b5b4ab9f6910d3c">ryujin::descriptor_type</a> : <a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a></td>
+          <td class="memname">enum <a class="el" href="namespaceryujin.html#a334030469fc54ade2b5b4ab9f6910d3c">ryujin::descriptor_type</a> : <a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a></td>
         </tr>
       </table>
   </td>
@@ -3143,7 +3202,7 @@ template&lt;typename... &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="namespaceryujin.html#a9e7809ddc1665c6ca1cd9e1369772e9b">ryujin::dynamic_pipeline_state</a> : <a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a></td>
+          <td class="memname">enum <a class="el" href="namespaceryujin.html#a9e7809ddc1665c6ca1cd9e1369772e9b">ryujin::dynamic_pipeline_state</a> : <a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a></td>
         </tr>
       </table>
   </td>
@@ -3169,7 +3228,7 @@ template&lt;typename... &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="namespaceryujin.html#ae2b6dd47d5354ee869444c553143e054">ryujin::filter</a> : <a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a></td>
+          <td class="memname">enum <a class="el" href="namespaceryujin.html#ae2b6dd47d5354ee869444c553143e054">ryujin::filter</a> : <a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a></td>
         </tr>
       </table>
   </td>
@@ -3195,7 +3254,7 @@ template&lt;typename... &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="namespaceryujin.html#ab0e547b1b3e1666369c8f0a473fbda32">ryujin::image_aspect</a> : <a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a></td>
+          <td class="memname">enum <a class="el" href="namespaceryujin.html#ab0e547b1b3e1666369c8f0a473fbda32">ryujin::image_aspect</a> : <a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a></td>
         </tr>
       </table>
   </td>
@@ -3222,7 +3281,7 @@ template&lt;typename... &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="namespaceryujin.html#a79a3cc66570d3e3c880899f48142c4ec">ryujin::image_layout</a> : <a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a></td>
+          <td class="memname">enum <a class="el" href="namespaceryujin.html#a79a3cc66570d3e3c880899f48142c4ec">ryujin::image_layout</a> : <a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a></td>
         </tr>
       </table>
   </td>
@@ -3264,7 +3323,7 @@ template&lt;typename... &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="namespaceryujin.html#a507a7197ebd80cd23d99536573dbabd6">ryujin::image_type</a> : <a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a></td>
+          <td class="memname">enum <a class="el" href="namespaceryujin.html#a507a7197ebd80cd23d99536573dbabd6">ryujin::image_type</a> : <a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a></td>
         </tr>
       </table>
   </td>
@@ -3291,7 +3350,7 @@ template&lt;typename... &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="namespaceryujin.html#a7456634c234faaa117faea0907267743">ryujin::image_usage</a> : <a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a></td>
+          <td class="memname">enum <a class="el" href="namespaceryujin.html#a7456634c234faaa117faea0907267743">ryujin::image_usage</a> : <a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a></td>
         </tr>
       </table>
   </td>
@@ -3323,7 +3382,7 @@ template&lt;typename... &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="namespaceryujin.html#a0a5677528666d88526aa2db61602ba13">ryujin::image_view_type</a> : <a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a></td>
+          <td class="memname">enum <a class="el" href="namespaceryujin.html#a0a5677528666d88526aa2db61602ba13">ryujin::image_view_type</a> : <a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a></td>
         </tr>
       </table>
   </td>
@@ -3354,7 +3413,7 @@ template&lt;typename... &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="namespaceryujin.html#a1c5224edc34730c4a30b77d6f66336ae">ryujin::input_binding_rate</a> : <a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a></td>
+          <td class="memname">enum <a class="el" href="namespaceryujin.html#a1c5224edc34730c4a30b77d6f66336ae">ryujin::input_binding_rate</a> : <a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a></td>
         </tr>
       </table>
   </td>
@@ -3380,7 +3439,7 @@ template&lt;typename... &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="namespaceryujin.html#a0782025183013ab5eb432198ee3365ae">ryujin::logic_op</a> : <a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a></td>
+          <td class="memname">enum <a class="el" href="namespaceryujin.html#a0782025183013ab5eb432198ee3365ae">ryujin::logic_op</a> : <a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a></td>
         </tr>
       </table>
   </td>
@@ -3446,7 +3505,7 @@ template&lt;typename... &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="namespaceryujin.html#a1f6f7b4ca02be1c89e211ed57d14352e">ryujin::memory_property</a> : <a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a></td>
+          <td class="memname">enum <a class="el" href="namespaceryujin.html#a1f6f7b4ca02be1c89e211ed57d14352e">ryujin::memory_property</a> : <a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a></td>
         </tr>
       </table>
   </td>
@@ -3475,7 +3534,7 @@ template&lt;typename... &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="namespaceryujin.html#addf67682c8aaf8dce6ac68a80bc05efd">ryujin::memory_usage</a> : <a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a></td>
+          <td class="memname">enum <a class="el" href="namespaceryujin.html#addf67682c8aaf8dce6ac68a80bc05efd">ryujin::memory_usage</a> : <a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a></td>
         </tr>
       </table>
   </td>
@@ -3502,7 +3561,7 @@ template&lt;typename... &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="namespaceryujin.html#abb946ea691baccdcee0ea547ff44ab82">ryujin::mipmap_mode</a> : <a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a></td>
+          <td class="memname">enum <a class="el" href="namespaceryujin.html#abb946ea691baccdcee0ea547ff44ab82">ryujin::mipmap_mode</a> : <a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a></td>
         </tr>
       </table>
   </td>
@@ -3528,7 +3587,7 @@ template&lt;typename... &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="namespaceryujin.html#afc14ff9db988d3c94740f940d1acda14">ryujin::pipeline_stage</a> : <a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a></td>
+          <td class="memname">enum <a class="el" href="namespaceryujin.html#afc14ff9db988d3c94740f940d1acda14">ryujin::pipeline_stage</a> : <a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a></td>
         </tr>
       </table>
   </td>
@@ -3569,7 +3628,7 @@ template&lt;typename... &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="namespaceryujin.html#a6e9e741eae48e43c5908797d741a7ed2">ryujin::polygon_rasterization_mode</a> : <a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a></td>
+          <td class="memname">enum <a class="el" href="namespaceryujin.html#a6e9e741eae48e43c5908797d741a7ed2">ryujin::polygon_rasterization_mode</a> : <a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a></td>
         </tr>
       </table>
   </td>
@@ -3596,7 +3655,7 @@ template&lt;typename... &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="namespaceryujin.html#a8250e487810a98e67e88893631db2725">ryujin::primitive_topology</a> : <a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a></td>
+          <td class="memname">enum <a class="el" href="namespaceryujin.html#a8250e487810a98e67e88893631db2725">ryujin::primitive_topology</a> : <a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a></td>
         </tr>
       </table>
   </td>
@@ -3631,7 +3690,7 @@ template&lt;typename... &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="namespaceryujin.html#ac64efbce982442d2281585e72b6fbcc8">ryujin::sample_count</a> : <a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a></td>
+          <td class="memname">enum <a class="el" href="namespaceryujin.html#ac64efbce982442d2281585e72b6fbcc8">ryujin::sample_count</a> : <a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a></td>
         </tr>
       </table>
   </td>
@@ -3660,7 +3719,7 @@ template&lt;typename... &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="namespaceryujin.html#a0dfec460ed1539b366857fe6ea93769e">ryujin::shader_stage</a> : <a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a></td>
+          <td class="memname">enum <a class="el" href="namespaceryujin.html#a0dfec460ed1539b366857fe6ea93769e">ryujin::shader_stage</a> : <a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a></td>
         </tr>
       </table>
   </td>
@@ -3690,7 +3749,7 @@ template&lt;typename... &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="namespaceryujin.html#ad0745968dd61bb1b7122e776049dcb3f">ryujin::stencil_op</a> : <a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a></td>
+          <td class="memname">enum <a class="el" href="namespaceryujin.html#ad0745968dd61bb1b7122e776049dcb3f">ryujin::stencil_op</a> : <a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a></td>
         </tr>
       </table>
   </td>
@@ -3722,7 +3781,7 @@ template&lt;typename... &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="namespaceryujin.html#ab435654f68acde87cbdda7ee9242809d">ryujin::vertex_winding_order</a> : <a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a></td>
+          <td class="memname">enum <a class="el" href="namespaceryujin.html#ab435654f68acde87cbdda7ee9242809d">ryujin::vertex_winding_order</a> : <a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a></td>
         </tr>
       </table>
   </td>
@@ -4213,7 +4272,7 @@ template&lt;numeric T&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr <a class="el" href="namespaceryujin.html#aedb18376edf7c7bc47557e8333960f6e">u16</a> ryujin::compress_to_half </td>
+          <td class="memname">constexpr <a class="el" href="namespaceryujin.html#a10185cea8b7d65241ee94892e50f23f8">u16</a> ryujin::compress_to_half </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="namespaceryujin.html#a8929b6fecbd9088f57cbc586fe029b6a">f32</a>&#160;</td>
           <td class="paramname"><em>value</em></td><td>)</td>
@@ -4688,6 +4747,21 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p>Forwards an r-value reference as an r-value. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Type of value to forward</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">t</td><td>Value to forward</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>r-value reference</dd></dl>
+
 </div>
 </div>
 <a id="a865ddc672e77eb76be36f0da7d7829fe"></a>
@@ -4715,6 +4789,21 @@ template&lt;typename T &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Forwards an l-value reference as an r-value. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Type of value to forward</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">t</td><td>Value to forward</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>r-value reference</dd></dl>
 
 </div>
 </div>
@@ -5094,7 +5183,7 @@ template&lt;typename T , typename ... Ts&gt; </div>
         <tr>
           <td class="memname">constexpr <a class="el" href="namespaceryujin.html#a8929b6fecbd9088f57cbc586fe029b6a">f32</a> ryujin::inflate_to_float </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="namespaceryujin.html#aedb18376edf7c7bc47557e8333960f6e">u16</a>&#160;</td>
+          <td class="paramtype">const <a class="el" href="namespaceryujin.html#a10185cea8b7d65241ee94892e50f23f8">u16</a>&#160;</td>
           <td class="paramname"><em>value</em></td><td>)</td>
           <td></td>
         </tr>
@@ -5854,6 +5943,21 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p>Moves a r-value reference. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Type fo the value to move</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">t</td><td>Value to move</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Moved reference</dd></dl>
+
 </div>
 </div>
 <a id="a5dd7ea8342b826e1a1d8021875501203"></a>
@@ -5892,6 +5996,21 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p>Implementation of move using swap semantics. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Type of values to swap</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>Value to swap</td></tr>
+    <tr><td class="paramname">b</td><td>Value to swap</td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="a6cc528f96fbd663b613fc1d0c5cd55f6"></a>
@@ -5929,6 +6048,22 @@ template&lt;typename T , sz N&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Implementation of move using swap semantics for an array type. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Type of values to swap</td></tr>
+    <tr><td class="paramname">N</td><td>Number of elements in the array</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>Value to swap</td></tr>
+    <tr><td class="paramname">b</td><td>Value to swap</td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -10105,6 +10240,8 @@ template&lt;numeric T&gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p>Default in place tag. </p>
+
 </div>
 </div>
 <a id="aa4b6fa0ff58ff47280fdaefdc8f3b603"></a>
@@ -10128,6 +10265,8 @@ template&lt;sz I&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Default in place index tag. </p>
 
 </div>
 </div>
@@ -10153,6 +10292,8 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p>Default in place type tag. </p>
+
 </div>
 </div>
 <a id="a73a5c4c8cf82e8a7eef6db8c273b0535"></a>
@@ -10165,7 +10306,7 @@ template&lt;typename T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr <a class="el" href="structryujin_1_1slot__map__key.html">slot_map_key</a> ryujin::invalid_slot_map_key = { .index = std::numeric_limits&lt;<a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a>&gt;::max(), .generation = std::numeric_limits&lt;<a class="el" href="namespaceryujin.html#a5f26fb8abf892c0e794f2fa0b7a094ad">u32</a>&gt;::max() }</td>
+          <td class="memname">constexpr <a class="el" href="structryujin_1_1slot__map__key.html">slot_map_key</a> ryujin::invalid_slot_map_key = { .index = std::numeric_limits&lt;<a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a>&gt;::max(), .generation = std::numeric_limits&lt;<a class="el" href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">u32</a>&gt;::max() }</td>
         </tr>
       </table>
   </td>

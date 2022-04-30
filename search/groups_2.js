@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['reference_20wrapper_3451',['Reference Wrapper',['../group__reference__wrapper.html',1,'']]]
+  ['hashing_20functors_3484',['Hashing Functors',['../group__hashes.html',1,'']]]
 ];
