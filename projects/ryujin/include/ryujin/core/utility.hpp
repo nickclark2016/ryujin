@@ -262,6 +262,19 @@ namespace ryujin
     };
 
     /// <summary>
+    /// Specialization of hash for an 64 bit unsigned integer.
+    /// </summary>
+    /// \ingroup hashes
+    template<>
+    struct hash<unsigned long int>
+    {
+        inline constexpr sz operator()(const unsigned long int v) const noexcept
+        {
+            return v;
+        }
+    };
+
+    /// <summary>
     /// Specialization of hash for a single precision float.
     /// </summary>
     /// \ingroup hashes
@@ -299,9 +312,76 @@ namespace ryujin
         inline constexpr sz operator()(const T* v) const noexcept
         {
             const sz s = static_cast<sz>(v);
-            return hash<sz>()(sz);
+            return hash<sz>()(s);
         }
     };
+
+    /// <summary>
+    /// Tuple containing two values.
+    /// </summary>
+    /// <typeparam name="T1">First type contained</typeparam>
+    /// <typeparam name="T2">Second type contained</typeparam>
+    template <typename T1, typename T2>
+    struct pair
+    {
+        /// <summary>
+        /// First element in the pair
+        /// </summary>
+        T1 first;
+
+        /// <summary>
+        /// Second element in the pair.
+        /// </summary>
+        T2 second;
+
+        /// <summary>
+        /// Default constructs the first and second element
+        /// </summary>
+        constexpr pair() = default;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        constexpr pair(const T1& first, const T2& second);
+        constexpr pair(T1&& first, T2&& second);
+
+        pair(const pair&) = default;
+        pair(pair&&) noexcept = default;
+
+        constexpr pair& operator=(const pair& rhs);
+        constexpr pair& operator=(pair&& rhs) noexcept;
+
+        void swap(pair& p);
+    };
+
+    template <typename T1, typename T2>
+    pair(T1, T2) -> pair<T1, T2>;
+
+    template <typename T1, typename T2>
+    inline constexpr pair<T1, T2>::pair(const T1& first, const T2& second)
+        : first(first), second(second)
+    {
+    }
+
+    /// <summary>
+    /// Constructs a pair from two r-values.
+    /// </summary>
+    /// <typeparam name="T1">Type of first value in pair</typeparam>
+    /// <typeparam name="T2">Type of second value in pair</typeparam>
+    /// <param name="first">First value in pair</param>
+    /// <param name="second">Second value in pair</param>
+    /// <returns>Pair containing the provided values</returns>
+    template <typename T1, typename T2>
+    inline constexpr pair<T1, T2> make_pair(T1&& first, T2&& second)
+    {
+        pair<T1, T2> p = {
+            .first = first,
+            .second = second
+        };
+        return p;
+    }
 }
 
 #endif // utility_hpp__
