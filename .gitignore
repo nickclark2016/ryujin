@@ -11,6 +11,7 @@ Makefile
 # Outputs
 bin/
 bin-int/
+docs/
 
 # SPIR-V Binaries
 *.spv 

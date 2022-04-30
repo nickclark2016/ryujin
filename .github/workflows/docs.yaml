@@ -1,0 +1,43 @@
+name: Linux
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  docs-build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Fetch Doxygen
+        run: sudo apt-get install -y doxygen
+      - name: Build Documentation
+        run: doxygen ./projects/ryujin/Doxygen && ./docs/.nojekyll
+        shell: bash
+      - name: Upload Documentation Artifacts
+        uses: actions/upload-artifacts@v2
+        with:
+          name: documentation-files
+          path: ./docs
+
+  docs-deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    if: github-ref == 'refs/heads/master'
+    steps:
+      - name: Downlod Documentation Artifacts
+        uses: actions/download-artifacts@v2
+        with:
+          name: documentation-files
+          path: ./docs
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs

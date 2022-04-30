@@ -6,18 +6,50 @@
 
 namespace ryujin
 {
+    /// \defgroup reference_wrapper Reference Wrapper
+
+    /// <summary>
+    /// Wraps a reference into a copyable and assignable type.  This can be used to store
+    /// references in types that cannot typically hold references.
+    /// </summary>
+    /// <typeparam name="T">Type of reference</typeparam>
+    /// \ingroup reference_wrapper
     template <typename T>
     class reference_wrapper
     {
     public:
+        /// <summary>
+        /// Constructs a reference wrapper from a value.
+        /// </summary>
+        /// <typeparam name="U">Type of the value to construct from</typeparam>
+        /// <param name="val">Value to construct from</param>
         template <typename U>
         constexpr reference_wrapper(U&& val);
 
+        /// <summary>
+        /// Copy constructor.
+        /// </summary>
+        /// <param name="other">Reference wrapper to copy reference from</param>
+        /// <returns></returns>
         constexpr reference_wrapper(const reference_wrapper& other) noexcept;
 
+        /// <summary>
+        /// Reseats the reference to point to the reference held by the other reference.
+        /// </summary>
+        /// <param name="other">Reference wrapper to copy from</param>
+        /// <returns>Reference to this</returns>
         constexpr reference_wrapper& operator=(const reference_wrapper& other) noexcept;
 
+        /// <summary>
+        /// Gets the value held by the wrapper.
+        /// </summary>
+        /// <returns>Reference held by wrapper</returns>
         constexpr operator T& () const noexcept;
+
+        /// <summary>
+        /// Gets the value held by the wrapper.
+        /// </summary>
+        /// <returns>Reference held by wrapper</returns>
         constexpr T& get() const noexcept;
     private:
         T* _ptr;
@@ -392,6 +424,8 @@ namespace ryujin
     template <typename ...>
     class move_only_function;
 
+    /// \defgroup Functions
+
     namespace detail
     {
         template <typename T>
@@ -401,37 +435,70 @@ namespace ryujin
         struct is_function_object<move_only_function<T>> : public true_type {};
     }
 
+    /// <summary>
+    /// Function with move-only semantics.
+    /// </summary>
+    /// <typeparam name="Args...">Type of arguments that the function takes</typeparam>
+    /// <typeparam name="Ret">Return type of the function</typeparam>
+    /// \ingroup Functions
     template <typename Ret, typename ... Args>
     class move_only_function<Ret(Args...)> : public detail::move_only_function_impl<Ret(Args...)>
     {
     public:
+        /// <summary>
+        /// Constructs an empty function.
+        /// </summary>
         inline move_only_function()
         {
             this->construct_empty();
         }
-                
+        
+        /// <summary>
+        /// Constructs a function by moving from another function.
+        /// </summary>
+        /// <param name="fn">Function to move from</param>
         inline move_only_function(move_only_function&& fn) noexcept
         {
             this->construct_move(ryujin::forward<move_only_function>(fn));
         }
         
+        /// <summary>
+        /// Constructs an empty function.
+        /// </summary>
+        /// <param name="">nullptr</param>
         inline move_only_function(nullptr_t) noexcept
             : move_only_function()
         {
         }
 
+        /// <summary>
+        /// Constructs a function by moving an external functor into this function.
+        /// </summary>
+        /// <typeparam name="Fn">Type of the functor</typeparam>
+        /// <param name="f">r-value reference to the functor</param>
         template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...)>> && !detail::is_function_object<remove_cvref_t<Fn>>::value, bool> = true>
         inline move_only_function(Fn&& f)
         {
             this->construct_from_functor(ryujin::forward<Fn>(f));
         }
 
+        /// <summary>
+        /// Moves a function into this function. If this function already contains a functor, it is released.  If the other function
+        /// contains a functor, ownership is transfered to this function.
+        /// </summary>
+        /// <param name="rhs">Function to move into this</param>
+        /// <returns>Reference to this</returns>
         inline move_only_function& operator=(move_only_function&& rhs) noexcept
         {
             this->move_assign(ryujin::forward<move_only_function&&>(rhs));
             return *this;
         }
 
+        /// <summary>
+        /// Moves a functor into this function. If this function already contains a functor, it is released.
+        /// </summary>
+        /// <param name="f">Function to move into this</param>
+        /// <returns>Reference to this</returns>
         template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...)>> && !detail::is_function_object<remove_cvref_t<Fn>>::value, bool> = true>
         inline move_only_function& operator=(Fn&& f) noexcept
         {
@@ -440,37 +507,70 @@ namespace ryujin
         }
     };
 
+    /// <summary>
+    /// Function with move-only semantics. Specialization for noexcept functions.
+    /// </summary>
+    /// <typeparam name="Args...">Type of arguments that the function takes</typeparam>
+    /// <typeparam name="Ret">Return type of the function</typeparam>
+    /// \ingroup Functions
     template <typename Ret, typename ... Args>
     class move_only_function<Ret(Args...) noexcept> : public detail::move_only_function_impl<Ret(Args...) noexcept>
     {
     public:
+        /// <summary>
+        /// Constructs an empty function.
+        /// </summary>
         inline move_only_function()
         {
             this->construct_empty();
         }
 
+        /// <summary>
+        /// Constructs a function by moving from another function.
+        /// </summary>
+        /// <param name="fn">Function to move from</param>
         inline move_only_function(move_only_function&& fn) noexcept
         {
             this->construct_move(ryujin::forward<move_only_function>(fn));
         }
 
+        /// <summary>
+        /// Constructs an empty function.
+        /// </summary>
+        /// <param name="">nullptr</param>
         inline move_only_function(nullptr_t) noexcept
             : move_only_function()
         {
         }
 
+        /// <summary>
+        /// Constructs a function by moving an external functor into this function.
+        /// </summary>
+        /// <typeparam name="Fn">Type of the functor</typeparam>
+        /// <param name="f">r-value reference to the functor</param>
         template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
         inline move_only_function(Fn&& f)
         {
             this->construct_from_functor(ryujin::forward<Fn>(f));
         }
 
+        /// <summary>
+        /// Moves a function into this function. If this function already contains a functor, it is released.  If the other function
+        /// contains a functor, ownership is transfered to this function.
+        /// </summary>
+        /// <param name="rhs">Function to move into this</param>
+        /// <returns>Reference to this</returns>
         inline move_only_function& operator=(move_only_function&& rhs) noexcept
         {
             this->move_assign(ryujin::forward<move_only_function&&>(rhs));
             return *this;
         }
 
+        /// <summary>
+        /// Moves a functor into this function. If this function already contains a functor, it is released.
+        /// </summary>
+        /// <param name="f">Function to move into this</param>
+        /// <returns>Reference to this</returns>
         template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
         inline move_only_function& operator=(Fn&& f) noexcept
         {
@@ -479,37 +579,70 @@ namespace ryujin
         }
     };
 
+    /// <summary>
+    /// Function with move-only semantics. Specialization for functions that act on l-value references only.
+    /// </summary>
+    /// <typeparam name="Args...">Type of arguments that the function takes</typeparam>
+    /// <typeparam name="Ret">Return type of the function</typeparam>
+    /// \ingroup Functions
     template <typename Ret, typename ... Args>
     class move_only_function<Ret(Args...) &> : public detail::move_only_function_impl<Ret(Args...) &>
     {
     public:
+        /// <summary>
+        /// Constructs an empty function.
+        /// </summary>
         inline move_only_function()
         {
             this->construct_empty();
         }
 
+        /// <summary>
+        /// Constructs a function by moving from another function.
+        /// </summary>
+        /// <param name="fn">Function to move from</param>
         inline move_only_function(move_only_function&& fn) noexcept
         {
             this->construct_move(ryujin::forward<move_only_function>(fn));
         }
 
+        /// <summary>
+        /// Constructs an empty function.
+        /// </summary>
+        /// <param name="">nullptr</param>
         inline move_only_function(nullptr_t) noexcept
             : move_only_function()
         {
         }
 
+        /// <summary>
+        /// Constructs a function by moving an external functor into this function.
+        /// </summary>
+        /// <typeparam name="Fn">Type of the functor</typeparam>
+        /// <param name="f">r-value reference to the functor</param>
         template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...)>>, bool> = true>
         inline move_only_function(Fn&& f)
         {
             this->construct_from_functor(ryujin::forward<Fn>(f));
         }
 
+        /// <summary>
+        /// Moves a function into this function. If this function already contains a functor, it is released.  If the other function
+        /// contains a functor, ownership is transfered to this function.
+        /// </summary>
+        /// <param name="rhs">Function to move into this</param>
+        /// <returns>Reference to this</returns>
         inline move_only_function& operator=(move_only_function&& rhs) noexcept
         {
             this->move_assign(ryujin::forward<move_only_function&&>(rhs));
             return *this;
         }
 
+        /// <summary>
+        /// Moves a functor into this function. If this function already contains a functor, it is released.
+        /// </summary>
+        /// <param name="f">Function to move into this</param>
+        /// <returns>Reference to this</returns>
         template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...)>>, bool> = true>
         inline move_only_function& operator=(Fn&& f) noexcept
         {
@@ -518,37 +651,70 @@ namespace ryujin
         }
     };
 
+    /// <summary>
+    /// Function with move-only semantics. Specialization for noexcept functions that act on l-value references only.
+    /// </summary>
+    /// <typeparam name="Args...">Type of arguments that the function takes</typeparam>
+    /// <typeparam name="Ret">Return type of the function</typeparam>
+    /// \ingroup Functions
     template <typename Ret, typename ... Args>
     class move_only_function<Ret(Args...) & noexcept> : public detail::move_only_function_impl<Ret(Args...) & noexcept>
     {
     public:
+        /// <summary>
+        /// Constructs an empty function.
+        /// </summary>
         inline move_only_function()
         {
             this->construct_empty();
         }
 
+        /// <summary>
+        /// Constructs a function by moving from another function.
+        /// </summary>
+        /// <param name="fn">Function to move from</param>
         inline move_only_function(move_only_function&& fn) noexcept
         {
             this->construct_move(ryujin::forward<move_only_function>(fn));
         }
 
+        /// <summary>
+        /// Constructs an empty function.
+        /// </summary>
+        /// <param name="">nullptr</param>
         inline move_only_function(nullptr_t) noexcept
             : move_only_function()
         {
         }
 
+        /// <summary>
+        /// Constructs a function by moving an external functor into this function.
+        /// </summary>
+        /// <typeparam name="Fn">Type of the functor</typeparam>
+        /// <param name="f">r-value reference to the functor</param>
         template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
         inline move_only_function(Fn&& f)
         {
             this->construct_from_functor(ryujin::forward<Fn>(f));
         }
 
+        /// <summary>
+        /// Moves a function into this function. If this function already contains a functor, it is released.  If the other function
+        /// contains a functor, ownership is transfered to this function.
+        /// </summary>
+        /// <param name="rhs">Function to move into this</param>
+        /// <returns>Reference to this</returns>
         inline move_only_function& operator=(move_only_function&& rhs) noexcept
         {
             this->move_assign(ryujin::forward<move_only_function&&>(rhs));
             return *this;
         }
 
+        /// <summary>
+        /// Moves a functor into this function. If this function already contains a functor, it is released.
+        /// </summary>
+        /// <param name="f">Function to move into this</param>
+        /// <returns>Reference to this</returns>
         template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
         inline move_only_function& operator=(Fn&& f) noexcept
         {
@@ -557,37 +723,70 @@ namespace ryujin
         }
     };
 
+    /// <summary>
+    /// Function with move-only semantics. Specialization for functions that act on r-value references only.
+    /// </summary>
+    /// <typeparam name="Args...">Type of arguments that the function takes</typeparam>
+    /// <typeparam name="Ret">Return type of the function</typeparam>
+    /// \ingroup Functions
     template <typename Ret, typename ... Args>
     class move_only_function<Ret(Args...) &&> : public detail::move_only_function_impl<Ret(Args...) &&>
     {
     public:
+        /// <summary>
+        /// Constructs an empty function.
+        /// </summary>
         inline move_only_function()
         {
             this->construct_empty();
         }
 
+        /// <summary>
+        /// Constructs a function by moving from another function.
+        /// </summary>
+        /// <param name="fn">Function to move from</param>
         inline move_only_function(move_only_function&& fn) noexcept
         {
             this->construct_move(ryujin::forward<move_only_function>(fn));
         }
 
+        /// <summary>
+        /// Constructs an empty function.
+        /// </summary>
+        /// <param name="">nullptr</param>
         inline move_only_function(nullptr_t) noexcept
             : move_only_function()
         {
         }
 
+        /// <summary>
+        /// Constructs a function by moving an external functor into this function.
+        /// </summary>
+        /// <typeparam name="Fn">Type of the functor</typeparam>
+        /// <param name="f">r-value reference to the functor</param>
         template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...)>>, bool> = true>
         inline move_only_function(Fn&& f)
         {
             this->construct_from_functor(ryujin::forward<Fn>(f));
         }
 
+        /// <summary>
+        /// Moves a function into this function. If this function already contains a functor, it is released.  If the other function
+        /// contains a functor, ownership is transfered to this function.
+        /// </summary>
+        /// <param name="rhs">Function to move into this</param>
+        /// <returns>Reference to this</returns>
         inline move_only_function& operator=(move_only_function&& rhs) noexcept
         {
             this->move_assign(ryujin::forward<move_only_function&&>(rhs));
             return *this;
         }
 
+        /// <summary>
+        /// Moves a functor into this function. If this function already contains a functor, it is released.
+        /// </summary>
+        /// <param name="f">Function to move into this</param>
+        /// <returns>Reference to this</returns>
         template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...)>>, bool> = true>
         inline move_only_function& operator=(Fn&& f) noexcept
         {
@@ -596,37 +795,70 @@ namespace ryujin
         }
     };
 
+    /// <summary>
+    /// Function with move-only semantics. Specialization for noexcept functions that act on r-value references only.
+    /// </summary>
+    /// <typeparam name="Args...">Type of arguments that the function takes</typeparam>
+    /// <typeparam name="Ret">Return type of the function</typeparam>
+    /// \ingroup Functions
     template <typename Ret, typename ... Args>
     class move_only_function<Ret(Args...) && noexcept> : public detail::move_only_function_impl<Ret(Args...) && noexcept>
     {
     public:
+        /// <summary>
+        /// Constructs an empty function.
+        /// </summary>
         inline move_only_function()
         {
             this->construct_empty();
         }
 
+        /// <summary>
+        /// Constructs a function by moving from another function.
+        /// </summary>
+        /// <param name="fn">Function to move from</param>
         inline move_only_function(move_only_function&& fn) noexcept
         {
             this->construct_move(ryujin::forward<move_only_function>(fn));
         }
 
+        /// <summary>
+        /// Constructs an empty function.
+        /// </summary>
+        /// <param name="">nullptr</param>
         inline move_only_function(nullptr_t) noexcept
             : move_only_function()
         {
         }
 
+        /// <summary>
+        /// Constructs a function by moving an external functor into this function.
+        /// </summary>
+        /// <typeparam name="Fn">Type of the functor</typeparam>
+        /// <param name="f">r-value reference to the functor</param>
         template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
         inline move_only_function(Fn&& f)
         {
             this->construct_from_functor(ryujin::forward<Fn>(f));
         }
 
+        /// <summary>
+        /// Moves a function into this function. If this function already contains a functor, it is released.  If the other function
+        /// contains a functor, ownership is transfered to this function.
+        /// </summary>
+        /// <param name="rhs">Function to move into this</param>
+        /// <returns>Reference to this</returns>
         inline move_only_function& operator=(move_only_function&& rhs) noexcept
         {
             this->move_assign(ryujin::forward<move_only_function&&>(rhs));
             return *this;
         }
 
+        /// <summary>
+        /// Moves a functor into this function. If this function already contains a functor, it is released.
+        /// </summary>
+        /// <param name="f">Function to move into this</param>
+        /// <returns>Reference to this</returns>
         template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
         inline move_only_function& operator=(Fn&& f) noexcept
         {
@@ -635,37 +867,70 @@ namespace ryujin
         }
     };
 
+    /// <summary>
+    /// Function with move-only semantics. Specialization for const functions.
+    /// </summary>
+    /// <typeparam name="Args...">Type of arguments that the function takes</typeparam>
+    /// <typeparam name="Ret">Return type of the function</typeparam>
+    /// \ingroup Functions
     template <typename Ret, typename ... Args>
     class move_only_function<Ret(Args...) const> : public detail::move_only_function_impl<Ret(Args...) const>
     {
     public:
+        /// <summary>
+        /// Constructs an empty function.
+        /// </summary>
         inline move_only_function()
         {
             this->construct_empty();
         }
 
+        /// <summary>
+        /// Constructs a function by moving from another function.
+        /// </summary>
+        /// <param name="fn">Function to move from</param>
         inline move_only_function(move_only_function&& fn) noexcept
         {
             this->construct_move(ryujin::forward<move_only_function>(fn));
         }
 
+        /// <summary>
+        /// Constructs an empty function.
+        /// </summary>
+        /// <param name="">nullptr</param>
         inline move_only_function(nullptr_t) noexcept
             : move_only_function()
         {
         }
 
+        /// <summary>
+        /// Constructs a function by moving an external functor into this function.
+        /// </summary>
+        /// <typeparam name="Fn">Type of the functor</typeparam>
+        /// <param name="f">r-value reference to the functor</param>
         template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...)>> && !detail::is_function_object<Fn>::value, bool> = true>
         inline move_only_function(Fn&& f)
         {
             this->construct_from_functor(ryujin::forward<Fn>(f));
         }
 
+        /// <summary>
+        /// Moves a function into this function. If this function already contains a functor, it is released.  If the other function
+        /// contains a functor, ownership is transfered to this function.
+        /// </summary>
+        /// <param name="rhs">Function to move into this</param>
+        /// <returns>Reference to this</returns>
         inline move_only_function& operator=(move_only_function&& rhs) noexcept
         {
             this->move_assign(ryujin::forward<move_only_function&&>(rhs));
             return *this;
         }
 
+        /// <summary>
+        /// Moves a functor into this function. If this function already contains a functor, it is released.
+        /// </summary>
+        /// <param name="f">Function to move into this</param>
+        /// <returns>Reference to this</returns>
         template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...)>> && !detail::is_function_object<Fn>::value, bool> = true>
         inline move_only_function& operator=(Fn&& f) noexcept
         {
@@ -674,37 +939,70 @@ namespace ryujin
         }
     };
 
+    /// <summary>
+    /// Function with move-only semantics. Specialization for const noexcept functions.
+    /// </summary>
+    /// <typeparam name="Args...">Type of arguments that the function takes</typeparam>
+    /// <typeparam name="Ret">Return type of the function</typeparam>
+    /// \ingroup Functions
     template <typename Ret, typename ... Args>
     class move_only_function<Ret(Args...) const noexcept> : public detail::move_only_function_impl<Ret(Args...) const noexcept>
     {
     public:
+        /// <summary>
+        /// Constructs an empty function.
+        /// </summary>
         inline move_only_function()
         {
             this->construct_empty();
         }
 
+        /// <summary>
+        /// Constructs a function by moving from another function.
+        /// </summary>
+        /// <param name="fn">Function to move from</param>
         inline move_only_function(move_only_function&& fn) noexcept
         {
             this->construct_move(ryujin::forward<move_only_function>(fn));
         }
 
+        /// <summary>
+        /// Constructs an empty function.
+        /// </summary>
+        /// <param name="">nullptr</param>
         inline move_only_function(nullptr_t) noexcept
             : move_only_function()
         {
         }
 
+        /// <summary>
+        /// Constructs a function by moving an external functor into this function.
+        /// </summary>
+        /// <typeparam name="Fn">Type of the functor</typeparam>
+        /// <param name="f">r-value reference to the functor</param>
         template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
         inline move_only_function(Fn&& f)
         {
             this->construct_from_functor(ryujin::forward<Fn>(f));
         }
 
+        /// <summary>
+        /// Moves a function into this function. If this function already contains a functor, it is released.  If the other function
+        /// contains a functor, ownership is transfered to this function.
+        /// </summary>
+        /// <param name="rhs">Function to move into this</param>
+        /// <returns>Reference to this</returns>
         inline move_only_function& operator=(move_only_function&& rhs) noexcept
         {
             this->move_assign(ryujin::forward<move_only_function&&>(rhs));
             return *this;
         }
 
+        /// <summary>
+        /// Moves a functor into this function. If this function already contains a functor, it is released.
+        /// </summary>
+        /// <param name="f">Function to move into this</param>
+        /// <returns>Reference to this</returns>
         template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
         inline move_only_function& operator=(Fn&& f) noexcept
         {
@@ -713,37 +1011,70 @@ namespace ryujin
         }
     };
 
+    /// <summary>
+    /// Function with move-only semantics. Specialization for const functions that act on l-value references only.
+    /// </summary>
+    /// <typeparam name="Args...">Type of arguments that the function takes</typeparam>
+    /// <typeparam name="Ret">Return type of the function</typeparam>
+    /// \ingroup Functions
     template <typename Ret, typename ... Args>
     class move_only_function<Ret(Args...) const &> : public detail::move_only_function_impl<Ret(Args...) const &>
     {
     public:
+        /// <summary>
+        /// Constructs an empty function.
+        /// </summary>
         inline move_only_function()
         {
             this->construct_empty();
         }
 
+        /// <summary>
+        /// Constructs a function by moving from another function.
+        /// </summary>
+        /// <param name="fn">Function to move from</param>
         inline move_only_function(move_only_function&& fn) noexcept
         {
             this->construct_move(ryujin::forward<move_only_function>(fn));
         }
 
+        /// <summary>
+        /// Constructs an empty function.
+        /// </summary>
+        /// <param name="">nullptr</param>
         inline move_only_function(nullptr_t) noexcept
             : move_only_function()
         {
         }
 
+        /// <summary>
+        /// Constructs a function by moving an external functor into this function.
+        /// </summary>
+        /// <typeparam name="Fn">Type of the functor</typeparam>
+        /// <param name="f">r-value reference to the functor</param>
         template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...)>>, bool> = true>
         inline move_only_function(Fn&& f)
         {
             this->construct_from_functor(ryujin::forward<Fn>(f));
         }
 
+        /// <summary>
+        /// Moves a function into this function. If this function already contains a functor, it is released.  If the other function
+        /// contains a functor, ownership is transfered to this function.
+        /// </summary>
+        /// <param name="rhs">Function to move into this</param>
+        /// <returns>Reference to this</returns>
         inline move_only_function& operator=(move_only_function&& rhs) noexcept
         {
             this->move_assign(ryujin::forward<move_only_function&&>(rhs));
             return *this;
         }
 
+        /// <summary>
+        /// Moves a functor into this function. If this function already contains a functor, it is released.
+        /// </summary>
+        /// <param name="f">Function to move into this</param>
+        /// <returns>Reference to this</returns>
         template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...)>>, bool> = true>
         inline move_only_function& operator=(Fn&& f) noexcept
         {
@@ -752,37 +1083,70 @@ namespace ryujin
         }
     };
 
+    /// <summary>
+    /// Function with move-only semantics. Specialization for const noexcept functions that act on l-value references only.
+    /// </summary>
+    /// <typeparam name="Args...">Type of arguments that the function takes</typeparam>
+    /// <typeparam name="Ret">Return type of the function</typeparam>
+    /// \ingroup Functions
     template <typename Ret, typename ... Args>
     class move_only_function<Ret(Args...) const & noexcept> : public detail::move_only_function_impl<Ret(Args...) const & noexcept>
     {
     public:
+        /// <summary>
+        /// Constructs an empty function.
+        /// </summary>
         inline move_only_function()
         {
             this->construct_empty();
         }
 
+        /// <summary>
+        /// Constructs a function by moving from another function.
+        /// </summary>
+        /// <param name="fn">Function to move from</param>
         inline move_only_function(move_only_function&& fn) noexcept
         {
             this->construct_move(ryujin::forward<move_only_function>(fn));
         }
 
+        /// <summary>
+        /// Constructs an empty function.
+        /// </summary>
+        /// <param name="">nullptr</param>
         inline move_only_function(nullptr_t) noexcept
             : move_only_function()
         {
         }
 
+        /// <summary>
+        /// Constructs a function by moving an external functor into this function.
+        /// </summary>
+        /// <typeparam name="Fn">Type of the functor</typeparam>
+        /// <param name="f">r-value reference to the functor</param>
         template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
         inline move_only_function(Fn&& f)
         {
             this->construct_from_functor(ryujin::forward<Fn>(f));
         }
 
+        /// <summary>
+        /// Moves a function into this function. If this function already contains a functor, it is released.  If the other function
+        /// contains a functor, ownership is transfered to this function.
+        /// </summary>
+        /// <param name="rhs">Function to move into this</param>
+        /// <returns>Reference to this</returns>
         inline move_only_function& operator=(move_only_function&& rhs) noexcept
         {
             this->move_assign(ryujin::forward<move_only_function&&>(rhs));
             return *this;
         }
 
+        /// <summary>
+        /// Moves a functor into this function. If this function already contains a functor, it is released.
+        /// </summary>
+        /// <param name="f">Function to move into this</param>
+        /// <returns>Reference to this</returns>
         template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
         inline move_only_function& operator=(Fn&& f) noexcept
         {
@@ -791,37 +1155,70 @@ namespace ryujin
         }
     };
 
+    /// <summary>
+    /// Function with move-only semantics. Specialization for const functions that act on r-value references only.
+    /// </summary>
+    /// <typeparam name="Args...">Type of arguments that the function takes</typeparam>
+    /// <typeparam name="Ret">Return type of the function</typeparam>
+    /// \ingroup Functions
     template <typename Ret, typename ... Args>
     class move_only_function<Ret(Args...) const &&> : public detail::move_only_function_impl<Ret(Args...) const &&>
     {
     public:
+        /// <summary>
+        /// Constructs an empty function.
+        /// </summary>
         inline move_only_function()
         {
             this->construct_empty();
         }
 
+        /// <summary>
+        /// Constructs a function by moving from another function.
+        /// </summary>
+        /// <param name="fn">Function to move from</param>
         inline move_only_function(move_only_function&& fn) noexcept
         {
             this->construct_move(ryujin::forward<move_only_function>(fn));
         }
 
+        /// <summary>
+        /// Constructs an empty function.
+        /// </summary>
+        /// <param name="">nullptr</param>
         inline move_only_function(nullptr_t) noexcept
             : move_only_function()
         {
         }
 
+        /// <summary>
+        /// Constructs a function by moving an external functor into this function.
+        /// </summary>
+        /// <typeparam name="Fn">Type of the functor</typeparam>
+        /// <param name="f">r-value reference to the functor</param>
         template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...)>>, bool> = true>
         inline move_only_function(Fn&& f)
         {
             this->construct_from_functor(ryujin::forward<Fn>(f));
         }
 
+        /// <summary>
+        /// Moves a function into this function. If this function already contains a functor, it is released.  If the other function
+        /// contains a functor, ownership is transfered to this function.
+        /// </summary>
+        /// <param name="rhs">Function to move into this</param>
+        /// <returns>Reference to this</returns>
         inline move_only_function& operator=(move_only_function&& rhs) noexcept
         {
             this->move_assign(ryujin::forward<move_only_function&&>(rhs));
             return *this;
         }
 
+        /// <summary>
+        /// Moves a functor into this function. If this function already contains a functor, it is released.
+        /// </summary>
+        /// <param name="f">Function to move into this</param>
+        /// <returns>Reference to this</returns>
         template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...)>>, bool> = true>
         inline move_only_function& operator=(Fn&& f) noexcept
         {
@@ -830,37 +1227,70 @@ namespace ryujin
         }
     };
 
+    /// <summary>
+    /// Function with move-only semantics. Specialization for const noexcept functions that act on r-value references only.
+    /// </summary>
+    /// <typeparam name="Args...">Type of arguments that the function takes</typeparam>
+    /// <typeparam name="Ret">Return type of the function</typeparam>
+    /// \ingroup Functions
     template <typename Ret, typename ... Args>
     class move_only_function<Ret(Args...) const && noexcept> : public detail::move_only_function_impl<Ret(Args...) const && noexcept>
     {
     public:
+        /// <summary>
+        /// Constructs an empty function.
+        /// </summary>
         inline move_only_function()
         {
             this->construct_empty();
         }
 
+        /// <summary>
+        /// Constructs a function by moving from another function.
+        /// </summary>
+        /// <param name="fn">Function to move from</param>
         inline move_only_function(move_only_function&& fn) noexcept
         {
             this->construct_move(ryujin::forward<move_only_function>(fn));
         }
 
+        /// <summary>
+        /// Constructs an empty function.
+        /// </summary>
+        /// <param name="">nullptr</param>
         inline move_only_function(nullptr_t) noexcept
             : move_only_function()
         {
         }
 
+        /// <summary>
+        /// Constructs a function by moving an external functor into this function.
+        /// </summary>
+        /// <typeparam name="Fn">Type of the functor</typeparam>
+        /// <param name="f">r-value reference to the functor</param>
         template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
         inline move_only_function(Fn&& f)
         {
             this->construct_from_functor(ryujin::forward<Fn>(f));
         }
 
+        /// <summary>
+        /// Moves a function into this function. If this function already contains a functor, it is released.  If the other function
+        /// contains a functor, ownership is transfered to this function.
+        /// </summary>
+        /// <param name="rhs">Function to move into this</param>
+        /// <returns>Reference to this</returns>
         inline move_only_function& operator=(move_only_function&& rhs) noexcept
         {
             this->move_assign(ryujin::forward<move_only_function&&>(rhs));
             return *this;
         }
 
+        /// <summary>
+        /// Moves a functor into this function. If this function already contains a functor, it is released.
+        /// </summary>
+        /// <param name="f">Function to move into this</param>
+        /// <returns>Reference to this</returns>
         template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function<Ret(Args...) noexcept>>, bool> = true>
         inline move_only_function& operator=(Fn&& f) noexcept
         {
@@ -947,12 +1377,26 @@ namespace ryujin
         };
     }
 
+    /// <summary>
+    /// Template deduction guide for move_only_function from a lambda.
+    /// </summary>
+    /// \ingroup Functions
     template <typename Fn, typename Signature = typename detail::function_signature_extractor<decltype(&Fn::operator())>::type>
     move_only_function(Fn&&)->move_only_function<Signature>;
 
+
+    /// <summary>
+    /// Template deduction guide for move_only_function from a function.
+    /// </summary>
+    /// \ingroup Functions
     template <typename Ret, typename ... Args>
     move_only_function(Ret(*)(Args...))->move_only_function<Ret(Args...)>;
 
+
+    /// <summary>
+    /// Template deduction guide for move_only_function from a member function.
+    /// </summary>
+    /// \ingroup Functions
     template <typename Ret, typename Type, typename ... Args>
     move_only_function(Ret(Type::*)(Args...))->move_only_function<Ret(Type, Args...)>;
 
@@ -989,6 +1433,13 @@ namespace ryujin
         return *_ptr;
     }
 
+    /// <summary>
+    /// Creates a reference wrapper from a reference.
+    /// </summary>
+    /// <typeparam name="T">Type of the reference</typeparam>
+    /// <param name="t">Reference to wrap</param>
+    /// <returns>Reference wrapper wrapping the provided reference</returns>
+    /// \ingroup reference_wrapper
     template <typename T>
     inline constexpr reference_wrapper<T> ref(T& t) noexcept
     {
@@ -998,6 +1449,13 @@ namespace ryujin
     template <typename T>
     void ref(const T&&) = delete;
 
+    /// <summary>
+    /// Creates a const reference wrapper from a reference.
+    /// </summary>
+    /// <typeparam name="T">Type of the reference</typeparam>
+    /// <param name="t">Reference to wrap</param>
+    /// <returns>Reference wrapper wrapping the provided reference as a constant reference</returns>
+    /// \ingroup reference_wrapper
     template <typename T>
     inline constexpr reference_wrapper<const T> cref(const T& t) noexcept
     {

@@ -3,6 +3,13 @@
 
 namespace ryujin
 {
+    /// <summary>
+    /// Utility method for casting a value from one type to another.
+    /// </summary>
+    /// <typeparam name="T">Type to cast to</typeparam>
+    /// <typeparam name="U">Type to cast from</typeparam>
+    /// <param name="value">Value to cast</param>
+    /// <returns>Casted value</returns>
     template <typename T, typename U>
     constexpr T as(U value)
     {
