@@ -76,7 +76,6 @@ $(function() {
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="primitives_8hpp_source.html">primitives.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="type__traits_8hpp_source.html">type_traits.hpp</a>&quot;</code><br />
-<code>#include &lt;type_traits&gt;</code><br />
 </div>
 <p><a href="utility_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -148,34 +147,26 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1tuple__size_3_01tuple_3_01_ts_8_8_8_01_4_01_4.html">ryujin::tuple_size&lt; tuple&lt; Ts... &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structstd_1_1ryujin_1_1tuple__size_3_01ryujin_1_1pair_3_01_t1_00_01_t2_01_4_01_4.html">std::ryujin::tuple_size&lt; ryujin::pair&lt; T1, T2 &gt; &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structstd_1_1ryujin_1_1tuple__element_3_010_00_01ryujin_1_1pair_3_01_t1_00_01_t2_01_4_01_4.html">std::ryujin::tuple_element&lt; 0, ryujin::pair&lt; T1, T2 &gt; &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structstd_1_1ryujin_1_1tuple__element_3_011_00_01ryujin_1_1pair_3_01_t1_00_01_t2_01_4_01_4.html">std::ryujin::tuple_element&lt; 1, ryujin::pair&lt; T1, T2 &gt; &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespaceryujin"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html">ryujin</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespacestd"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacestd.html">std</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a865ddc672e77eb76be36f0da7d7829fe"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a865ddc672e77eb76be36f0da7d7829fe"><td class="memTemplItemLeft" align="right" valign="top">constexpr T &amp;&amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a865ddc672e77eb76be36f0da7d7829fe">ryujin::forward</a> (std::remove_reference_t&lt; T &gt; &amp;t) noexcept</td></tr>
-<tr class="memdesc:a865ddc672e77eb76be36f0da7d7829fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forwards an l-value reference as an r-value.  <a href="namespaceryujin.html#a865ddc672e77eb76be36f0da7d7829fe">More...</a><br /></td></tr>
-<tr class="separator:a865ddc672e77eb76be36f0da7d7829fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a18b6791b87d78175b3da01efb18cecc8"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a18b6791b87d78175b3da01efb18cecc8"><td class="memTemplItemLeft" align="right" valign="top">constexpr T &amp;&amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a18b6791b87d78175b3da01efb18cecc8">ryujin::forward</a> (std::remove_reference_t&lt; T &gt; &amp;&amp;t) noexcept</td></tr>
-<tr class="memdesc:a18b6791b87d78175b3da01efb18cecc8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forwards an r-value reference as an r-value.  <a href="namespaceryujin.html#a18b6791b87d78175b3da01efb18cecc8">More...</a><br /></td></tr>
-<tr class="separator:a18b6791b87d78175b3da01efb18cecc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa63c708049399a43557e4f22faff9f95"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:aa63c708049399a43557e4f22faff9f95"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::remove_reference_t&lt; T &gt; &amp;&amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#aa63c708049399a43557e4f22faff9f95">ryujin::move</a> (T &amp;&amp;t) noexcept</td></tr>
-<tr class="memdesc:aa63c708049399a43557e4f22faff9f95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Moves a r-value reference.  <a href="namespaceryujin.html#aa63c708049399a43557e4f22faff9f95">More...</a><br /></td></tr>
-<tr class="separator:aa63c708049399a43557e4f22faff9f95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba42f2ef8e07b3154d22fd88025b28a6"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:aba42f2ef8e07b3154d22fd88025b28a6"><td class="memTemplItemLeft" align="right" valign="top">constexpr T &amp;&amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#aba42f2ef8e07b3154d22fd88025b28a6">ryujin::forward</a> (remove_reference_t&lt; T &gt; &amp;t) noexcept</td></tr>
+<tr class="memdesc:aba42f2ef8e07b3154d22fd88025b28a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forwards an l-value reference as an r-value.  <a href="namespaceryujin.html#aba42f2ef8e07b3154d22fd88025b28a6">More...</a><br /></td></tr>
+<tr class="separator:aba42f2ef8e07b3154d22fd88025b28a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1bebbeb37bd6816bc69d5dfe45187c7"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ac1bebbeb37bd6816bc69d5dfe45187c7"><td class="memTemplItemLeft" align="right" valign="top">constexpr T &amp;&amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#ac1bebbeb37bd6816bc69d5dfe45187c7">ryujin::forward</a> (remove_reference_t&lt; T &gt; &amp;&amp;t) noexcept</td></tr>
+<tr class="memdesc:ac1bebbeb37bd6816bc69d5dfe45187c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forwards an r-value reference as an r-value.  <a href="namespaceryujin.html#ac1bebbeb37bd6816bc69d5dfe45187c7">More...</a><br /></td></tr>
+<tr class="separator:ac1bebbeb37bd6816bc69d5dfe45187c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76d4e502e6245634408e2616b7ec1899"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a76d4e502e6245634408e2616b7ec1899"><td class="memTemplItemLeft" align="right" valign="top">constexpr remove_reference_t&lt; T &gt; &amp;&amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a76d4e502e6245634408e2616b7ec1899">ryujin::move</a> (T &amp;&amp;t) noexcept</td></tr>
+<tr class="memdesc:a76d4e502e6245634408e2616b7ec1899"><td class="mdescLeft">&#160;</td><td class="mdescRight">Moves a r-value reference.  <a href="namespaceryujin.html#a76d4e502e6245634408e2616b7ec1899">More...</a><br /></td></tr>
+<tr class="separator:a76d4e502e6245634408e2616b7ec1899"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5dd7ea8342b826e1a1d8021875501203"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a5dd7ea8342b826e1a1d8021875501203"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a5dd7ea8342b826e1a1d8021875501203">ryujin::move_swap</a> (T &amp;a, T &amp;b)</td></tr>
 <tr class="memdesc:a5dd7ea8342b826e1a1d8021875501203"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of move using swap semantics.  <a href="namespaceryujin.html#a5dd7ea8342b826e1a1d8021875501203">More...</a><br /></td></tr>
