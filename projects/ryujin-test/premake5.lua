@@ -25,6 +25,10 @@ project ('ryujin-test')
         'ryujin'
     })
 
+    defines ({
+        'RYUJIN_PROVIDE_STRUCTURED_BINDINGS'
+    })
+
     filter ({ 'configurations:Debug' })
         optimize ('Off')
 

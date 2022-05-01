@@ -4,8 +4,6 @@
 #include "primitives.hpp"
 #include "type_traits.hpp"
 
-#include <type_traits>
-
 namespace ryujin
 {
     /// <summary>
@@ -15,7 +13,7 @@ namespace ryujin
     /// <param name="t">Value to forward</param>
     /// <returns>r-value reference</returns>
     template <typename T>
-    constexpr T&& forward(std::remove_reference_t<T>& t) noexcept
+    constexpr T&& forward(remove_reference_t<T>& t) noexcept
     {
         return static_cast<T&&>(t);
     }
@@ -27,7 +25,7 @@ namespace ryujin
     /// <param name="t">Value to forward</param>
     /// <returns>r-value reference</returns>
     template <typename T>
-    inline constexpr T&& forward(std::remove_reference_t<T>&& t) noexcept
+    inline constexpr T&& forward(remove_reference_t<T>&& t) noexcept
     {
         static_assert(!std::is_lvalue_reference_v<T>);
         return static_cast<T&&>(t);
@@ -40,9 +38,9 @@ namespace ryujin
     /// <param name="t">Value to move</param>
     /// <returns>Moved reference</returns>
     template <typename T>
-    inline constexpr std::remove_reference_t<T>&& move(T&& t) noexcept
+    inline constexpr remove_reference_t<T>&& move(T&& t) noexcept
     {
-        return static_cast<std::remove_reference_t<T>&&>(t);
+        return static_cast<remove_reference_t<T>&&>(t);
     }
 
     /// <summary>
@@ -459,10 +457,7 @@ namespace ryujin
     template <typename T1, typename T2>
     inline constexpr pair<T1, T2> make_pair(T1&& first, T2&& second)
     {
-        pair<T1, T2> p = {
-            .first = first,
-            .second = second
-        };
+        pair<T1, T2> p(ryujin::forward<T1>(first), ryujin::forward<T2>(second));
         return p;
     }
 
@@ -521,24 +516,19 @@ namespace ryujin
     };
 }
 
-// structured bindings
+#ifdef RYUJIN_PROVIDE_STRUCTURED_BINDINGS
+#include <tuple>
+
 namespace std
 {
     template <typename T1, typename T2>
-    struct ryujin::tuple_size<ryujin::pair<T1, T2>> : ryujin::integral_constant<sz, 2>
+    class tuple_size<ryujin::pair<T1, T2>> : public ryujin::integral_constant<ryujin::sz, 2>
     {};
 
-    template <typename T1, typename T2>
-    struct ryujin::tuple_element<0, ryujin::pair<T1, T2>>
-    {
-        using type = T1;
-    };
-
-    template <typename T1, typename T2>
-    struct ryujin::tuple_element<1, ryujin::pair<T1, T2>>
-    {
-        using type = T2;
-    };
+    template <ryujin::sz I, typename T1, typename T2>
+    class tuple_element<I, ryujin::pair<T1, T2>> : public ryujin::tuple_element<I, ryujin::tuple<T1, T2>>
+    {};
 }
+#endif
 
 #endif // utility_hpp__
