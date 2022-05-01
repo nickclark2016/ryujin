@@ -335,34 +335,117 @@ namespace ryujin
         T2 second;
 
         /// <summary>
-        /// Default constructs the first and second element
+        /// Default constructs the first and second element.
         /// </summary>
         constexpr pair() = default;
 
         /// <summary>
-        /// 
+        /// Copy constructs the first and second elements.
         /// </summary>
-        /// <param name="first"></param>
-        /// <param name="second"></param>
+        /// <param name="first">First element</param>
+        /// <param name="second">Second element</param>
         constexpr pair(const T1& first, const T2& second);
+
+        /// <summary>
+        /// Move constructs the first and second elements.
+        /// </summary>
+        /// <param name="first">First element</param>
+        /// <param name="second">Second element</param>
         constexpr pair(T1&& first, T2&& second);
 
+        /// <summary>
+        /// Default copy constructor
+        /// </summary>
+        /// <param name="">Pair to copy from</param>
         pair(const pair&) = default;
+
+        /// <summary>
+        /// Default move constructor
+        /// </summary>
+        /// <param name="">Pair to move from</param>
         pair(pair&&) noexcept = default;
 
+        /// <summary>
+        /// Copies the right hand argument into this pair.
+        /// </summary>
+        /// <param name="rhs">Argument to copy from</param>
+        /// <returns>Reference to this</returns>
         constexpr pair& operator=(const pair& rhs);
+
+        /// <summary>
+        /// Moves the right hand argument into this pair.
+        /// </summary>
+        /// <param name="rhs">Argument to move from</param>
+        /// <returns>Reference to this</returns>
         constexpr pair& operator=(pair&& rhs) noexcept;
 
+        /// <summary>
+        /// Swaps the contains of this pair and the other pair.
+        /// </summary>
+        /// <param name="p"></param>
         void swap(pair& p);
     };
 
     template <typename T1, typename T2>
-    pair(T1, T2) -> pair<T1, T2>;
+    pair(T1, T2)->pair<T1, T2>;
 
     template <typename T1, typename T2>
     inline constexpr pair<T1, T2>::pair(const T1& first, const T2& second)
         : first(first), second(second)
     {
+    }
+
+    template <typename T1, typename T2>
+    inline constexpr pair<T1, T2>::pair(T1&& first, T2&& second)
+        : first(first), second(second)
+    {
+    }
+
+    template <typename T1, typename T2>
+    inline constexpr pair<T1, T2>& pair<T1, T2>::operator=(const pair& rhs)
+    {
+        if (&rhs == this)
+        {
+            return *this;
+        }
+
+        first = rhs.first;
+        second = rhs.second;
+
+        return *this;
+    }
+
+    template <typename T1, typename T2>
+    inline constexpr pair<T1, T2>& pair<T1, T2>::operator=(pair&& rhs) noexcept
+    {
+        if (&rhs == this)
+        {
+            return *this;
+        }
+
+        first = ryujin::move(rhs.first);
+        second = ryujin::move(rhs.second);
+
+        return *this;
+    }
+
+    /// <summary>
+    /// Compares the pairs by the first value first, then the second value.
+    /// </summary>
+    /// <typeparam name="T1"></typeparam>
+    /// <typeparam name="T2"></typeparam>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    template <typename T1, typename T2>
+    inline constexpr auto operator<=>(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs) noexcept
+    {
+        const auto fe = lhs.first <=> rhs.first;
+        if (fe == 0)
+        {
+            return lhs.second <=> rhs.second;
+        }
+        return fe;
     }
 
     /// <summary>
@@ -382,6 +465,80 @@ namespace ryujin
         };
         return p;
     }
+
+    template <sz N, typename T1, typename T2>
+    inline constexpr const auto& get(const pair<T1, T2>& p)
+    {
+        if constexpr (N == 0)
+        {
+            return p.first;
+        }
+        else if constexpr (N == 1)
+        {
+            return p.second;
+        }
+    }
+
+    template <sz N, typename T1, typename T2>
+    inline constexpr auto& get(pair<T1, T2>& p)
+    {
+        if constexpr (N == 0)
+        {
+            return p.first;
+        }
+        else if constexpr (N == 1)
+        {
+            return p.second;
+        }
+    }
+
+    template <typename ... Ts>
+    struct tuple
+    {
+    };
+
+    template <sz I, typename ... Ts>
+    struct tuple_element;
+
+    template <sz I, typename Head, typename ... Ts>
+    struct tuple_element<I, tuple<Head, Ts...>> : tuple_element<I - 1, tuple<Ts...>>
+    {
+    };
+
+    template <typename Head, typename ... Ts>
+    struct tuple_element<0, tuple<Head, Ts...>>
+    {
+        using type = Head;
+    };
+
+    template <typename ... Ts>
+    struct tuple_size;
+
+    template <typename ... Ts>
+    struct tuple_size<tuple<Ts...>> : ryujin::integral_constant<sz, sizeof...(Ts)>
+    {
+
+    };
+}
+
+// structured bindings
+namespace std
+{
+    template <typename T1, typename T2>
+    struct ryujin::tuple_size<ryujin::pair<T1, T2>> : ryujin::integral_constant<sz, 2>
+    {};
+
+    template <typename T1, typename T2>
+    struct ryujin::tuple_element<0, ryujin::pair<T1, T2>>
+    {
+        using type = T1;
+    };
+
+    template <typename T1, typename T2>
+    struct ryujin::tuple_element<1, ryujin::pair<T1, T2>>
+    {
+        using type = T2;
+    };
 }
 
 #endif // utility_hpp__
