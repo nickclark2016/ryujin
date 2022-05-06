@@ -105,5 +105,6 @@ var searchData=
   ['maximizecallback_389',['maximizeCallback',['../classryujin_1_1window.html#a33a1f02ba12276a8bd4b6764797a2f33',1,'ryujin::window']]],
   ['mousebuttoncallback_390',['mouseButtonCallback',['../classryujin_1_1window.html#a9f4558a08580e7b91969e06730dd1af1',1,'ryujin::window']]],
   ['resizecallback_391',['resizeCallback',['../classryujin_1_1window.html#ac177881110e30b5e71933c66d42dc0aa',1,'ryujin::window']]],
-  ['scrollcallback_392',['scrollCallback',['../classryujin_1_1window.html#a2ac9f0cf13e9a4a5fb5791dfb99c1618',1,'ryujin::window']]]
+  ['scrollcallback_392',['scrollCallback',['../classryujin_1_1window.html#a2ac9f0cf13e9a4a5fb5791dfb99c1618',1,'ryujin::window']]],
+  ['unordered_5fmap_5fiterator_3c_20key_2c_20value_2c_20hash_2c_20keyequal_2c_20allocator_20_3e_393',['unordered_map_iterator&lt; Key, Value, Hash, KeyEqual, Allocator &gt;',['../classryujin_1_1unordered__map.html#a1264791d95f36d55ffd785e61a8137ad',1,'ryujin::unordered_map']]]
 ];
