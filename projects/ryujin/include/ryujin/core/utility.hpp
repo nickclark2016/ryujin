@@ -363,6 +363,9 @@ namespace ryujin
         /// <param name="">Pair to move from</param>
         pair(pair&&) noexcept = default;
 
+        template <typename U1, typename U2>
+        constexpr pair(const pair<U1, U2>& p);
+
         /// <summary>
         /// Copies the right hand argument into this pair.
         /// </summary>
@@ -396,6 +399,13 @@ namespace ryujin
     template <typename T1, typename T2>
     inline constexpr pair<T1, T2>::pair(T1&& first, T2&& second)
         : first(first), second(second)
+    {
+    }
+
+    template <typename T1, typename T2>
+    template <typename U1, typename U2>
+    inline constexpr pair<T1, T2>::pair(const pair<U1, U2>& p)
+        : first(p.first), second(p.second)
     {
     }
 
