@@ -804,6 +804,42 @@ namespace ryujin
     {
         return detail::get<I, Ts...>(t);
     }
+
+    template <typename T, T ... Integers>
+    struct integer_sequence
+    {
+        static constexpr sz size() noexcept;
+    };
+
+    template <typename T, T ... Integers>
+    inline constexpr sz integer_sequence<T, Integers...>::size() noexcept
+    {
+        return sizeof...(Integers);
+    }
+
+    namespace detail
+    {
+        template <typename T, sz N, T ... Integers>
+        struct gen_seq : gen_seq<T, N - 1, T(N - 1), Integers...> {};
+
+        template <typename T, T... Integers>
+        struct gen_seq<T, 0, Integers...>
+        {
+            using type = integer_sequence<T, Integers...>;
+        };
+    }
+
+    template <sz ... Integers>
+    using index_sequence = integer_sequence<sz, Integers...>;
+
+    template <typename T, T N>
+    using make_integer_sequence = typename detail::gen_seq<T, T(N)>::type;
+
+    template <sz N>
+    using make_index_sequence = make_integer_sequence<sz, N>;
+
+    template <typename ... Ts>
+    using index_sequence_for = make_index_sequence<sizeof...(Ts)>;
 }
 
 #ifdef RYUJIN_PROVIDE_STRUCTURED_BINDINGS
