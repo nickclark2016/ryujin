@@ -685,6 +685,12 @@ namespace ryujin
                 return get<I - 1>(tup.get_rest());
             }
         };
+
+        template <typename ... Ts>
+        void swap(tuple_impl<Ts...>& lhs, tuple_impl<Ts...>& rhs)
+        {
+            return move_swap(lhs, rhs);
+        }
     }
 
     template <typename ... Ts>
@@ -759,8 +765,24 @@ namespace ryujin
         tuple& operator=(const tuple&) = default;
         tuple& operator=(tuple&&) noexcept = default;
 
-    private:
+        inline constexpr void swap(tuple<Ts...>& rhs) noexcept
+        {
+            detail::swap(*this, rhs);
+        }
 
+        template <sz I>
+        inline constexpr typename tuple_element<I, tuple<Ts...>>::type& get()
+        {
+            return detail::get<I>(*this);
+        }
+
+        template <sz I>
+        inline constexpr const typename tuple_element<I, tuple<Ts...>>::type& get() const
+        {
+            return detail::get<I>(*this);
+        }
+
+    private:
         template <sz I, typename ... Types>
         friend auto& get(tuple<Types...>& t) noexcept;
 
@@ -795,6 +817,14 @@ namespace std
 
     template <ryujin::sz I, typename T1, typename T2>
     class tuple_element<I, ryujin::pair<T1, T2>> : public ryujin::tuple_element<I, ryujin::tuple<T1, T2>>
+    {};
+
+    template <typename ... Ts>
+    class tuple_size<ryujin::tuple<Ts...>> : public ryujin::integral_constant<ryujin::sz, sizeof...(Ts)>
+    {};
+
+    template <ryujin::sz I, typename ... Ts>
+    class tuple_element<I, ryujin::tuple<Ts...>> : public ryujin::tuple_element<I, ryujin::tuple<Ts...>>
     {};
 }
 #endif

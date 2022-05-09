@@ -35,3 +35,40 @@ TEST(Tuple, MakeTrivialConstTuple)
     ASSERT_EQ(i, 1);
     ASSERT_EQ(c, 'a');
 }
+
+TEST(Tuple, SwapTrivialTuple)
+{
+    tuple<int, char> t0 = ryujin::make_tuple(1, 'a');
+    tuple<int, char> t1 = ryujin::make_tuple(2, 'b');
+
+    t0.swap(t1);
+
+    const int& i0 = ryujin::get<0>(t0);
+    const char& c0 = ryujin::get<1>(t0);
+
+    const int& i1 = ryujin::get<0>(t1);
+    const char& c1 = ryujin::get<1>(t1);
+
+    ASSERT_EQ(i0, 2);
+    ASSERT_EQ(c0, 'b');
+    ASSERT_EQ(i1, 1);
+    ASSERT_EQ(c1, 'a');
+}
+
+TEST(Tuple, StructuredBindingTrivialTuple)
+{
+    tuple<int, char> t = ryujin::make_tuple(1, 'a');
+    auto& [i, c] = t;
+
+    ASSERT_EQ(i, 1);
+    ASSERT_EQ(c, 'a');
+}
+
+TEST(Tuple, StructuredBindingTrivialConstTuple)
+{
+    const tuple<int, char> t = ryujin::make_tuple(1, 'a');
+    const auto& [i, c] = t;
+
+    ASSERT_EQ(i, 1);
+    ASSERT_EQ(c, 'a');
+}
