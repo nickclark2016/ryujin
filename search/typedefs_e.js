@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['value_5ftype_2951',['value_type',['../structryujin_1_1integral__constant.html#a598631322cf9b639dba7d8b6d462a378',1,'ryujin::integral_constant::value_type()'],['../classryujin_1_1sparse__map.html#a077158631ff27f136e6cfad062dec387',1,'ryujin::sparse_map::value_type()']]],
-  ['variant_5falternative_5ft_2952',['variant_alternative_t',['../namespaceryujin.html#a5e37ebdea90c1eb9b87062af1857455d',1,'ryujin']]],
-  ['version_5ftype_2953',['version_type',['../structryujin_1_1entity__traits_3_01u32_01_4.html#ad26a5c651fba013341cc2db817407027',1,'ryujin::entity_traits&lt; u32 &gt;::version_type()'],['../structryujin_1_1entity__traits_3_01u64_01_4.html#a4904b46b280cd95f392f67887b83f731',1,'ryujin::entity_traits&lt; u64 &gt;::version_type()']]],
-  ['void_5ft_2954',['void_t',['../namespaceryujin.html#a0790102d2b63a5561becbe6dbfaf7656',1,'ryujin']]]
+  ['u16_2977',['u16',['../namespaceryujin.html#a10185cea8b7d65241ee94892e50f23f8',1,'ryujin']]],
+  ['u32_2978',['u32',['../namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf',1,'ryujin']]],
+  ['u64_2979',['u64',['../namespaceryujin.html#a3e143684101f7c548db9e81ad0deb9fe',1,'ryujin']]],
+  ['u8_2980',['u8',['../namespaceryujin.html#a4fdd9d0598161de847155dcd0d0058ac',1,'ryujin']]]
 ];

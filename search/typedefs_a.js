@@ -1,13 +1,6 @@
 var searchData=
 [
-  ['reference_2930',['reference',['../classryujin_1_1static__vector.html#a1896bf9155e37fc49089e79fb9c69538',1,'ryujin::static_vector']]],
-  ['registry_2931',['registry',['../namespaceryujin.html#afe984a3fec394b915edd27c4a76aa31f',1,'ryujin']]],
-  ['remove_5fall_5fextents_5ft_2932',['remove_all_extents_t',['../namespaceryujin.html#a4a18e9f779a221b602e0c08f3c90d175',1,'ryujin']]],
-  ['remove_5fconst_5ft_2933',['remove_const_t',['../namespaceryujin.html#ad0b87c52e89ded1ba00368b03a8b511f',1,'ryujin']]],
-  ['remove_5fcv_5ft_2934',['remove_cv_t',['../namespaceryujin.html#aae4c2293350bde853e67bbd3e33d643a',1,'ryujin']]],
-  ['remove_5fcvref_5ft_2935',['remove_cvref_t',['../namespaceryujin.html#abfbaf270e90c5a2913dbc45efa8d7335',1,'ryujin']]],
-  ['remove_5fextent_5ft_2936',['remove_extent_t',['../namespaceryujin.html#a7207d61a2a6680a92f849bbcd48c182d',1,'ryujin']]],
-  ['remove_5freference_5ft_2937',['remove_reference_t',['../namespaceryujin.html#a25c95ea4eb236111add2bfa9f67009c3',1,'ryujin']]],
-  ['remove_5fvolatile_5ft_2938',['remove_volatile_t',['../namespaceryujin.html#aada078ca34c96952960f0fbc9cc13f49',1,'ryujin']]],
-  ['render_5fpass_2939',['render_pass',['../namespaceryujin.html#a53318442f50a415ff8d043fffb38710b',1,'ryujin']]]
+  ['pipeline_2956',['pipeline',['../namespaceryujin.html#ab3f615715473f5ede0e324cd51786354',1,'ryujin']]],
+  ['pipeline_5flayout_2957',['pipeline_layout',['../namespaceryujin.html#a31d4d6b84a91f4217c03db6444ca170a',1,'ryujin']]],
+  ['pointer_2958',['pointer',['../classryujin_1_1unique__ptr.html#a99e0939d538bc2e5aea6fbc10bb77249',1,'ryujin::unique_ptr::pointer()'],['../classryujin_1_1unique__ptr_3_01_t_0f_0e_00_01_deleter_01_4.html#a51f5ca57a83eee1037e02f1fadff98e9',1,'ryujin::unique_ptr&lt; T[], Deleter &gt;::pointer()'],['../classryujin_1_1shared__ptr.html#aa6a79c30a92dee1e09b58d366f5d88d9',1,'ryujin::shared_ptr::pointer()'],['../classryujin_1_1static__vector.html#a75f34c02520de0ae7c1aad7c8b40a582',1,'ryujin::static_vector::pointer()']]]
 ];

@@ -68,6 +68,7 @@ $(function() {
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -152,11 +153,28 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classryujin_1_1tuple.html">ryujin::tuple&lt; Ts &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1integer__sequence.html">ryujin::integer_sequence&lt; T, Integers &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespaceryujin"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html">ryujin</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:ae6fb73d03fd18b2babaab7794731158c"><td class="memTemplParams" colspan="2">template&lt;sz ... Integers&gt; </td></tr>
+<tr class="memitem:ae6fb73d03fd18b2babaab7794731158c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#ae6fb73d03fd18b2babaab7794731158c">ryujin::index_sequence</a> = integer_sequence&lt; sz, Integers... &gt;</td></tr>
+<tr class="separator:ae6fb73d03fd18b2babaab7794731158c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f99c9c94eb61a3c567e18340006151c"><td class="memTemplParams" colspan="2">template&lt;typename T , T N&gt; </td></tr>
+<tr class="memitem:a4f99c9c94eb61a3c567e18340006151c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a4f99c9c94eb61a3c567e18340006151c">ryujin::make_integer_sequence</a> = typename detail::gen_seq&lt; T, T(N)&gt;::type</td></tr>
+<tr class="separator:a4f99c9c94eb61a3c567e18340006151c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bccfd06d7aa1e3c76731d15c96b9366"><td class="memTemplParams" colspan="2">template&lt;sz N&gt; </td></tr>
+<tr class="memitem:a6bccfd06d7aa1e3c76731d15c96b9366"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a6bccfd06d7aa1e3c76731d15c96b9366">ryujin::make_index_sequence</a> = make_integer_sequence&lt; sz, N &gt;</td></tr>
+<tr class="separator:a6bccfd06d7aa1e3c76731d15c96b9366"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab88bf64d109496268b6d2d672b16bf45"><td class="memTemplParams" colspan="2">template&lt;typename ... Ts&gt; </td></tr>
+<tr class="memitem:ab88bf64d109496268b6d2d672b16bf45"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#ab88bf64d109496268b6d2d672b16bf45">ryujin::index_sequence_for</a> = make_index_sequence&lt; sizeof...(Ts)&gt;</td></tr>
+<tr class="separator:ab88bf64d109496268b6d2d672b16bf45"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>

@@ -328,6 +328,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1input__assembly__state__info.html">input_assembly_state_info</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1integer__sequence.html">integer_sequence</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1integral__constant.html">integral_constant</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1is__array.html">is_array</a></td></tr>
@@ -405,6 +407,8 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1is__same_3_01_t_00_01_t_01_4.html">is_same&lt; T, T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1is__void.html">is_void</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classryujin_1_1itask.html">itask</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classryujin_1_1keyboard.html">keyboard</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -574,6 +578,10 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1subpass__description.html">subpass_description</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classryujin_1_1task.html">task</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classryujin_1_1task_3_01_return_07_args_8_8_8_08_4.html">task&lt; Return(Args...)&gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1text__file.html">text_file</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1texture.html">texture</a></td></tr>
@@ -725,6 +733,18 @@ Typedefs</h2></td></tr>
 <tr class="memitem:a472db44c5553e4c90e092a3a2bef7ae3"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a472db44c5553e4c90e092a3a2bef7ae3"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a472db44c5553e4c90e092a3a2bef7ae3">decay_t</a> = typename <a class="el" href="structryujin_1_1decay.html">decay</a>&lt; T &gt;::type</td></tr>
 <tr class="separator:a472db44c5553e4c90e092a3a2bef7ae3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6fb73d03fd18b2babaab7794731158c"><td class="memTemplParams" colspan="2">template&lt;sz ... Integers&gt; </td></tr>
+<tr class="memitem:ae6fb73d03fd18b2babaab7794731158c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#ae6fb73d03fd18b2babaab7794731158c">index_sequence</a> = <a class="el" href="structryujin_1_1integer__sequence.html">integer_sequence</a>&lt; <a class="el" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a>, Integers... &gt;</td></tr>
+<tr class="separator:ae6fb73d03fd18b2babaab7794731158c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f99c9c94eb61a3c567e18340006151c"><td class="memTemplParams" colspan="2">template&lt;typename T , T N&gt; </td></tr>
+<tr class="memitem:a4f99c9c94eb61a3c567e18340006151c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a4f99c9c94eb61a3c567e18340006151c">make_integer_sequence</a> = typename detail::gen_seq&lt; T, T(N)&gt;::type</td></tr>
+<tr class="separator:a4f99c9c94eb61a3c567e18340006151c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bccfd06d7aa1e3c76731d15c96b9366"><td class="memTemplParams" colspan="2">template&lt;sz N&gt; </td></tr>
+<tr class="memitem:a6bccfd06d7aa1e3c76731d15c96b9366"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a6bccfd06d7aa1e3c76731d15c96b9366">make_index_sequence</a> = <a class="el" href="namespaceryujin.html#a4f99c9c94eb61a3c567e18340006151c">make_integer_sequence</a>&lt; <a class="el" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a>, N &gt;</td></tr>
+<tr class="separator:a6bccfd06d7aa1e3c76731d15c96b9366"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab88bf64d109496268b6d2d672b16bf45"><td class="memTemplParams" colspan="2">template&lt;typename ... Ts&gt; </td></tr>
+<tr class="memitem:ab88bf64d109496268b6d2d672b16bf45"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#ab88bf64d109496268b6d2d672b16bf45">index_sequence_for</a> = <a class="el" href="namespaceryujin.html#a6bccfd06d7aa1e3c76731d15c96b9366">make_index_sequence</a>&lt; sizeof...(Ts)&gt;</td></tr>
+<tr class="separator:ab88bf64d109496268b6d2d672b16bf45"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e37ebdea90c1eb9b87062af1857455d"><td class="memTemplParams" colspan="2">template&lt;sz I, typename T &gt; </td></tr>
 <tr class="memitem:a5e37ebdea90c1eb9b87062af1857455d"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a5e37ebdea90c1eb9b87062af1857455d">variant_alternative_t</a> = typename <a class="el" href="structryujin_1_1variant__alternative.html">variant_alternative</a>&lt; I, T &gt;::type</td></tr>
 <tr class="separator:a5e37ebdea90c1eb9b87062af1857455d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -2383,6 +2403,70 @@ template&lt;bool B, typename T &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">using <a class="el" href="namespaceryujin.html#a428d3777b228e75c842bfdb2dddd7e84">ryujin::image_view</a> = typedef VkImageView</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae6fb73d03fd18b2babaab7794731158c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6fb73d03fd18b2babaab7794731158c">&#9670;&nbsp;</a></span>index_sequence</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;sz ... Integers&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespaceryujin.html#ae6fb73d03fd18b2babaab7794731158c">ryujin::index_sequence</a> = typedef <a class="el" href="structryujin_1_1integer__sequence.html">integer_sequence</a>&lt;<a class="el" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a>, Integers...&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab88bf64d109496268b6d2d672b16bf45"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab88bf64d109496268b6d2d672b16bf45">&#9670;&nbsp;</a></span>index_sequence_for</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename ... Ts&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespaceryujin.html#ab88bf64d109496268b6d2d672b16bf45">ryujin::index_sequence_for</a> = typedef <a class="el" href="namespaceryujin.html#a6bccfd06d7aa1e3c76731d15c96b9366">make_index_sequence</a>&lt;sizeof...(Ts)&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6bccfd06d7aa1e3c76731d15c96b9366"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6bccfd06d7aa1e3c76731d15c96b9366">&#9670;&nbsp;</a></span>make_index_sequence</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;sz N&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespaceryujin.html#a6bccfd06d7aa1e3c76731d15c96b9366">ryujin::make_index_sequence</a> = typedef <a class="el" href="namespaceryujin.html#a4f99c9c94eb61a3c567e18340006151c">make_integer_sequence</a>&lt;<a class="el" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a>, N&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4f99c9c94eb61a3c567e18340006151c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4f99c9c94eb61a3c567e18340006151c">&#9670;&nbsp;</a></span>make_integer_sequence</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , T N&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespaceryujin.html#a4f99c9c94eb61a3c567e18340006151c">ryujin::make_integer_sequence</a> = typedef typename detail::gen_seq&lt;T, T(N)&gt;::type</td>
         </tr>
       </table>
 </div><div class="memdoc">
