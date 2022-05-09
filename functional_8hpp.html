@@ -75,14 +75,12 @@ $(function() {
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="smart__pointers_8hpp_source.html">smart_pointers.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="type__traits_8hpp_source.html">type_traits.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="utility_8hpp_source.html">utility.hpp</a>&quot;</code><br />
 </div>
 <p><a href="functional_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classryujin_1_1reference__wrapper.html">ryujin::reference_wrapper&lt; T &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wraps a reference into a copyable and assignable type. This can be used to store references in types that cannot typically hold references.  <a href="classryujin_1_1reference__wrapper.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classryujin_1_1move__only__function.html">ryujin::move_only_function&lt;... &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classryujin_1_1move__only__function_3_01_ret_07_args_8_8_8_08_4.html">ryujin::move_only_function&lt; Ret(Args...)&gt;</a></td></tr>
@@ -132,9 +130,6 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:afde6bafd9f95ae60a5a124aefb2a2f6b"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:afde6bafd9f95ae60a5a124aefb2a2f6b"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#afde6bafd9f95ae60a5a124aefb2a2f6b">ryujin::reference_wrapper</a> (T &amp;) -&gt; reference_wrapper&lt; T &gt;</td></tr>
-<tr class="separator:afde6bafd9f95ae60a5a124aefb2a2f6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga62afa12c66b618feea0ddcfe9f0e6196"><td class="memTemplParams" colspan="2">template&lt;typename Fn , typename Signature  = typename detail::function_signature_extractor&lt;decltype(&amp;Fn::operator())&gt;::type&gt; </td></tr>
 <tr class="memitem:ga62afa12c66b618feea0ddcfe9f0e6196"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group___functions.html#ga62afa12c66b618feea0ddcfe9f0e6196">ryujin::move_only_function</a> (Fn &amp;&amp;) -&gt; move_only_function&lt; Signature &gt;</td></tr>
 <tr class="memdesc:ga62afa12c66b618feea0ddcfe9f0e6196"><td class="mdescLeft">&#160;</td><td class="mdescRight">Template deduction guide for <a class="el" href="classryujin_1_1move__only__function.html">move_only_function</a> from a lambda.  <a href="group___functions.html#ga62afa12c66b618feea0ddcfe9f0e6196">More...</a><br /></td></tr>
@@ -147,20 +142,6 @@ Functions</h2></td></tr>
 <tr class="memitem:gac4ab2826063dcf6eef8a3461e946b2a4"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group___functions.html#gac4ab2826063dcf6eef8a3461e946b2a4">ryujin::move_only_function</a> (Ret(Type::*)(Args...)) -&gt; move_only_function&lt; Ret(Type, Args...)&gt;</td></tr>
 <tr class="memdesc:gac4ab2826063dcf6eef8a3461e946b2a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Template deduction guide for <a class="el" href="classryujin_1_1move__only__function.html">move_only_function</a> from a member function.  <a href="group___functions.html#gac4ab2826063dcf6eef8a3461e946b2a4">More...</a><br /></td></tr>
 <tr class="separator:gac4ab2826063dcf6eef8a3461e946b2a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga27e0fedf354718a1c1ef1a0f367e83c5"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ga27e0fedf354718a1c1ef1a0f367e83c5"><td class="memTemplItemLeft" align="right" valign="top">constexpr reference_wrapper&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__reference__wrapper.html#ga27e0fedf354718a1c1ef1a0f367e83c5">ryujin::ref</a> (T &amp;t) noexcept</td></tr>
-<tr class="memdesc:ga27e0fedf354718a1c1ef1a0f367e83c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a reference wrapper from a reference.  <a href="group__reference__wrapper.html#ga27e0fedf354718a1c1ef1a0f367e83c5">More...</a><br /></td></tr>
-<tr class="separator:ga27e0fedf354718a1c1ef1a0f367e83c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae47759cccf52a3331a8d1b27662b21a2"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ae47759cccf52a3331a8d1b27662b21a2"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#ae47759cccf52a3331a8d1b27662b21a2">ryujin::ref</a> (const T &amp;&amp;)=delete</td></tr>
-<tr class="separator:ae47759cccf52a3331a8d1b27662b21a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga35863a5911293e2d71af4be77f6ab3a0"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ga35863a5911293e2d71af4be77f6ab3a0"><td class="memTemplItemLeft" align="right" valign="top">constexpr reference_wrapper&lt; const T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__reference__wrapper.html#ga35863a5911293e2d71af4be77f6ab3a0">ryujin::cref</a> (const T &amp;t) noexcept</td></tr>
-<tr class="memdesc:ga35863a5911293e2d71af4be77f6ab3a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a const reference wrapper from a reference.  <a href="group__reference__wrapper.html#ga35863a5911293e2d71af4be77f6ab3a0">More...</a><br /></td></tr>
-<tr class="separator:ga35863a5911293e2d71af4be77f6ab3a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a57d0c190a9731ccc989e9a21b0ca1271"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a57d0c190a9731ccc989e9a21b0ca1271"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a57d0c190a9731ccc989e9a21b0ca1271">ryujin::cref</a> (const T &amp;&amp;)=delete</td></tr>
-<tr class="separator:a57d0c190a9731ccc989e9a21b0ca1271"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->

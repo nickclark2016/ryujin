@@ -81,6 +81,9 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classryujin_1_1reference__wrapper.html">ryujin::reference_wrapper&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wraps a reference into a copyable and assignable type. This can be used to store references in types that cannot typically hold references.  <a href="classryujin_1_1reference__wrapper.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1in__place__t.html">ryujin::in_place_t</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type used to tag for in-place construction.  <a href="structryujin_1_1in__place__t.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -135,7 +138,7 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1pair.html">ryujin::pair&lt; T1, T2 &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tuple containing two values.  <a href="structryujin_1_1pair.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1tuple.html">ryujin::tuple&lt; Ts &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classryujin_1_1tuple.html">ryujin::tuple&lt; Ts &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1tuple__element.html">ryujin::tuple_element&lt; I, Ts &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -147,6 +150,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1tuple__size_3_01tuple_3_01_ts_8_8_8_01_4_01_4.html">ryujin::tuple_size&lt; tuple&lt; Ts... &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classryujin_1_1tuple.html">ryujin::tuple&lt; Ts &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
@@ -155,6 +160,23 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:afde6bafd9f95ae60a5a124aefb2a2f6b"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:afde6bafd9f95ae60a5a124aefb2a2f6b"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#afde6bafd9f95ae60a5a124aefb2a2f6b">ryujin::reference_wrapper</a> (T &amp;) -&gt; reference_wrapper&lt; T &gt;</td></tr>
+<tr class="separator:afde6bafd9f95ae60a5a124aefb2a2f6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga27e0fedf354718a1c1ef1a0f367e83c5"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga27e0fedf354718a1c1ef1a0f367e83c5"><td class="memTemplItemLeft" align="right" valign="top">constexpr reference_wrapper&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__reference__wrapper.html#ga27e0fedf354718a1c1ef1a0f367e83c5">ryujin::ref</a> (T &amp;t) noexcept</td></tr>
+<tr class="memdesc:ga27e0fedf354718a1c1ef1a0f367e83c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a reference wrapper from a reference.  <a href="group__reference__wrapper.html#ga27e0fedf354718a1c1ef1a0f367e83c5">More...</a><br /></td></tr>
+<tr class="separator:ga27e0fedf354718a1c1ef1a0f367e83c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae47759cccf52a3331a8d1b27662b21a2"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ae47759cccf52a3331a8d1b27662b21a2"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#ae47759cccf52a3331a8d1b27662b21a2">ryujin::ref</a> (const T &amp;&amp;)=delete</td></tr>
+<tr class="separator:ae47759cccf52a3331a8d1b27662b21a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga35863a5911293e2d71af4be77f6ab3a0"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga35863a5911293e2d71af4be77f6ab3a0"><td class="memTemplItemLeft" align="right" valign="top">constexpr reference_wrapper&lt; const T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__reference__wrapper.html#ga35863a5911293e2d71af4be77f6ab3a0">ryujin::cref</a> (const T &amp;t) noexcept</td></tr>
+<tr class="memdesc:ga35863a5911293e2d71af4be77f6ab3a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a const reference wrapper from a reference.  <a href="group__reference__wrapper.html#ga35863a5911293e2d71af4be77f6ab3a0">More...</a><br /></td></tr>
+<tr class="separator:ga35863a5911293e2d71af4be77f6ab3a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57d0c190a9731ccc989e9a21b0ca1271"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a57d0c190a9731ccc989e9a21b0ca1271"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a57d0c190a9731ccc989e9a21b0ca1271">ryujin::cref</a> (const T &amp;&amp;)=delete</td></tr>
+<tr class="separator:a57d0c190a9731ccc989e9a21b0ca1271"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba42f2ef8e07b3154d22fd88025b28a6"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:aba42f2ef8e07b3154d22fd88025b28a6"><td class="memTemplItemLeft" align="right" valign="top">constexpr T &amp;&amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#aba42f2ef8e07b3154d22fd88025b28a6">ryujin::forward</a> (remove_reference_t&lt; T &gt; &amp;t) noexcept</td></tr>
 <tr class="memdesc:aba42f2ef8e07b3154d22fd88025b28a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forwards an l-value reference as an r-value.  <a href="namespaceryujin.html#aba42f2ef8e07b3154d22fd88025b28a6">More...</a><br /></td></tr>
@@ -192,6 +214,18 @@ Functions</h2></td></tr>
 <tr class="memitem:a19d673a5fc4c07e873b7a4e6cb5ef83c"><td class="memTemplParams" colspan="2">template&lt;sz N, typename T1 , typename T2 &gt; </td></tr>
 <tr class="memitem:a19d673a5fc4c07e873b7a4e6cb5ef83c"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a19d673a5fc4c07e873b7a4e6cb5ef83c">ryujin::get</a> (pair&lt; T1, T2 &gt; &amp;p)</td></tr>
 <tr class="separator:a19d673a5fc4c07e873b7a4e6cb5ef83c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9dce2340756de26665521d9e7f0de52"><td class="memTemplParams" colspan="2">template&lt;typename ... Ts&gt; </td></tr>
+<tr class="memitem:ae9dce2340756de26665521d9e7f0de52"><td class="memTemplItemLeft" align="right" valign="top">constexpr tuple&lt; Ts... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#ae9dce2340756de26665521d9e7f0de52">ryujin::make_tuple</a> (Ts &amp;&amp;... ts)</td></tr>
+<tr class="separator:ae9dce2340756de26665521d9e7f0de52"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac96c5ef5d6b691300cb9e3f301a9b301"><td class="memTemplParams" colspan="2">template&lt;typename ... Ts&gt; </td></tr>
+<tr class="memitem:ac96c5ef5d6b691300cb9e3f301a9b301"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#ac96c5ef5d6b691300cb9e3f301a9b301">ryujin::tuple</a> (Ts...) -&gt; tuple&lt; Ts... &gt;</td></tr>
+<tr class="separator:ac96c5ef5d6b691300cb9e3f301a9b301"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff97f072dc0145d63415e03f034fb5aa"><td class="memTemplParams" colspan="2">template&lt;sz I, typename ... Ts&gt; </td></tr>
+<tr class="memitem:aff97f072dc0145d63415e03f034fb5aa"><td class="memTemplItemLeft" align="right" valign="top">auto &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#aff97f072dc0145d63415e03f034fb5aa">ryujin::get</a> (tuple&lt; Ts... &gt; &amp;t) noexcept</td></tr>
+<tr class="separator:aff97f072dc0145d63415e03f034fb5aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84416fd7c922848168da7cfa499a4287"><td class="memTemplParams" colspan="2">template&lt;sz I, typename ... Ts&gt; </td></tr>
+<tr class="memitem:a84416fd7c922848168da7cfa499a4287"><td class="memTemplItemLeft" align="right" valign="top">const auto &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a84416fd7c922848168da7cfa499a4287">ryujin::get</a> (const tuple&lt; Ts... &gt; &amp;t) noexcept</td></tr>
+<tr class="separator:a84416fd7c922848168da7cfa499a4287"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
