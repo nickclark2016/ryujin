@@ -6,6 +6,123 @@
 
 namespace ryujin
 {
+    /// \defgroup reference_wrapper Reference Wrapper
+
+    /// <summary>
+    /// Wraps a reference into a copyable and assignable type.  This can be used to store
+    /// references in types that cannot typically hold references.
+    /// </summary>
+    /// <typeparam name="T">Type of reference</typeparam>
+    /// \ingroup reference_wrapper
+    template <typename T>
+    class reference_wrapper
+    {
+    public:
+        /// <summary>
+        /// Constructs a reference wrapper from a value.
+        /// </summary>
+        /// <typeparam name="U">Type of the value to construct from</typeparam>
+        /// <param name="val">Value to construct from</param>
+        template <typename U>
+        constexpr reference_wrapper(U&& val);
+
+        /// <summary>
+        /// Copy constructor.
+        /// </summary>
+        /// <param name="other">Reference wrapper to copy reference from</param>
+        /// <returns></returns>
+        constexpr reference_wrapper(const reference_wrapper& other) noexcept;
+
+        /// <summary>
+        /// Reseats the reference to point to the reference held by the other reference.
+        /// </summary>
+        /// <param name="other">Reference wrapper to copy from</param>
+        /// <returns>Reference to this</returns>
+        constexpr reference_wrapper& operator=(const reference_wrapper& other) noexcept;
+
+        /// <summary>
+        /// Gets the value held by the wrapper.
+        /// </summary>
+        /// <returns>Reference held by wrapper</returns>
+        constexpr operator T& () const noexcept;
+
+        /// <summary>
+        /// Gets the value held by the wrapper.
+        /// </summary>
+        /// <returns>Reference held by wrapper</returns>
+        constexpr T& get() const noexcept;
+    private:
+        T* _ptr;
+    };
+
+    template <typename T>
+    reference_wrapper(T&)->reference_wrapper<T>;
+
+    template<typename T>
+    template<typename U>
+    inline constexpr reference_wrapper<T>::reference_wrapper(U&& val)
+    {
+        T& ref = static_cast<U>(val);
+        _ptr = &ref;
+    }
+
+    template<typename T>
+    inline constexpr reference_wrapper<T>::reference_wrapper(const reference_wrapper& other) noexcept
+    {
+        _ptr = other._ptr;
+    }
+
+    template<typename T>
+    inline constexpr reference_wrapper<T>& reference_wrapper<T>::operator=(const reference_wrapper& other) noexcept
+    {
+        _ptr = other._ptr;
+        return *this;
+    }
+
+    template<typename T>
+    inline constexpr reference_wrapper<T>::operator T& () const noexcept
+    {
+        return *_ptr;
+    }
+
+    template<typename T>
+    inline constexpr T& reference_wrapper<T>::get() const noexcept
+    {
+        return *_ptr;
+    }
+
+    /// <summary>
+    /// Creates a reference wrapper from a reference.
+    /// </summary>
+    /// <typeparam name="T">Type of the reference</typeparam>
+    /// <param name="t">Reference to wrap</param>
+    /// <returns>Reference wrapper wrapping the provided reference</returns>
+    /// \ingroup reference_wrapper
+    template <typename T>
+    inline constexpr reference_wrapper<T> ref(T& t) noexcept
+    {
+        return reference_wrapper<T>(t);
+    }
+
+    template <typename T>
+    void ref(const T&&) = delete;
+
+    /// <summary>
+    /// Creates a const reference wrapper from a reference.
+    /// </summary>
+    /// <typeparam name="T">Type of the reference</typeparam>
+    /// <param name="t">Reference to wrap</param>
+    /// <returns>Reference wrapper wrapping the provided reference as a constant reference</returns>
+    /// \ingroup reference_wrapper
+    template <typename T>
+    inline constexpr reference_wrapper<const T> cref(const T& t) noexcept
+    {
+        return reference_wrapper<const T>(t);
+    }
+
+    template <typename T>
+    void cref(const T&&) = delete;
+
     /// <summary>
     /// Forwards an l-value reference as an r-value.
     /// </summary>
@@ -497,10 +614,105 @@ namespace ryujin
         }
     }
 
-    template <typename ... Ts>
-    struct tuple
+    namespace detail
     {
-    };
+        template <typename ... Ts>
+        struct tuple_impl;
+
+        template <>
+        struct tuple_impl<>
+        {};
+
+        template <typename Head, typename ... Rest>
+        struct tuple_impl<Head, Rest...> : public tuple_impl<Rest...>
+        {
+            using type = Head;
+            using base = tuple_impl<Rest...>;
+
+            type value;
+
+            inline constexpr tuple_impl()
+                : base(), value()
+            {
+            }
+
+            inline constexpr tuple_impl(const Head& value, const Rest& ... rest)
+                : base(ryujin::forward<Rest>(rest)...), value(value)
+            {
+            }
+
+            template <typename H, typename ... R>
+            inline constexpr tuple_impl(H&& value, R&& ... rest)
+                : base(ryujin::forward<R>(rest)...), value(ryujin::forward<H>(value))
+            {
+            }
+
+            inline constexpr base& get_rest() noexcept
+            {
+                return *this;
+            }
+
+            inline constexpr const base& get_rest() const noexcept
+            {
+                return *this;
+            }
+        };
+
+        template <sz I, typename ... Ts>
+        auto& get(tuple_impl<Ts...>& tup) noexcept
+        {
+            static_assert(I < sizeof...(Ts), "Invalid size index");
+            if constexpr (I == 0)
+            {
+                return tup.value;
+            }
+            else
+            {
+                return get<I - 1>(tup.get_rest());
+            }
+        };
+
+        template <sz I, typename ... Ts>
+        const auto& get(const tuple_impl<Ts...>& tup) noexcept
+        {
+            static_assert(I < sizeof...(Ts), "Invalid size index");
+            if constexpr (I == 0)
+            {
+                return tup.value;
+            }
+            else
+            {
+                return get<I - 1>(tup.get_rest());
+            }
+        };
+    }
+
+    template <typename ... Ts>
+    class tuple;
+
+    namespace detail
+    {
+        template <typename T>
+        struct unwrap_reference_wrapper
+        {
+            using type = T;
+        };
+
+        template <typename T>
+        struct unwrap_reference_wrapper<reference_wrapper<T>>
+        {
+            using type = T;
+        };
+
+        template <typename T>
+        using unwrapped_decay_t = typename unwrap_reference_wrapper<decay_t<T>>::type;
+    }
+
+    template <typename ... Ts>
+    inline constexpr tuple<Ts...> make_tuple(Ts&& ... ts)
+    {
+        return tuple<detail::unwrapped_decay_t<Ts>...>(ryujin::forward<Ts>(ts)...);
+    }
 
     template <sz I, typename ... Ts>
     struct tuple_element;
@@ -522,8 +734,54 @@ namespace ryujin
     template <typename ... Ts>
     struct tuple_size<tuple<Ts...>> : ryujin::integral_constant<sz, sizeof...(Ts)>
     {
-
     };
+
+    template <typename ... Ts>
+    class tuple : detail::tuple_impl<Ts...>
+    {
+    public:
+        constexpr tuple() = default;
+
+        inline constexpr tuple(const Ts& ... args)
+            : detail::tuple_impl<Ts...>(ryujin::forward<Ts>(args)...)
+        {};
+
+        template <typename ... Us>
+        constexpr tuple(Us&& ... us)
+            : detail::tuple_impl<Ts...>(ryujin::forward<Us>(us)...)
+        {};
+
+        tuple(const tuple&) = default;
+        tuple(tuple&&) noexcept = default;
+
+        ~tuple() = default;
+
+        tuple& operator=(const tuple&) = default;
+        tuple& operator=(tuple&&) noexcept = default;
+
+    private:
+
+        template <sz I, typename ... Types>
+        friend auto& get(tuple<Types...>& t) noexcept;
+
+        template <sz I, typename ... Types>
+        friend const auto& get(const tuple<Types...>& t) noexcept;
+    };
+
+    template <typename ... Ts>
+    tuple(Ts...)->tuple<Ts...>;
+
+    template<sz I, typename ... Ts>
+    auto& get(tuple<Ts...>& t) noexcept
+    {
+        return detail::get<I, Ts...>(t);
+    }
+
+    template<sz I, typename ... Ts>
+    const auto& get(const tuple<Ts...>& t) noexcept
+    {
+        return detail::get<I, Ts...>(t);
+    }
 }
 
 #ifdef RYUJIN_PROVIDE_STRUCTURED_BINDINGS

@@ -3,61 +3,10 @@
 
 #include "smart_pointers.hpp"
 #include "type_traits.hpp"
+#include "utility.hpp"
 
 namespace ryujin
 {
-    /// \defgroup reference_wrapper Reference Wrapper
-
-    /// <summary>
-    /// Wraps a reference into a copyable and assignable type.  This can be used to store
-    /// references in types that cannot typically hold references.
-    /// </summary>
-    /// <typeparam name="T">Type of reference</typeparam>
-    /// \ingroup reference_wrapper
-    template <typename T>
-    class reference_wrapper
-    {
-    public:
-        /// <summary>
-        /// Constructs a reference wrapper from a value.
-        /// </summary>
-        /// <typeparam name="U">Type of the value to construct from</typeparam>
-        /// <param name="val">Value to construct from</param>
-        template <typename U>
-        constexpr reference_wrapper(U&& val);
-
-        /// <summary>
-        /// Copy constructor.
-        /// </summary>
-        /// <param name="other">Reference wrapper to copy reference from</param>
-        /// <returns></returns>
-        constexpr reference_wrapper(const reference_wrapper& other) noexcept;
-
-        /// <summary>
-        /// Reseats the reference to point to the reference held by the other reference.
-        /// </summary>
-        /// <param name="other">Reference wrapper to copy from</param>
-        /// <returns>Reference to this</returns>
-        constexpr reference_wrapper& operator=(const reference_wrapper& other) noexcept;
-
-        /// <summary>
-        /// Gets the value held by the wrapper.
-        /// </summary>
-        /// <returns>Reference held by wrapper</returns>
-        constexpr operator T& () const noexcept;
-
-        /// <summary>
-        /// Gets the value held by the wrapper.
-        /// </summary>
-        /// <returns>Reference held by wrapper</returns>
-        constexpr T& get() const noexcept;
-    private:
-        T* _ptr;
-    };
-
-    template <typename T>
-    reference_wrapper(T&)->reference_wrapper<T>;
-
     namespace detail
     {
         template <sz FnSize = 2 * sizeof(void*)>
@@ -1399,71 +1348,6 @@ namespace ryujin
     /// \ingroup Functions
     template <typename Ret, typename Type, typename ... Args>
     move_only_function(Ret(Type::*)(Args...))->move_only_function<Ret(Type, Args...)>;
-
-    template<typename T>
-    template<typename U>
-    inline constexpr reference_wrapper<T>::reference_wrapper(U&& val)
-    {
-        T& ref = static_cast<U>(val);
-        _ptr = &ref;
-    }
-
-    template<typename T>
-    inline constexpr reference_wrapper<T>::reference_wrapper(const reference_wrapper& other) noexcept
-    {
-        _ptr = other._ptr;
-    }
-    
-    template<typename T>
-    inline constexpr reference_wrapper<T>& reference_wrapper<T>::operator=(const reference_wrapper& other) noexcept
-    {
-        _ptr = other._ptr;
-        return *this;
-    }
-
-    template<typename T>
-    inline constexpr reference_wrapper<T>::operator T& () const noexcept
-    {
-        return *_ptr;
-    }
-
-    template<typename T>
-    inline constexpr T& reference_wrapper<T>::get() const noexcept
-    {
-        return *_ptr;
-    }
-
-    /// <summary>
-    /// Creates a reference wrapper from a reference.
-    /// </summary>
-    /// <typeparam name="T">Type of the reference</typeparam>
-    /// <param name="t">Reference to wrap</param>
-    /// <returns>Reference wrapper wrapping the provided reference</returns>
-    /// \ingroup reference_wrapper
-    template <typename T>
-    inline constexpr reference_wrapper<T> ref(T& t) noexcept
-    {
-        return reference_wrapper<T>(t);
-    }
-
-    template <typename T>
-    void ref(const T&&) = delete;
-
-    /// <summary>
-    /// Creates a const reference wrapper from a reference.
-    /// </summary>
-    /// <typeparam name="T">Type of the reference</typeparam>
-    /// <param name="t">Reference to wrap</param>
-    /// <returns>Reference wrapper wrapping the provided reference as a constant reference</returns>
-    /// \ingroup reference_wrapper
-    template <typename T>
-    inline constexpr reference_wrapper<const T> cref(const T& t) noexcept
-    {
-        return reference_wrapper<const T>(t);
-    }
-
-    template <typename T>
-    void cref(const T&&) = delete;
 
     /// <summary>
     /// Functor struct testing for equality of two values.

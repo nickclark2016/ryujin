@@ -19,6 +19,21 @@ namespace ryujin
     template <bool B, typename T>
     using enable_if_t = typename enable_if<B, T>::type;
 
+    template <bool B, typename T, typename F>
+    struct conditional
+    {
+        using type = T;
+    };
+
+    template <typename T, typename F>
+    struct conditional<false, T, F>
+    {
+        using type = F;
+    };
+
+    template <bool B, typename T, typename F>
+    using conditional_t = typename conditional<B, T, F>::type;
+
     template <typename T>
     struct type_identity
     {
@@ -64,6 +79,15 @@ namespace ryujin
 
     template <typename T>
     inline constexpr bool is_reference_v = is_reference<T>::value;
+
+    template <typename T>
+    struct is_lvalue_reference : false_type {};
+
+    template <typename T>
+    struct is_lvalue_reference<T&> : true_type {};
+
+    template <typename T>
+    inline constexpr bool is_lvalue_reference_v = is_lvalue_reference<T>::value;
 
     namespace detail
     {
@@ -243,6 +267,21 @@ namespace ryujin
     template <typename T>
     inline constexpr bool is_const_v = is_const<T>::value;
 
+    namespace detail
+    {
+        template <typename T>
+        auto try_add_pointer(int)->type_identity<remove_reference_t<T>*>;
+
+        template <typename T>
+        auto try_add_pointer(...)->type_identity<T>;
+    }
+
+    template <typename T>
+    struct add_pointer : decltype(detail::try_add_pointer<T>(0)) {};
+
+    template <typename T>
+    using add_pointer_t = typename add_pointer<T>::type;
+
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable: 4180)
@@ -308,6 +347,23 @@ namespace ryujin
 
     template <typename T>
     inline constexpr bool is_array_v = is_array<T>::value;
+
+    namespace detail
+    {
+        template <typename T>
+        struct decay_impl
+        {
+            using U = remove_reference_t<T>;
+            using type = conditional_t<is_array_v<U>, remove_extent_t<U>*, conditional_t<is_function_v<U>, add_pointer_t<U>, remove_cv_t<U>>>;
+        };
+    }
+
+    template <typename T>
+    struct decay : type_identity<typename detail::decay_impl<T>::type>
+    {};
+
+    template <typename T>
+    using decay_t = typename decay<T>::type;
 
     namespace detail
     {
