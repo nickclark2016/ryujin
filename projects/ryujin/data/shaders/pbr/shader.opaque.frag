@@ -103,7 +103,7 @@ vec2 get_metal_rough(uint id)
     {
         return vec2(0);
     }
-    return texture(textures[id], fs_in.texcoord0).rg;
+    return texture(textures[id], fs_in.texcoord0).bg;
 }
 
 float get_ao(uint id)

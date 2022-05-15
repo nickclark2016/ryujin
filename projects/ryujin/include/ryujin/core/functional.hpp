@@ -103,7 +103,7 @@ namespace ryujin
                 _constructor = nullptr;
                 _destructor = nullptr;
                 _isInline = false;
-                _storage.heapAllocated = true;
+                _storage.heapAllocated = nullptr;
             }
 
             template <typename Fn, enable_if_t<!is_same_v<remove_cvref_t<Fn>, move_only_function_base<Ret, Nx, Args...>>, bool> = true>

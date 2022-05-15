@@ -464,9 +464,12 @@ namespace ryujin
         /// <summary>
         /// Move constructs the first and second elements.
         /// </summary>
+        /// <typeparam name="U1">Type of first element</typeparam>
+        /// <typeparam name="U2">Type of second element</typeparam>
         /// <param name="first">First element</param>
         /// <param name="second">Second element</param>
-        constexpr pair(T1&& first, T2&& second);
+        template <typename U1, typename U2>
+        constexpr pair(U1&& first, U2&& second);
 
         /// <summary>
         /// Default copy constructor
@@ -513,9 +516,10 @@ namespace ryujin
     {
     }
 
-    template <typename T1, typename T2>
-    inline constexpr pair<T1, T2>::pair(T1&& first, T2&& second)
-        : first(first), second(second)
+    template<typename T1, typename T2>
+    template<typename U1, typename U2>
+    inline constexpr pair<T1, T2>::pair(U1&& first, U2&& second)
+        : first(ryujin::forward<U1>(first)), second(ryujin::forward<U2>(second))
     {
     }
 

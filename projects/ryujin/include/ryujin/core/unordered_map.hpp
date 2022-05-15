@@ -100,6 +100,8 @@ namespace ryujin
         constexpr sz size() const noexcept;
         constexpr sz capacity() const noexcept;
         constexpr bool empty() const noexcept;
+
+        constexpr Value& operator[](const Key& k) noexcept;
     private:
         Hash _hasher;
         KeyEqual _equality;
@@ -417,6 +419,40 @@ namespace ryujin
     inline constexpr bool unordered_map<Key, Value, Hash, KeyEqual, Allocator>::empty() const noexcept
     {
         return _size == 0;
+    }
+
+    template <typename Key, typename Value, typename Hash, typename KeyEqual, template <typename> typename Allocator>
+    inline constexpr Value& unordered_map<Key, Value, Hash, KeyEqual, Allocator>::operator[](const Key& k) noexcept
+    {
+        const auto search = find(k);
+        if (search == end())
+        {
+            if (_needs_resize())
+            {
+                _make_new_pages((_pageCount + 1) * values_per_page);
+            }
+
+            auto hash = _hasher(k) % _capacity;
+
+            auto page = hash / values_per_page;
+            auto index = hash % values_per_page;
+
+            while (_is_occupied(page, index))
+            {
+                ++index;
+                if (index == values_per_page)
+                {
+                    index = 0;
+                    page = (page + 1) % _pageCount;
+                }
+            }
+
+            ::new (&(_pages[page].values[index])) pair<const Key, Value>(k, ryujin::move(Value()));
+            detail::set_status(_pages[page].tags, 2 * index, detail::unordered_map_slot_status::OCCUPIED);
+            ++_size;
+            return _pages[page].values[index].second;
+        }
+        return search->second;
     }
 
     template <typename Key, typename Value, typename Hash, typename KeyEqual, template <typename> typename Allocator>

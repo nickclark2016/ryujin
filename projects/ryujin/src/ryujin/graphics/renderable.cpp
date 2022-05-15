@@ -401,9 +401,9 @@ namespace ryujin
 
             auto entity = _registry->allocate();
             // apply mesh-specific transformations
-            auto position = baseTransform.position + mesh.position;
+            auto position = baseTransform.position;
             auto rotation = baseTransform.rotation;
-            auto scale = baseTransform.scale * mesh.scale;
+            auto scale = baseTransform.scale;
 
             auto& material = *mesh.material;
             auto materialName = fmt::v8::format("{}_{}", asset.name(), material.name);
@@ -415,7 +415,11 @@ namespace ryujin
                 materialKey = load_material(materialName, material);
             }
 
-            set_transform(entity.get<transform_component>(), position, rotation, scale);
+            auto& tx = entity.get<transform_component>();
+            tx.offset = mesh.position;
+            tx.deformScale = mesh.scale;
+
+            set_transform(tx, position, rotation, scale);
             entity.assign(renderable_component{
                     .material = materialKey,
                     .mesh = meshKey
