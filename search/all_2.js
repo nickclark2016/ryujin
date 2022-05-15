@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['b_133',['b',['../structryujin_1_1vec3.html#a86884e1ff9237494b89697089d640382',1,'ryujin::vec3::b()'],['../structryujin_1_1vec4.html#acbbff80a5f9dd756fd7fac0ca208fad3',1,'ryujin::vec4::b()'],['../classryujin_1_1keyboard.html#a658950f742aa62faacfe81f130b91012a9d5ed678fe57bcca610140957afab571',1,'ryujin::keyboard::B()']]],
+  ['b_133',['B',['../classryujin_1_1keyboard.html#a658950f742aa62faacfe81f130b91012a9d5ed678fe57bcca610140957afab571',1,'ryujin::keyboard::B()'],['../structryujin_1_1vec3.html#a86884e1ff9237494b89697089d640382',1,'ryujin::vec3::b()'],['../structryujin_1_1vec4.html#acbbff80a5f9dd756fd7fac0ca208fad3',1,'ryujin::vec4::b()']]],
   ['b10g11r11_5fufloat_5fpack32_134',['B10G11R11_UFLOAT_PACK32',['../namespaceryujin.html#aa5c888d9a37512df2eefd85ec3765244a1606c834acaf345caa7d4fbf6354c2c5',1,'ryujin']]],
   ['b4g4r4a4_5funorm_5fpack16_135',['B4G4R4A4_UNORM_PACK16',['../namespaceryujin.html#aa5c888d9a37512df2eefd85ec3765244ad63d4bec01395d94dd9ff74a6a13716c',1,'ryujin']]],
   ['b5g5r5a1_5funorm_5fpack16_136',['B5G5R5A1_UNORM_PACK16',['../namespaceryujin.html#aa5c888d9a37512df2eefd85ec3765244a82e33fa192f74dce0e573ad0f1e88950',1,'ryujin']]],

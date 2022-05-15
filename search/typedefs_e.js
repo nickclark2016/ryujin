@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['u16_2977',['u16',['../namespaceryujin.html#a10185cea8b7d65241ee94892e50f23f8',1,'ryujin']]],
-  ['u32_2978',['u32',['../namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf',1,'ryujin']]],
-  ['u64_2979',['u64',['../namespaceryujin.html#a3e143684101f7c548db9e81ad0deb9fe',1,'ryujin']]],
-  ['u8_2980',['u8',['../namespaceryujin.html#a4fdd9d0598161de847155dcd0d0058ac',1,'ryujin']]]
+  ['u16_2959',['u16',['../namespaceryujin.html#a10185cea8b7d65241ee94892e50f23f8',1,'ryujin']]],
+  ['u32_2960',['u32',['../namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf',1,'ryujin']]],
+  ['u64_2961',['u64',['../namespaceryujin.html#a3e143684101f7c548db9e81ad0deb9fe',1,'ryujin']]],
+  ['u8_2962',['u8',['../namespaceryujin.html#a4fdd9d0598161de847155dcd0d0058ac',1,'ryujin']]]
 ];
