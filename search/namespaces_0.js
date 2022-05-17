@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['constants_2173',['constants',['../namespaceryujin_1_1constants.html',1,'ryujin']]],
-  ['ryujin_2174',['ryujin',['../namespaceryujin.html',1,'']]]
+  ['constants_2271',['constants',['../namespaceryujin_1_1constants.html',1,'ryujin']]],
+  ['ryujin_2272',['ryujin',['../namespaceryujin.html',1,'']]]
 ];

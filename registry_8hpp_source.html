@@ -334,7 +334,7 @@ $(function() {
 <div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;    <span class="keyword">class </span><a class="code" href="classryujin_1_1base__registry.html">base_registry</a></div>
 <div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;    {</div>
 <div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00266"></a><span class="lineno"><a class="line" href="classryujin_1_1base__registry.html#a0329b976dd069430f43c4ffefa7f5031">  266</a></span>&#160;        <span class="keyword">using</span> <a class="code" href="classryujin_1_1base__registry.html#a0329b976dd069430f43c4ffefa7f5031">entity_type</a> = Type;</div>
+<div class="line"><a name="l00266"></a><span class="lineno"><a class="line" href="classryujin_1_1base__registry.html#a0329b976dd069430f43c4ffefa7f5031">  266</a></span>&#160;        <span class="keyword">using</span> entity_type = Type;</div>
 <div class="line"><a name="l00267"></a><span class="lineno"><a class="line" href="classryujin_1_1base__registry.html#a4910a8ad4531e18ad1e60a36997a92a2">  267</a></span>&#160;        <span class="keyword">using</span> <a class="code" href="structryujin_1_1entity__traits.html">entity_type_traits</a> = <a class="code" href="structryujin_1_1entity__traits.html">entity_traits&lt;typename Type::type&gt;</a>;</div>
 <div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160; </div>
 <div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;        <a class="code" href="classryujin_1_1base__registry.html">base_registry</a>();</div>
@@ -388,14 +388,14 @@ $(function() {
 <div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160; </div>
 <div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;    private:</div>
 <div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;        static constexpr <a class="code" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a> _poolSize = 1024;</div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;        static constexpr <a class="code" href="classryujin_1_1base__registry.html#a0329b976dd069430f43c4ffefa7f5031">entity_type</a> _tombstone = <a class="code" href="structryujin_1_1entity__traits.html">entity_traits</a>&lt;typename <a class="code" href="classryujin_1_1base__registry.html#a0329b976dd069430f43c4ffefa7f5031">entity_type</a>::type&gt;::from_type(~(typename <a class="code" href="classryujin_1_1base__registry.html#a0329b976dd069430f43c4ffefa7f5031">entity_type</a>::type)(0));</div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;        static constexpr entity_type _tombstone = <a class="code" href="structryujin_1_1entity__traits.html">entity_traits</a>&lt;typename entity_type::type&gt;::from_type(~(typename entity_type::type)(0));</div>
 <div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160; </div>
 <div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;        <a class="code" href="classryujin_1_1vector.html">vector</a>&lt;detail::pool&gt; _pools;</div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;        <a class="code" href="classryujin_1_1vector.html">vector</a>&lt;<a class="code" href="classryujin_1_1base__registry.html#a0329b976dd069430f43c4ffefa7f5031">entity_type</a>&gt; _entities;</div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;        <a class="code" href="classryujin_1_1base__registry.html#a0329b976dd069430f43c4ffefa7f5031">entity_type</a> _freeListHead = _tombstone;</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;        <a class="code" href="classryujin_1_1vector.html">vector</a>&lt;entity_type&gt; _entities;</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;        entity_type _freeListHead = _tombstone;</div>
 <div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160; </div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;        <a class="code" href="classryujin_1_1base__registry.html#a0329b976dd069430f43c4ffefa7f5031">entity_type</a> _allocateNewIdentifier();</div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;        <a class="code" href="classryujin_1_1base__registry.html#a0329b976dd069430f43c4ffefa7f5031">entity_type</a> _recycleExistingIdentifier();</div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;        entity_type _allocateNewIdentifier();</div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;        entity_type _recycleExistingIdentifier();</div>
 <div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160; </div>
 <div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;        <a class="code" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a> _active;</div>
 <div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160; </div>
@@ -521,7 +521,7 @@ $(function() {
 <div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Type&gt;</div>
 <div class="line"><a name="l00451"></a><span class="lineno"><a class="line" href="classryujin_1_1base__registry.html#a308661162aa6974fc4e9db3d3d30b1e4">  451</a></span>&#160;    <span class="keyword">inline</span> <a class="code" href="classryujin_1_1entity__handle.html">entity_handle&lt;Type&gt;</a> <a class="code" href="classryujin_1_1base__registry.html">base_registry&lt;Type&gt;::allocate</a>()</div>
 <div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;    {</div>
-<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;        <a class="code" href="classryujin_1_1base__registry.html#a0329b976dd069430f43c4ffefa7f5031">entity_type</a> <a class="code" href="structryujin_1_1entity.html">entity</a> = _freeListHead == _tombstone ? _allocateNewIdentifier() : _recycleExistingIdentifier();</div>
+<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;        entity_type <a class="code" href="structryujin_1_1entity.html">entity</a> = _freeListHead == _tombstone ? _allocateNewIdentifier() : _recycleExistingIdentifier();</div>
 <div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;        ++_active;</div>
 <div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;        <span class="keyword">auto</span> handle = <a class="code" href="classryujin_1_1entity__handle.html">entity_handle</a>(<a class="code" href="structryujin_1_1entity.html">entity</a>, <span class="keyword">this</span>);</div>
 <div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;        assign&lt;transform_component&gt;(handle, {});</div>
@@ -547,8 +547,8 @@ $(function() {
 <div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;        <span class="comment">// add it to the free list in id ascending order</span></div>
 <div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;        <span class="keywordflow">if</span> (identifier &lt; _freeListHead.identifier)</div>
 <div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160;        {</div>
-<div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;            _entities[identifier] = <a class="code" href="classryujin_1_1base__registry.html#a0329b976dd069430f43c4ffefa7f5031">entity_type</a>{ _freeListHead.identifier, <span class="keyword">static_cast&lt;</span>entity_type_traits::version_type<span class="keyword">&gt;</span>(version) };</div>
-<div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160;            _freeListHead = <a class="code" href="classryujin_1_1base__registry.html#a0329b976dd069430f43c4ffefa7f5031">entity_type</a>{ identifier, 0 };</div>
+<div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;            _entities[identifier] = entity_type{ _freeListHead.identifier, <span class="keyword">static_cast&lt;</span>entity_type_traits::version_type<span class="keyword">&gt;</span>(version) };</div>
+<div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160;            _freeListHead = entity_type{ identifier, 0 };</div>
 <div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160;            <span class="keywordflow">return</span>;</div>
 <div class="line"><a name="l00482"></a><span class="lineno">  482</span>&#160;        }</div>
 <div class="line"><a name="l00483"></a><span class="lineno">  483</span>&#160; </div>
@@ -557,8 +557,8 @@ $(function() {
 <div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160;            <span class="keyword">auto</span> <a class="code" href="structryujin_1_1entity.html">entity</a> = _entities[current];</div>
 <div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;            <span class="keywordflow">if</span> (identifier &lt; <a class="code" href="structryujin_1_1entity.html">entity</a>.identifier)</div>
 <div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;            {</div>
-<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;                _entities[identifier] = <a class="code" href="classryujin_1_1base__registry.html#a0329b976dd069430f43c4ffefa7f5031">entity_type</a>{ <a class="code" href="structryujin_1_1entity.html">entity</a>.identifier, <span class="keyword">static_cast&lt;</span>entity_type_traits::version_type<span class="keyword">&gt;</span>(version) };</div>
-<div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160;                _entities[current] = <a class="code" href="classryujin_1_1base__registry.html#a0329b976dd069430f43c4ffefa7f5031">entity_type</a>{ identifier, _entities[current].version };</div>
+<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;                _entities[identifier] = entity_type{ <a class="code" href="structryujin_1_1entity.html">entity</a>.identifier, <span class="keyword">static_cast&lt;</span>entity_type_traits::version_type<span class="keyword">&gt;</span>(version) };</div>
+<div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160;                _entities[current] = entity_type{ identifier, _entities[current].version };</div>
 <div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160;                <span class="keywordflow">return</span>;</div>
 <div class="line"><a name="l00492"></a><span class="lineno">  492</span>&#160;            }</div>
 <div class="line"><a name="l00493"></a><span class="lineno">  493</span>&#160;        }</div>
@@ -1052,7 +1052,7 @@ $(function() {
 <div class="ttc" id="aentity_8hpp_html"><div class="ttname"><a href="entity_8hpp.html">entity.hpp</a></div></div>
 <div class="ttc" id="aclassryujin_1_1sparse__map_html"><div class="ttname"><a href="classryujin_1_1sparse__map.html">ryujin::sparse_map</a></div><div class="ttdef"><b>Definition:</b> sparse_map.hpp:18</div></div>
 <div class="ttc" id="anamespaceryujin_html"><div class="ttname"><a href="namespaceryujin.html">ryujin</a></div><div class="ttdef"><b>Definition:</b> algorithm.hpp:6</div></div>
-<div class="ttc" id="aclassryujin_1_1vector_html"><div class="ttname"><a href="classryujin_1_1vector.html">ryujin::vector</a></div><div class="ttdef"><b>Definition:</b> vector.hpp:16</div></div>
+<div class="ttc" id="aclassryujin_1_1vector_html"><div class="ttname"><a href="classryujin_1_1vector.html">ryujin::vector</a></div><div class="ttdef"><b>Definition:</b> vector.hpp:14</div></div>
 <div class="ttc" id="anamespaceryujin_html_a9a712172a56e6e235d857a717144f9bf"><div class="ttname"><a href="namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf">ryujin::u32</a></div><div class="ttdeci">unsigned int u32</div><div class="ttdef"><b>Definition:</b> primitives.hpp:8</div></div>
 <div class="ttc" id="anamespaceryujin_html_ad9e1ea7c62a26c1228e409525145a222"><div class="ttname"><a href="namespaceryujin.html#ad9e1ea7c62a26c1228e409525145a222">ryujin::operator==</a></div><div class="ttdeci">constexpr bool operator==(const slot_map_key &amp;lhs, const slot_map_key &amp;rhs) noexcept</div><div class="ttdef"><b>Definition:</b> slot_map.hpp:20</div></div>
 <div class="ttc" id="aclassryujin_1_1entity__handle_html"><div class="ttname"><a href="classryujin_1_1entity__handle.html">ryujin::entity_handle</a></div><div class="ttdef"><b>Definition:</b> registry.hpp:150</div></div>
@@ -1063,7 +1063,7 @@ $(function() {
 <div class="ttc" id="astructryujin_1_1component__replace__event_html"><div class="ttname"><a href="structryujin_1_1component__replace__event.html">ryujin::component_replace_event</a></div><div class="ttdef"><b>Definition:</b> registry.hpp:253</div></div>
 <div class="ttc" id="astructryujin_1_1entity__traits_html"><div class="ttname"><a href="structryujin_1_1entity__traits.html">ryujin::entity_traits</a></div><div class="ttdef"><b>Definition:</b> entity.hpp:44</div></div>
 <div class="ttc" id="atransform__component_8hpp_html"><div class="ttname"><a href="transform__component_8hpp.html">transform_component.hpp</a></div></div>
-<div class="ttc" id="aclassryujin_1_1base__registry_html_a0329b976dd069430f43c4ffefa7f5031"><div class="ttname"><a href="classryujin_1_1base__registry.html#a0329b976dd069430f43c4ffefa7f5031">ryujin::base_registry&lt; registry::entity_type &gt;::entity_type</a></div><div class="ttdeci">registry::entity_type entity_type</div><div class="ttdef"><b>Definition:</b> registry.hpp:266</div></div>
+<div class="ttc" id="aclassryujin_1_1base__registry_html_a0329b976dd069430f43c4ffefa7f5031"><div class="ttname"><a href="classryujin_1_1base__registry.html#a0329b976dd069430f43c4ffefa7f5031">ryujin::base_registry::entity_type</a></div><div class="ttdeci">Type entity_type</div><div class="ttdef"><b>Definition:</b> registry.hpp:266</div></div>
 <div class="ttc" id="aclassryujin_1_1entity__handle_html_a05694b064db9d7d14ddcead6b9ccf51c"><div class="ttname"><a href="classryujin_1_1entity__handle.html#a05694b064db9d7d14ddcead6b9ccf51c">ryujin::entity_handle::replace</a></div><div class="ttdeci">entity_handle &amp; replace(const T &amp;t)</div></div>
 <div class="ttc" id="anamespaceryujin_html_a26efc3b933ce8356ece4cbb809bcff47"><div class="ttname"><a href="namespaceryujin.html#a26efc3b933ce8356ece4cbb809bcff47">ryujin::get</a></div><div class="ttdeci">constexpr const auto &amp; get(const pair&lt; T1, T2 &gt; &amp;p)</div><div class="ttdef"><b>Definition:</b> utility.hpp:596</div></div>
 <div class="ttc" id="aclassryujin_1_1entity__handle_html_a0c8850187e14294bb931a53689b1f740"><div class="ttname"><a href="classryujin_1_1entity__handle.html#a0c8850187e14294bb931a53689b1f740">ryujin::entity_handle::get</a></div><div class="ttdeci">T &amp; get() const noexcept</div><div class="ttdef"><b>Definition:</b> registry.hpp:392</div></div>
