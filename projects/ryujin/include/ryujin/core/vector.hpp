@@ -344,9 +344,9 @@ namespace ryujin
     template<typename Type, typename Allocator>
     inline constexpr vector<Type, Allocator>::iterator vector<Type, Allocator>::erase(iterator start, iterator stop)
     {
-        const size_t s = start - begin();
-        const size_t e = stop - begin();
-        const size_t count = e - s;
+        const sz s = start - begin();
+        const sz e = stop - begin();
+        const sz count = e - s;
 
         for (sz i = s; i < _size; ++i)
         {
