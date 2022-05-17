@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['u_1574',['u',['../structryujin_1_1renderable__manager_1_1mesh__group_1_1texcoord__t.html#a443c6532d9332780b80cf6c7435fda2b',1,'ryujin::renderable_manager::mesh_group::texcoord_t::u()'],['../structryujin_1_1sampler__create__info.html#a99696d7b7e211086a1c00261381b9b15',1,'ryujin::sampler_create_info::u()'],['../structryujin_1_1vec2.html#a52f8469c9e4211cf7f8900d78d04287b',1,'ryujin::vec2::u()'],['../classryujin_1_1keyboard.html#a658950f742aa62faacfe81f130b91012a4c614360da93c0a041b22e537de151eb',1,'ryujin::keyboard::U()']]],
+  ['u_1574',['U',['../classryujin_1_1keyboard.html#a658950f742aa62faacfe81f130b91012a4c614360da93c0a041b22e537de151eb',1,'ryujin::keyboard::U()'],['../structryujin_1_1renderable__manager_1_1mesh__group_1_1texcoord__t.html#a443c6532d9332780b80cf6c7435fda2b',1,'ryujin::renderable_manager::mesh_group::texcoord_t::u()'],['../structryujin_1_1sampler__create__info.html#a99696d7b7e211086a1c00261381b9b15',1,'ryujin::sampler_create_info::u()'],['../structryujin_1_1vec2.html#a52f8469c9e4211cf7f8900d78d04287b',1,'ryujin::vec2::u()']]],
   ['u16_1575',['u16',['../namespaceryujin.html#a10185cea8b7d65241ee94892e50f23f8',1,'ryujin']]],
   ['u32_1576',['u32',['../namespaceryujin.html#a9a712172a56e6e235d857a717144f9bf',1,'ryujin']]],
   ['u64_1577',['u64',['../namespaceryujin.html#a3e143684101f7c548db9e81ad0deb9fe',1,'ryujin']]],
