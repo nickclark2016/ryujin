@@ -52,6 +52,8 @@ namespace ryujin
 		template<sz N>
 		constexpr basic_string& operator+=(const Type(&data)[N]) noexcept;
 
+		constexpr Type& operator[](sz index) const noexcept;
+
 		constexpr iterator begin() noexcept;
 		constexpr const_iterator begin() const noexcept;
 		constexpr const_iterator cbegin() const noexcept;
@@ -424,6 +426,12 @@ namespace ryujin
 	}
 
 	template<typename Type, typename Allocator>
+	inline constexpr Type& basic_string<Type, Allocator>::operator[](sz index) const noexcept
+	{
+		return _data[index];
+	}
+
+	template<typename Type, typename Allocator>
 	inline constexpr typename basic_string<Type, Allocator>::iterator basic_string<Type, Allocator>::begin() noexcept
 	{
 		return _data;
@@ -514,6 +522,26 @@ namespace ryujin
 	{
 		_data = const_cast<Type*>(_empty);
 	}
+
+	template <typename Type, typename Allocator>
+	struct hash<basic_string<Type, Allocator>>
+	{
+		inline constexpr sz operator()(const basic_string<Type, Allocator>& v) const noexcept
+		{
+			const i32 p = 31, m = 1e9 + 7;
+			sz hash_value = 0;
+
+			i64 p_pow = 1;
+			const sz n = v.size();
+			for (sz i = 0; i < n; ++i)
+			{
+				hash_value = (hash_value + (v[i] - as<Type>('a') + 1) * p_pow) % m;
+				p_pow = (p_pow * p) % m;
+			}
+
+			return hash<sz>()(hash_value);
+		}
+	};
 
 	using string = basic_string<char>;
 	using wstring = basic_string<wchar_t>;
