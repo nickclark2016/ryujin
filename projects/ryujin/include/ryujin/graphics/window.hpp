@@ -7,6 +7,7 @@
 #include "../core/smart_pointers.hpp"
 #include "../core/vector.hpp"
 
+#include <string>
 #include <string_view>
 #include <tuple>
 

@@ -1,18 +1,16 @@
 #ifndef vector_hpp__
 #define vector_hpp__
 
+#include "allocator.hpp"
 #include "algorithm.hpp"
 #include "iterator.hpp"
 #include "primitives.hpp"
 #include "result.hpp"
 #include "utility.hpp"
 
-#include <memory>
-#include <new>
-
 namespace ryujin
 {
-    template <typename Type, typename Allocator = std::allocator<Type>>
+    template <typename Type, typename Allocator = ryujin::allocator<Type>>
     class vector
     {
     public:

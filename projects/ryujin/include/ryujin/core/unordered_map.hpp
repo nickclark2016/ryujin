@@ -1,6 +1,7 @@
 #ifndef unordered_map__
 #define unordered_map__
 
+#include "allocator.hpp"
 #include "as.hpp"
 #include "functional.hpp"
 #include "utility.hpp"
@@ -65,7 +66,7 @@ namespace ryujin
         };
     };
 
-    template <typename Key, typename Value, typename Hash = hash<Key>, typename KeyEqual = equal_to<Key>, template<typename> typename Allocator = std::allocator>
+    template <typename Key, typename Value, typename Hash = hash<Key>, typename KeyEqual = equal_to<Key>, template<typename> typename Allocator = ryujin::allocator>
     class unordered_map
     {
         static constexpr sz values_per_page = 32;
