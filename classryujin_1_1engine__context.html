@@ -86,6 +86,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a118018d61428288de1a4a9348cf1bb4b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classryujin_1_1engine__context.html#a118018d61428288de1a4a9348cf1bb4b">~engine_context</a> ()</td></tr>
 <tr class="memdesc:a118018d61428288de1a4a9348cf1bb4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructs an engine  <a href="classryujin_1_1engine__context.html#a118018d61428288de1a4a9348cf1bb4b">More...</a><br /></td></tr>
 <tr class="separator:a118018d61428288de1a4a9348cf1bb4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af538c8b7e88b2c87ce21799527f6b31e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classryujin_1_1engine__context.html#af538c8b7e88b2c87ce21799527f6b31e">engine_context</a> (const <a class="el" href="classryujin_1_1engine__context.html">engine_context</a> &amp;)=delete</td></tr>
+<tr class="separator:af538c8b7e88b2c87ce21799527f6b31e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56524ca10c19410403b06b4d73d2bbb1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classryujin_1_1engine__context.html#a56524ca10c19410403b06b4d73d2bbb1">engine_context</a> (<a class="el" href="classryujin_1_1engine__context.html">engine_context</a> &amp;&amp;) noexcept=delete</td></tr>
+<tr class="separator:a56524ca10c19410403b06b4d73d2bbb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1a18b4664a1b08739035372b6c1a0b3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classryujin_1_1engine__context.html">engine_context</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classryujin_1_1engine__context.html#ad1a18b4664a1b08739035372b6c1a0b3">operator=</a> (const <a class="el" href="classryujin_1_1engine__context.html">engine_context</a> &amp;)=delete</td></tr>
+<tr class="separator:ad1a18b4664a1b08739035372b6c1a0b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a51285e617dee4247ee59bc387a556812"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classryujin_1_1engine__context.html">engine_context</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classryujin_1_1engine__context.html#a51285e617dee4247ee59bc387a556812">operator=</a> (<a class="el" href="classryujin_1_1engine__context.html">engine_context</a> &amp;&amp;) noexcept=delete</td></tr>
+<tr class="separator:a51285e617dee4247ee59bc387a556812"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1885bb4fe6ff061103d7be60c4ba144a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classryujin_1_1unique__ptr.html">unique_ptr</a>&lt; <a class="el" href="classryujin_1_1window.html">window</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classryujin_1_1engine__context.html#a1885bb4fe6ff061103d7be60c4ba144a">add_window</a> (const <a class="el" href="structryujin_1_1window_1_1create__info.html">window::create_info</a> info)</td></tr>
 <tr class="memdesc:a1885bb4fe6ff061103d7be60c4ba144a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a window for the engine to manage.  <a href="classryujin_1_1engine__context.html#a1885bb4fe6ff061103d7be60c4ba144a">More...</a><br /></td></tr>
 <tr class="separator:a1885bb4fe6ff061103d7be60c4ba144a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -118,7 +126,7 @@ Public Member Functions</h2></td></tr>
 <div class="textblock"><p>Class containing engine execution logic. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a8983d336b494dd6e039cf1a1b61217ec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8983d336b494dd6e039cf1a1b61217ec">&#9670;&nbsp;</a></span>engine_context()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a8983d336b494dd6e039cf1a1b61217ec">&#9670;&nbsp;</a></span>engine_context() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -152,6 +160,58 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Destructs an engine </p>
+
+</div>
+</div>
+<a id="af538c8b7e88b2c87ce21799527f6b31e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af538c8b7e88b2c87ce21799527f6b31e">&#9670;&nbsp;</a></span>engine_context() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ryujin::engine_context::engine_context </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classryujin_1_1engine__context.html">engine_context</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">delete</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a56524ca10c19410403b06b4d73d2bbb1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a56524ca10c19410403b06b4d73d2bbb1">&#9670;&nbsp;</a></span>engine_context() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ryujin::engine_context::engine_context </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classryujin_1_1engine__context.html">engine_context</a> &amp;&amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">delete</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -373,6 +433,58 @@ Public Member Functions</h2></td></tr>
 
 <p>Gets a constant reference to the map of windows that the engine currently manages. The key of the map is the name of the window. </p>
 <dl class="section return"><dt>Returns</dt><dd>Managed window map</dd></dl>
+
+</div>
+</div>
+<a id="ad1a18b4664a1b08739035372b6c1a0b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1a18b4664a1b08739035372b6c1a0b3">&#9670;&nbsp;</a></span>operator=() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classryujin_1_1engine__context.html">engine_context</a>&amp; ryujin::engine_context::operator= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classryujin_1_1engine__context.html">engine_context</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">delete</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a51285e617dee4247ee59bc387a556812"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a51285e617dee4247ee59bc387a556812">&#9670;&nbsp;</a></span>operator=() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classryujin_1_1engine__context.html">engine_context</a>&amp; ryujin::engine_context::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classryujin_1_1engine__context.html">engine_context</a> &amp;&amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">delete</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
