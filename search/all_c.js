@@ -12,7 +12,7 @@ var searchData=
   ['left_5fcontrol_863',['LEFT_CONTROL',['../classryujin_1_1keyboard.html#a658950f742aa62faacfe81f130b91012addf133566f544b297f2f84874c283589',1,'ryujin::keyboard']]],
   ['left_5fshift_864',['LEFT_SHIFT',['../classryujin_1_1keyboard.html#a658950f742aa62faacfe81f130b91012ab6c7e6204e97690efd79d6f513ed5613',1,'ryujin::keyboard']]],
   ['left_5fsuper_865',['LEFT_SUPER',['../classryujin_1_1keyboard.html#a658950f742aa62faacfe81f130b91012afd816cf0346d4939b4cf3bed78dd7fde',1,'ryujin::keyboard']]],
-  ['length_866',['length',['../structryujin_1_1binary__file.html#a276742a276a3b4817a108470d312a1fa',1,'ryujin::binary_file::length()'],['../structryujin_1_1descriptor__buffer__info.html#ad20b61560ffcdfb0a1f6cb39f0645a0b',1,'ryujin::descriptor_buffer_info::length()'],['../classryujin_1_1span.html#a195b9bb973c8dff843ae6cf6ae7c9a74',1,'ryujin::span::length()']]],
+  ['length_866',['length',['../structryujin_1_1binary__file.html#a276742a276a3b4817a108470d312a1fa',1,'ryujin::binary_file::length()'],['../structryujin_1_1descriptor__buffer__info.html#ad20b61560ffcdfb0a1f6cb39f0645a0b',1,'ryujin::descriptor_buffer_info::length()'],['../classryujin_1_1span.html#a195b9bb973c8dff843ae6cf6ae7c9a74',1,'ryujin::span::length()'],['../classryujin_1_1basic__string.html#a1102aba73d8a4af8c9af647f0d95762a',1,'ryujin::basic_string::length()']]],
   ['lerp_867',['lerp',['../namespaceryujin.html#a6c43daa3ee4eb0aaf12afa9c963d5126',1,'ryujin']]],
   ['less_868',['LESS',['../namespaceryujin.html#ab11aefc182ba008962c8c807189c933ca1798e8c3621ca53d9e3a80d257306000',1,'ryujin']]],
   ['less_5for_5fequal_869',['LESS_OR_EQUAL',['../namespaceryujin.html#ab11aefc182ba008962c8c807189c933ca93d39e6064b3c462e437e20cd8b2bdab',1,'ryujin']]],

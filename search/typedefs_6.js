@@ -9,5 +9,5 @@ var searchData=
   ['image_5fview_3031',['image_view',['../namespaceryujin.html#a428d3777b228e75c842bfdb2dddd7e84',1,'ryujin']]],
   ['index_5fsequence_3032',['index_sequence',['../namespaceryujin.html#ae6fb73d03fd18b2babaab7794731158c',1,'ryujin']]],
   ['index_5fsequence_5ffor_3033',['index_sequence_for',['../namespaceryujin.html#ab88bf64d109496268b6d2d672b16bf45',1,'ryujin']]],
-  ['iterator_3034',['iterator',['../classryujin_1_1unordered__map.html#a8a3b26acda2b14c2e83569cabd2e8a54',1,'ryujin::unordered_map::iterator()'],['../classryujin_1_1vector.html#a6594a2c25246c38b417672b19eb3b78d',1,'ryujin::vector::iterator()'],['../classryujin_1_1static__vector.html#a702e36b0f51c6e3c7e6487ef67e4f42f',1,'ryujin::static_vector::iterator()']]]
+  ['iterator_3034',['iterator',['../classryujin_1_1basic__string.html#ad295a347d7ff16ef122226733ff966ee',1,'ryujin::basic_string::iterator()'],['../classryujin_1_1unordered__map.html#a8a3b26acda2b14c2e83569cabd2e8a54',1,'ryujin::unordered_map::iterator()'],['../classryujin_1_1vector.html#a6594a2c25246c38b417672b19eb3b78d',1,'ryujin::vector::iterator()'],['../classryujin_1_1static__vector.html#a702e36b0f51c6e3c7e6487ef67e4f42f',1,'ryujin::static_vector::iterator()']]]
 ];

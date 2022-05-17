@@ -160,6 +160,6 @@ var searchData=
   ['is_5fsame_5fv_825',['is_same_v',['../namespaceryujin.html#a8de6cdd3227c21849de42f64e9f7574a',1,'ryujin']]],
   ['is_5fvoid_826',['is_void',['../structryujin_1_1is__void.html',1,'ryujin']]],
   ['is_5fvoid_5fv_827',['is_void_v',['../namespaceryujin.html#aafbffb94331d9002b94cf2cc823848e4',1,'ryujin']]],
-  ['iterator_828',['iterator',['../classryujin_1_1unordered__map.html#a8a3b26acda2b14c2e83569cabd2e8a54',1,'ryujin::unordered_map::iterator()'],['../classryujin_1_1vector.html#a6594a2c25246c38b417672b19eb3b78d',1,'ryujin::vector::iterator()'],['../classryujin_1_1static__vector.html#a702e36b0f51c6e3c7e6487ef67e4f42f',1,'ryujin::static_vector::iterator()']]],
+  ['iterator_828',['iterator',['../classryujin_1_1basic__string.html#ad295a347d7ff16ef122226733ff966ee',1,'ryujin::basic_string::iterator()'],['../classryujin_1_1unordered__map.html#a8a3b26acda2b14c2e83569cabd2e8a54',1,'ryujin::unordered_map::iterator()'],['../classryujin_1_1vector.html#a6594a2c25246c38b417672b19eb3b78d',1,'ryujin::vector::iterator()'],['../classryujin_1_1static__vector.html#a702e36b0f51c6e3c7e6487ef67e4f42f',1,'ryujin::static_vector::iterator()']]],
   ['iterator_2ehpp_829',['iterator.hpp',['../iterator_8hpp.html',1,'']]]
 ];

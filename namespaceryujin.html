@@ -1440,6 +1440,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a1491c41448a40c8289edc8862b65d65c"><td class="memTemplParams" colspan="2">template&lt;typename T , sz N&gt; </td></tr>
 <tr class="memitem:a1491c41448a40c8289edc8862b65d65c"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a1491c41448a40c8289edc8862b65d65c">span</a> (const T[N]) -&gt; <a class="el" href="classryujin_1_1span.html">span</a>&lt; T &gt;</td></tr>
 <tr class="separator:a1491c41448a40c8289edc8862b65d65c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7b743114e02aa0893a136085d5b443c"><td class="memTemplParams" colspan="2">template&lt;typename Type &gt; </td></tr>
+<tr class="memitem:ae7b743114e02aa0893a136085d5b443c"><td class="memTemplItemLeft" align="right" valign="top">constexpr static <a class="el" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#ae7b743114e02aa0893a136085d5b443c">strlen</a> (const Type *data) noexcept</td></tr>
+<tr class="separator:ae7b743114e02aa0893a136085d5b443c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd9eda22788a92176bcd1020afc50172"><td class="memTemplParams" colspan="2">template&lt;typename Type &gt; </td></tr>
+<tr class="memitem:acd9eda22788a92176bcd1020afc50172"><td class="memTemplItemLeft" align="right" valign="top">constexpr static <a class="el" href="namespaceryujin.html#ab2e7be3891da84c750c86b7cd517ba3a">i32</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#acd9eda22788a92176bcd1020afc50172">strcmp</a> (const Type *lhs, const Type *rhs) noexcept</td></tr>
+<tr class="separator:acd9eda22788a92176bcd1020afc50172"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a394f278b474d37298e0e0824fddd3335"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a394f278b474d37298e0e0824fddd3335"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceryujin.html#ad844386b39d7c763b2072ca9c0c5e200">add_rvalue_reference_t</a>&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a394f278b474d37298e0e0824fddd3335">declval</a> () noexcept</td></tr>
 <tr class="separator:a394f278b474d37298e0e0824fddd3335"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -2068,7 +2074,9 @@ Variables</h2></td></tr>
 <tr class="memitem:a915a67fa045a674520d41991f3cacd15"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="structryujin_1_1vec3.html">vec3</a>&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a915a67fa045a674520d41991f3cacd15">right</a> = <a class="el" href="structryujin_1_1vec3.html">vec3</a>&lt;T&gt;(<a class="el" href="namespaceryujin.html#a9f43ac824335837f8cfe2f9424325a39">as</a>&lt;T&gt;(1), <a class="el" href="namespaceryujin.html#a9f43ac824335837f8cfe2f9424325a39">as</a>&lt;T&gt;(0), <a class="el" href="namespaceryujin.html#a9f43ac824335837f8cfe2f9424325a39">as</a>&lt;T&gt;(0))</td></tr>
 <tr class="separator:a915a67fa045a674520d41991f3cacd15"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Typedef Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>TODO: Capacity opt TODO: substr TODO: start_with, ends_with, first_index_of, last_index_of, rfirst_index_of, rlast_index_of, replace, reserve, contains, find, rfind, split </p>
+</div><h2 class="groupheader">Typedef Documentation</h2>
 <a id="a4a072675aadb794a5f1088057467c2c5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4a072675aadb794a5f1088057467c2c5">&#9670;&nbsp;</a></span>add_const_t</h2>
 
@@ -9933,6 +9941,72 @@ template&lt;typename T , sz N&gt; </div>
           <td> -&gt;  <a class="el" href="classryujin_1_1span.html">span</a>&lt; T &gt;</td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acd9eda22788a92176bcd1020afc50172"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acd9eda22788a92176bcd1020afc50172">&#9670;&nbsp;</a></span>strcmp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Type &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr static <a class="el" href="namespaceryujin.html#ab2e7be3891da84c750c86b7cd517ba3a">i32</a> ryujin::strcmp </td>
+          <td>(</td>
+          <td class="paramtype">const Type *&#160;</td>
+          <td class="paramname"><em>lhs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Type *&#160;</td>
+          <td class="paramname"><em>rhs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae7b743114e02aa0893a136085d5b443c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7b743114e02aa0893a136085d5b443c">&#9670;&nbsp;</a></span>strlen()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Type &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr static <a class="el" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a> ryujin::strlen </td>
+          <td>(</td>
+          <td class="paramtype">const Type *&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>

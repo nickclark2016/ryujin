@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['length_2468',['length',['../classryujin_1_1span.html#a195b9bb973c8dff843ae6cf6ae7c9a74',1,'ryujin::span']]],
+  ['length_2468',['length',['../classryujin_1_1span.html#a195b9bb973c8dff843ae6cf6ae7c9a74',1,'ryujin::span::length()'],['../classryujin_1_1basic__string.html#a1102aba73d8a4af8c9af647f0d95762a',1,'ryujin::basic_string::length()']]],
   ['lerp_2469',['lerp',['../namespaceryujin.html#a6c43daa3ee4eb0aaf12afa9c963d5126',1,'ryujin']]],
   ['linear_5fallocator_2470',['linear_allocator',['../classryujin_1_1linear__allocator.html#a06a96eb28853b692a8014ebfc225f63f',1,'ryujin::linear_allocator']]],
   ['linear_5fallocator_5flock_2471',['linear_allocator_lock',['../classryujin_1_1linear__allocator__lock.html#a748c3abc136bcec7bcf437ca2572df01',1,'ryujin::linear_allocator_lock::linear_allocator_lock(T &amp;allocator)'],['../classryujin_1_1linear__allocator__lock.html#a3903a109b5d0b27021d2afe1424da37d',1,'ryujin::linear_allocator_lock::linear_allocator_lock(const linear_allocator_lock &amp;)=delete'],['../classryujin_1_1linear__allocator__lock.html#a371e00ec39f4cc34dd89c51746cb2abe',1,'ryujin::linear_allocator_lock::linear_allocator_lock(linear_allocator_lock &amp;&amp;) noexcept=delete'],['../namespaceryujin.html#aee31e0c7d54f0db0591c59704ee5ac77',1,'ryujin::linear_allocator_lock()']]],
