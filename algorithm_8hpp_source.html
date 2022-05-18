@@ -96,7 +96,7 @@ $(function() {
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keyword">const</span> <a class="code" href="namespaceryujin.html#ad388e5d297b4feee974bcdee22fccb1f">ptr_diff</a> diff = last - first;</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="keywordflow">if</span> constexpr (is_same_v&lt;Input, Output&gt; &amp;&amp; is_trivially_copyable_v&lt;Input&gt;)</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        {</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            <a class="code" href="namespaceryujin.html#a74bac0e3ee98a5bb790705b6a98c5ac5">memcpy</a>(out, first, diff * <span class="keyword">sizeof</span>(decltype(*first)));</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            <a class="code" href="namespaceryujin.html#a74bac0e3ee98a5bb790705b6a98c5ac5">ryujin::memcpy</a>(out, first, diff * <span class="keyword">sizeof</span>(decltype(*first)));</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;            <span class="keywordflow">return</span> out + diff;</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        }</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="keywordflow">else</span></div>
