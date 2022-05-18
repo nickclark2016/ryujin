@@ -7,12 +7,13 @@
 #include "primitives.hpp"
 #include "utility.hpp"
 #include "smart_pointers.hpp"
+#include "vector.hpp"
 
 #include <cassert>
 #include <memory>
 
 /// TODO: Capacity opt
-/// TODO: start_with, ends_with, rfirst_index_of, rlast_index_of, replace, reserve, rfind, split
+/// TODO: replace, reserve, rfind, split
 
 namespace ryujin
 {
@@ -79,16 +80,27 @@ namespace ryujin
 		constexpr basic_string substr(sz pos = 0, sz len = npos);
 
 		constexpr sz first_index_of(Type token) const noexcept;
+		constexpr sz first_index_of_any(vector<Type> tokens) const noexcept;
+		constexpr sz first_index_of_any(const Type* tokens) const noexcept;
 		constexpr sz last_index_of(Type token) const noexcept;
+		constexpr sz last_index_of_any(vector<Type> tokens) const noexcept;
+		constexpr sz last_index_of_any(const Type* tokens) const noexcept;
 
 		constexpr sz find(const basic_string& str, sz pos = 0) const noexcept;
 		constexpr sz find(const Type* str, sz pos = 0) const noexcept;
 		constexpr sz find(const Type* str, sz pos, sz n) const noexcept;
-		constexpr sz find(Type c, sz pos = 0) noexcept;
 
 		constexpr bool contains(const Type token) const noexcept;
 		constexpr bool contains(const Type* str) const noexcept;
 		constexpr bool contains(const basic_string& str) const noexcept;
+
+		constexpr bool starts_with(const Type token) const noexcept;
+		constexpr bool starts_with(const Type* str) const noexcept;
+		constexpr bool starts_with(const basic_string& str) const noexcept;
+
+		constexpr bool ends_with(const Type token) const noexcept;
+		constexpr bool ends_with(const Type* str) const noexcept;
+		constexpr bool ends_with(const basic_string& str) const noexcept;
 
 	private:
 		Type* _data = nullptr;
@@ -643,11 +655,69 @@ namespace ryujin
 	}
 
 	template<typename Type, typename Allocator>
+	inline constexpr sz basic_string<Type, Allocator>::first_index_of_any(vector<Type> tokens) const noexcept
+	{
+		sz lowestIndex = npos;
+		
+		for (Type token : tokens)
+		{
+			sz tokenIndex = first_index_of(token);
+			lowestIndex = min(tokenIndex, lowestIndex);
+		}
+
+		return lowestIndex;
+	}
+
+	template<typename Type, typename Allocator>
+	inline constexpr sz basic_string<Type, Allocator>::first_index_of_any(const Type* tokens) const noexcept
+	{
+		sz lowestIndex = npos;
+		sz tokensLen = ryujin::strlen(tokens);
+
+		for(sz i = 0; i < tokensLen; i++)
+		{
+			sz tokenIndex = first_index_of(tokens[i]);
+			lowestIndex = min(tokenIndex, lowestIndex);
+		}
+
+		return lowestIndex;
+	}
+
+	template<typename Type, typename Allocator>
 	inline constexpr sz basic_string<Type, Allocator>::last_index_of(Type token) const noexcept
 	{
 		sz i = _size - 1;
 		while (_data[i] != token) --i;
 		return i < _size ? i : npos;
+	}
+
+	template<typename Type, typename Allocator>
+	inline constexpr sz basic_string<Type, Allocator>::last_index_of_any(vector<Type> tokens) const noexcept
+	{
+		sz highestIndex = 0;
+
+		for (Type token : tokens)
+		{
+			sz tokenIndex = last_index_of(token);
+			highestIndex = max(tokenIndex, highestIndex);
+		}
+
+		return highestIndex;
+	}
+
+	template<typename Type, typename Allocator>
+	inline constexpr sz basic_string<Type, Allocator>::last_index_of_any(const Type* tokens) const noexcept
+	{
+		sz highestIndex = 0;
+		sz tokensLen = ryujin::strlen(tokens);
+
+		for (sz i = 0; i < tokensLen; i++)
+		{
+			sz tokenIndex = last_index_of(tokens[i]);
+			highestIndex = max(tokenIndex, highestIndex);
+		}
+
+		return highestIndex;
 	}
 
 	template<typename Type, typename Allocator>
@@ -695,28 +765,6 @@ namespace ryujin
 	}
 
 	template<typename Type, typename Allocator>
-	inline constexpr sz basic_string<Type, Allocator>::find(Type c, sz pos) noexcept
-	{
-		if (pos >= _size)
-		{
-			return npos;
-		}
-
-		Type* str = _alloc.allocate(2);
-		memset(as<void*>(str), c, sizeof(Type));
-		str[1] = as<Type>(0);
-		const Type* subresult = ryujin::strstr(_data + pos, str);
-		if (subresult != nullptr)
-		{
-			return (_size - strlen(subresult));
-		}
-		else
-		{
-			return npos;
-		}
-	}
-
-	template<typename Type, typename Allocator>
 	inline constexpr bool basic_string<Type, Allocator>::contains(const Type token) const noexcept
 	{
 		return first_index_of(token) != npos;
@@ -732,6 +780,44 @@ namespace ryujin
 	inline constexpr bool basic_string<Type, Allocator>::contains(const basic_string& str) const noexcept
 	{
 		return contains(str._data);
+	}
+
+	template<typename Type, typename Allocator>
+	inline constexpr bool basic_string<Type, Allocator>::starts_with(const Type token) const noexcept
+	{
+		return first_index_of(token) == 0;
+	}
+
+	template<typename Type, typename Allocator>
+	inline constexpr bool basic_string<Type, Allocator>::starts_with(const Type* str) const noexcept
+	{
+		return find(str) == 0;
+	}
+
+	template<typename Type, typename Allocator>
+	inline constexpr bool basic_string<Type, Allocator>::starts_with(const basic_string& str) const noexcept
+	{
+		return find(str) == 0;
+	}
+
+	template<typename Type, typename Allocator>
+	inline constexpr bool basic_string<Type, Allocator>::ends_with(const Type token) const noexcept
+	{
+		return last_index_of(token) == _size - 1;
+	}
+
+	template<typename Type, typename Allocator>
+	inline constexpr bool basic_string<Type, Allocator>::ends_with(const Type* str) const noexcept
+	{
+		// TODO: Requires rfind
+		return false;
+	}
+
+	template<typename Type, typename Allocator>
+	inline constexpr bool basic_string<Type, Allocator>::ends_with(const basic_string& str) const noexcept
+	{
+		// TODO: Requires rfind
+		return false;
 	}
 
 	template<typename Type, typename Allocator>

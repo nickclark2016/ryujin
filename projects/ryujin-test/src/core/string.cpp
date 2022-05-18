@@ -83,8 +83,6 @@ TEST(String, Find)
 	ASSERT_TRUE(a.find("a test") == 8);
 
 	ASSERT_TRUE(a.find("a test", 0, 4) == 8);
-
-	ASSERT_EQ(a.find('a'), 8);
 }
 
 TEST(String, indexof)
