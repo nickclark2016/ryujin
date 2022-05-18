@@ -190,7 +190,7 @@ namespace ryujin
 		if (_size != 0)
 		{
 			_data = _alloc.allocate(_size + 1);
-			memcpy(_data, data, _size);
+			ryujin::memcpy(_data, data, _size);
 			_data[_size] = as<Type>(0);
 		}
 		else
@@ -207,7 +207,7 @@ namespace ryujin
 			_size = size;
 
 			_data = _alloc.allocate(size + 1);
-			memcpy(_data, data, size);
+			ryujin::memcpy(_data, data, size);
 			_data[_size] = as<Type>(0);
 		}
 		else
@@ -225,7 +225,7 @@ namespace ryujin
 			_size = N;
 
 			_data = _alloc.allocate(_size + 1);
-			memcpy(_data, data, _size);
+			ryujin::memcpy(_data, data, _size);
 			_data[_size] = as<Type>(0);
 		}
 		else
@@ -264,7 +264,7 @@ namespace ryujin
 			_size = rhs._size;
 
 			_data = _alloc.allocate(_size + 1);
-			memcpy(_data, rhs._data, _size);
+			ryujin::memcpy(_data, rhs._data, _size);
 			_data[_size] = as<Type>(0);
 		}
 		else
@@ -311,7 +311,7 @@ namespace ryujin
 		if (_size != 0)
 		{
 			_data = _alloc.allocate(_size + 1);
-			memcpy(_data, data, _size);
+			ryujin::memcpy(_data, data, _size);
 			_data[_size] = as<Type>(0);
 		}
 		else
@@ -336,7 +336,7 @@ namespace ryujin
 		if (_size != 0)
 		{
 			_data = _alloc.allocate(_size + 1);
-			memcpy(_data, data, _size);
+			ryujin::memcpy(_data, data, _size);
 			_data[_size] = as<Type>(0);
 		}
 		else
@@ -362,8 +362,8 @@ namespace ryujin
 
 		const sz newSize = _size + rhs._size;
 		const Type* buffer = _alloc.allocate(newSize + 1);
-		memcpy(buffer, _data, _size);
-		memcpy(buffer + _size, rhs._data, rhs._size);
+		ryujin::memcpy(buffer, _data, _size);
+		ryujin::memcpy(buffer + _size, rhs._data, rhs._size);
 		buffer[newSize] = as<Type>(0);
 
 		_alloc.deallocate(_data, _size + 1);
@@ -390,8 +390,8 @@ namespace ryujin
 
 		const sz newSize = _size + rhsSize;
 		const Type* buffer = _alloc.allocate(newSize + 1);
-		memcpy(buffer, _data, _size);
-		memcpy(buffer + _size, rhs, rhsSize);
+		ryujin::memcpy(buffer, _data, _size);
+		ryujin::memcpy(buffer + _size, rhs, rhsSize);
 		buffer[newSize] = as<Type>(0);
 
 		_alloc.deallocate(_data, _size + 1);
@@ -418,8 +418,8 @@ namespace ryujin
 
 		const sz newSize = _size + N;
 		const Type* buffer = _alloc.allocate(newSize + 1);
-		memcpy(buffer, _data, _size);
-		memcpy(buffer + _size, data, N);
+		ryujin::memcpy(buffer, _data, _size);
+		ryujin::memcpy(buffer + _size, data, N);
 		buffer[newSize] = as<Type>(0);
 
 		_alloc.deallocate(_data, _size + 1);
@@ -498,8 +498,8 @@ namespace ryujin
 			sz size = _size - count;
 			
 			Type* buffer = _alloc.allocate(size);
-			memcpy(buffer, _data, s);
-			memcpy(buffer, _data + e, end() - stop);
+			ryujin::memcpy(buffer, _data, s);
+			ryujin::memcpy(buffer, _data + e, end() - stop);
 
 			_alloc.deallocate(_data, _size + 1);
 			_data = buffer;
@@ -538,7 +538,7 @@ namespace ryujin
 
 		basic_string str(len);
 
-		memcpy(str._data, _data + pos, len * sizeof(Type));
+		ryujin::memcpy(str._data, _data + pos, len * sizeof(Type));
 		str._data[len] = as<Type>(0);
 
 		return str;

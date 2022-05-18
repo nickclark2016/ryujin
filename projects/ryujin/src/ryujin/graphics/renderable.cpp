@@ -569,15 +569,9 @@ namespace ryujin
 
         const auto stagingBuffer = *stagingResult;
         std::byte* gpuBufferAddr = reinterpret_cast<std::byte*>(stagingBuffer.info.pMappedData);
-#ifdef _RYUJIN_WINDOWS
-        memcpy_s(gpuBufferAddr, positionsSize, _activeMeshGroup.positions.data(), positionsSize);
-        memcpy_s(gpuBufferAddr + positionsSize, interleavedSize, _activeMeshGroup.interleavedValues.data(), interleavedSize);
-        memcpy_s(gpuBufferAddr + positionsSize + interleavedSize, indicesSize, _activeMeshGroup.indices.data(), indicesSize);
-#else
-        memcpy(gpuBufferAddr, _activeMeshGroup.positions.data(), positionsSize);
-        memcpy(gpuBufferAddr + positionsSize, _activeMeshGroup.interleavedValues.data(), interleavedSize);
-        memcpy(gpuBufferAddr + positionsSize + interleavedSize, _activeMeshGroup.indices.data(), indicesSize);
-#endif
+        ryujin::memcpy(gpuBufferAddr, _activeMeshGroup.positions.data(), positionsSize);
+        ryujin::memcpy(gpuBufferAddr + positionsSize, _activeMeshGroup.interleavedValues.data(), interleavedSize);
+        ryujin::memcpy(gpuBufferAddr + positionsSize + interleavedSize, _activeMeshGroup.indices.data(), indicesSize);
 
         // build vertex and index buffers
         const buffer_create_info positionBufferCreateInfo = {
@@ -811,10 +805,10 @@ namespace ryujin
         }
 
         auto drawCallMapping = reinterpret_cast<gpu_indirect_call*>(indirectBuffer.info.pMappedData) + offset;
-        memcpy(drawCallMapping, _drawCallCache[typeId].data(), _drawCallCache[typeId].size() * sizeof(gpu_indirect_call));
+        ryujin::memcpy(drawCallMapping, _drawCallCache[typeId].data(), _drawCallCache[typeId].size() * sizeof(gpu_indirect_call));
 
         auto mapped = reinterpret_cast<u32*>(drawCountBuffer.info.pMappedData) + offset;
-        memcpy(mapped, _drawCountCache[typeId].data(), _drawCountCache[typeId].size() * sizeof(u32));
+        ryujin::memcpy(mapped, _drawCountCache[typeId].data(), _drawCountCache[typeId].size() * sizeof(u32));
         
         return _groupsWrittenCount[typeId];
     }

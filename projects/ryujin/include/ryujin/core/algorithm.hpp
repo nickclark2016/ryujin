@@ -47,7 +47,7 @@ namespace ryujin
         const ptr_diff diff = last - first;
         if constexpr (is_same_v<Input, Output> && is_trivially_copyable_v<Input>)
         {
-            memcpy(out, first, diff * sizeof(decltype(*first)));
+            ryujin::memcpy(out, first, diff * sizeof(decltype(*first)));
             return out + diff;
         }
         else
