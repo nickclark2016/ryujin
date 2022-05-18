@@ -1,8 +1,6 @@
 #ifndef type_traits_hpp__
 #define type_traits_hpp__
 
-#include <type_traits>
-
 namespace ryujin
 {
     template <bool B, typename T = void>
@@ -790,6 +788,112 @@ namespace ryujin
 
     template <typename From, typename To>
     inline constexpr bool is_nothrow_convertible_v = is_nothrow_convertible<From, To>::value;
+
+    template <typename T>
+    struct is_integral : public false_type
+    {
+    };
+
+    template <>
+    struct is_integral<bool> : public true_type
+    {
+    };
+
+    template <>
+    struct is_integral<char> : public true_type
+    {
+    };
+
+    template <>
+    struct is_integral<unsigned char> : public true_type
+    {
+    };
+
+    template <>
+    struct is_integral<char8_t> : public true_type
+    {
+    };
+
+    template <>
+    struct is_integral<char16_t> : public true_type
+    {
+    };
+
+    template <>
+    struct is_integral<char32_t> : public true_type
+    {
+    };
+
+    template <>
+    struct is_integral<wchar_t> : public true_type
+    {
+    };
+
+    template <>
+    struct is_integral<short> : public true_type
+    {
+    };
+
+    template <>
+    struct is_integral<unsigned short> : public true_type
+    {
+    };
+
+    template <>
+    struct is_integral<int> : public true_type
+    {
+    };
+
+    template <>
+    struct is_integral<unsigned int> : public true_type
+    {
+    };
+
+    template <>
+    struct is_integral<long> : public true_type
+    {
+    };
+
+    template <>
+    struct is_integral<unsigned long> : public true_type
+    {
+    };
+
+    template <>
+    struct is_integral<long long> : public true_type
+    {
+    };
+
+    template <>
+    struct is_integral<unsigned long long> : public true_type
+    {
+    };
+
+#if defined(_MSC_VER) or defined(__GNUC__)
+    template <typename T>
+    struct is_trivial : public bool_constant<__is_trivial(T)>
+    {};
+
+    template <typename T>
+    struct is_trivially_copyable : public bool_constant<__has_trivial_copy(T)>
+    {};
+#else // conservative estimate of is_integral
+    template <typename T>
+    struct is_trivial : public is_integral<T>
+    {
+    };
+
+    template <typename T>
+    struct is_trivially_copyable : public is_integral<T>
+    {
+    };
+#endif
+
+    template <typename T>
+    inline constexpr bool is_trivial_v = is_trivial<T>::value;
+
+    template <typename T>
+    inline constexpr bool is_trivially_copyable_v = is_trivially_copyable<T>::value;
 
     template <typename ... Ts>
     struct all_nothrow_copy_constructible : bool_constant<(is_nothrow_copy_constructible_v<Ts> && ...)>

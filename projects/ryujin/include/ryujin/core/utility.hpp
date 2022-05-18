@@ -1,6 +1,7 @@
 #ifndef utility_hpp__
 #define utility_hpp__
 
+#include "as.hpp"
 #include "primitives.hpp"
 #include "type_traits.hpp"
 
@@ -144,7 +145,7 @@ namespace ryujin
     template <typename T>
     inline constexpr T&& forward(remove_reference_t<T>&& t) noexcept
     {
-        static_assert(!std::is_lvalue_reference_v<T>);
+        static_assert(!is_lvalue_reference_v<T>);
         return static_cast<T&&>(t);
     }
 
@@ -844,6 +845,17 @@ namespace ryujin
 
     template <typename ... Ts>
     using index_sequence_for = make_index_sequence<sizeof...(Ts)>;
+
+    inline constexpr void* memcpy(void* dst, const void* src, sz count)
+    {
+        char* d = as<char*>(dst);
+        const char* s = as<const char*>(src);
+        while (count--)
+        {
+            *d++ = *s++;
+        }
+        return dst;
+    }
 }
 
 #ifdef RYUJIN_PROVIDE_STRUCTURED_BINDINGS

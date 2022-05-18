@@ -1,6 +1,7 @@
 #ifndef string_hpp__
 #define string_hpp__
 
+#include "algorithm.hpp"
 #include "allocator.hpp"
 #include "as.hpp"
 #include "primitives.hpp"
@@ -161,7 +162,7 @@ namespace ryujin
 		{
 			_size = s._size;
 			_data = _alloc.allocate(_size + 1);
-			memcpy(_data, s._data, _size * sizeof(Type));
+			ryujin::copy(s._data, s._data + s._size, _data);
 			_data[_size] = as<Type>(0);
 		}
 		else

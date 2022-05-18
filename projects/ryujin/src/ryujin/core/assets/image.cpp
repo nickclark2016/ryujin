@@ -44,7 +44,7 @@ namespace ryujin::assets
             float* data = stbi_loadf(cpath, &x, &y, &channels, 4);
             const sz sz = x * y * sizeof(float) * 4;
             level.bytes.resize(sz);
-            memcpy(level.bytes.data(), data, sz);
+            ryujin::memcpy(level.bytes.data(), data, sz);
             stbi_image_free(data);
         }
         else
@@ -57,7 +57,7 @@ namespace ryujin::assets
                 stbi_us* data = stbi_load_16(cpath, &x, &y, &channels, 4);
                 const sz sz = x * y * sizeof(stbi_us) * 4;
                 level.bytes.resize(sz);
-                memcpy(level.bytes.data(), data, sz);
+                ryujin::memcpy(level.bytes.data(), data, sz);
                 stbi_image_free(data);
             }
             else
@@ -66,7 +66,7 @@ namespace ryujin::assets
                 stbi_uc* data = stbi_load(cpath, &x, &y, &channels, 4);
                 const sz sz = x * y * sizeof(stbi_uc) * 4;
                 level.bytes.resize(sz);
-                memcpy(level.bytes.data(), data, sz);
+                ryujin::memcpy(level.bytes.data(), data, sz);
                 stbi_image_free(data);
             }
         }
