@@ -72,56 +72,59 @@ $(function() {
 <a href="algorithm_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef algorithm_hpp__</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define algorithm_hpp__</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="utility_8hpp.html">utility.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
-<div class="line"><a name="l00006"></a><span class="lineno"><a class="line" href="namespaceryujin.html">    6</a></span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceryujin.html">ryujin</a></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;{</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Input, <span class="keyword">typename</span> Output&gt;</div>
-<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="group___algorithms.html#gacc293678684195f79fd382c5ea523af6">   21</a></span>&#160;    <span class="keyword">inline</span> constexpr Output <a class="code" href="group___algorithms.html#gacc293678684195f79fd382c5ea523af6">move</a>(Input first, Input last, Output <a class="code" href="classryujin_1_1result.html">result</a>)</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    {</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        <span class="keywordflow">while</span> (first != last)</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        {</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;            *<a class="code" href="classryujin_1_1result.html">result</a> = <a class="code" href="group___algorithms.html#gacc293678684195f79fd382c5ea523af6">ryujin::move</a>(*first);</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;            ++first;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;            ++<a class="code" href="classryujin_1_1result.html">result</a>;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        }</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="classryujin_1_1result.html">result</a>;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    }</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Input, <span class="keyword">typename</span> Output&gt;</div>
-<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="group___algorithms.html#ga91837dee425a98cb0ba9b51088293d67">   45</a></span>&#160;    <span class="keyword">inline</span> constexpr Output <a class="code" href="group___algorithms.html#ga91837dee425a98cb0ba9b51088293d67">copy</a>(Input first, Input last, Output out)</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    {</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keyword">const</span> <a class="code" href="namespaceryujin.html#ad388e5d297b4feee974bcdee22fccb1f">ptr_diff</a> diff = last - first;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="keywordflow">if</span> constexpr (is_same_v&lt;Input, Output&gt; &amp;&amp; is_trivially_copyable_v&lt;Input&gt;)</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        {</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            <a class="code" href="namespaceryujin.html#a74bac0e3ee98a5bb790705b6a98c5ac5">ryujin::memcpy</a>(out, first, diff * <span class="keyword">sizeof</span>(decltype(*first)));</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;            <span class="keywordflow">return</span> out + diff;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        }</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        {</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;            <span class="keywordflow">while</span> (first != last)</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            {</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;                *out = *first;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;                ++first;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;                ++out;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;            }</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            <span class="keywordflow">return</span> out;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        }</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    }</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;}</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="preprocessor">#endif // algorithm_hpp__</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="export_8hpp.html">export.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="utility_8hpp.html">utility.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
+<div class="line"><a name="l00007"></a><span class="lineno"><a class="line" href="namespaceryujin.html">    7</a></span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceryujin.html">ryujin</a></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;{</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Input, <span class="keyword">typename</span> Output&gt;</div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="group___algorithms.html#gac1f64c2e9e140a9f8bb090715d9d2350">   22</a></span>&#160;    <a class="code" href="export_8hpp.html#a490bbffc5b83af6f250c2944162b7ec6">RYUJIN_API</a> <span class="keyword">inline</span> constexpr Output <a class="code" href="group___algorithms.html#gac1f64c2e9e140a9f8bb090715d9d2350">move</a>(Input first, Input last, Output <a class="code" href="classryujin_1_1result.html">result</a>)</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    {</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        <span class="keywordflow">while</span> (first != last)</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        {</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;            *<a class="code" href="classryujin_1_1result.html">result</a> = <a class="code" href="group___algorithms.html#gac1f64c2e9e140a9f8bb090715d9d2350">ryujin::move</a>(*first);</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;            ++first;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;            ++<a class="code" href="classryujin_1_1result.html">result</a>;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        }</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="classryujin_1_1result.html">result</a>;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    }</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Input, <span class="keyword">typename</span> Output&gt;</div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="group___algorithms.html#ga05550ae137b154dca913eea0f9aeb619">   46</a></span>&#160;    <a class="code" href="export_8hpp.html#a490bbffc5b83af6f250c2944162b7ec6">RYUJIN_API</a> <span class="keyword">inline</span> constexpr Output <a class="code" href="group___algorithms.html#ga05550ae137b154dca913eea0f9aeb619">copy</a>(Input first, Input last, Output out)</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    {</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="keyword">const</span> <a class="code" href="namespaceryujin.html#ad388e5d297b4feee974bcdee22fccb1f">ptr_diff</a> diff = last - first;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <span class="keywordflow">if</span> constexpr (is_same_v&lt;Input, Output&gt; &amp;&amp; is_trivially_copyable_v&lt;Input&gt;)</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        {</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;            <a class="code" href="namespaceryujin.html#a74bac0e3ee98a5bb790705b6a98c5ac5">ryujin::memcpy</a>(out, first, diff * <span class="keyword">sizeof</span>(decltype(*first)));</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;            <span class="keywordflow">return</span> out + diff;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        }</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        {</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            <span class="keywordflow">while</span> (first != last)</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;            {</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;                *out = *first;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;                ++first;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;                ++out;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            }</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;            <span class="keywordflow">return</span> out;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        }</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    }</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;}</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#endif // algorithm_hpp__</span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="agroup___algorithms_html_ga91837dee425a98cb0ba9b51088293d67"><div class="ttname"><a href="group___algorithms.html#ga91837dee425a98cb0ba9b51088293d67">ryujin::copy</a></div><div class="ttdeci">constexpr Output copy(Input first, Input last, Output out)</div><div class="ttdoc">Copies the values from one iterator to another.</div><div class="ttdef"><b>Definition:</b> algorithm.hpp:45</div></div>
 <div class="ttc" id="anamespaceryujin_html_a74bac0e3ee98a5bb790705b6a98c5ac5"><div class="ttname"><a href="namespaceryujin.html#a74bac0e3ee98a5bb790705b6a98c5ac5">ryujin::memcpy</a></div><div class="ttdeci">constexpr void * memcpy(void *dst, const void *src, sz count)</div><div class="ttdef"><b>Definition:</b> utility.hpp:849</div></div>
+<div class="ttc" id="aexport_8hpp_html"><div class="ttname"><a href="export_8hpp.html">export.hpp</a></div></div>
 <div class="ttc" id="anamespaceryujin_html_ad388e5d297b4feee974bcdee22fccb1f"><div class="ttname"><a href="namespaceryujin.html#ad388e5d297b4feee974bcdee22fccb1f">ryujin::ptr_diff</a></div><div class="ttdeci">decltype((char *)(0) -(char *)(0)) ptr_diff</div><div class="ttdef"><b>Definition:</b> primitives.hpp:17</div></div>
-<div class="ttc" id="anamespaceryujin_html"><div class="ttname"><a href="namespaceryujin.html">ryujin</a></div><div class="ttdef"><b>Definition:</b> algorithm.hpp:6</div></div>
+<div class="ttc" id="agroup___algorithms_html_gac1f64c2e9e140a9f8bb090715d9d2350"><div class="ttname"><a href="group___algorithms.html#gac1f64c2e9e140a9f8bb090715d9d2350">ryujin::move</a></div><div class="ttdeci">constexpr RYUJIN_API Output move(Input first, Input last, Output result)</div><div class="ttdoc">Moves the values from one iterator to another.</div><div class="ttdef"><b>Definition:</b> algorithm.hpp:22</div></div>
+<div class="ttc" id="anamespaceryujin_html"><div class="ttname"><a href="namespaceryujin.html">ryujin</a></div><div class="ttdef"><b>Definition:</b> algorithm.hpp:7</div></div>
+<div class="ttc" id="aexport_8hpp_html_a490bbffc5b83af6f250c2944162b7ec6"><div class="ttname"><a href="export_8hpp.html#a490bbffc5b83af6f250c2944162b7ec6">RYUJIN_API</a></div><div class="ttdeci">#define RYUJIN_API</div><div class="ttdef"><b>Definition:</b> export.hpp:15</div></div>
+<div class="ttc" id="agroup___algorithms_html_ga05550ae137b154dca913eea0f9aeb619"><div class="ttname"><a href="group___algorithms.html#ga05550ae137b154dca913eea0f9aeb619">ryujin::copy</a></div><div class="ttdeci">constexpr RYUJIN_API Output copy(Input first, Input last, Output out)</div><div class="ttdoc">Copies the values from one iterator to another.</div><div class="ttdef"><b>Definition:</b> algorithm.hpp:46</div></div>
 <div class="ttc" id="autility_8hpp_html"><div class="ttname"><a href="utility_8hpp.html">utility.hpp</a></div></div>
 <div class="ttc" id="aclassryujin_1_1result_html"><div class="ttname"><a href="classryujin_1_1result.html">ryujin::result</a></div><div class="ttdef"><b>Definition:</b> result.hpp:10</div></div>
-<div class="ttc" id="agroup___algorithms_html_gacc293678684195f79fd382c5ea523af6"><div class="ttname"><a href="group___algorithms.html#gacc293678684195f79fd382c5ea523af6">ryujin::move</a></div><div class="ttdeci">constexpr Output move(Input first, Input last, Output result)</div><div class="ttdoc">Moves the values from one iterator to another.</div><div class="ttdef"><b>Definition:</b> algorithm.hpp:21</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

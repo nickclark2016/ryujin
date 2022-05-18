@@ -118,7 +118,7 @@ $(function() {
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> SuccessType, <span class="keyword">typename</span> ErrorType&gt;</div>
 <div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="classryujin_1_1result.html#adbb3924378e4c0fd26ea139f03189be2">   48</a></span>&#160;    <span class="keyword">inline</span> <a class="code" href="classryujin_1_1result.html#a294f26d7988257e40706115aa2e10fa9">result&lt;SuccessType, ErrorType&gt;::result</a>(<a class="code" href="classryujin_1_1result.html">result</a>&amp;&amp; res) noexcept</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    {</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        _impl =  <a class="code" href="group___algorithms.html#gacc293678684195f79fd382c5ea523af6">ryujin::move</a>(res._impl);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        _impl =  <a class="code" href="group___algorithms.html#gac1f64c2e9e140a9f8bb090715d9d2350">ryujin::move</a>(res._impl);</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        _isInitialized = res._isInitialized;</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        _isSuccessful = res._isSuccessful;</div>
@@ -133,7 +133,7 @@ $(function() {
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        _isInitialized = other._isInitialized;</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        _isSuccessful = other._isSuccessful;</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        _impl =  <a class="code" href="group___algorithms.html#gacc293678684195f79fd382c5ea523af6">ryujin::move</a>(other._impl);</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        _impl =  <a class="code" href="group___algorithms.html#gac1f64c2e9e140a9f8bb090715d9d2350">ryujin::move</a>(other._impl);</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        other._isInitialized = <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        other._isSuccessful = <span class="keyword">false</span>;</div>
@@ -174,13 +174,13 @@ $(function() {
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> SuccessType, <span class="keyword">typename</span> ErrorType&gt;</div>
 <div class="line"><a name="l00104"></a><span class="lineno"><a class="line" href="classryujin_1_1result.html#afc794dd82add6b1e7dd0677d7387fbc4">  104</a></span>&#160;    <span class="keyword">inline</span> SuccessType <a class="code" href="classryujin_1_1result.html#afc794dd82add6b1e7dd0677d7387fbc4">result&lt;SuccessType, ErrorType&gt;::success</a>() noexcept</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    {</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        <span class="keywordflow">return</span> ryujin::get&lt;SuccessType&gt;(<a class="code" href="group___algorithms.html#gacc293678684195f79fd382c5ea523af6">ryujin::move</a>(_impl));</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        <span class="keywordflow">return</span> ryujin::get&lt;SuccessType&gt;(<a class="code" href="group___algorithms.html#gac1f64c2e9e140a9f8bb090715d9d2350">ryujin::move</a>(_impl));</div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    }</div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> SuccessType, <span class="keyword">typename</span> ErrorType&gt;</div>
 <div class="line"><a name="l00110"></a><span class="lineno"><a class="line" href="classryujin_1_1result.html#aa2c480036eda93a801d1d7b29899b04f">  110</a></span>&#160;    <span class="keyword">inline</span> ErrorType <a class="code" href="classryujin_1_1result.html#aa2c480036eda93a801d1d7b29899b04f">result&lt;SuccessType, ErrorType&gt;::error_code</a>() const noexcept</div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    {</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        <span class="keywordflow">return</span> ryujin::get&lt;ErrorType&gt;(<a class="code" href="group___algorithms.html#gacc293678684195f79fd382c5ea523af6">ryujin::move</a>(_impl));</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        <span class="keywordflow">return</span> ryujin::get&lt;ErrorType&gt;(<a class="code" href="group___algorithms.html#gac1f64c2e9e140a9f8bb090715d9d2350">ryujin::move</a>(_impl));</div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    }</div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    </div>
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> SuccessType, <span class="keyword">typename</span> ErrorType&gt;</div>
@@ -248,7 +248,8 @@ $(function() {
 <div class="ttc" id="aclassryujin_1_1result_html_a295961a7b3f001f0f049bd6a6c99fd5e"><div class="ttname"><a href="classryujin_1_1result.html#a295961a7b3f001f0f049bd6a6c99fd5e">ryujin::result::~result</a></div><div class="ttdeci">~result()=default</div></div>
 <div class="ttc" id="aclassryujin_1_1result_html_ac61cb4eb92d17e0e6e6b94edccc7412e"><div class="ttname"><a href="classryujin_1_1result.html#ac61cb4eb92d17e0e6e6b94edccc7412e">ryujin::result::from_success</a></div><div class="ttdeci">static result&lt; SuccessType, ErrorType &gt; from_success(const SuccessType &amp;res)</div><div class="ttdef"><b>Definition:</b> result.hpp:116</div></div>
 <div class="ttc" id="aclassryujin_1_1variant_html"><div class="ttname"><a href="classryujin_1_1variant.html">ryujin::variant&lt; SuccessType, ErrorType &gt;</a></div></div>
-<div class="ttc" id="anamespaceryujin_html"><div class="ttname"><a href="namespaceryujin.html">ryujin</a></div><div class="ttdef"><b>Definition:</b> algorithm.hpp:6</div></div>
+<div class="ttc" id="agroup___algorithms_html_gac1f64c2e9e140a9f8bb090715d9d2350"><div class="ttname"><a href="group___algorithms.html#gac1f64c2e9e140a9f8bb090715d9d2350">ryujin::move</a></div><div class="ttdeci">constexpr RYUJIN_API Output move(Input first, Input last, Output result)</div><div class="ttdoc">Moves the values from one iterator to another.</div><div class="ttdef"><b>Definition:</b> algorithm.hpp:22</div></div>
+<div class="ttc" id="anamespaceryujin_html"><div class="ttname"><a href="namespaceryujin.html">ryujin</a></div><div class="ttdef"><b>Definition:</b> algorithm.hpp:7</div></div>
 <div class="ttc" id="aclassryujin_1_1result_html_a294f26d7988257e40706115aa2e10fa9"><div class="ttname"><a href="classryujin_1_1result.html#a294f26d7988257e40706115aa2e10fa9">ryujin::result::result</a></div><div class="ttdeci">result(const SuccessType &amp;res)</div><div class="ttdef"><b>Definition:</b> result.hpp:140</div></div>
 <div class="ttc" id="aclassryujin_1_1result_html_a9b9af8125e854b1cfaa01233eb4fedbd"><div class="ttname"><a href="classryujin_1_1result.html#a9b9af8125e854b1cfaa01233eb4fedbd">ryujin::result::from_error</a></div><div class="ttdeci">static result&lt; SuccessType, ErrorType &gt; from_error(const ErrorType &amp;err)</div><div class="ttdef"><b>Definition:</b> result.hpp:128</div></div>
 <div class="ttc" id="aclassryujin_1_1result_html_a43a581ba9669209afde6bbfd24428a19"><div class="ttname"><a href="classryujin_1_1result.html#a43a581ba9669209afde6bbfd24428a19">ryujin::result::operator-&gt;</a></div><div class="ttdeci">SuccessType * operator-&gt;() noexcept</div><div class="ttdef"><b>Definition:</b> result.hpp:80</div></div>
@@ -256,7 +257,6 @@ $(function() {
 <div class="ttc" id="avariant_8hpp_html"><div class="ttname"><a href="variant_8hpp.html">variant.hpp</a></div></div>
 <div class="ttc" id="autility_8hpp_html"><div class="ttname"><a href="utility_8hpp.html">utility.hpp</a></div></div>
 <div class="ttc" id="aclassryujin_1_1result_html"><div class="ttname"><a href="classryujin_1_1result.html">ryujin::result</a></div><div class="ttdef"><b>Definition:</b> result.hpp:10</div></div>
-<div class="ttc" id="agroup___algorithms_html_gacc293678684195f79fd382c5ea523af6"><div class="ttname"><a href="group___algorithms.html#gacc293678684195f79fd382c5ea523af6">ryujin::move</a></div><div class="ttdeci">constexpr Output move(Input first, Input last, Output result)</div><div class="ttdoc">Moves the values from one iterator to another.</div><div class="ttdef"><b>Definition:</b> algorithm.hpp:21</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">
