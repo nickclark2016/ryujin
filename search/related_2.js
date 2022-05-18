@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['input_3712',['input',['../classryujin_1_1keyboard.html#a0a8814941837a9542fbb768e740fd03b',1,'ryujin::keyboard::input()'],['../classryujin_1_1mouse.html#a0a8814941837a9542fbb768e740fd03b',1,'ryujin::mouse::input()']]]
+  ['input_3720',['input',['../classryujin_1_1keyboard.html#a0a8814941837a9542fbb768e740fd03b',1,'ryujin::keyboard::input()'],['../classryujin_1_1mouse.html#a0a8814941837a9542fbb768e740fd03b',1,'ryujin::mouse::input()']]]
 ];
