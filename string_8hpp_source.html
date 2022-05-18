@@ -596,46 +596,45 @@ $(function() {
 <div class="line"><a name="l00527"></a><span class="lineno">  527</span>&#160;            len = _size - pos + 1;</div>
 <div class="line"><a name="l00528"></a><span class="lineno">  528</span>&#160;        }</div>
 <div class="line"><a name="l00529"></a><span class="lineno">  529</span>&#160; </div>
-<div class="line"><a name="l00530"></a><span class="lineno">  530</span>&#160;        Type* <a class="code" href="structryujin_1_1buffer.html">buffer</a> = <span class="keyword">new</span> Type[len];</div>
-<div class="line"><a name="l00531"></a><span class="lineno">  531</span>&#160;        memcpy(<a class="code" href="structryujin_1_1buffer.html">buffer</a>, _data + pos, len);</div>
-<div class="line"><a name="l00532"></a><span class="lineno">  532</span>&#160;        <a class="code" href="classryujin_1_1basic__string.html">basic_string</a> str(<a class="code" href="structryujin_1_1buffer.html">buffer</a>);</div>
-<div class="line"><a name="l00533"></a><span class="lineno">  533</span>&#160; </div>
-<div class="line"><a name="l00534"></a><span class="lineno">  534</span>&#160;        <span class="keyword">delete</span>[] <a class="code" href="structryujin_1_1buffer.html">buffer</a>;</div>
-<div class="line"><a name="l00535"></a><span class="lineno">  535</span>&#160; </div>
-<div class="line"><a name="l00536"></a><span class="lineno">  536</span>&#160;        <span class="keywordflow">return</span> str;</div>
-<div class="line"><a name="l00537"></a><span class="lineno">  537</span>&#160;    }</div>
-<div class="line"><a name="l00538"></a><span class="lineno">  538</span>&#160; </div>
-<div class="line"><a name="l00539"></a><span class="lineno">  539</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Type, <span class="keyword">typename</span> Allocator&gt;</div>
-<div class="line"><a name="l00540"></a><span class="lineno">  540</span>&#160;    <span class="keyword">inline</span> constexpr <span class="keywordtype">void</span> <a class="code" href="classryujin_1_1basic__string.html">basic_string&lt;Type, Allocator&gt;::_set_empty</a>() noexcept</div>
-<div class="line"><a name="l00541"></a><span class="lineno">  541</span>&#160;    {</div>
-<div class="line"><a name="l00542"></a><span class="lineno">  542</span>&#160;        _data = <span class="keyword">const_cast&lt;</span>Type*<span class="keyword">&gt;</span>(_empty);</div>
-<div class="line"><a name="l00543"></a><span class="lineno">  543</span>&#160;    }</div>
-<div class="line"><a name="l00544"></a><span class="lineno">  544</span>&#160; </div>
-<div class="line"><a name="l00545"></a><span class="lineno">  545</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Type, <span class="keyword">typename</span> Allocator&gt;</div>
-<div class="line"><a name="l00546"></a><span class="lineno"><a class="line" href="structryujin_1_1hash_3_01basic__string_3_01_type_00_01_allocator_01_4_01_4.html">  546</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="structryujin_1_1hash.html">hash</a>&lt;<a class="code" href="classryujin_1_1basic__string.html">basic_string</a>&lt;Type, Allocator&gt;&gt;</div>
-<div class="line"><a name="l00547"></a><span class="lineno">  547</span>&#160;    {</div>
-<div class="line"><a name="l00548"></a><span class="lineno"><a class="line" href="structryujin_1_1hash_3_01basic__string_3_01_type_00_01_allocator_01_4_01_4.html#a86d14647591a163c487c522809c8d88a">  548</a></span>&#160;        <span class="keyword">inline</span> constexpr <a class="code" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a> <a class="code" href="structryujin_1_1hash_3_01basic__string_3_01_type_00_01_allocator_01_4_01_4.html#a86d14647591a163c487c522809c8d88a">operator()</a>(<span class="keyword">const</span> <a class="code" href="classryujin_1_1basic__string.html">basic_string&lt;Type, Allocator&gt;</a>&amp; v) <span class="keyword">const</span> noexcept</div>
-<div class="line"><a name="l00549"></a><span class="lineno">  549</span>&#160;        {</div>
-<div class="line"><a name="l00550"></a><span class="lineno">  550</span>&#160;            <span class="keyword">const</span> <a class="code" href="namespaceryujin.html#ab2e7be3891da84c750c86b7cd517ba3a">i32</a> p = 31, m = 1e9 + 7;</div>
-<div class="line"><a name="l00551"></a><span class="lineno">  551</span>&#160;            <a class="code" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a> hash_value = 0;</div>
-<div class="line"><a name="l00552"></a><span class="lineno">  552</span>&#160; </div>
-<div class="line"><a name="l00553"></a><span class="lineno">  553</span>&#160;            <a class="code" href="namespaceryujin.html#a8f98a92be42ef53d01792c0cd0ed2524">i64</a> p_pow = 1;</div>
-<div class="line"><a name="l00554"></a><span class="lineno">  554</span>&#160;            <span class="keyword">const</span> <a class="code" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a> n = v.size();</div>
-<div class="line"><a name="l00555"></a><span class="lineno">  555</span>&#160;            <span class="keywordflow">for</span> (<a class="code" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a> i = 0; i &lt; n; ++i)</div>
-<div class="line"><a name="l00556"></a><span class="lineno">  556</span>&#160;            {</div>
-<div class="line"><a name="l00557"></a><span class="lineno">  557</span>&#160;                hash_value = (hash_value + (v[i] - as&lt;Type&gt;(<span class="charliteral">&#39;a&#39;</span>) + 1) * p_pow) % m;</div>
-<div class="line"><a name="l00558"></a><span class="lineno">  558</span>&#160;                p_pow = (p_pow * p) % m;</div>
-<div class="line"><a name="l00559"></a><span class="lineno">  559</span>&#160;            }</div>
-<div class="line"><a name="l00560"></a><span class="lineno">  560</span>&#160; </div>
-<div class="line"><a name="l00561"></a><span class="lineno">  561</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="structryujin_1_1hash.html">hash&lt;sz&gt;</a>()(hash_value);</div>
-<div class="line"><a name="l00562"></a><span class="lineno">  562</span>&#160;        }</div>
-<div class="line"><a name="l00563"></a><span class="lineno">  563</span>&#160;    };</div>
-<div class="line"><a name="l00564"></a><span class="lineno">  564</span>&#160; </div>
-<div class="line"><a name="l00565"></a><span class="lineno"><a class="line" href="namespaceryujin.html#a519eb9bb8a066df78fcff54c6563e77d">  565</a></span>&#160;    <span class="keyword">using</span> <span class="keywordtype">string</span> = <a class="code" href="classryujin_1_1basic__string.html">basic_string&lt;char&gt;</a>;</div>
-<div class="line"><a name="l00566"></a><span class="lineno"><a class="line" href="namespaceryujin.html#a9659142188bf11cc85986f4ebeb9a24b">  566</a></span>&#160;    <span class="keyword">using</span> <a class="code" href="classryujin_1_1basic__string.html">wstring</a> = <a class="code" href="classryujin_1_1basic__string.html">basic_string&lt;wchar_t&gt;</a>;</div>
-<div class="line"><a name="l00567"></a><span class="lineno">  567</span>&#160;}</div>
-<div class="line"><a name="l00568"></a><span class="lineno">  568</span>&#160; </div>
-<div class="line"><a name="l00569"></a><span class="lineno">  569</span>&#160;<span class="preprocessor">#endif // string_hpp__</span></div>
+<div class="line"><a name="l00530"></a><span class="lineno">  530</span>&#160;        <a class="code" href="classryujin_1_1basic__string.html">basic_string</a> str(len);</div>
+<div class="line"><a name="l00531"></a><span class="lineno">  531</span>&#160; </div>
+<div class="line"><a name="l00532"></a><span class="lineno">  532</span>&#160;        memcpy(str._data, _data + pos, len * <span class="keyword">sizeof</span>(Type));</div>
+<div class="line"><a name="l00533"></a><span class="lineno">  533</span>&#160;        str._data[len] = as&lt;Type&gt;(0);</div>
+<div class="line"><a name="l00534"></a><span class="lineno">  534</span>&#160; </div>
+<div class="line"><a name="l00535"></a><span class="lineno">  535</span>&#160;        <span class="keywordflow">return</span> str;</div>
+<div class="line"><a name="l00536"></a><span class="lineno">  536</span>&#160;    }</div>
+<div class="line"><a name="l00537"></a><span class="lineno">  537</span>&#160; </div>
+<div class="line"><a name="l00538"></a><span class="lineno">  538</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Type, <span class="keyword">typename</span> Allocator&gt;</div>
+<div class="line"><a name="l00539"></a><span class="lineno">  539</span>&#160;    <span class="keyword">inline</span> constexpr <span class="keywordtype">void</span> <a class="code" href="classryujin_1_1basic__string.html">basic_string&lt;Type, Allocator&gt;::_set_empty</a>() noexcept</div>
+<div class="line"><a name="l00540"></a><span class="lineno">  540</span>&#160;    {</div>
+<div class="line"><a name="l00541"></a><span class="lineno">  541</span>&#160;        _data = <span class="keyword">const_cast&lt;</span>Type*<span class="keyword">&gt;</span>(_empty);</div>
+<div class="line"><a name="l00542"></a><span class="lineno">  542</span>&#160;    }</div>
+<div class="line"><a name="l00543"></a><span class="lineno">  543</span>&#160; </div>
+<div class="line"><a name="l00544"></a><span class="lineno">  544</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Type, <span class="keyword">typename</span> Allocator&gt;</div>
+<div class="line"><a name="l00545"></a><span class="lineno"><a class="line" href="structryujin_1_1hash_3_01basic__string_3_01_type_00_01_allocator_01_4_01_4.html">  545</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="structryujin_1_1hash.html">hash</a>&lt;<a class="code" href="classryujin_1_1basic__string.html">basic_string</a>&lt;Type, Allocator&gt;&gt;</div>
+<div class="line"><a name="l00546"></a><span class="lineno">  546</span>&#160;    {</div>
+<div class="line"><a name="l00547"></a><span class="lineno"><a class="line" href="structryujin_1_1hash_3_01basic__string_3_01_type_00_01_allocator_01_4_01_4.html#a86d14647591a163c487c522809c8d88a">  547</a></span>&#160;        <span class="keyword">inline</span> constexpr <a class="code" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a> <a class="code" href="structryujin_1_1hash_3_01basic__string_3_01_type_00_01_allocator_01_4_01_4.html#a86d14647591a163c487c522809c8d88a">operator()</a>(<span class="keyword">const</span> <a class="code" href="classryujin_1_1basic__string.html">basic_string&lt;Type, Allocator&gt;</a>&amp; v) <span class="keyword">const</span> noexcept</div>
+<div class="line"><a name="l00548"></a><span class="lineno">  548</span>&#160;        {</div>
+<div class="line"><a name="l00549"></a><span class="lineno">  549</span>&#160;            <span class="keyword">const</span> <a class="code" href="namespaceryujin.html#ab2e7be3891da84c750c86b7cd517ba3a">i32</a> p = 31, m = 1e9 + 7;</div>
+<div class="line"><a name="l00550"></a><span class="lineno">  550</span>&#160;            <a class="code" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a> hash_value = 0;</div>
+<div class="line"><a name="l00551"></a><span class="lineno">  551</span>&#160; </div>
+<div class="line"><a name="l00552"></a><span class="lineno">  552</span>&#160;            <a class="code" href="namespaceryujin.html#a8f98a92be42ef53d01792c0cd0ed2524">i64</a> p_pow = 1;</div>
+<div class="line"><a name="l00553"></a><span class="lineno">  553</span>&#160;            <span class="keyword">const</span> <a class="code" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a> n = v.size();</div>
+<div class="line"><a name="l00554"></a><span class="lineno">  554</span>&#160;            <span class="keywordflow">for</span> (<a class="code" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a> i = 0; i &lt; n; ++i)</div>
+<div class="line"><a name="l00555"></a><span class="lineno">  555</span>&#160;            {</div>
+<div class="line"><a name="l00556"></a><span class="lineno">  556</span>&#160;                hash_value = (hash_value + (v[i] - as&lt;Type&gt;(<span class="charliteral">&#39;a&#39;</span>) + 1) * p_pow) % m;</div>
+<div class="line"><a name="l00557"></a><span class="lineno">  557</span>&#160;                p_pow = (p_pow * p) % m;</div>
+<div class="line"><a name="l00558"></a><span class="lineno">  558</span>&#160;            }</div>
+<div class="line"><a name="l00559"></a><span class="lineno">  559</span>&#160; </div>
+<div class="line"><a name="l00560"></a><span class="lineno">  560</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="structryujin_1_1hash.html">hash&lt;sz&gt;</a>()(hash_value);</div>
+<div class="line"><a name="l00561"></a><span class="lineno">  561</span>&#160;        }</div>
+<div class="line"><a name="l00562"></a><span class="lineno">  562</span>&#160;    };</div>
+<div class="line"><a name="l00563"></a><span class="lineno">  563</span>&#160; </div>
+<div class="line"><a name="l00564"></a><span class="lineno"><a class="line" href="namespaceryujin.html#a519eb9bb8a066df78fcff54c6563e77d">  564</a></span>&#160;    <span class="keyword">using</span> <span class="keywordtype">string</span> = <a class="code" href="classryujin_1_1basic__string.html">basic_string&lt;char&gt;</a>;</div>
+<div class="line"><a name="l00565"></a><span class="lineno"><a class="line" href="namespaceryujin.html#a9659142188bf11cc85986f4ebeb9a24b">  565</a></span>&#160;    <span class="keyword">using</span> <a class="code" href="classryujin_1_1basic__string.html">wstring</a> = <a class="code" href="classryujin_1_1basic__string.html">basic_string&lt;wchar_t&gt;</a>;</div>
+<div class="line"><a name="l00566"></a><span class="lineno">  566</span>&#160;}</div>
+<div class="line"><a name="l00567"></a><span class="lineno">  567</span>&#160; </div>
+<div class="line"><a name="l00568"></a><span class="lineno">  568</span>&#160;<span class="preprocessor">#endif // string_hpp__</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="astructryujin_1_1buffer_html"><div class="ttname"><a href="structryujin_1_1buffer.html">ryujin::buffer</a></div><div class="ttdef"><b>Definition:</b> types.hpp:539</div></div>
 <div class="ttc" id="aclassryujin_1_1basic__string_html_a696fbf933cb5f7decfe2b224dac620a8"><div class="ttname"><a href="classryujin_1_1basic__string.html#a696fbf933cb5f7decfe2b224dac620a8">ryujin::basic_string::npos</a></div><div class="ttdeci">constexpr static sz npos</div><div class="ttdef"><b>Definition:</b> string.hpp:70</div></div>
@@ -650,7 +649,7 @@ $(function() {
 <div class="ttc" id="aclassryujin_1_1basic__string_html_a86aaf5b2537e8381a3c22d88e2463475"><div class="ttname"><a href="classryujin_1_1basic__string.html#a86aaf5b2537e8381a3c22d88e2463475">ryujin::basic_string::operator!=</a></div><div class="ttdeci">constexpr bool operator!=(const basic_string &amp;rhs) const noexcept</div><div class="ttdef"><b>Definition:</b> string.hpp:241</div></div>
 <div class="ttc" id="aclassryujin_1_1basic__string_html_aa0a40ac048dbeef612182d1f0f3f0d75"><div class="ttname"><a href="classryujin_1_1basic__string.html#aa0a40ac048dbeef612182d1f0f3f0d75">ryujin::basic_string::begin</a></div><div class="ttdeci">constexpr iterator begin() noexcept</div><div class="ttdef"><b>Definition:</b> string.hpp:437</div></div>
 <div class="ttc" id="anamespaceryujin_html_ab2e7be3891da84c750c86b7cd517ba3a"><div class="ttname"><a href="namespaceryujin.html#ab2e7be3891da84c750c86b7cd517ba3a">ryujin::i32</a></div><div class="ttdeci">int i32</div><div class="ttdef"><b>Definition:</b> primitives.hpp:12</div></div>
-<div class="ttc" id="astructryujin_1_1hash_3_01basic__string_3_01_type_00_01_allocator_01_4_01_4_html_a86d14647591a163c487c522809c8d88a"><div class="ttname"><a href="structryujin_1_1hash_3_01basic__string_3_01_type_00_01_allocator_01_4_01_4.html#a86d14647591a163c487c522809c8d88a">ryujin::hash&lt; basic_string&lt; Type, Allocator &gt; &gt;::operator()</a></div><div class="ttdeci">constexpr sz operator()(const basic_string&lt; Type, Allocator &gt; &amp;v) const noexcept</div><div class="ttdef"><b>Definition:</b> string.hpp:548</div></div>
+<div class="ttc" id="astructryujin_1_1hash_3_01basic__string_3_01_type_00_01_allocator_01_4_01_4_html_a86d14647591a163c487c522809c8d88a"><div class="ttname"><a href="structryujin_1_1hash_3_01basic__string_3_01_type_00_01_allocator_01_4_01_4.html#a86d14647591a163c487c522809c8d88a">ryujin::hash&lt; basic_string&lt; Type, Allocator &gt; &gt;::operator()</a></div><div class="ttdeci">constexpr sz operator()(const basic_string&lt; Type, Allocator &gt; &amp;v) const noexcept</div><div class="ttdef"><b>Definition:</b> string.hpp:547</div></div>
 <div class="ttc" id="aclassryujin_1_1basic__string_html_ad295a347d7ff16ef122226733ff966ee"><div class="ttname"><a href="classryujin_1_1basic__string.html#ad295a347d7ff16ef122226733ff966ee">ryujin::basic_string::iterator</a></div><div class="ttdeci">Type * iterator</div><div class="ttdef"><b>Definition:</b> string.hpp:21</div></div>
 <div class="ttc" id="aclassryujin_1_1basic__string_html_ac40a0883ff6f685dab60bf64784f7b07"><div class="ttname"><a href="classryujin_1_1basic__string.html#ac40a0883ff6f685dab60bf64784f7b07">ryujin::basic_string::substr</a></div><div class="ttdeci">constexpr basic_string substr(sz pos=0, sz len=npos)</div><div class="ttdef"><b>Definition:</b> string.hpp:523</div></div>
 <div class="ttc" id="aclassryujin_1_1basic__string_html_a20e0e68d844d00061c129f3b37444a0a"><div class="ttname"><a href="classryujin_1_1basic__string.html#a20e0e68d844d00061c129f3b37444a0a">ryujin::basic_string::operator[]</a></div><div class="ttdeci">constexpr Type &amp; operator[](sz index) const noexcept</div><div class="ttdef"><b>Definition:</b> string.hpp:431</div></div>
