@@ -176,14 +176,14 @@ namespace ryujin
 		glfwSetWindowSizeCallback(_native, nullptr);
 	}
 	
-	result<std::tuple<u32, u32>, window::error_code> window::size() const noexcept
+	result<tuple<u32, u32>, window::error_code> window::size() const noexcept
 	{
-		using result_type = result<std::tuple<u32, u32>, error_code>;
+		using result_type = result<tuple<u32, u32>, error_code>;
 
 		i32 w, h;
 		glfwGetWindowSize(_native, &w, &h);
 
-		auto res = std::make_tuple(static_cast<u32>(w), static_cast<u32>(h));
+		auto res = ryujin::make_tuple(static_cast<u32>(w), static_cast<u32>(h));
 		return result_type::from_success(std::move(res));
 	}
 	
