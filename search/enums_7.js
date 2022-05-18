@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['key_3092',['key',['../classryujin_1_1keyboard.html#a658950f742aa62faacfe81f130b91012',1,'ryujin::keyboard']]]
+  ['key_3098',['key',['../classryujin_1_1keyboard.html#a658950f742aa62faacfe81f130b91012',1,'ryujin::keyboard']]]
 ];
