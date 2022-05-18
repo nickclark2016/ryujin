@@ -67,6 +67,8 @@ namespace ryujin
 		constexpr sz length() const noexcept;
 		constexpr bool empty() const noexcept;
 
+		constexpr const Type* c_str() const noexcept;
+
 		constexpr static sz npos = (~(sz)0);
 
 		constexpr basic_string substr(sz pos = 0, sz len = npos);
@@ -520,6 +522,12 @@ namespace ryujin
 	}
 
 	template<typename Type, typename Allocator>
+	constexpr const Type* basic_string<Type, Allocator>::c_str() const noexcept
+	{
+		return _data;
+	}
+
+	template<typename Type, typename Allocator>
 	inline constexpr basic_string<Type, Allocator> basic_string<Type, Allocator>::substr(sz pos, sz len)
 	{
 		if (len == npos)
@@ -546,11 +554,11 @@ namespace ryujin
 	{
 		inline constexpr sz operator()(const basic_string<Type, Allocator>& v) const noexcept
 		{
-			const i32 p = 31, m = 1e9 + 7;
+			const i32 p = 31, m = static_cast<i32>(1e9) + 7;
 			sz hash_value = 0;
 
 			i64 p_pow = 1;
-			const sz n = v.size();
+			const sz n = v.length();
 			for (sz i = 0; i < n; ++i)
 			{
 				hash_value = (hash_value + (v[i] - as<Type>('a') + 1) * p_pow) % m;

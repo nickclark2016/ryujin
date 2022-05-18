@@ -13,13 +13,12 @@
 #include <semaphore>
 #include <string>
 #include <thread>
-#include <unordered_map>
 
 namespace ryujin
 {
     struct engine_context::impl
     {
-        std::unordered_map<std::string, unique_ptr<window>> _windows;
+        unordered_map<string, unique_ptr<window>> _windows;
 
         unique_ptr<window> _invalidWindowHandle;
 
@@ -33,7 +32,7 @@ namespace ryujin
         std::binary_semaphore _gameLogicComplete = std::binary_semaphore(1);
         std::thread _renderLogic;
 
-        f64 _delta;
+        f64 _delta = 0.0;
         std::chrono::time_point<std::chrono::high_resolution_clock> _lastTime;
     };
 
@@ -72,12 +71,12 @@ namespace ryujin
         return _impl->_invalidWindowHandle;
     }
     
-    void engine_context::remove_window(const std::string& win)
+    void engine_context::remove_window(const string& win)
     {
         _impl->_windows.erase(win);
     }
     
-    unique_ptr<window>& engine_context::get_window(const std::string& name)
+    unique_ptr<window>& engine_context::get_window(const string& name)
     {
         const auto& it = _impl->_windows.find(name);
         if (it == _impl->_windows.end())
@@ -87,7 +86,7 @@ namespace ryujin
         return it->second;
     }
 
-    const std::unordered_map<std::string, unique_ptr<window>>& engine_context::get_windows() const noexcept
+    const unordered_map<string, unique_ptr<window>>& engine_context::get_windows() const noexcept
     {
         return _impl->_windows;
     }

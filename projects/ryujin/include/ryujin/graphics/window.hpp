@@ -5,10 +5,9 @@
 #include "../core/primitives.hpp"
 #include "../core/result.hpp"
 #include "../core/smart_pointers.hpp"
+#include "../core/string.hpp"
 #include "../core/vector.hpp"
 
-#include <string>
-#include <string_view>
 #include <tuple>
 
 #include <GLFW/glfw3.h>
@@ -43,7 +42,7 @@ namespace ryujin
 
         struct create_info
         {
-            std::string name;
+            string name;
             u32 width;
             u32 height;
         };

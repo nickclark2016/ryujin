@@ -3,6 +3,7 @@
 
 #include "assets.hpp"
 #include "smart_pointers.hpp"
+#include "unordered_map.hpp"
 
 #include "../entities/registry.hpp"
 #include "../graphics/window.hpp"
@@ -93,21 +94,21 @@ namespace ryujin
         /// Removes a window from the engine's management.
         /// </summary>
         /// <param name="win">Name of the window to remove</param>
-        void remove_window(const std::string& win);
+        void remove_window(const string& win);
 
         /// <summary>
         /// Gets a unique pointer to a window with the given name.
         /// </summary>
         /// <param name="name">Name of the window</param>
         /// <returns>Unique pointer to the window of that name</returns>
-        unique_ptr<window>& get_window(const std::string& name);
+        unique_ptr<window>& get_window(const string& name);
 
         /// <summary>
         /// Gets a constant reference to the map of windows that the engine currently manages.  The key of the map
         /// is the name of the window.
         /// </summary>
         /// <returns>Managed window map</returns>
-        const std::unordered_map<std::string, unique_ptr<window>>& get_windows() const noexcept;
+        const unordered_map<string, unique_ptr<window>>& get_windows() const noexcept;
 
         /// <summary>
         /// Executes an application.
