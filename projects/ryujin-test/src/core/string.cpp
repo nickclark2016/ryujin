@@ -45,6 +45,6 @@ TEST(String, substr)
 	string hello = a.substr(0, 5);
 	string world = a.substr(6);
 
-	ASSERT_TRUE(hello == "Hello");
-	ASSERT_TRUE(world == "World");
+	ASSERT_EQ(hello, "Hello");
+	ASSERT_EQ(world, "World");
 }

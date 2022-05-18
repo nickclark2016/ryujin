@@ -527,11 +527,10 @@ namespace ryujin
 			len = _size - pos + 1;
 		}
 
-		Type* buffer = new Type[len];
-		memcpy(buffer, _data + pos, len);
-		basic_string str(buffer);
+		basic_string str(len);
 
-		delete[] buffer;
+		memcpy(str._data, _data + pos, len * sizeof(Type));
+		str._data[len] = as<Type>(0);
 
 		return str;
 	}
