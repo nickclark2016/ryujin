@@ -74,9 +74,75 @@ Functions</h2></td></tr>
 <tr class="memitem:gacc293678684195f79fd382c5ea523af6"><td class="memTemplItemLeft" align="right" valign="top">constexpr Output&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group___algorithms.html#gacc293678684195f79fd382c5ea523af6">ryujin::move</a> (Input first, Input last, Output <a class="el" href="classryujin_1_1result.html">result</a>)</td></tr>
 <tr class="memdesc:gacc293678684195f79fd382c5ea523af6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Moves the values from one iterator to another.  <a href="group___algorithms.html#gacc293678684195f79fd382c5ea523af6">More...</a><br /></td></tr>
 <tr class="separator:gacc293678684195f79fd382c5ea523af6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga91837dee425a98cb0ba9b51088293d67"><td class="memTemplParams" colspan="2">template&lt;typename Input , typename Output &gt; </td></tr>
+<tr class="memitem:ga91837dee425a98cb0ba9b51088293d67"><td class="memTemplItemLeft" align="right" valign="top">constexpr Output&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group___algorithms.html#ga91837dee425a98cb0ba9b51088293d67">ryujin::copy</a> (Input first, Input last, Output out)</td></tr>
+<tr class="memdesc:ga91837dee425a98cb0ba9b51088293d67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copies the values from one iterator to another.  <a href="group___algorithms.html#ga91837dee425a98cb0ba9b51088293d67">More...</a><br /></td></tr>
+<tr class="separator:ga91837dee425a98cb0ba9b51088293d67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="ga91837dee425a98cb0ba9b51088293d67"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga91837dee425a98cb0ba9b51088293d67">&#9670;&nbsp;</a></span>copy()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Input , typename Output &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr Output ryujin::copy </td>
+          <td>(</td>
+          <td class="paramtype">Input&#160;</td>
+          <td class="paramname"><em>first</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Input&#160;</td>
+          <td class="paramname"><em>last</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Output&#160;</td>
+          <td class="paramname"><em>out</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Copies the values from one iterator to another. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Input</td><td>Input iterator type</td></tr>
+    <tr><td class="paramname">Output</td><td>Output iterator type</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">first</td><td>Iterator at start of range to copy from (inclusive)</td></tr>
+    <tr><td class="paramname">last</td><td>Iterator at end of range to copy from (exclusive)</td></tr>
+    <tr><td class="paramname">result</td><td>Iterator at start of result range to copy into</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Iterator to the end of the output range copy to</dd></dl>
+
+</div>
+</div>
 <a id="gacc293678684195f79fd382c5ea523af6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gacc293678684195f79fd382c5ea523af6">&#9670;&nbsp;</a></span>move()</h2>
 
