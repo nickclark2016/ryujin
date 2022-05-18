@@ -6,9 +6,8 @@
 #include "../core/result.hpp"
 #include "../core/smart_pointers.hpp"
 #include "../core/string.hpp"
+#include "../core/utility.hpp"
 #include "../core/vector.hpp"
-
-#include <tuple>
 
 #include <GLFW/glfw3.h>
 
@@ -51,7 +50,7 @@ namespace ryujin
 
         ~window();
 
-        result<std::tuple<u32, u32>, error_code> size() const noexcept;
+        result<tuple<u32, u32>, error_code> size() const noexcept;
         void size(const u32 width, const u32 height) noexcept;
         bool focused() const noexcept;
         void focus() noexcept;

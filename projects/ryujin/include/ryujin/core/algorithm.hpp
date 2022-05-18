@@ -1,6 +1,7 @@
 #ifndef algorithm_hpp__
 #define algorithm_hpp__
 
+#include "export.hpp"
 #include "utility.hpp"
 
 namespace ryujin
@@ -18,7 +19,7 @@ namespace ryujin
     /// <returns>Iterator to the end of the output range moved to</returns>
     /// \ingroup Algorithms
     template <typename Input, typename Output>
-    inline constexpr Output move(Input first, Input last, Output result)
+    RYUJIN_API inline constexpr Output move(Input first, Input last, Output result)
     {
         while (first != last)
         {
@@ -42,7 +43,7 @@ namespace ryujin
     /// <returns>Iterator to the end of the output range copy to</returns>
     /// \ingroup Algorithms
     template <typename Input, typename Output>
-    inline constexpr Output copy(Input first, Input last, Output out)
+    RYUJIN_API inline constexpr Output copy(Input first, Input last, Output out)
     {
         const ptr_diff diff = last - first;
         if constexpr (is_same_v<Input, Output> && is_trivially_copyable_v<Input>)
