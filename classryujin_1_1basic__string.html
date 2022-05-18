@@ -68,6 +68,7 @@ $(function() {
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="classryujin_1_1basic__string-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">ryujin::basic_string&lt; Type, Allocator &gt; Class Template Reference</div>  </div>
@@ -146,12 +147,19 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a1102aba73d8a4af8c9af647f0d95762a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a03605528bbfd3905bb312ef4b6eba3b6"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classryujin_1_1basic__string.html#a03605528bbfd3905bb312ef4b6eba3b6">empty</a> () const noexcept</td></tr>
 <tr class="separator:a03605528bbfd3905bb312ef4b6eba3b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac40a0883ff6f685dab60bf64784f7b07"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="classryujin_1_1basic__string.html">basic_string</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classryujin_1_1basic__string.html#ac40a0883ff6f685dab60bf64784f7b07">substr</a> (<a class="el" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a> pos=0, <a class="el" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a> len=<a class="el" href="classryujin_1_1basic__string.html#a696fbf933cb5f7decfe2b224dac620a8">npos</a>)</td></tr>
+<tr class="separator:ac40a0883ff6f685dab60bf64784f7b07"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6ed9d49b7560abc64f375ebfbeb2479a"><td class="memTemplParams" colspan="2">template&lt;sz N&gt; </td></tr>
 <tr class="memitem:a6ed9d49b7560abc64f375ebfbeb2479a"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classryujin_1_1basic__string.html">basic_string</a>&lt; Type, Allocator &gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classryujin_1_1basic__string.html#a6ed9d49b7560abc64f375ebfbeb2479a">operator=</a> (const Type(&amp;data)[N]) noexcept</td></tr>
 <tr class="separator:a6ed9d49b7560abc64f375ebfbeb2479a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aedeea87f75b83bff437e933663093fed"><td class="memTemplParams" colspan="2">template&lt;sz N&gt; </td></tr>
 <tr class="memitem:aedeea87f75b83bff437e933663093fed"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classryujin_1_1basic__string.html">basic_string</a>&lt; Type, Allocator &gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classryujin_1_1basic__string.html#aedeea87f75b83bff437e933663093fed">operator+=</a> (const Type(&amp;data)[N]) noexcept</td></tr>
 <tr class="separator:aedeea87f75b83bff437e933663093fed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:a696fbf933cb5f7decfe2b224dac620a8"><td class="memItemLeft" align="right" valign="top">constexpr static <a class="el" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classryujin_1_1basic__string.html#a696fbf933cb5f7decfe2b224dac620a8">npos</a> = (~(<a class="el" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a>)0)</td></tr>
+<tr class="separator:a696fbf933cb5f7decfe2b224dac620a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="ac0e7c12db8fb8fa9749debde3b9d8ebd"></a>
@@ -1042,6 +1050,69 @@ template&lt;typename Type , typename Allocator &gt; </div>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac40a0883ff6f685dab60bf64784f7b07"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac40a0883ff6f685dab60bf64784f7b07">&#9670;&nbsp;</a></span>substr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Type , typename Allocator &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classryujin_1_1basic__string.html">basic_string</a>&lt; Type, Allocator &gt; <a class="el" href="classryujin_1_1basic__string.html">ryujin::basic_string</a>&lt; Type, Allocator &gt;::substr </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a>&#160;</td>
+          <td class="paramname"><em>pos</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a>&#160;</td>
+          <td class="paramname"><em>len</em> = <code><a class="el" href="classryujin_1_1basic__string.html#a696fbf933cb5f7decfe2b224dac620a8">npos</a></code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a696fbf933cb5f7decfe2b224dac620a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a696fbf933cb5f7decfe2b224dac620a8">&#9670;&nbsp;</a></span>npos</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Type , typename Allocator  = allocator&lt;Type&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr static <a class="el" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a> <a class="el" href="classryujin_1_1basic__string.html">ryujin::basic_string</a>&lt; Type, Allocator &gt;::npos = (~(<a class="el" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a>)0)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
