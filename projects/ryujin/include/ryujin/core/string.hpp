@@ -6,12 +6,13 @@
 #include "as.hpp"
 #include "primitives.hpp"
 #include "utility.hpp"
+#include "smart_pointers.hpp"
 
 #include <cassert>
 #include <memory>
 
 /// TODO: Capacity opt
-/// TODO: start_with, ends_with, rfirst_index_of, rlast_index_of, replace, reserve, contains, find, rfind, split
+/// TODO: start_with, ends_with, rfirst_index_of, rlast_index_of, replace, reserve, rfind, split
 
 namespace ryujin
 {
@@ -80,7 +81,10 @@ namespace ryujin
 		constexpr sz first_index_of(Type token) const noexcept;
 		constexpr sz last_index_of(Type token) const noexcept;
 
-		constexpr sz find(const Type* str) const noexcept;
+		constexpr sz find(const basic_string& str, sz pos = 0) const noexcept;
+		constexpr sz find(const Type* str, sz pos = 0) const noexcept;
+		constexpr sz find(const Type* str, sz pos, sz n) const noexcept;
+		constexpr sz find(Type c, sz pos = 0) noexcept;
 
 		constexpr bool contains(const Type token) const noexcept;
 		constexpr bool contains(const Type* str) const noexcept;
@@ -98,7 +102,7 @@ namespace ryujin
 	};
 
 	template<typename Type>
-	inline constexpr static sz strlen(const Type* data) noexcept
+	inline constexpr sz strlen(const Type* data) noexcept
 	{
 		sz i = 0;
 		while (data[i] != 0) ++i;
@@ -106,7 +110,7 @@ namespace ryujin
 	}
 
 	template<typename Type>
-	inline constexpr static i32 strcmp(const Type* lhs, const Type* rhs) noexcept
+	inline constexpr i32 strcmp(const Type* lhs, const Type* rhs) noexcept
 	{
 		if (lhs == rhs)
 		{
@@ -140,11 +144,8 @@ namespace ryujin
 	}
 
 	template<typename Type>
-	inline constexpr static const Type* strstr(const Type* lhs, const Type* rhs) noexcept
+	inline constexpr const Type* strstr(const Type* lhs, sz lhsSize, const Type* rhs, sz rhsSize) noexcept
 	{
-		sz lhsSize = lhs != nullptr ? strlen(lhs) : 0;
-		sz rhsSize = rhs != nullptr ? strlen(rhs) : 0;
-
 		// RHS is empty or null
 		if (rhsSize == 0 || *rhs == as<Type>(0))
 		{
@@ -158,8 +159,8 @@ namespace ryujin
 		}
 
 		// next stores the index of the next best partial match
-		sz* next = new sz[rhsSize + 1];
-		memset(next, 0, (rhsSize + 1) * sizeof(sz));
+		auto next = ryujin::make_unique<sz[]>(rhsSize + 1);
+		memset(next.get(), 0, (rhsSize + 1) * sizeof(sz));
 
 		for (sz i = 1; i < rhsSize; i++)
 		{
@@ -182,7 +183,6 @@ namespace ryujin
 			{
 				if (++j == rhsSize)
 				{
-					delete[] next;
 					return (lhs + i - j + 1);
 				}
 			}
@@ -193,8 +193,16 @@ namespace ryujin
 			}
 		}
 
-		delete[] next;
 		return nullptr;
+	}
+
+	template<typename Type>
+	inline constexpr const Type* strstr(const Type* lhs, const Type* rhs) noexcept
+	{
+		sz lhsSize = lhs != nullptr ? ryujin::strlen(lhs) : 0;
+		sz rhsSize = rhs != nullptr ? ryujin::strlen(rhs) : 0;
+
+		return ryujin::strstr(lhs, lhsSize, rhs, rhsSize);
 	}
 
 	template<typename Type, typename Allocator>
@@ -643,9 +651,61 @@ namespace ryujin
 	}
 
 	template<typename Type, typename Allocator>
-	inline constexpr sz basic_string<Type, Allocator>::find(const Type* str) const noexcept
+	inline constexpr sz basic_string<Type, Allocator>::find(const basic_string& str, sz pos) const noexcept
 	{
-		const Type* subresult = ryujin::strstr(_data, str);
+		return find(str.c_str(), pos);
+	}
+
+	template<typename Type, typename Allocator>
+	inline constexpr sz basic_string<Type, Allocator>::find(const Type* str, sz pos) const noexcept
+	{
+		if (pos >= _size)
+		{
+			return npos;
+		}
+
+		const Type* subresult = ryujin::strstr(_data + pos, str);
+		if (subresult != nullptr)
+		{
+			return (_size - strlen(subresult));
+		}
+		else
+		{
+			return npos;
+		}
+	}
+
+	template<typename Type, typename Allocator>
+	inline constexpr sz basic_string<Type, Allocator>::find(const Type* str, sz pos, sz n) const noexcept
+	{
+		if (pos >= _size)
+		{
+			return npos;
+		}
+
+		const Type* subresult = ryujin::strstr(_data + pos, _size, str, n);
+		if (subresult != nullptr)
+		{
+			return (_size - strlen(subresult));
+		}
+		else
+		{
+			return npos;
+		}
+	}
+
+	template<typename Type, typename Allocator>
+	inline constexpr sz basic_string<Type, Allocator>::find(Type c, sz pos) noexcept
+	{
+		if (pos >= _size)
+		{
+			return npos;
+		}
+
+		Type* str = _alloc.allocate(2);
+		memset(as<void*>(str), c, sizeof(Type));
+		str[1] = as<Type>(0);
+		const Type* subresult = ryujin::strstr(_data + pos, str);
 		if (subresult != nullptr)
 		{
 			return (_size - strlen(subresult));
