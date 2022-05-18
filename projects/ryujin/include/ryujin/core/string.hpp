@@ -10,9 +10,7 @@
 #include <memory>
 
 /// TODO: Capacity opt
-/// TODO: substr
 /// TODO: start_with, ends_with, first_index_of, last_index_of, rfirst_index_of, rlast_index_of, replace, reserve, contains, find, rfind, split
-/// TODO: hash
 
 namespace ryujin
 {
@@ -68,6 +66,10 @@ namespace ryujin
 
 		constexpr sz length() const noexcept;
 		constexpr bool empty() const noexcept;
+
+		constexpr static sz npos = (~(sz)0);
+
+		constexpr basic_string substr(sz pos = 0, sz len = npos);
 
 	private:
 		Type* _data = nullptr;
@@ -515,6 +517,23 @@ namespace ryujin
 	inline constexpr bool basic_string<Type, Allocator>::empty() const noexcept
 	{
 		return _data == _empty;
+	}
+
+	template<typename Type, typename Allocator>
+	inline constexpr basic_string<Type, Allocator> basic_string<Type, Allocator>::substr(sz pos, sz len)
+	{
+		if (len == npos)
+		{
+			len = _size - pos + 1;
+		}
+
+		Type* buffer = new Type[len];
+		memcpy(buffer, _data + pos, len);
+		basic_string str(buffer);
+
+		delete[] buffer;
+
+		return str;
 	}
 
 	template<typename Type, typename Allocator>

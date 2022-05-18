@@ -37,3 +37,14 @@ TEST(String, EqualsComparison)
 
 	ASSERT_FALSE(a == "test2");
 }
+
+TEST(String, substr)
+{
+	string a("Hello World");
+
+	string hello = a.substr(0, 5);
+	string world = a.substr(6);
+
+	ASSERT_TRUE(hello == "Hello");
+	ASSERT_TRUE(world == "World");
+}
