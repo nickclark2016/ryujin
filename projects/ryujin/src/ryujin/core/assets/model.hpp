@@ -2,6 +2,7 @@
 #define asset_model_hpp__
 
 #include <ryujin/core/assets.hpp>
+#include <ryujin/core/string.hpp>
 
 namespace ryujin
 {
@@ -10,7 +11,7 @@ namespace ryujin
 
 namespace ryujin::assets
 {
-    vector<unique_ptr<model_asset>> load_model(const std::string& path, const std::string& ext, asset_manager* manager);
+    vector<unique_ptr<model_asset>> load_model(const string& path, const string& ext, asset_manager* manager);
 }
 
 #endif // asset_model_hpp__

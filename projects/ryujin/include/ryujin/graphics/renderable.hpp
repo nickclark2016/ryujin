@@ -147,17 +147,17 @@ namespace ryujin
         };
 
         explicit renderable_manager(render_manager* manager, registry* reg);
-        slot_map_key load_texture(const std::string& name, const texture_asset& asset);
-        slot_map_key load_texture(const std::string& name, const image img, const image_view view);
-        optional<texture> try_fetch_texture(const std::string& name);
+        slot_map_key load_texture(const string& name, const texture_asset& asset);
+        slot_map_key load_texture(const string& name, const image img, const image_view view);
+        optional<texture> try_fetch_texture(const string& name);
         optional<texture> try_fetch_texture(const slot_map_key& key);
         void unload_texture(const slot_map_key& key);
 
         entity_handle<registry::entity_type> load_to_entities(const asset_manager& mgr, const model_asset& asset);
 
-        slot_map_key load_material(const std::string& name, const material_asset& asset);
+        slot_map_key load_material(const string& name, const material_asset& asset);
 
-        slot_map_key load_mesh(const std::string& name, const mesh& m);
+        slot_map_key load_mesh(const string& name, const mesh& m);
         void build_meshes();
 
         instance_write_info write_instances(buffer& buf, const sz offset);
@@ -193,7 +193,7 @@ namespace ryujin
         registry* _registry;
         render_manager* _manager;
 
-        std::unordered_map<std::string, slot_map_key> _textureNameLut;
+        unordered_map<string, slot_map_key> _textureNameLut;
         slot_map<texture> _textures;
 
         struct mesh_group
@@ -218,10 +218,10 @@ namespace ryujin
         mesh_group _activeMeshGroup;
 
         slot_map<renderable_mesh> _meshes;
-        std::unordered_map<std::string, slot_map_key> _meshesLut;
+        unordered_map<string, slot_map_key> _meshesLut;
 
         slot_map<material> _materials;
-        std::unordered_map<std::string, slot_map_key> _materialsLut;
+        unordered_map<string, slot_map_key> _materialsLut;
 
         image_sampler _defaultSampler = {};
 

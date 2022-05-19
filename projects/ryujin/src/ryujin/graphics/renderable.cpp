@@ -76,7 +76,7 @@ namespace ryujin
         reg->events().subscribe(cameraDestroyedCallback);
     }
 
-    slot_map_key renderable_manager::load_texture(const std::string& name, const texture_asset& asset)
+    slot_map_key renderable_manager::load_texture(const string& name, const texture_asset& asset)
     {
         auto width = asset.width();
         auto height = asset.height();
@@ -324,7 +324,7 @@ namespace ryujin
         return key;
     }
 
-    slot_map_key renderable_manager::load_texture(const std::string& name, const image img, const image_view view)
+    slot_map_key renderable_manager::load_texture(const string& name, const image img, const image_view view)
     {
         const texture tex = {
             .img = img,
@@ -336,7 +336,7 @@ namespace ryujin
         return key;
     }
 
-    optional<texture> renderable_manager::try_fetch_texture(const std::string& name)
+    optional<texture> renderable_manager::try_fetch_texture(const string& name)
     {
         auto it = _textureNameLut.find(name);
         if (it != _textureNameLut.end())
@@ -390,7 +390,7 @@ namespace ryujin
         // TODO: Coalesce to a single entity if we only have a single mesh?
         for (const auto meshGroup = mgr.get_mesh_group(meshGroupKey); auto mesh : meshGroup->meshes)
         {
-            auto meshName = fmt::v8::format("{}_{}", asset.name(), mesh.name);
+            string meshName = fmt::v8::format("{}_{}", asset.name().c_str(), mesh.name.c_str()).c_str();
             auto meshKeyIt = _meshesLut.find(meshName);
             auto meshKey = meshKeyIt == _meshesLut.end() ? invalid_slot_map_key : meshKeyIt->second;
 
@@ -406,7 +406,7 @@ namespace ryujin
             auto scale = baseTransform.scale;
 
             auto& material = *mesh.material;
-            auto materialName = fmt::v8::format("{}_{}", asset.name(), material.name);
+            string materialName = fmt::v8::format("{}_{}", asset.name().c_str(), material.name.c_str()).c_str();
             auto materialKeyIt = _materialsLut.find(materialName);
             auto materialKey = materialKeyIt == _materialsLut.end() ? invalid_slot_map_key : materialKeyIt->second;
             
@@ -453,7 +453,7 @@ namespace ryujin
         return baseEntity;
     }
 
-    slot_map_key renderable_manager::load_material(const std::string& name, const material_asset& asset)
+    slot_map_key renderable_manager::load_material(const string& name, const material_asset& asset)
     {
         const auto base = asset.baseColorTexture;
         const auto normal = asset.normalTexture;
@@ -461,11 +461,11 @@ namespace ryujin
         const auto emissive = asset.emissiveTexture;
         const auto occlusion = asset.occlusionTexture;
 
-        const auto baseTex = base ? load_texture(fmt::v8::format("{}_{}", name, "base"), *base) : decltype(_textures)::invalid;
-        const auto normalTex = normal ? load_texture(fmt::v8::format("{}_{}", name, "normal"), *normal) : decltype(_textures)::invalid;
-        const auto metalRoughTex = metalRough ? load_texture(fmt::v8::format("{}_{}", name, "metalRough"), *metalRough) : decltype(_textures)::invalid;
-        const auto emissiveTex = emissive ? load_texture(fmt::v8::format("{}_{}", name, "emissive"), *emissive) : decltype(_textures)::invalid;
-        const auto occlusionTex = occlusion ? load_texture(fmt::v8::format("{}_{}", name, "occlusion"), *occlusion) : decltype(_textures)::invalid;
+        const auto baseTex = base ? load_texture(fmt::v8::format("{}_{}", name.c_str(), "base").c_str(), *base) : decltype(_textures)::invalid;
+        const auto normalTex = normal ? load_texture(fmt::v8::format("{}_{}", name.c_str(), "normal").c_str(), *normal) : decltype(_textures)::invalid;
+        const auto metalRoughTex = metalRough ? load_texture(fmt::v8::format("{}_{}", name.c_str(), "metalRough").c_str(), *metalRough) : decltype(_textures)::invalid;
+        const auto emissiveTex = emissive ? load_texture(fmt::v8::format("{}_{}", name.c_str(), "emissive").c_str(), *emissive) : decltype(_textures)::invalid;
+        const auto occlusionTex = occlusion ? load_texture(fmt::v8::format("{}_{}", name.c_str(), "occlusion").c_str(), *occlusion) : decltype(_textures)::invalid;
 
         const material mat = {
             .albedo = baseTex,
@@ -478,7 +478,7 @@ namespace ryujin
         return _materials.insert(mat);
     }
 
-    slot_map_key renderable_manager::load_mesh(const std::string& name, const mesh& m)
+    slot_map_key renderable_manager::load_mesh(const string& name, const mesh& m)
     {
         renderable_mesh mesh
         {

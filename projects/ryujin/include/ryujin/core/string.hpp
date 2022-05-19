@@ -28,7 +28,7 @@ namespace ryujin
 		constexpr ~basic_string();
 		explicit constexpr basic_string(sz size) noexcept;
 
-		explicit constexpr basic_string(const basic_string& s) noexcept;
+		constexpr basic_string(const basic_string& s) noexcept;
 		constexpr basic_string(basic_string&& s) noexcept;
 
 		constexpr basic_string(const Type* data) noexcept;

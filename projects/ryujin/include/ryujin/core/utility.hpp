@@ -5,6 +5,10 @@
 #include "primitives.hpp"
 #include "type_traits.hpp"
 
+#if !defined(USE_CUSTOM_MEM_FNS)
+#include <cstring>
+#endif
+
 namespace ryujin
 {
     /// \defgroup reference_wrapper Reference Wrapper
@@ -846,8 +850,13 @@ namespace ryujin
     template <typename ... Ts>
     using index_sequence_for = make_index_sequence<sizeof...(Ts)>;
 
-    inline constexpr void* memcpy(void* dst, const void* src, sz len)
+    inline void* memcpy(void* dst, const void* src, sz len)
     {
+#if defined(__GNUC__)
+        return __builtin_memcpy(dst, src, len);
+#elif !defined(USE_CUSTOM_MEM_FNS)
+        return std::memcpy(dst, src, len);
+#else
         char* d = as<char*>(dst);
         const char* s = as<const char*>(src);
         while (len--)
@@ -855,16 +864,23 @@ namespace ryujin
             *d++ = *s++;
         }
         return dst;
+#endif
     }
 
-    inline constexpr void* memset(void* dst, int val, sz len)
+    inline void* memset(void* dst, int val, sz len)
     {
+#if defined(__GNUC__)
+        return __builtin_memset(dst, val, len);
+#elif !defined(USE_CUSTOM_MEM_FNS)
+        return std::memset(dst, val, len);
+#else
         char* d = as<char*>(dst);
         while (len--)
         {
             *d++ = val;
         }
         return dst;
+#endif
     }
 }
 

@@ -110,7 +110,7 @@ namespace ryujin::assets
                 auto metalRoughTexture = load_material_texture(parent, gltfModel, metalRoughInfo, manager);
             
                 material_asset mat = {
-                    .name = gltfMaterial.name,
+                    .name = gltfMaterial.name.c_str(),
                     .baseColorTexture = baseColorTexture,
                     .normalTexture = normalMapTexture,
                     .occlusionTexture = occlusionTexture,
@@ -132,7 +132,7 @@ namespace ryujin::assets
                 for (const auto& prim : gltfMesh.primitives)
                 {
                     mesh m;
-                    m.name = fmt::v8::format("{}_{}", gltfMesh.name, primitiveCount++);
+                    m.name = fmt::v8::format("{}_{}", gltfMesh.name, primitiveCount++).c_str();
 
                     // populate mesh vertices
                     const auto drawMode = prim.mode;
@@ -147,13 +147,13 @@ namespace ryujin::assets
                     if (drawMode != TINYGLTF_MODE_TRIANGLES)
                     {
                         // TODO: support other draw modes
-                        spdlog::error("Unsupported draw mode {} for mesh {} in file {}.", drawMode, m.name, path);
+                        spdlog::error("Unsupported draw mode {} for mesh {} in file {}.", drawMode, m.name.c_str(), path);
                         return {};
                     }
 
                     if (indicesAccessorIndex < 0)
                     {
-                        spdlog::error("Mesh {} in file {} does not have indices.", m.name, path);
+                        spdlog::error("Mesh {} in file {} does not have indices.", m.name.c_str(), path);
                         return {};
                     }
                     else
@@ -201,7 +201,7 @@ namespace ryujin::assets
 
                     if (positionsAccessorIterator == endAccessorIterator)
                     {
-                        spdlog::error("Mesh {} in file {} does not have positions.", m.name, path);
+                        spdlog::error("Mesh {} in file {} does not have positions.", m.name.c_str(), path);
                         return {};
                     }
                     else
@@ -371,7 +371,7 @@ namespace ryujin::assets
         }
     }
 
-    vector<unique_ptr<model_asset>> load_model(const std::string& path, const std::string& ext, asset_manager* manager)
+    vector<unique_ptr<model_asset>> load_model(const string& path, const string& ext, asset_manager* manager)
     {
         vector<unique_ptr<model_asset>> models;
         
@@ -384,14 +384,14 @@ namespace ryujin::assets
             Model gltfModel;
 
             std::string err, warn;
-            const bool ret = ext == GLB_EXT ? gltfLoader.LoadBinaryFromFile(&gltfModel, &err, &warn, path) : gltfLoader.LoadASCIIFromFile(&gltfModel, &err, &warn, path);
+            const bool ret = ext == GLB_EXT ? gltfLoader.LoadBinaryFromFile(&gltfModel, &err, &warn, path.c_str()) : gltfLoader.LoadASCIIFromFile(&gltfModel, &err, &warn, path.c_str());
             if (!ret)
             {
-                spdlog::error("Failed to load GLTF model {}: {}", path, err);
+                spdlog::error("Failed to load GLTF model {}: {}", path.c_str(), err);
                 return {};
             }
 
-            vector<mesh_group> meshes = gltf::load_meshes(gltfModel, path, manager);
+            vector<mesh_group> meshes = gltf::load_meshes(gltfModel, path.c_str(), manager);
             vector<slot_map_key> meshKeys;
             meshKeys.reserve(meshes.size());
 
@@ -406,7 +406,7 @@ namespace ryujin::assets
             {
                 const auto meshIndex = node.mesh;
                 
-                const std::string name = node.name;
+                const string name = node.name.c_str();
                 const slot_map_key meshKey = meshIndex < 0 ? slot_map<mesh_group>::invalid : meshKeys[meshIndex];
 
                 vec3 translate = node.translation.empty() ? vec3(0.0f) : (as<float>(node.translation[0]), as<float>(node.translation[1]), as<float>(node.translation[2]));
@@ -430,7 +430,7 @@ namespace ryujin::assets
                     const auto result = ryujin::decompose(transform, translate, rotate, scale);
                     if (!result)
                     {
-                        spdlog::warn("Failed to decompose transformation of model {} in file {}", name, path);
+                        spdlog::warn("Failed to decompose transformation of model {} in file {}", name.c_str(), path.c_str());
                     }
                 }
 

@@ -13,14 +13,14 @@ namespace ryujin::assets
 {
     static constexpr auto HDR_IMAGE_EXT = ".hdr";
 
-    texture_asset* load_image(const std::string& path, const std::string& ext)
+    texture_asset* load_image(const string& path, const string& ext)
     {
         const char* cpath = path.c_str();
         int x, y, channels;
         const auto infoResult = stbi_info(cpath, &x, &y, &channels);
         if (infoResult == 0)
         {
-            spdlog::error("Failed to load image {} - {}", path, stbi_failure_reason());
+            spdlog::error("Failed to load image {} - {}", path.c_str(), stbi_failure_reason());
             return nullptr;
         }
 
