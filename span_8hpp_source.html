@@ -123,7 +123,7 @@ $(function() {
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    </div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
 <div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="classryujin_1_1span.html#ab0d14427dc8d39182bd15c05c4ea8d88">   54</a></span>&#160;    <span class="keyword">inline</span> constexpr <a class="code" href="classryujin_1_1span.html#ab0d14427dc8d39182bd15c05c4ea8d88">span&lt;T&gt;::span</a>()</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        : <a class="code" href="classryujin_1_1span.html">span</a>&lt;T&gt;((T*)nullptr, <a class="code" href="namespaceryujin.html#a9f43ac824335837f8cfe2f9424325a39">as</a>&lt;<a class="code" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a>&gt;(0))</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        : <a class="code" href="classryujin_1_1span.html">span</a>&lt;T&gt;((T*)nullptr, <a class="code" href="namespaceryujin.html#a9317f2d0c454947efd9c4efc4d568784">as</a>&lt;<a class="code" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a>&gt;(0))</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    {</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    }</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
@@ -143,7 +143,7 @@ $(function() {
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
 <div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="classryujin_1_1span.html#a29730c15e93bd308de25f73d16aab694">   74</a></span>&#160;    <span class="keyword">inline</span> constexpr <a class="code" href="namespaceryujin.html#a1491c41448a40c8289edc8862b65d65c">span&lt;T&gt;::span</a>(<span class="keyword">const</span> T&amp; value)</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        : _ptr(&amp;value), _length(<a class="code" href="namespaceryujin.html#a9f43ac824335837f8cfe2f9424325a39">as</a>&lt;<a class="code" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a>&gt;(1))</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        : _ptr(&amp;value), _length(<a class="code" href="namespaceryujin.html#a9317f2d0c454947efd9c4efc4d568784">as</a>&lt;<a class="code" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a>&gt;(1))</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    {</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    }</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
@@ -224,8 +224,8 @@ $(function() {
 <div class="ttc" id="anamespaceryujin_html_ae2f589c1df41aae8be4986a91baa9ef7"><div class="ttname"><a href="namespaceryujin.html#ae2f589c1df41aae8be4986a91baa9ef7">ryujin::end</a></div><div class="ttdeci">constexpr auto end(C &amp;c) -&gt; decltype(c.end())</div><div class="ttdef"><b>Definition:</b> iterator.hpp:33</div></div>
 <div class="ttc" id="anamespaceryujin_html"><div class="ttname"><a href="namespaceryujin.html">ryujin</a></div><div class="ttdef"><b>Definition:</b> algorithm.hpp:7</div></div>
 <div class="ttc" id="anamespaceryujin_html_a3230f2023555adb9ad578d3b489f2b64"><div class="ttname"><a href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">ryujin::sz</a></div><div class="ttdeci">decltype(sizeof(void *)) sz</div><div class="ttdef"><b>Definition:</b> primitives.hpp:16</div></div>
-<div class="ttc" id="anamespaceryujin_html_a9f43ac824335837f8cfe2f9424325a39"><div class="ttname"><a href="namespaceryujin.html#a9f43ac824335837f8cfe2f9424325a39">ryujin::as</a></div><div class="ttdeci">constexpr T as(U value)</div><div class="ttdoc">Utility method for casting a value from one type to another.</div><div class="ttdef"><b>Definition:</b> as.hpp:14</div></div>
 <div class="ttc" id="aclassryujin_1_1span_html_a195b9bb973c8dff843ae6cf6ae7c9a74"><div class="ttname"><a href="classryujin_1_1span.html#a195b9bb973c8dff843ae6cf6ae7c9a74">ryujin::span::length</a></div><div class="ttdeci">constexpr sz length() const noexcept</div><div class="ttdef"><b>Definition:</b> span.hpp:122</div></div>
+<div class="ttc" id="anamespaceryujin_html_a9317f2d0c454947efd9c4efc4d568784"><div class="ttname"><a href="namespaceryujin.html#a9317f2d0c454947efd9c4efc4d568784">ryujin::as</a></div><div class="ttdeci">constexpr RYUJIN_API T as(U value)</div><div class="ttdoc">Utility method for casting a value from one type to another.</div><div class="ttdef"><b>Definition:</b> as.hpp:16</div></div>
 <div class="ttc" id="aoptional_8hpp_html"><div class="ttname"><a href="optional_8hpp.html">optional.hpp</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

@@ -72,19 +72,23 @@ $(function() {
 <a href="as_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef as_hpp__</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define as_hpp__</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceryujin.html">ryujin</a></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;{</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> U&gt;</div>
-<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="namespaceryujin.html#a9f43ac824335837f8cfe2f9424325a39">   14</a></span>&#160;    constexpr T <a class="code" href="namespaceryujin.html#a9f43ac824335837f8cfe2f9424325a39">as</a>(U value)</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    {</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(value);</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    }</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;}</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#endif // as_hpp__</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="export_8hpp.html">export.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceryujin.html">ryujin</a></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;{</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> U&gt;</div>
+<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="namespaceryujin.html#a9317f2d0c454947efd9c4efc4d568784">   16</a></span>&#160;    <a class="code" href="export_8hpp.html#a490bbffc5b83af6f250c2944162b7ec6">RYUJIN_API</a> <span class="keyword">inline</span> constexpr T <a class="code" href="namespaceryujin.html#a9317f2d0c454947efd9c4efc4d568784">as</a>(U value)</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    {</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(value);</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    }</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;}</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#endif // as_hpp__</span></div>
 </div><!-- fragment --></div><!-- contents -->
+<div class="ttc" id="aexport_8hpp_html"><div class="ttname"><a href="export_8hpp.html">export.hpp</a></div></div>
 <div class="ttc" id="anamespaceryujin_html"><div class="ttname"><a href="namespaceryujin.html">ryujin</a></div><div class="ttdef"><b>Definition:</b> algorithm.hpp:7</div></div>
-<div class="ttc" id="anamespaceryujin_html_a9f43ac824335837f8cfe2f9424325a39"><div class="ttname"><a href="namespaceryujin.html#a9f43ac824335837f8cfe2f9424325a39">ryujin::as</a></div><div class="ttdeci">constexpr T as(U value)</div><div class="ttdoc">Utility method for casting a value from one type to another.</div><div class="ttdef"><b>Definition:</b> as.hpp:14</div></div>
+<div class="ttc" id="aexport_8hpp_html_a490bbffc5b83af6f250c2944162b7ec6"><div class="ttname"><a href="export_8hpp.html#a490bbffc5b83af6f250c2944162b7ec6">RYUJIN_API</a></div><div class="ttdeci">#define RYUJIN_API</div><div class="ttdef"><b>Definition:</b> export.hpp:26</div></div>
+<div class="ttc" id="anamespaceryujin_html_a9317f2d0c454947efd9c4efc4d568784"><div class="ttname"><a href="namespaceryujin.html#a9317f2d0c454947efd9c4efc4d568784">ryujin::as</a></div><div class="ttdeci">constexpr RYUJIN_API T as(U value)</div><div class="ttdoc">Utility method for casting a value from one type to another.</div><div class="ttdef"><b>Definition:</b> as.hpp:16</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

@@ -97,7 +97,7 @@ $(function() {
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        constexpr <a class="code" href="classryujin_1_1basic__string.html#aa4bfd48f722d356427e16440aede80ff">~basic_string</a>();</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keyword">explicit</span> constexpr <a class="code" href="classryujin_1_1basic__string.html#a72023e34293c5fa3cd8601277997074d">basic_string</a>(<a class="code" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a> size) noexcept;</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keyword">explicit</span> constexpr <a class="code" href="classryujin_1_1basic__string.html#a72023e34293c5fa3cd8601277997074d">basic_string</a>(<span class="keyword">const</span> <a class="code" href="classryujin_1_1basic__string.html">basic_string</a>&amp; s) noexcept;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        constexpr <a class="code" href="classryujin_1_1basic__string.html#a72023e34293c5fa3cd8601277997074d">basic_string</a>(<span class="keyword">const</span> <a class="code" href="classryujin_1_1basic__string.html">basic_string</a>&amp; s) noexcept;</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        constexpr <a class="code" href="classryujin_1_1basic__string.html#a72023e34293c5fa3cd8601277997074d">basic_string</a>(<a class="code" href="classryujin_1_1basic__string.html">basic_string</a>&amp;&amp; s) noexcept;</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        constexpr <a class="code" href="classryujin_1_1basic__string.html#a72023e34293c5fa3cd8601277997074d">basic_string</a>(<span class="keyword">const</span> Type* data) noexcept;</div>
@@ -241,7 +241,7 @@ $(function() {
 <div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160; </div>
 <div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;        <span class="comment">// next stores the index of the next best partial match</span></div>
 <div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;        <span class="keyword">auto</span> next = ryujin::make_unique&lt;sz[]&gt;(rhsSize + 1);</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;        <a class="code" href="namespaceryujin.html#a008a36ce5ec63812b648e944002d3e57">ryujin::memset</a>(next.get(), 0, (rhsSize + 1) * <span class="keyword">sizeof</span>(<a class="code" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a>));</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;        <a class="code" href="namespaceryujin.html#ae707ad932fd0654641a9e2afdf447bfd">ryujin::memset</a>(next.get(), 0, (rhsSize + 1) * <span class="keyword">sizeof</span>(<a class="code" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a>));</div>
 <div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160; </div>
 <div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;        <span class="keywordflow">for</span> (<a class="code" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a> i = 1; i &lt; rhsSize; i++)</div>
 <div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;        {</div>
@@ -349,7 +349,7 @@ $(function() {
 <div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;        <span class="keywordflow">if</span> (_size != 0)</div>
 <div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;        {</div>
 <div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;            _data = _alloc.allocate(_size + 1);</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;            <a class="code" href="namespaceryujin.html#a7d232f02aac329596707ecbfbafe3e5b">ryujin::memcpy</a>(_data, data, _size);</div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;            <a class="code" href="namespaceryujin.html#acb0c37d6bba8d9e9f4459b320d20745a">ryujin::memcpy</a>(_data, data, _size);</div>
 <div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;            _data[_size] = as&lt;Type&gt;(0);</div>
 <div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;        }</div>
 <div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;        <span class="keywordflow">else</span></div>
@@ -366,7 +366,7 @@ $(function() {
 <div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;            _size = size;</div>
 <div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160; </div>
 <div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;            _data = _alloc.allocate(size + 1);</div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;            <a class="code" href="namespaceryujin.html#a7d232f02aac329596707ecbfbafe3e5b">ryujin::memcpy</a>(_data, data, size);</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;            <a class="code" href="namespaceryujin.html#acb0c37d6bba8d9e9f4459b320d20745a">ryujin::memcpy</a>(_data, data, size);</div>
 <div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;            _data[_size] = as&lt;Type&gt;(0);</div>
 <div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;        }</div>
 <div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;        <span class="keywordflow">else</span></div>
@@ -384,7 +384,7 @@ $(function() {
 <div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;            _size = N;</div>
 <div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160; </div>
 <div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;            _data = _alloc.allocate(_size + 1);</div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;            <a class="code" href="namespaceryujin.html#a7d232f02aac329596707ecbfbafe3e5b">ryujin::memcpy</a>(_data, data, _size);</div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;            <a class="code" href="namespaceryujin.html#acb0c37d6bba8d9e9f4459b320d20745a">ryujin::memcpy</a>(_data, data, _size);</div>
 <div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;            _data[_size] = as&lt;Type&gt;(0);</div>
 <div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;        }</div>
 <div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;        <span class="keywordflow">else</span></div>
@@ -435,7 +435,7 @@ $(function() {
 <div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;            _size = rhs._size;</div>
 <div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160; </div>
 <div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;            _data = _alloc.allocate(_size + 1);</div>
-<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;            <a class="code" href="namespaceryujin.html#a7d232f02aac329596707ecbfbafe3e5b">ryujin::memcpy</a>(_data, rhs._data, _size);</div>
+<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;            <a class="code" href="namespaceryujin.html#acb0c37d6bba8d9e9f4459b320d20745a">ryujin::memcpy</a>(_data, rhs._data, _size);</div>
 <div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;            _data[_size] = as&lt;Type&gt;(0);</div>
 <div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;        }</div>
 <div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;        <span class="keywordflow">else</span></div>
@@ -482,7 +482,7 @@ $(function() {
 <div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;        <span class="keywordflow">if</span> (_size != 0)</div>
 <div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;        {</div>
 <div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;            _data = _alloc.allocate(_size + 1);</div>
-<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;            <a class="code" href="namespaceryujin.html#a7d232f02aac329596707ecbfbafe3e5b">ryujin::memcpy</a>(_data, data, _size);</div>
+<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;            <a class="code" href="namespaceryujin.html#acb0c37d6bba8d9e9f4459b320d20745a">ryujin::memcpy</a>(_data, data, _size);</div>
 <div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;            _data[_size] = as&lt;Type&gt;(0);</div>
 <div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;        }</div>
 <div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;        <span class="keywordflow">else</span></div>
@@ -507,7 +507,7 @@ $(function() {
 <div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;        <span class="keywordflow">if</span> (_size != 0)</div>
 <div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;        {</div>
 <div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;            _data = _alloc.allocate(_size + 1);</div>
-<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;            <a class="code" href="namespaceryujin.html#a7d232f02aac329596707ecbfbafe3e5b">ryujin::memcpy</a>(_data, data, _size);</div>
+<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;            <a class="code" href="namespaceryujin.html#acb0c37d6bba8d9e9f4459b320d20745a">ryujin::memcpy</a>(_data, data, _size);</div>
 <div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;            _data[_size] = as&lt;Type&gt;(0);</div>
 <div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;        }</div>
 <div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;        <span class="keywordflow">else</span></div>
@@ -533,8 +533,8 @@ $(function() {
 <div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160; </div>
 <div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;        <span class="keyword">const</span> <a class="code" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a> newSize = _size + rhs._size;</div>
 <div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;        <span class="keyword">const</span> Type* <a class="code" href="structryujin_1_1buffer.html">buffer</a> = _alloc.allocate(newSize + 1);</div>
-<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;        <a class="code" href="namespaceryujin.html#a7d232f02aac329596707ecbfbafe3e5b">ryujin::memcpy</a>(<a class="code" href="structryujin_1_1buffer.html">buffer</a>, _data, _size);</div>
-<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;        <a class="code" href="namespaceryujin.html#a7d232f02aac329596707ecbfbafe3e5b">ryujin::memcpy</a>(<a class="code" href="structryujin_1_1buffer.html">buffer</a> + _size, rhs._data, rhs._size);</div>
+<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;        <a class="code" href="namespaceryujin.html#acb0c37d6bba8d9e9f4459b320d20745a">ryujin::memcpy</a>(<a class="code" href="structryujin_1_1buffer.html">buffer</a>, _data, _size);</div>
+<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;        <a class="code" href="namespaceryujin.html#acb0c37d6bba8d9e9f4459b320d20745a">ryujin::memcpy</a>(<a class="code" href="structryujin_1_1buffer.html">buffer</a> + _size, rhs._data, rhs._size);</div>
 <div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;        <a class="code" href="structryujin_1_1buffer.html">buffer</a>[newSize] = as&lt;Type&gt;(0);</div>
 <div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160; </div>
 <div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;        _alloc.deallocate(_data, _size + 1);</div>
@@ -561,8 +561,8 @@ $(function() {
 <div class="line"><a name="l00492"></a><span class="lineno">  492</span>&#160; </div>
 <div class="line"><a name="l00493"></a><span class="lineno">  493</span>&#160;        <span class="keyword">const</span> <a class="code" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a> newSize = _size + rhsSize;</div>
 <div class="line"><a name="l00494"></a><span class="lineno">  494</span>&#160;        <span class="keyword">const</span> Type* <a class="code" href="structryujin_1_1buffer.html">buffer</a> = _alloc.allocate(newSize + 1);</div>
-<div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160;        <a class="code" href="namespaceryujin.html#a7d232f02aac329596707ecbfbafe3e5b">ryujin::memcpy</a>(<a class="code" href="structryujin_1_1buffer.html">buffer</a>, _data, _size);</div>
-<div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160;        <a class="code" href="namespaceryujin.html#a7d232f02aac329596707ecbfbafe3e5b">ryujin::memcpy</a>(<a class="code" href="structryujin_1_1buffer.html">buffer</a> + _size, rhs, rhsSize);</div>
+<div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160;        <a class="code" href="namespaceryujin.html#acb0c37d6bba8d9e9f4459b320d20745a">ryujin::memcpy</a>(<a class="code" href="structryujin_1_1buffer.html">buffer</a>, _data, _size);</div>
+<div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160;        <a class="code" href="namespaceryujin.html#acb0c37d6bba8d9e9f4459b320d20745a">ryujin::memcpy</a>(<a class="code" href="structryujin_1_1buffer.html">buffer</a> + _size, rhs, rhsSize);</div>
 <div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160;        <a class="code" href="structryujin_1_1buffer.html">buffer</a>[newSize] = as&lt;Type&gt;(0);</div>
 <div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160; </div>
 <div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160;        _alloc.deallocate(_data, _size + 1);</div>
@@ -589,8 +589,8 @@ $(function() {
 <div class="line"><a name="l00520"></a><span class="lineno">  520</span>&#160; </div>
 <div class="line"><a name="l00521"></a><span class="lineno">  521</span>&#160;        <span class="keyword">const</span> <a class="code" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a> newSize = _size + N;</div>
 <div class="line"><a name="l00522"></a><span class="lineno">  522</span>&#160;        <span class="keyword">const</span> Type* <a class="code" href="structryujin_1_1buffer.html">buffer</a> = _alloc.allocate(newSize + 1);</div>
-<div class="line"><a name="l00523"></a><span class="lineno">  523</span>&#160;        <a class="code" href="namespaceryujin.html#a7d232f02aac329596707ecbfbafe3e5b">ryujin::memcpy</a>(<a class="code" href="structryujin_1_1buffer.html">buffer</a>, _data, _size);</div>
-<div class="line"><a name="l00524"></a><span class="lineno">  524</span>&#160;        <a class="code" href="namespaceryujin.html#a7d232f02aac329596707ecbfbafe3e5b">ryujin::memcpy</a>(<a class="code" href="structryujin_1_1buffer.html">buffer</a> + _size, data, N);</div>
+<div class="line"><a name="l00523"></a><span class="lineno">  523</span>&#160;        <a class="code" href="namespaceryujin.html#acb0c37d6bba8d9e9f4459b320d20745a">ryujin::memcpy</a>(<a class="code" href="structryujin_1_1buffer.html">buffer</a>, _data, _size);</div>
+<div class="line"><a name="l00524"></a><span class="lineno">  524</span>&#160;        <a class="code" href="namespaceryujin.html#acb0c37d6bba8d9e9f4459b320d20745a">ryujin::memcpy</a>(<a class="code" href="structryujin_1_1buffer.html">buffer</a> + _size, data, N);</div>
 <div class="line"><a name="l00525"></a><span class="lineno">  525</span>&#160;        <a class="code" href="structryujin_1_1buffer.html">buffer</a>[newSize] = as&lt;Type&gt;(0);</div>
 <div class="line"><a name="l00526"></a><span class="lineno">  526</span>&#160; </div>
 <div class="line"><a name="l00527"></a><span class="lineno">  527</span>&#160;        _alloc.deallocate(_data, _size + 1);</div>
@@ -669,8 +669,8 @@ $(function() {
 <div class="line"><a name="l00600"></a><span class="lineno">  600</span>&#160;            <a class="code" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a> size = _size - count;</div>
 <div class="line"><a name="l00601"></a><span class="lineno">  601</span>&#160;            </div>
 <div class="line"><a name="l00602"></a><span class="lineno">  602</span>&#160;            Type* <a class="code" href="structryujin_1_1buffer.html">buffer</a> = _alloc.allocate(size);</div>
-<div class="line"><a name="l00603"></a><span class="lineno">  603</span>&#160;            <a class="code" href="namespaceryujin.html#a7d232f02aac329596707ecbfbafe3e5b">ryujin::memcpy</a>(<a class="code" href="structryujin_1_1buffer.html">buffer</a>, _data, s);</div>
-<div class="line"><a name="l00604"></a><span class="lineno">  604</span>&#160;            <a class="code" href="namespaceryujin.html#a7d232f02aac329596707ecbfbafe3e5b">ryujin::memcpy</a>(<a class="code" href="structryujin_1_1buffer.html">buffer</a>, _data + e, <a class="code" href="classryujin_1_1basic__string.html#a91a7342ccd92c8a8484faf74d3daab79">end</a>() - stop);</div>
+<div class="line"><a name="l00603"></a><span class="lineno">  603</span>&#160;            <a class="code" href="namespaceryujin.html#acb0c37d6bba8d9e9f4459b320d20745a">ryujin::memcpy</a>(<a class="code" href="structryujin_1_1buffer.html">buffer</a>, _data, s);</div>
+<div class="line"><a name="l00604"></a><span class="lineno">  604</span>&#160;            <a class="code" href="namespaceryujin.html#acb0c37d6bba8d9e9f4459b320d20745a">ryujin::memcpy</a>(<a class="code" href="structryujin_1_1buffer.html">buffer</a>, _data + e, <a class="code" href="classryujin_1_1basic__string.html#a91a7342ccd92c8a8484faf74d3daab79">end</a>() - stop);</div>
 <div class="line"><a name="l00605"></a><span class="lineno">  605</span>&#160; </div>
 <div class="line"><a name="l00606"></a><span class="lineno">  606</span>&#160;            _alloc.deallocate(_data, _size + 1);</div>
 <div class="line"><a name="l00607"></a><span class="lineno">  607</span>&#160;            _data = <a class="code" href="structryujin_1_1buffer.html">buffer</a>;</div>
@@ -709,7 +709,7 @@ $(function() {
 <div class="line"><a name="l00640"></a><span class="lineno">  640</span>&#160; </div>
 <div class="line"><a name="l00641"></a><span class="lineno">  641</span>&#160;        <a class="code" href="classryujin_1_1basic__string.html">basic_string</a> str(len);</div>
 <div class="line"><a name="l00642"></a><span class="lineno">  642</span>&#160; </div>
-<div class="line"><a name="l00643"></a><span class="lineno">  643</span>&#160;        <a class="code" href="namespaceryujin.html#a7d232f02aac329596707ecbfbafe3e5b">ryujin::memcpy</a>(str._data, _data + pos, len * <span class="keyword">sizeof</span>(Type));</div>
+<div class="line"><a name="l00643"></a><span class="lineno">  643</span>&#160;        <a class="code" href="namespaceryujin.html#acb0c37d6bba8d9e9f4459b320d20745a">ryujin::memcpy</a>(str._data, _data + pos, len * <span class="keyword">sizeof</span>(Type));</div>
 <div class="line"><a name="l00644"></a><span class="lineno">  644</span>&#160;        str._data[len] = as&lt;Type&gt;(0);</div>
 <div class="line"><a name="l00645"></a><span class="lineno">  645</span>&#160; </div>
 <div class="line"><a name="l00646"></a><span class="lineno">  646</span>&#160;        <span class="keywordflow">return</span> str;</div>
@@ -931,7 +931,6 @@ $(function() {
 <div class="ttc" id="aclassryujin_1_1basic__string_html_ac4fb653edaeb665cd4195d3f7161d286"><div class="ttname"><a href="classryujin_1_1basic__string.html#ac4fb653edaeb665cd4195d3f7161d286">ryujin::basic_string::find</a></div><div class="ttdeci">constexpr sz find(const basic_string &amp;str, sz pos=0) const noexcept</div><div class="ttdef"><b>Definition:</b> string.hpp:724</div></div>
 <div class="ttc" id="aclassryujin_1_1basic__string_html_aa4bfd48f722d356427e16440aede80ff"><div class="ttname"><a href="classryujin_1_1basic__string.html#aa4bfd48f722d356427e16440aede80ff">ryujin::basic_string::~basic_string</a></div><div class="ttdeci">constexpr ~basic_string()</div><div class="ttdef"><b>Definition:</b> string.hpp:227</div></div>
 <div class="ttc" id="aclassryujin_1_1basic__string_html_ae1a50253927bd62b95883c02f11aff16"><div class="ttname"><a href="classryujin_1_1basic__string.html#ae1a50253927bd62b95883c02f11aff16">ryujin::basic_string::starts_with</a></div><div class="ttdeci">constexpr bool starts_with(const Type token) const noexcept</div><div class="ttdef"><b>Definition:</b> string.hpp:786</div></div>
-<div class="ttc" id="anamespaceryujin_html_a7d232f02aac329596707ecbfbafe3e5b"><div class="ttname"><a href="namespaceryujin.html#a7d232f02aac329596707ecbfbafe3e5b">ryujin::memcpy</a></div><div class="ttdeci">constexpr void * memcpy(void *dst, const void *src, sz len)</div><div class="ttdef"><b>Definition:</b> utility.hpp:849</div></div>
 <div class="ttc" id="agroup___algorithms_html_gadbaae5f7101d19b63f25d8b1ce4ec119"><div class="ttname"><a href="group___algorithms.html#gadbaae5f7101d19b63f25d8b1ce4ec119">ryujin::min</a></div><div class="ttdeci">constexpr const RYUJIN_API T &amp; min(const T &amp;lhs, const T &amp;rhs)</div><div class="ttdoc">Returns the minimum of two values. Evaluated as lhs &lt; rhs.</div><div class="ttdef"><b>Definition:</b> algorithm.hpp:74</div></div>
 <div class="ttc" id="agroup___algorithms_html_ga43e41b1d74b1dde2bb264ca3e4340c93"><div class="ttname"><a href="group___algorithms.html#ga43e41b1d74b1dde2bb264ca3e4340c93">ryujin::max</a></div><div class="ttdeci">constexpr const RYUJIN_API T &amp; max(const T &amp;lhs, const T &amp;rhs)</div><div class="ttdoc">Returns the maximum of two values. Evaluated as lhs &gt; rhs.</div><div class="ttdef"><b>Definition:</b> algorithm.hpp:106</div></div>
 <div class="ttc" id="aclassryujin_1_1basic__string_html_ac0e7c12db8fb8fa9749debde3b9d8ebd"><div class="ttname"><a href="classryujin_1_1basic__string.html#ac0e7c12db8fb8fa9749debde3b9d8ebd">ryujin::basic_string&lt; char &gt;::const_iterator</a></div><div class="ttdeci">const char * const_iterator</div><div class="ttdef"><b>Definition:</b> string.hpp:25</div></div>
@@ -943,6 +942,7 @@ $(function() {
 <div class="ttc" id="astructryujin_1_1hash_3_01basic__string_3_01_type_00_01_allocator_01_4_01_4_html_a86d14647591a163c487c522809c8d88a"><div class="ttname"><a href="structryujin_1_1hash_3_01basic__string_3_01_type_00_01_allocator_01_4_01_4.html#a86d14647591a163c487c522809c8d88a">ryujin::hash&lt; basic_string&lt; Type, Allocator &gt; &gt;::operator()</a></div><div class="ttdeci">constexpr sz operator()(const basic_string&lt; Type, Allocator &gt; &amp;v) const noexcept</div><div class="ttdef"><b>Definition:</b> string.hpp:832</div></div>
 <div class="ttc" id="aclassryujin_1_1basic__string_html_ad295a347d7ff16ef122226733ff966ee"><div class="ttname"><a href="classryujin_1_1basic__string.html#ad295a347d7ff16ef122226733ff966ee">ryujin::basic_string&lt; char &gt;::iterator</a></div><div class="ttdeci">char * iterator</div><div class="ttdef"><b>Definition:</b> string.hpp:24</div></div>
 <div class="ttc" id="aclassryujin_1_1basic__string_html_ac40a0883ff6f685dab60bf64784f7b07"><div class="ttname"><a href="classryujin_1_1basic__string.html#ac40a0883ff6f685dab60bf64784f7b07">ryujin::basic_string::substr</a></div><div class="ttdeci">constexpr basic_string substr(sz pos=0, sz len=npos)</div><div class="ttdef"><b>Definition:</b> string.hpp:634</div></div>
+<div class="ttc" id="anamespaceryujin_html_ae707ad932fd0654641a9e2afdf447bfd"><div class="ttname"><a href="namespaceryujin.html#ae707ad932fd0654641a9e2afdf447bfd">ryujin::memset</a></div><div class="ttdeci">void * memset(void *dst, int val, sz len)</div><div class="ttdef"><b>Definition:</b> utility.hpp:868</div></div>
 <div class="ttc" id="anamespaceryujin_html_a60225ae5da9d9abd1c182937585e3465"><div class="ttname"><a href="namespaceryujin.html#a60225ae5da9d9abd1c182937585e3465">ryujin::strlen</a></div><div class="ttdeci">constexpr sz strlen(const Type *data) noexcept</div><div class="ttdef"><b>Definition:</b> string.hpp:117</div></div>
 <div class="ttc" id="aclassryujin_1_1basic__string_html_a20e0e68d844d00061c129f3b37444a0a"><div class="ttname"><a href="classryujin_1_1basic__string.html#a20e0e68d844d00061c129f3b37444a0a">ryujin::basic_string::operator[]</a></div><div class="ttdeci">constexpr Type &amp; operator[](sz index) const noexcept</div><div class="ttdef"><b>Definition:</b> string.hpp:536</div></div>
 <div class="ttc" id="aclassryujin_1_1basic__string_html_a9eb455090c3707fcb8802c7f44d1e121"><div class="ttname"><a href="classryujin_1_1basic__string.html#a9eb455090c3707fcb8802c7f44d1e121">ryujin::basic_string::erase</a></div><div class="ttdeci">constexpr iterator erase(iterator it)</div><div class="ttdef"><b>Definition:</b> string.hpp:584</div></div>
@@ -961,7 +961,7 @@ $(function() {
 <div class="ttc" id="aclassryujin_1_1basic__string_html_acf5b6b26df5cd13c86cc0ba909a2c947"><div class="ttname"><a href="classryujin_1_1basic__string.html#acf5b6b26df5cd13c86cc0ba909a2c947">ryujin::basic_string::c_str</a></div><div class="ttdeci">constexpr const Type * c_str() const noexcept</div><div class="ttdef"><b>Definition:</b> string.hpp:628</div></div>
 <div class="ttc" id="aclassryujin_1_1basic__string_html_acdc1230e6ccaa5117100bec5a5d9c533"><div class="ttname"><a href="classryujin_1_1basic__string.html#acdc1230e6ccaa5117100bec5a5d9c533">ryujin::basic_string::contains</a></div><div class="ttdeci">constexpr bool contains(const Type token) const noexcept</div><div class="ttdef"><b>Definition:</b> string.hpp:768</div></div>
 <div class="ttc" id="aclassryujin_1_1basic__string_html_a91a7342ccd92c8a8484faf74d3daab79"><div class="ttname"><a href="classryujin_1_1basic__string.html#a91a7342ccd92c8a8484faf74d3daab79">ryujin::basic_string::end</a></div><div class="ttdeci">constexpr iterator end() noexcept</div><div class="ttdef"><b>Definition:</b> string.hpp:560</div></div>
-<div class="ttc" id="astructryujin_1_1hash_html"><div class="ttname"><a href="structryujin_1_1hash.html">ryujin::hash</a></div><div class="ttdoc">Functor type that hashes a value and returns the hash. Specializations should implement an overload o...</div><div class="ttdef"><b>Definition:</b> utility.hpp:261</div></div>
+<div class="ttc" id="astructryujin_1_1hash_html"><div class="ttname"><a href="structryujin_1_1hash.html">ryujin::hash</a></div><div class="ttdoc">Functor type that hashes a value and returns the hash. Specializations should implement an overload o...</div><div class="ttdef"><b>Definition:</b> utility.hpp:265</div></div>
 <div class="ttc" id="aclassryujin_1_1basic__string_html_a18c2ae949005e101178c58bb8c8fb5ef"><div class="ttname"><a href="classryujin_1_1basic__string.html#a18c2ae949005e101178c58bb8c8fb5ef">ryujin::basic_string::operator+=</a></div><div class="ttdeci">constexpr basic_string &amp; operator+=(const basic_string &amp;rhs) noexcept</div><div class="ttdef"><b>Definition:</b> string.hpp:453</div></div>
 <div class="ttc" id="aclassryujin_1_1basic__string_html_a5b9ecd99d193a397744de950d3df5639"><div class="ttname"><a href="classryujin_1_1basic__string.html#a5b9ecd99d193a397744de950d3df5639">ryujin::basic_string::operator==</a></div><div class="ttdeci">constexpr bool operator==(const basic_string &amp;rhs) const noexcept</div><div class="ttdef"><b>Definition:</b> string.hpp:328</div></div>
 <div class="ttc" id="agroup___algorithms_html_ga05550ae137b154dca913eea0f9aeb619"><div class="ttname"><a href="group___algorithms.html#ga05550ae137b154dca913eea0f9aeb619">ryujin::copy</a></div><div class="ttdeci">constexpr RYUJIN_API Output copy(Input first, Input last, Output out)</div><div class="ttdoc">Copies the values from one iterator to another.</div><div class="ttdef"><b>Definition:</b> algorithm.hpp:44</div></div>
@@ -970,9 +970,9 @@ $(function() {
 <div class="ttc" id="aclassryujin_1_1basic__string_html_a6f6a60939b8dcff4640fe0ac1a6921db"><div class="ttname"><a href="classryujin_1_1basic__string.html#a6f6a60939b8dcff4640fe0ac1a6921db">ryujin::basic_string::first_index_of_any</a></div><div class="ttdeci">constexpr sz first_index_of_any(vector&lt; Type &gt; tokens) const noexcept</div><div class="ttdef"><b>Definition:</b> string.hpp:658</div></div>
 <div class="ttc" id="autility_8hpp_html"><div class="ttname"><a href="utility_8hpp.html">utility.hpp</a></div></div>
 <div class="ttc" id="aclassryujin_1_1basic__string_html_a4d0765224add8746e31f00970e033d65"><div class="ttname"><a href="classryujin_1_1basic__string.html#a4d0765224add8746e31f00970e033d65">ryujin::basic_string::ends_with</a></div><div class="ttdeci">constexpr bool ends_with(const Type token) const noexcept</div><div class="ttdef"><b>Definition:</b> string.hpp:804</div></div>
+<div class="ttc" id="anamespaceryujin_html_acb0c37d6bba8d9e9f4459b320d20745a"><div class="ttname"><a href="namespaceryujin.html#acb0c37d6bba8d9e9f4459b320d20745a">ryujin::memcpy</a></div><div class="ttdeci">void * memcpy(void *dst, const void *src, sz len)</div><div class="ttdef"><b>Definition:</b> utility.hpp:853</div></div>
 <div class="ttc" id="aclassryujin_1_1basic__string_html_ac87a4e38b0d11d8f31554db7d9c223d7"><div class="ttname"><a href="classryujin_1_1basic__string.html#ac87a4e38b0d11d8f31554db7d9c223d7">ryujin::basic_string::last_index_of_any</a></div><div class="ttdeci">constexpr sz last_index_of_any(vector&lt; Type &gt; tokens) const noexcept</div><div class="ttdef"><b>Definition:</b> string.hpp:695</div></div>
 <div class="ttc" id="aclassryujin_1_1basic__string_html"><div class="ttname"><a href="classryujin_1_1basic__string.html">ryujin::basic_string</a></div><div class="ttdef"><b>Definition:</b> string.hpp:21</div></div>
-<div class="ttc" id="anamespaceryujin_html_a008a36ce5ec63812b648e944002d3e57"><div class="ttname"><a href="namespaceryujin.html#a008a36ce5ec63812b648e944002d3e57">ryujin::memset</a></div><div class="ttdeci">constexpr void * memset(void *dst, int val, sz len)</div><div class="ttdef"><b>Definition:</b> utility.hpp:860</div></div>
 <div class="ttc" id="aclassryujin_1_1basic__string_html_adbda593999501975e0232bf1152bbb79"><div class="ttname"><a href="classryujin_1_1basic__string.html#adbda593999501975e0232bf1152bbb79">ryujin::basic_string::last_index_of</a></div><div class="ttdeci">constexpr sz last_index_of(Type token) const noexcept</div><div class="ttdef"><b>Definition:</b> string.hpp:687</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
