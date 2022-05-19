@@ -12,5 +12,5 @@ var searchData=
   ['insert_5for_5freplace_2518',['insert_or_replace',['../classryujin_1_1sparse__map.html#a3b5fedc7ed0b9369921bd2410f942def',1,'ryujin::sparse_map']]],
   ['invalid_2519',['invalid',['../classryujin_1_1base__registry.html#ab27c6c7cb0cf2e06113da5abf7f40909',1,'ryujin::base_registry']]],
   ['inverse_5flerp_2520',['inverse_lerp',['../namespaceryujin.html#aeb6632cba304aa453985dbcd3dc9638d',1,'ryujin']]],
-  ['is_5fcursor_5fcaptured_2521',['is_cursor_captured',['../classryujin_1_1window.html#acf0a5afbf1411eccf6e8df94872c217b',1,'ryujin::window']]]
+  ['is_5fcursor_5fcaptured_2521',['is_cursor_captured',['../classryujin_1_1window.html#a5033d757edb5a4f277b7f342071c4858',1,'ryujin::window']]]
 ];

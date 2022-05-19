@@ -20,5 +20,5 @@ var searchData=
   ['_7eunique_5fptr_2732',['~unique_ptr',['../classryujin_1_1unique__ptr.html#a6b0d19e7118ff64721efa5babe229a13',1,'ryujin::unique_ptr::~unique_ptr()'],['../classryujin_1_1unique__ptr_3_01_t_0f_0e_00_01_deleter_01_4.html#a1130b11fa1154b037e2aa691f4845a67',1,'ryujin::unique_ptr&lt; T[], Deleter &gt;::~unique_ptr()']]],
   ['_7evariant_2733',['~variant',['../classryujin_1_1variant.html#a58ddd569330975f6eabfb5025670481f',1,'ryujin::variant']]],
   ['_7evector_2734',['~vector',['../classryujin_1_1vector.html#a02652fa9f19c6d82a52d2f23764c6521',1,'ryujin::vector']]],
-  ['_7ewindow_2735',['~window',['../classryujin_1_1window.html#ab10061e324708d6bf03ec95c59d63ba6',1,'ryujin::window']]]
+  ['_7ewindow_2735',['~window',['../classryujin_1_1window.html#a142a4b1fbdd82f0fb0ce6208999925d7',1,'ryujin::window']]]
 ];

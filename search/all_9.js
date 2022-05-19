@@ -106,7 +106,7 @@ var searchData=
   ['is_5fcopy_5fassignable_5fv_777',['is_copy_assignable_v',['../namespaceryujin.html#a4f0ae6a2c5e9a848484ab8a834dd9d8b',1,'ryujin']]],
   ['is_5fcopy_5fconstructible_778',['is_copy_constructible',['../structryujin_1_1is__copy__constructible.html',1,'ryujin']]],
   ['is_5fcopy_5fconstructible_5fv_779',['is_copy_constructible_v',['../namespaceryujin.html#a93334958c55b88a92854903e54f091ee',1,'ryujin']]],
-  ['is_5fcursor_5fcaptured_780',['is_cursor_captured',['../classryujin_1_1window.html#acf0a5afbf1411eccf6e8df94872c217b',1,'ryujin::window']]],
+  ['is_5fcursor_5fcaptured_780',['is_cursor_captured',['../classryujin_1_1window.html#a5033d757edb5a4f277b7f342071c4858',1,'ryujin::window']]],
   ['is_5fdefault_5fconstructible_781',['is_default_constructible',['../structryujin_1_1is__default__constructible.html',1,'ryujin']]],
   ['is_5fdefault_5fconstructible_5fv_782',['is_default_constructible_v',['../namespaceryujin.html#ae7fc6218a58211060475b79416dd2fcd',1,'ryujin']]],
   ['is_5fdestructible_783',['is_destructible',['../structryujin_1_1is__destructible.html',1,'ryujin']]],

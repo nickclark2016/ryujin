@@ -36,7 +36,7 @@ var searchData=
   ['add_5frvalue_5freference_5ft_42',['add_rvalue_reference_t',['../namespaceryujin.html#ad844386b39d7c763b2072ca9c0c5e200',1,'ryujin']]],
   ['add_5fwindow_43',['add_window',['../classryujin_1_1engine__context.html#a1885bb4fe6ff061103d7be60c4ba144a',1,'ryujin::engine_context']]],
   ['address_5fmode_44',['address_mode',['../namespaceryujin.html#a876bf1432134ccd1c0418353e3620ddc',1,'ryujin']]],
-  ['after_5fclose_45',['after_close',['../classryujin_1_1window.html#a9b59714083189dda5669a2c07df3aa8a',1,'ryujin::window']]],
+  ['after_5fclose_45',['after_close',['../classryujin_1_1window.html#a4deeae42e8f99445ce30f6da96e97d08',1,'ryujin::window']]],
   ['albedo_46',['albedo',['../structryujin_1_1material.html#aad7136d27e3dcedd52b8b1dc75335fc6',1,'ryujin::material::albedo()'],['../structryujin_1_1gpu__material__data.html#a9b00d485451876955975950843329147',1,'ryujin::gpu_material_data::albedo()']]],
   ['algorithm_2ehpp_47',['algorithm.hpp',['../algorithm_8hpp.html',1,'']]],
   ['algorithms_48',['Algorithms',['../group___algorithms.html',1,'']]],
