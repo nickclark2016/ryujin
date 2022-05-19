@@ -30,8 +30,6 @@ namespace ryujin
         return result;
     }
 
-    /// \defgroup Algorithms
-
     /// <summary>
     /// Copies the values from one iterator to another.
     /// </summary>
@@ -62,6 +60,70 @@ namespace ryujin
             }
             return out;
         }
+    }
+    
+    /// <summary>
+    /// Returns the minimum of two values.  Evaluated as lhs < rhs.
+    /// </summary>
+    /// <typeparam name="T">Type of values to get minimum of. Type must be comparable.</typeparam>
+    /// <param name="lhs">Left hand argument</param>
+    /// <param name="rhs">Right hand argument</param>
+    /// <returns>Minimum argument</returns>
+    /// \ingroup Algorithms
+    template <typename T>
+    inline constexpr const T& min(const T& lhs, const T& rhs)
+    {
+        return (lhs < rhs) ? lhs : rhs;
+    }
+
+    /// <summary>
+    /// Returns the minimum of two values.  Evaluated as lhs < rhs.
+    /// </summary>
+    /// <typeparam name="T">Type of values to get minimum of.</typeparam>
+    /// <typeparam name="Compare">Comparison functor type.  The signature of the comparator must be of form
+    /// bool cmp(const T& lhs, const T& rhs).  The function returns true if the left hand argument is less
+    /// than the right hand argument.</typeparam>
+    /// <param name="lhs">Left hand argument</param>
+    /// <param name="rhs">Right hand argument</param>
+    /// <param name="comp">Comparator</param>
+    /// <returns>Minimum argument</returns>
+    /// \ingroup Algorithms
+    template <typename T, typename Compare>
+    inline constexpr const T& min(const T& lhs, const T& rhs, Compare comp)
+    {
+        return (comp(lhs, rhs)) ? lhs : rhs;
+    }
+
+    /// <summary>
+    /// Returns the maximum of two values.  Evaluated as lhs > rhs.
+    /// </summary>
+    /// <typeparam name="T">Type of values to get maximum of. Type must be comparable.</typeparam>
+    /// <param name="lhs">Left hand argument</param>
+    /// <param name="rhs">Right hand argument</param>
+    /// <returns>Maximum argument</returns>
+    /// \ingroup Algorithms
+    template <typename T>
+    inline constexpr const T& max(const T& lhs, const T& rhs)
+    {
+        return (lhs > rhs) ? lhs : rhs;
+    }
+
+    /// <summary>
+    /// Returns the maximum of two values.  Evaluated as lhs > rhs.
+    /// </summary>
+    /// <typeparam name="T">Type of values to get maximum of.</typeparam>
+    /// <typeparam name="Compare">Comparison functor type.  The signature of the comparator must be of form
+    /// bool cmp(const T& lhs, const T& rhs).  The function returns true if the left hand argument is greater
+    /// than the right hand argument.</typeparam>
+    /// <param name="lhs">Left hand argument</param>
+    /// <param name="rhs">Right hand argument</param>
+    /// <param name="comp">Comparator</param>
+    /// <returns>Maximum argument</returns>
+    /// \ingroup Algorithms
+    template <typename T, typename Compare>
+    inline constexpr const T& max(const T& lhs, const T& rhs, Compare comp)
+    {
+        return (comp(lhs, rhs)) ? lhs : rhs;
     }
 }
 

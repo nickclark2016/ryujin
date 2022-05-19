@@ -662,7 +662,7 @@ namespace ryujin
 		for (Type token : tokens)
 		{
 			sz tokenIndex = first_index_of(token);
-			lowestIndex = min(tokenIndex, lowestIndex);
+			lowestIndex = ryujin::min(tokenIndex, lowestIndex);
 		}
 
 		return lowestIndex;
@@ -677,7 +677,7 @@ namespace ryujin
 		for(sz i = 0; i < tokensLen; i++)
 		{
 			sz tokenIndex = first_index_of(tokens[i]);
-			lowestIndex = min(tokenIndex, lowestIndex);
+			lowestIndex = ryujin::min(tokenIndex, lowestIndex);
 		}
 
 		return lowestIndex;
@@ -699,7 +699,7 @@ namespace ryujin
 		for (Type token : tokens)
 		{
 			sz tokenIndex = last_index_of(token);
-			highestIndex = max(tokenIndex, highestIndex);
+			highestIndex = ryujin::max(tokenIndex, highestIndex);
 		}
 
 		return highestIndex;
@@ -714,7 +714,7 @@ namespace ryujin
 		for (sz i = 0; i < tokensLen; i++)
 		{
 			sz tokenIndex = last_index_of(tokens[i]);
-			highestIndex = max(tokenIndex, highestIndex);
+			highestIndex = ryujin::max(tokenIndex, highestIndex);
 		}
 
 		return highestIndex;
