@@ -78,6 +78,22 @@ Functions</h2></td></tr>
 <tr class="memitem:ga05550ae137b154dca913eea0f9aeb619"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="export_8hpp.html#a490bbffc5b83af6f250c2944162b7ec6">RYUJIN_API</a> Output&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group___algorithms.html#ga05550ae137b154dca913eea0f9aeb619">ryujin::copy</a> (Input first, Input last, Output out)</td></tr>
 <tr class="memdesc:ga05550ae137b154dca913eea0f9aeb619"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copies the values from one iterator to another.  <a href="group___algorithms.html#ga05550ae137b154dca913eea0f9aeb619">More...</a><br /></td></tr>
 <tr class="separator:ga05550ae137b154dca913eea0f9aeb619"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4fecb7711c382872aa1fe83c2092d319"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga4fecb7711c382872aa1fe83c2092d319"><td class="memTemplItemLeft" align="right" valign="top">constexpr const T &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group___algorithms.html#ga4fecb7711c382872aa1fe83c2092d319">ryujin::min</a> (const T &amp;lhs, const T &amp;rhs)</td></tr>
+<tr class="memdesc:ga4fecb7711c382872aa1fe83c2092d319"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the minimum of two values. Evaluated as lhs &lt; rhs.  <a href="group___algorithms.html#ga4fecb7711c382872aa1fe83c2092d319">More...</a><br /></td></tr>
+<tr class="separator:ga4fecb7711c382872aa1fe83c2092d319"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4d0c742d1fb286d03a23b754e5188a9e"><td class="memTemplParams" colspan="2">template&lt;typename T , typename Compare &gt; </td></tr>
+<tr class="memitem:ga4d0c742d1fb286d03a23b754e5188a9e"><td class="memTemplItemLeft" align="right" valign="top">constexpr const T &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group___algorithms.html#ga4d0c742d1fb286d03a23b754e5188a9e">ryujin::min</a> (const T &amp;lhs, const T &amp;rhs, Compare comp)</td></tr>
+<tr class="memdesc:ga4d0c742d1fb286d03a23b754e5188a9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the minimum of two values. Evaluated as lhs &lt; rhs.  <a href="group___algorithms.html#ga4d0c742d1fb286d03a23b754e5188a9e">More...</a><br /></td></tr>
+<tr class="separator:ga4d0c742d1fb286d03a23b754e5188a9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8e0f93be1e28fc416f924769b074b4cc"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga8e0f93be1e28fc416f924769b074b4cc"><td class="memTemplItemLeft" align="right" valign="top">constexpr const T &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group___algorithms.html#ga8e0f93be1e28fc416f924769b074b4cc">ryujin::max</a> (const T &amp;lhs, const T &amp;rhs)</td></tr>
+<tr class="memdesc:ga8e0f93be1e28fc416f924769b074b4cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the maximum of two values. Evaluated as lhs &gt; rhs.  <a href="group___algorithms.html#ga8e0f93be1e28fc416f924769b074b4cc">More...</a><br /></td></tr>
+<tr class="separator:ga8e0f93be1e28fc416f924769b074b4cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga81fdd5ed359fd2319f81d9cff918a542"><td class="memTemplParams" colspan="2">template&lt;typename T , typename Compare &gt; </td></tr>
+<tr class="memitem:ga81fdd5ed359fd2319f81d9cff918a542"><td class="memTemplItemLeft" align="right" valign="top">constexpr const T &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group___algorithms.html#ga81fdd5ed359fd2319f81d9cff918a542">ryujin::max</a> (const T &amp;lhs, const T &amp;rhs, Compare comp)</td></tr>
+<tr class="memdesc:ga81fdd5ed359fd2319f81d9cff918a542"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the maximum of two values. Evaluated as lhs &gt; rhs.  <a href="group___algorithms.html#ga81fdd5ed359fd2319f81d9cff918a542">More...</a><br /></td></tr>
+<tr class="separator:ga81fdd5ed359fd2319f81d9cff918a542"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <h2 class="groupheader">Function Documentation</h2>
@@ -140,6 +156,238 @@ template&lt;typename Input , typename Output &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Iterator to the end of the output range copy to</dd></dl>
+
+</div>
+</div>
+<a id="ga8e0f93be1e28fc416f924769b074b4cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8e0f93be1e28fc416f924769b074b4cc">&#9670;&nbsp;</a></span>max() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr const T&amp; ryujin::max </td>
+          <td>(</td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>lhs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>rhs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the maximum of two values. Evaluated as lhs &gt; rhs. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Type of values to get maximum of. Type must be comparable.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">lhs</td><td>Left hand argument</td></tr>
+    <tr><td class="paramname">rhs</td><td>Right hand argument</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Maximum argument</dd></dl>
+
+</div>
+</div>
+<a id="ga81fdd5ed359fd2319f81d9cff918a542"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga81fdd5ed359fd2319f81d9cff918a542">&#9670;&nbsp;</a></span>max() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , typename Compare &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr const T&amp; ryujin::max </td>
+          <td>(</td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>lhs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>rhs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Compare&#160;</td>
+          <td class="paramname"><em>comp</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the maximum of two values. Evaluated as lhs &gt; rhs. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Type of values to get maximum of.</td></tr>
+    <tr><td class="paramname">Compare</td><td>Comparison functor type. The signature of the comparator must be of form bool cmp(const T&amp; lhs, const T&amp; rhs). The function returns true if the left hand argument is greater than the right hand argument.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">lhs</td><td>Left hand argument</td></tr>
+    <tr><td class="paramname">rhs</td><td>Right hand argument</td></tr>
+    <tr><td class="paramname">comp</td><td>Comparator</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Maximum argument</dd></dl>
+
+</div>
+</div>
+<a id="ga4fecb7711c382872aa1fe83c2092d319"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4fecb7711c382872aa1fe83c2092d319">&#9670;&nbsp;</a></span>min() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr const T&amp; ryujin::min </td>
+          <td>(</td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>lhs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>rhs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the minimum of two values. Evaluated as lhs &lt; rhs. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Type of values to get minimum of. Type must be comparable.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">lhs</td><td>Left hand argument</td></tr>
+    <tr><td class="paramname">rhs</td><td>Right hand argument</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Minimum argument</dd></dl>
+
+</div>
+</div>
+<a id="ga4d0c742d1fb286d03a23b754e5188a9e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4d0c742d1fb286d03a23b754e5188a9e">&#9670;&nbsp;</a></span>min() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , typename Compare &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr const T&amp; ryujin::min </td>
+          <td>(</td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>lhs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>rhs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Compare&#160;</td>
+          <td class="paramname"><em>comp</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the minimum of two values. Evaluated as lhs &lt; rhs. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Type of values to get minimum of.</td></tr>
+    <tr><td class="paramname">Compare</td><td>Comparison functor type. The signature of the comparator must be of form bool cmp(const T&amp; lhs, const T&amp; rhs). The function returns true if the left hand argument is less than the right hand argument.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">lhs</td><td>Left hand argument</td></tr>
+    <tr><td class="paramname">rhs</td><td>Right hand argument</td></tr>
+    <tr><td class="paramname">comp</td><td>Comparator</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Minimum argument</dd></dl>
 
 </div>
 </div>
