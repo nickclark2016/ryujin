@@ -172,7 +172,7 @@ namespace ryujin
 
 		// next stores the index of the next best partial match
 		auto next = ryujin::make_unique<sz[]>(rhsSize + 1);
-		memset(next.get(), 0, (rhsSize + 1) * sizeof(sz));
+		ryujin::memset(next.get(), 0, (rhsSize + 1) * sizeof(sz));
 
 		for (sz i = 1; i < rhsSize; i++)
 		{

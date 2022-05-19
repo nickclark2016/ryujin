@@ -846,13 +846,23 @@ namespace ryujin
     template <typename ... Ts>
     using index_sequence_for = make_index_sequence<sizeof...(Ts)>;
 
-    inline constexpr void* memcpy(void* dst, const void* src, sz count)
+    inline constexpr void* memcpy(void* dst, const void* src, sz len)
     {
         char* d = as<char*>(dst);
         const char* s = as<const char*>(src);
-        while (count--)
+        while (len--)
         {
             *d++ = *s++;
+        }
+        return dst;
+    }
+
+    inline constexpr void* memset(void* dst, int val, sz len)
+    {
+        char* d = as<char*>(dst);
+        while (len--)
+        {
+            *d++ = val;
         }
         return dst;
     }
