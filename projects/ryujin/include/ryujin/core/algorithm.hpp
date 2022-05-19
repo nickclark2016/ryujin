@@ -71,7 +71,7 @@ namespace ryujin
     /// <returns>Minimum argument</returns>
     /// \ingroup Algorithms
     template <typename T>
-    inline constexpr const T& min(const T& lhs, const T& rhs)
+    RYUJIN_API inline constexpr const T& min(const T& lhs, const T& rhs)
     {
         return (lhs < rhs) ? lhs : rhs;
     }
@@ -89,7 +89,7 @@ namespace ryujin
     /// <returns>Minimum argument</returns>
     /// \ingroup Algorithms
     template <typename T, typename Compare>
-    inline constexpr const T& min(const T& lhs, const T& rhs, Compare comp)
+    RYUJIN_API inline constexpr const T& min(const T& lhs, const T& rhs, Compare comp)
     {
         return (comp(lhs, rhs)) ? lhs : rhs;
     }
@@ -103,7 +103,7 @@ namespace ryujin
     /// <returns>Maximum argument</returns>
     /// \ingroup Algorithms
     template <typename T>
-    inline constexpr const T& max(const T& lhs, const T& rhs)
+    RYUJIN_API inline constexpr const T& max(const T& lhs, const T& rhs)
     {
         return (lhs > rhs) ? lhs : rhs;
     }
@@ -121,7 +121,7 @@ namespace ryujin
     /// <returns>Maximum argument</returns>
     /// \ingroup Algorithms
     template <typename T, typename Compare>
-    inline constexpr const T& max(const T& lhs, const T& rhs, Compare comp)
+    RYUJIN_API inline constexpr const T& max(const T& lhs, const T& rhs, Compare comp)
     {
         return (comp(lhs, rhs)) ? lhs : rhs;
     }

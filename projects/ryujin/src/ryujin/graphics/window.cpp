@@ -171,9 +171,14 @@ namespace ryujin
 		_userRestoreCallbacks.clear();
 		_userScrollCallbacks.clear();
 
-		glfwSetWindowFocusCallback(_native, nullptr);
 		glfwSetWindowCloseCallback(_native, nullptr);
+		glfwSetCursorPosCallback(_native, nullptr);
+		glfwSetWindowFocusCallback(_native, nullptr);
+		glfwSetWindowIconifyCallback(_native, nullptr);
+		glfwSetKeyCallback(_native, nullptr);
+		glfwSetWindowMaximizeCallback(_native, nullptr);
 		glfwSetWindowSizeCallback(_native, nullptr);
+		glfwSetScrollCallback(_native, nullptr);
 	}
 	
 	result<tuple<u32, u32>, window::error_code> window::size() const noexcept

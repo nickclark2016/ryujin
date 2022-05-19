@@ -1,6 +1,7 @@
 #ifndef allocator_hpp__
 #define allocator_hpp__
 
+#include "export.hpp"
 #include "primitives.hpp"
 
 #include <new> // TODO: Figure out how tf to replace this
@@ -9,8 +10,8 @@ namespace ryujin
 {
     namespace detail
     {
-        void* allocate_raw_bytes(const sz count, const sz bytesPerElem, const sz alignment);
-        void deallocate_raw_bytes(void* data, const sz alignment);
+        RYUJIN_API void* allocate_raw_bytes(const sz count, const sz bytesPerElem, const sz alignment);
+        RYUJIN_API void deallocate_raw_bytes(void* data, const sz alignment);
     }
 
     template <typename T>
@@ -25,8 +26,8 @@ namespace ryujin
         using size_type = sz;
         using difference_type = ptr_diff;
 
-        constexpr pointer allocate(size_type n);
-        constexpr void deallocate(pointer p, size_type n);
+        RYUJIN_API constexpr pointer allocate(size_type n);
+        RYUJIN_API constexpr void deallocate(pointer p, size_type n);
     };
     
     template<typename T>
