@@ -1579,8 +1579,10 @@ Functions</h2></td></tr>
 <tr class="memitem:a84416fd7c922848168da7cfa499a4287"><td class="memTemplParams" colspan="2">template&lt;sz I, typename ... Ts&gt; </td></tr>
 <tr class="memitem:a84416fd7c922848168da7cfa499a4287"><td class="memTemplItemLeft" align="right" valign="top">const auto &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a84416fd7c922848168da7cfa499a4287">get</a> (const <a class="el" href="classryujin_1_1tuple.html">tuple</a>&lt; Ts... &gt; &amp;t) noexcept</td></tr>
 <tr class="separator:a84416fd7c922848168da7cfa499a4287"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a74bac0e3ee98a5bb790705b6a98c5ac5"><td class="memItemLeft" align="right" valign="top">constexpr void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a74bac0e3ee98a5bb790705b6a98c5ac5">memcpy</a> (void *dst, const void *src, <a class="el" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a> count)</td></tr>
-<tr class="separator:a74bac0e3ee98a5bb790705b6a98c5ac5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d232f02aac329596707ecbfbafe3e5b"><td class="memItemLeft" align="right" valign="top">constexpr void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a7d232f02aac329596707ecbfbafe3e5b">memcpy</a> (void *dst, const void *src, <a class="el" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a> len)</td></tr>
+<tr class="separator:a7d232f02aac329596707ecbfbafe3e5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a008a36ce5ec63812b648e944002d3e57"><td class="memItemLeft" align="right" valign="top">constexpr void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a008a36ce5ec63812b648e944002d3e57">memset</a> (void *dst, int val, <a class="el" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a> len)</td></tr>
+<tr class="separator:a008a36ce5ec63812b648e944002d3e57"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5d59649cd03d5fab9cc57d5448500d1c"><td class="memTemplParams" colspan="2">template&lt;typename T , typename ... Ts&gt; </td></tr>
 <tr class="memitem:a5d59649cd03d5fab9cc57d5448500d1c"><td class="memTemplItemLeft" align="right" valign="top">constexpr T &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a5d59649cd03d5fab9cc57d5448500d1c">get</a> (<a class="el" href="classryujin_1_1variant.html">ryujin::variant</a>&lt; Ts... &gt; &amp;v)</td></tr>
 <tr class="separator:a5d59649cd03d5fab9cc57d5448500d1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -6412,8 +6414,8 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a id="a74bac0e3ee98a5bb790705b6a98c5ac5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a74bac0e3ee98a5bb790705b6a98c5ac5">&#9670;&nbsp;</a></span>memcpy()</h2>
+<a id="a7d232f02aac329596707ecbfbafe3e5b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d232f02aac329596707ecbfbafe3e5b">&#9670;&nbsp;</a></span>memcpy()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -6437,7 +6439,49 @@ template&lt;typename T &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a>&#160;</td>
-          <td class="paramname"><em>count</em>&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a008a36ce5ec63812b648e944002d3e57"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a008a36ce5ec63812b648e944002d3e57">&#9670;&nbsp;</a></span>memset()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr void* ryujin::memset </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>dst</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>val</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a>&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
