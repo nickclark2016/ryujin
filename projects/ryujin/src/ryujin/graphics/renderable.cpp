@@ -390,8 +390,7 @@ namespace ryujin
         // TODO: Coalesce to a single entity if we only have a single mesh?
         for (const auto meshGroup = mgr.get_mesh_group(meshGroupKey); auto mesh : meshGroup->meshes)
         {
-            string meshName = fmt::v8::format("{}_{}", asset.name().c_str(), mesh.name.c_str()).c_str();
-            auto meshKeyIt = _meshesLut.find(meshName);
+            auto meshKeyIt = _meshesLut.find(mesh.name);
             auto meshKey = meshKeyIt == _meshesLut.end() ? invalid_slot_map_key : meshKeyIt->second;
 
             if (meshKey == invalid_slot_map_key)
@@ -475,7 +474,10 @@ namespace ryujin
             .ao = occlusionTex
         };
 
-        return _materials.insert(mat);
+        auto key = _materials.insert(mat);
+        _materialsLut[name] = key;
+
+        return key;
     }
 
     slot_map_key renderable_manager::load_mesh(const string& name, const mesh& m)

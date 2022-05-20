@@ -1521,7 +1521,7 @@ namespace ryujin
     render_manager::error_code render_manager::create_swapchain()
     {
         vkb::SwapchainBuilder swapchainBuilder(_device, _surface);
-
+        swapchainBuilder.set_desired_present_mode(VK_PRESENT_MODE_IMMEDIATE_KHR);
         const auto swapchainResult = swapchainBuilder.build();
         if (!swapchainResult)
         {

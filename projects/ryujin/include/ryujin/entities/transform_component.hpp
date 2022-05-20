@@ -20,30 +20,9 @@ namespace ryujin
 
         transform_component() = default;
         transform_component(const transform_component&) = default;
-        
-        inline transform_component(transform_component&& comp) noexcept
-            : matrix(std::move((comp.matrix))), position(std::move(const_cast<vec3<float>&>(comp.position))),
-                rotation(std::move(const_cast<quat<float>&>(comp.rotation))), scale(std::move(const_cast<vec3<float>&>(comp.scale)))
-        {
-        }
-
-        inline transform_component& operator=(const transform_component& rhs) noexcept
-        {
-            matrix = rhs.matrix;
-            position = rhs.position;
-            rotation = rhs.rotation;
-            scale = rhs.scale;
-            return *this;
-        }
-
-        inline transform_component& operator=(transform_component&& rhs) noexcept
-        {
-            matrix = std::move(const_cast<mat4<float>&&>(rhs.matrix));
-            position = std::move(const_cast<vec3<float>&&>(rhs.position));
-            rotation = std::move(const_cast<quat<float>&&>(rhs.rotation));
-            scale = std::move(const_cast<vec3<float>&&>(rhs.scale));
-            return *this;
-        }
+        transform_component(transform_component&&) noexcept = default;
+        transform_component& operator=(const transform_component&) = default;
+        transform_component& operator=(transform_component&&) noexcept = default;
     };
 
     inline void set_position(transform_component& tx, const vec3<float>& position)

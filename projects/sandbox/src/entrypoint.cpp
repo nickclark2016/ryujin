@@ -56,9 +56,19 @@ public:
         auto& cubeTx = cubeEnt.get<transform_component>();
         set_position(cubeTx, vec3(0.0f, 0.0f, 0.0f));
 
-        renderables.build_meshes();
+        for (size_t i = 1; i < 2048; ++i)
+        {
+            auto e = renderables.load_to_entities(ctx.get_assets(), *cube); // actually get first child
+            auto& hierarchy = e.get<entity_relationship_component<registry::entity_type>>();
+            e = entity_handle(hierarchy.firstChild, &ctx.get_registry());
+
+            auto& eTx = e.get<transform_component>();
+            set_position(eTx, vec3(i * 4.0f, 0.0f, 0.0f));
+        }
 
         _camera = free_look_camera(vec3(0.0f, 1.0f, -10.0f), ctx.get_registry());
+
+        renderables.build_meshes();
     }
 
     void on_exit(engine_context& ctx) override

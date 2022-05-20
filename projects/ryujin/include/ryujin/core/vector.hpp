@@ -514,7 +514,10 @@ namespace ryujin
     {
         const sz requested = newSize == 0 ? (_capacity == 0 ? 8 : _size * 2) : newSize;
         Type* allocation = _alloc.allocate(requested);
-        ryujin::move(_data, _data + _size, allocation);
+        for (sz i = 0; i < _size; ++i)
+        {
+            ::new(allocation + i) Type(ryujin::move(_data[i]));
+        }
         if (_capacity)
         {
             _alloc.deallocate(_data, _capacity);
