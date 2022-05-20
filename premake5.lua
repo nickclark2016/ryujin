@@ -4,6 +4,10 @@ workspace ('ryujin')
         'Release'
     })
 
+    flags ({
+        'MultiProcessorCompile'
+    })
+
     filter ({ 'configurations:Debug' })
         runtime ('Debug')
     
