@@ -692,58 +692,62 @@ $(function() {
 <div class="line"><a name="l00852"></a><span class="lineno">  852</span>&#160; </div>
 <div class="line"><a name="l00853"></a><span class="lineno"><a class="line" href="namespaceryujin.html#acb0c37d6bba8d9e9f4459b320d20745a">  853</a></span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">void</span>* <a class="code" href="namespaceryujin.html#acb0c37d6bba8d9e9f4459b320d20745a">memcpy</a>(<span class="keywordtype">void</span>* dst, <span class="keyword">const</span> <span class="keywordtype">void</span>* src, <a class="code" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a> len)</div>
 <div class="line"><a name="l00854"></a><span class="lineno">  854</span>&#160;    {</div>
-<div class="line"><a name="l00855"></a><span class="lineno">  855</span>&#160;<span class="preprocessor">#if !defined(USE_CUSTOM_MEM_FNS)</span></div>
-<div class="line"><a name="l00856"></a><span class="lineno">  856</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceryujin.html#acb0c37d6bba8d9e9f4459b320d20745a">std::memcpy</a>(dst, src, len);</div>
-<div class="line"><a name="l00857"></a><span class="lineno">  857</span>&#160;<span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00858"></a><span class="lineno">  858</span>&#160;        <span class="keywordtype">char</span>* d = as&lt;char*&gt;(dst);</div>
-<div class="line"><a name="l00859"></a><span class="lineno">  859</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span>* s = as&lt;const char*&gt;(src);</div>
-<div class="line"><a name="l00860"></a><span class="lineno">  860</span>&#160;        <span class="keywordflow">while</span> (len--)</div>
-<div class="line"><a name="l00861"></a><span class="lineno">  861</span>&#160;        {</div>
-<div class="line"><a name="l00862"></a><span class="lineno">  862</span>&#160;            *d++ = *s++;</div>
-<div class="line"><a name="l00863"></a><span class="lineno">  863</span>&#160;        }</div>
-<div class="line"><a name="l00864"></a><span class="lineno">  864</span>&#160;        <span class="keywordflow">return</span> dst;</div>
-<div class="line"><a name="l00865"></a><span class="lineno">  865</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00866"></a><span class="lineno">  866</span>&#160;    }</div>
-<div class="line"><a name="l00867"></a><span class="lineno">  867</span>&#160; </div>
-<div class="line"><a name="l00868"></a><span class="lineno"><a class="line" href="namespaceryujin.html#ae707ad932fd0654641a9e2afdf447bfd">  868</a></span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">void</span>* <a class="code" href="namespaceryujin.html#ae707ad932fd0654641a9e2afdf447bfd">memset</a>(<span class="keywordtype">void</span>* dst, <span class="keywordtype">int</span> val, <a class="code" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a> len)</div>
-<div class="line"><a name="l00869"></a><span class="lineno">  869</span>&#160;    {</div>
-<div class="line"><a name="l00870"></a><span class="lineno">  870</span>&#160;<span class="preprocessor">#if !defined(USE_CUSTOM_MEM_FNS)</span></div>
-<div class="line"><a name="l00871"></a><span class="lineno">  871</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceryujin.html#ae707ad932fd0654641a9e2afdf447bfd">std::memset</a>(dst, val, len);</div>
-<div class="line"><a name="l00872"></a><span class="lineno">  872</span>&#160;<span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00873"></a><span class="lineno">  873</span>&#160;        <span class="keywordtype">char</span>* d = as&lt;char*&gt;(dst);</div>
-<div class="line"><a name="l00874"></a><span class="lineno">  874</span>&#160;        <span class="keywordflow">while</span> (len--)</div>
-<div class="line"><a name="l00875"></a><span class="lineno">  875</span>&#160;        {</div>
-<div class="line"><a name="l00876"></a><span class="lineno">  876</span>&#160;            *d++ = val;</div>
-<div class="line"><a name="l00877"></a><span class="lineno">  877</span>&#160;        }</div>
-<div class="line"><a name="l00878"></a><span class="lineno">  878</span>&#160;        <span class="keywordflow">return</span> dst;</div>
-<div class="line"><a name="l00879"></a><span class="lineno">  879</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00880"></a><span class="lineno">  880</span>&#160;    }</div>
-<div class="line"><a name="l00881"></a><span class="lineno">  881</span>&#160;}</div>
-<div class="line"><a name="l00882"></a><span class="lineno">  882</span>&#160; </div>
-<div class="line"><a name="l00883"></a><span class="lineno">  883</span>&#160;<span class="preprocessor">#ifdef RYUJIN_PROVIDE_STRUCTURED_BINDINGS</span></div>
-<div class="line"><a name="l00884"></a><span class="lineno">  884</span>&#160;<span class="preprocessor">#include &lt;tuple&gt;</span></div>
-<div class="line"><a name="l00885"></a><span class="lineno">  885</span>&#160; </div>
-<div class="line"><a name="l00886"></a><span class="lineno">  886</span>&#160;<span class="keyword">namespace </span>std</div>
-<div class="line"><a name="l00887"></a><span class="lineno">  887</span>&#160;{</div>
-<div class="line"><a name="l00888"></a><span class="lineno">  888</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2&gt;</div>
-<div class="line"><a name="l00889"></a><span class="lineno">  889</span>&#160;    <span class="keyword">class </span>tuple_size&lt;<a class="code" href="namespaceryujin.html">ryujin</a>::<a class="code" href="namespaceryujin.html#a62095d1856fc9ddd5370cf94bec4dc41">pair</a>&lt;T1, T2&gt;&gt; : <span class="keyword">public</span> <a class="code" href="structryujin_1_1integral__constant.html">ryujin::integral_constant</a>&lt;ryujin::sz, 2&gt;</div>
-<div class="line"><a name="l00890"></a><span class="lineno">  890</span>&#160;    {};</div>
-<div class="line"><a name="l00891"></a><span class="lineno">  891</span>&#160; </div>
-<div class="line"><a name="l00892"></a><span class="lineno">  892</span>&#160;    <span class="keyword">template</span> &lt;ryujin::sz I, <span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2&gt;</div>
-<div class="line"><a name="l00893"></a><span class="lineno">  893</span>&#160;    <span class="keyword">class </span>tuple_element&lt;I, <a class="code" href="namespaceryujin.html">ryujin</a>::<a class="code" href="namespaceryujin.html#a62095d1856fc9ddd5370cf94bec4dc41">pair</a>&lt;T1, T2&gt;&gt; : <span class="keyword">public</span> <a class="code" href="structryujin_1_1tuple__element.html">ryujin::tuple_element</a>&lt;I, ryujin::tuple&lt;T1, T2&gt;&gt;</div>
+<div class="line"><a name="l00855"></a><span class="lineno">  855</span>&#160;<span class="preprocessor">#if defined(__GNUC__)</span></div>
+<div class="line"><a name="l00856"></a><span class="lineno">  856</span>&#160;        <span class="keywordflow">return</span> __builtin_memcpy(dst, src, len);</div>
+<div class="line"><a name="l00857"></a><span class="lineno">  857</span>&#160;<span class="preprocessor">#elif !defined(USE_CUSTOM_MEM_FNS)</span></div>
+<div class="line"><a name="l00858"></a><span class="lineno">  858</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceryujin.html#acb0c37d6bba8d9e9f4459b320d20745a">std::memcpy</a>(dst, src, len);</div>
+<div class="line"><a name="l00859"></a><span class="lineno">  859</span>&#160;<span class="preprocessor">#else</span></div>
+<div class="line"><a name="l00860"></a><span class="lineno">  860</span>&#160;        <span class="keywordtype">char</span>* d = as&lt;char*&gt;(dst);</div>
+<div class="line"><a name="l00861"></a><span class="lineno">  861</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span>* s = as&lt;const char*&gt;(src);</div>
+<div class="line"><a name="l00862"></a><span class="lineno">  862</span>&#160;        <span class="keywordflow">while</span> (len--)</div>
+<div class="line"><a name="l00863"></a><span class="lineno">  863</span>&#160;        {</div>
+<div class="line"><a name="l00864"></a><span class="lineno">  864</span>&#160;            *d++ = *s++;</div>
+<div class="line"><a name="l00865"></a><span class="lineno">  865</span>&#160;        }</div>
+<div class="line"><a name="l00866"></a><span class="lineno">  866</span>&#160;        <span class="keywordflow">return</span> dst;</div>
+<div class="line"><a name="l00867"></a><span class="lineno">  867</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00868"></a><span class="lineno">  868</span>&#160;    }</div>
+<div class="line"><a name="l00869"></a><span class="lineno">  869</span>&#160; </div>
+<div class="line"><a name="l00870"></a><span class="lineno"><a class="line" href="namespaceryujin.html#ae707ad932fd0654641a9e2afdf447bfd">  870</a></span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">void</span>* <a class="code" href="namespaceryujin.html#ae707ad932fd0654641a9e2afdf447bfd">memset</a>(<span class="keywordtype">void</span>* dst, <span class="keywordtype">int</span> val, <a class="code" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a> len)</div>
+<div class="line"><a name="l00871"></a><span class="lineno">  871</span>&#160;    {</div>
+<div class="line"><a name="l00872"></a><span class="lineno">  872</span>&#160;<span class="preprocessor">#if defined(__GNUC__)</span></div>
+<div class="line"><a name="l00873"></a><span class="lineno">  873</span>&#160;        <span class="keywordflow">return</span> __builtin_memset(dst, val, len);</div>
+<div class="line"><a name="l00874"></a><span class="lineno">  874</span>&#160;<span class="preprocessor">#elif !defined(USE_CUSTOM_MEM_FNS)</span></div>
+<div class="line"><a name="l00875"></a><span class="lineno">  875</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceryujin.html#ae707ad932fd0654641a9e2afdf447bfd">std::memset</a>(dst, val, len);</div>
+<div class="line"><a name="l00876"></a><span class="lineno">  876</span>&#160;<span class="preprocessor">#else</span></div>
+<div class="line"><a name="l00877"></a><span class="lineno">  877</span>&#160;        <span class="keywordtype">char</span>* d = as&lt;char*&gt;(dst);</div>
+<div class="line"><a name="l00878"></a><span class="lineno">  878</span>&#160;        <span class="keywordflow">while</span> (len--)</div>
+<div class="line"><a name="l00879"></a><span class="lineno">  879</span>&#160;        {</div>
+<div class="line"><a name="l00880"></a><span class="lineno">  880</span>&#160;            *d++ = val;</div>
+<div class="line"><a name="l00881"></a><span class="lineno">  881</span>&#160;        }</div>
+<div class="line"><a name="l00882"></a><span class="lineno">  882</span>&#160;        <span class="keywordflow">return</span> dst;</div>
+<div class="line"><a name="l00883"></a><span class="lineno">  883</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00884"></a><span class="lineno">  884</span>&#160;    }</div>
+<div class="line"><a name="l00885"></a><span class="lineno">  885</span>&#160;}</div>
+<div class="line"><a name="l00886"></a><span class="lineno">  886</span>&#160; </div>
+<div class="line"><a name="l00887"></a><span class="lineno">  887</span>&#160;<span class="preprocessor">#ifdef RYUJIN_PROVIDE_STRUCTURED_BINDINGS</span></div>
+<div class="line"><a name="l00888"></a><span class="lineno">  888</span>&#160;<span class="preprocessor">#include &lt;tuple&gt;</span></div>
+<div class="line"><a name="l00889"></a><span class="lineno">  889</span>&#160; </div>
+<div class="line"><a name="l00890"></a><span class="lineno">  890</span>&#160;<span class="keyword">namespace </span>std</div>
+<div class="line"><a name="l00891"></a><span class="lineno">  891</span>&#160;{</div>
+<div class="line"><a name="l00892"></a><span class="lineno">  892</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2&gt;</div>
+<div class="line"><a name="l00893"></a><span class="lineno">  893</span>&#160;    <span class="keyword">class </span>tuple_size&lt;<a class="code" href="namespaceryujin.html">ryujin</a>::<a class="code" href="namespaceryujin.html#a62095d1856fc9ddd5370cf94bec4dc41">pair</a>&lt;T1, T2&gt;&gt; : <span class="keyword">public</span> <a class="code" href="structryujin_1_1integral__constant.html">ryujin::integral_constant</a>&lt;ryujin::sz, 2&gt;</div>
 <div class="line"><a name="l00894"></a><span class="lineno">  894</span>&#160;    {};</div>
 <div class="line"><a name="l00895"></a><span class="lineno">  895</span>&#160; </div>
-<div class="line"><a name="l00896"></a><span class="lineno">  896</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> ... Ts&gt;</div>
-<div class="line"><a name="l00897"></a><span class="lineno">  897</span>&#160;    <span class="keyword">class </span>tuple_size&lt;<a class="code" href="namespaceryujin.html">ryujin</a>::<a class="code" href="namespaceryujin.html#ac96c5ef5d6b691300cb9e3f301a9b301">tuple</a>&lt;Ts...&gt;&gt; : <span class="keyword">public</span> <a class="code" href="structryujin_1_1integral__constant.html">ryujin::integral_constant</a>&lt;ryujin::sz, sizeof...(Ts)&gt;</div>
+<div class="line"><a name="l00896"></a><span class="lineno">  896</span>&#160;    <span class="keyword">template</span> &lt;ryujin::sz I, <span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2&gt;</div>
+<div class="line"><a name="l00897"></a><span class="lineno">  897</span>&#160;    <span class="keyword">class </span>tuple_element&lt;I, <a class="code" href="namespaceryujin.html">ryujin</a>::<a class="code" href="namespaceryujin.html#a62095d1856fc9ddd5370cf94bec4dc41">pair</a>&lt;T1, T2&gt;&gt; : <span class="keyword">public</span> <a class="code" href="structryujin_1_1tuple__element.html">ryujin::tuple_element</a>&lt;I, ryujin::tuple&lt;T1, T2&gt;&gt;</div>
 <div class="line"><a name="l00898"></a><span class="lineno">  898</span>&#160;    {};</div>
 <div class="line"><a name="l00899"></a><span class="lineno">  899</span>&#160; </div>
-<div class="line"><a name="l00900"></a><span class="lineno">  900</span>&#160;    <span class="keyword">template</span> &lt;<a class="code" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">ryujin::sz</a> I, <span class="keyword">typename</span> ... Ts&gt;</div>
-<div class="line"><a name="l00901"></a><span class="lineno">  901</span>&#160;    <span class="keyword">class </span>tuple_element&lt;I, <a class="code" href="namespaceryujin.html">ryujin</a>::<a class="code" href="namespaceryujin.html#ac96c5ef5d6b691300cb9e3f301a9b301">tuple</a>&lt;Ts...&gt;&gt; : <span class="keyword">public</span> <a class="code" href="structryujin_1_1tuple__element.html">ryujin::tuple_element</a>&lt;I, ryujin::tuple&lt;Ts...&gt;&gt;</div>
+<div class="line"><a name="l00900"></a><span class="lineno">  900</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> ... Ts&gt;</div>
+<div class="line"><a name="l00901"></a><span class="lineno">  901</span>&#160;    <span class="keyword">class </span>tuple_size&lt;<a class="code" href="namespaceryujin.html">ryujin</a>::<a class="code" href="namespaceryujin.html#ac96c5ef5d6b691300cb9e3f301a9b301">tuple</a>&lt;Ts...&gt;&gt; : <span class="keyword">public</span> <a class="code" href="structryujin_1_1integral__constant.html">ryujin::integral_constant</a>&lt;ryujin::sz, sizeof...(Ts)&gt;</div>
 <div class="line"><a name="l00902"></a><span class="lineno">  902</span>&#160;    {};</div>
-<div class="line"><a name="l00903"></a><span class="lineno">  903</span>&#160;}</div>
-<div class="line"><a name="l00904"></a><span class="lineno">  904</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00905"></a><span class="lineno">  905</span>&#160; </div>
-<div class="line"><a name="l00906"></a><span class="lineno">  906</span>&#160;<span class="preprocessor">#endif // utility_hpp__</span></div>
+<div class="line"><a name="l00903"></a><span class="lineno">  903</span>&#160; </div>
+<div class="line"><a name="l00904"></a><span class="lineno">  904</span>&#160;    <span class="keyword">template</span> &lt;<a class="code" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">ryujin::sz</a> I, <span class="keyword">typename</span> ... Ts&gt;</div>
+<div class="line"><a name="l00905"></a><span class="lineno">  905</span>&#160;    <span class="keyword">class </span>tuple_element&lt;I, <a class="code" href="namespaceryujin.html">ryujin</a>::<a class="code" href="namespaceryujin.html#ac96c5ef5d6b691300cb9e3f301a9b301">tuple</a>&lt;Ts...&gt;&gt; : <span class="keyword">public</span> <a class="code" href="structryujin_1_1tuple__element.html">ryujin::tuple_element</a>&lt;I, ryujin::tuple&lt;Ts...&gt;&gt;</div>
+<div class="line"><a name="l00906"></a><span class="lineno">  906</span>&#160;    {};</div>
+<div class="line"><a name="l00907"></a><span class="lineno">  907</span>&#160;}</div>
+<div class="line"><a name="l00908"></a><span class="lineno">  908</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00909"></a><span class="lineno">  909</span>&#160; </div>
+<div class="line"><a name="l00910"></a><span class="lineno">  910</span>&#160;<span class="preprocessor">#endif // utility_hpp__</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclassryujin_1_1reference__wrapper_html_ae8d7e971c5ed6c730378b989517a5f33"><div class="ttname"><a href="classryujin_1_1reference__wrapper.html#ae8d7e971c5ed6c730378b989517a5f33">ryujin::reference_wrapper::reference_wrapper</a></div><div class="ttdeci">constexpr reference_wrapper(U &amp;&amp;val)</div><div class="ttdoc">Constructs a reference wrapper from a value.</div><div class="ttdef"><b>Definition:</b> utility.hpp:68</div></div>
 <div class="ttc" id="astructryujin_1_1pair_html_aa4b2654ca92bdf3cc85ada7a4897a866"><div class="ttname"><a href="structryujin_1_1pair.html#aa4b2654ca92bdf3cc85ada7a4897a866">ryujin::pair::pair</a></div><div class="ttdeci">constexpr pair()=default</div><div class="ttdoc">Default constructs the first and second element.</div></div>
@@ -769,7 +773,7 @@ $(function() {
 <div class="ttc" id="astructryujin_1_1pair_html_afc8e3bb36ad31a9cc3922439c7c7d7c9"><div class="ttname"><a href="structryujin_1_1pair.html#afc8e3bb36ad31a9cc3922439c7c7d7c9">ryujin::pair::second</a></div><div class="ttdeci">T2 second</div><div class="ttdoc">Second element in the pair.</div><div class="ttdef"><b>Definition:</b> utility.hpp:455</div></div>
 <div class="ttc" id="astructryujin_1_1tuple__element_html"><div class="ttname"><a href="structryujin_1_1tuple__element.html">ryujin::tuple_element</a></div><div class="ttdef"><b>Definition:</b> utility.hpp:733</div></div>
 <div class="ttc" id="astructryujin_1_1hash_3_01u32_01_4_html"><div class="ttname"><a href="structryujin_1_1hash_3_01u32_01_4.html">ryujin::hash&lt; u32 &gt;</a></div><div class="ttdoc">Specialization of hash for an 32 bit unsigned integer.</div><div class="ttdef"><b>Definition:</b> utility.hpp:350</div></div>
-<div class="ttc" id="anamespaceryujin_html_ae707ad932fd0654641a9e2afdf447bfd"><div class="ttname"><a href="namespaceryujin.html#ae707ad932fd0654641a9e2afdf447bfd">ryujin::memset</a></div><div class="ttdeci">void * memset(void *dst, int val, sz len)</div><div class="ttdef"><b>Definition:</b> utility.hpp:868</div></div>
+<div class="ttc" id="anamespaceryujin_html_ae707ad932fd0654641a9e2afdf447bfd"><div class="ttname"><a href="namespaceryujin.html#ae707ad932fd0654641a9e2afdf447bfd">ryujin::memset</a></div><div class="ttdeci">void * memset(void *dst, int val, sz len)</div><div class="ttdef"><b>Definition:</b> utility.hpp:870</div></div>
 <div class="ttc" id="astructryujin_1_1hash_3_01i32_01_4_html_a6f7e54433f203f33eed2a7849b3fdc7e"><div class="ttname"><a href="structryujin_1_1hash_3_01i32_01_4.html#a6f7e54433f203f33eed2a7849b3fdc7e">ryujin::hash&lt; i32 &gt;::operator()</a></div><div class="ttdeci">constexpr sz operator()(const i32 v) const noexcept</div><div class="ttdef"><b>Definition:</b> utility.hpp:339</div></div>
 <div class="ttc" id="astructryujin_1_1hash_3_01u32_01_4_html_a103e06e0fa16bbd6a085846aa760e916"><div class="ttname"><a href="structryujin_1_1hash_3_01u32_01_4.html#a103e06e0fa16bbd6a085846aa760e916">ryujin::hash&lt; u32 &gt;::operator()</a></div><div class="ttdeci">constexpr sz operator()(const u32 v) const noexcept</div><div class="ttdef"><b>Definition:</b> utility.hpp:352</div></div>
 <div class="ttc" id="anamespaceryujin_html_a10185cea8b7d65241ee94892e50f23f8"><div class="ttname"><a href="namespaceryujin.html#a10185cea8b7d65241ee94892e50f23f8">ryujin::u16</a></div><div class="ttdeci">unsigned short u16</div><div class="ttdef"><b>Definition:</b> primitives.hpp:7</div></div>
