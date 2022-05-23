@@ -78,8 +78,11 @@ $(function() {
 <li>register_window()
 : <a class="el" href="classryujin_1_1input.html#a55d935814f24639acba3d4adaf514b16">ryujin::input</a>
 </li>
+<li>relative_path()
+: <a class="el" href="classryujin_1_1filesystem_1_1path.html#a08554722d704209846f49bd707ca1a15">ryujin::filesystem::path</a>
+</li>
 <li>release()
-: <a class="el" href="classryujin_1_1render__manager.html#a5ea16b73c967f3f3b062f2b485aab27d">ryujin::render_manager</a>
+: <a class="el" href="classryujin_1_1render__manager.html#a1a70750a245903e4f3a098b6e58d1b78">ryujin::render_manager</a>
 , <a class="el" href="classryujin_1_1unique__ptr.html#a098048e04e202080bb9903b07ccfea4d">ryujin::unique_ptr&lt; T, Deleter &gt;</a>
 , <a class="el" href="classryujin_1_1unique__ptr_3_01_t_0f_0e_00_01_deleter_01_4.html#a1f46c8868b75d2a61f82c23e7d80544e">ryujin::unique_ptr&lt; T[], Deleter &gt;</a>
 </li>
@@ -91,6 +94,9 @@ $(function() {
 , <a class="el" href="classryujin_1_1entity__handle.html#add73058b92378e51550b4a1753a5e9bc">ryujin::entity_handle&lt; Type &gt;</a>
 , <a class="el" href="classryujin_1_1sparse__map.html#af47641ed37cc1ec92d98f958be432a13">ryujin::sparse_map&lt; EntityType, ValueType, PageSize &gt;</a>
 , <a class="el" href="classryujin_1_1sparse__set.html#aa74054bd9db96cd08dfacd6d2a767032">ryujin::sparse_set&lt; EntityType, PageSize &gt;</a>
+</li>
+<li>remove_filename()
+: <a class="el" href="classryujin_1_1filesystem_1_1path.html#a862fef203a1ee7aa4a970b628dbe09d5">ryujin::filesystem::path</a>
 </li>
 <li>remove_render_target()
 : <a class="el" href="classryujin_1_1base__render__pipeline.html#ad785ad21b2db2ee348ab148f82b7ecc7">ryujin::base_render_pipeline</a>
@@ -128,8 +134,14 @@ $(function() {
 </li>
 <li>replace()
 : <a class="el" href="classryujin_1_1base__registry.html#aaee3f4a3cebdec0adcc0ede7de6dd59a">ryujin::base_registry&lt; Type &gt;</a>
-, <a class="el" href="classryujin_1_1entity__handle.html#a799451c26adf8ebece1e52f0b02d4e51">ryujin::entity_handle&lt; Type &gt;</a>
+, <a class="el" href="classryujin_1_1entity__handle.html#a05694b064db9d7d14ddcead6b9ccf51c">ryujin::entity_handle&lt; Type &gt;</a>
 , <a class="el" href="classryujin_1_1sparse__map.html#ab9dd3d510dd90dbcad670f7936c91d72">ryujin::sparse_map&lt; EntityType, ValueType, PageSize &gt;</a>
+</li>
+<li>replace_extension()
+: <a class="el" href="classryujin_1_1filesystem_1_1path.html#a0769cfe39e724fd065af297590c26be5">ryujin::filesystem::path</a>
+</li>
+<li>replace_filename()
+: <a class="el" href="classryujin_1_1filesystem_1_1path.html#a1a481e70a4a19c886c946fb47d054622">ryujin::filesystem::path</a>
 </li>
 <li>reserve()
 : <a class="el" href="classryujin_1_1sparse__map.html#af4083867c0a350d1040e35ced8544ec6">ryujin::sparse_map&lt; EntityType, ValueType, PageSize &gt;</a>
@@ -141,7 +153,7 @@ $(function() {
 , <a class="el" href="classryujin_1_1inline__linear__allocator.html#ac4183eb5b3e6a1b91a12a002b7ddb840">ryujin::inline_linear_allocator&lt; N &gt;</a>
 , <a class="el" href="classryujin_1_1linear__allocator.html#a738b60430ca2db52658d2c21e255e564">ryujin::linear_allocator</a>
 , <a class="el" href="classryujin_1_1optional.html#a9c59307058deca2efaa7daadfe8813b1">ryujin::optional&lt; T &gt;</a>
-, <a class="el" href="classryujin_1_1render__manager.html#a02cc53e40b7fdc2b17d341655337dd3e">ryujin::render_manager</a>
+, <a class="el" href="classryujin_1_1render__manager.html#a091c6026a88985c153754ec1e4fe4cef">ryujin::render_manager</a>
 , <a class="el" href="classryujin_1_1shared__ptr.html#a79964e6d762153b960003b6818100f6e">ryujin::shared_ptr&lt; T, Deleter &gt;</a>
 , <a class="el" href="classryujin_1_1unique__ptr.html#a3df6dde10d29383ec0123635d224864f">ryujin::unique_ptr&lt; T, Deleter &gt;</a>
 , <a class="el" href="classryujin_1_1unique__ptr_3_01_t_0f_0e_00_01_deleter_01_4.html#a9460d7b2669e9ffef07bbaf23444a066">ryujin::unique_ptr&lt; T[], Deleter &gt;</a>
@@ -153,7 +165,16 @@ $(function() {
 : <a class="el" href="classryujin_1_1vector.html#a8d8a567151ade7f59fec5e2142e74a73">ryujin::vector&lt; Type, Allocator &gt;</a>
 </li>
 <li>result()
-: <a class="el" href="classryujin_1_1result.html#adbb3924378e4c0fd26ea139f03189be2">ryujin::result&lt; SuccessType, ErrorType &gt;</a>
+: <a class="el" href="classryujin_1_1result.html#acc51617187051b6775cb74b2d736fa99">ryujin::result&lt; SuccessType, ErrorType &gt;</a>
+</li>
+<li>root_directory()
+: <a class="el" href="classryujin_1_1filesystem_1_1path.html#a7e9c6768b830c30594219aba6151aaf2">ryujin::filesystem::path</a>
+</li>
+<li>root_name()
+: <a class="el" href="classryujin_1_1filesystem_1_1path.html#aa253b98f499a8da0cea2e66625d0ef87">ryujin::filesystem::path</a>
+</li>
+<li>root_path()
+: <a class="el" href="classryujin_1_1filesystem_1_1path.html#aa4b4656e947872f4c4b00b800280c0bc">ryujin::filesystem::path</a>
 </li>
 </ul>
 </div><!-- contents -->

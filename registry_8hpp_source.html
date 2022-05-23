@@ -96,7 +96,7 @@ $(function() {
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        {</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;            <a class="code" href="structryujin_1_1function__table.html">function_table</a> default_table;</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;            bool (*contains)(<span class="keywordtype">void</span>*, <span class="keywordtype">void</span>*); <span class="comment">// pool, entity pointer</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;            void (*remove)(<span class="keywordtype">void</span>*, <span class="keywordtype">void</span>*); <span class="comment">// pool, entity pointer</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;            void (*<a class="code" href="namespaceryujin_1_1filesystem.html#aa52c2c8a714e5926f55865e374ba691b">remove</a>)(<span class="keywordtype">void</span>*, <span class="keywordtype">void</span>*); <span class="comment">// pool, entity pointer</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;            void (*delete_map)(<span class="keywordtype">void</span>*); <span class="comment">// pool</span></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        };</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
@@ -239,7 +239,7 @@ $(function() {
 <div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;        T* try_get() <span class="keyword">const</span> noexcept;</div>
 <div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160; </div>
 <div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;        <a class="code" href="classryujin_1_1entity__handle.html">entity_handle</a>&amp; remove();</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;        <a class="code" href="classryujin_1_1entity__handle.html">entity_handle</a>&amp; <a class="code" href="namespaceryujin_1_1filesystem.html#aa52c2c8a714e5926f55865e374ba691b">remove</a>();</div>
 <div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160; </div>
 <div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
 <div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;        <a class="code" href="classryujin_1_1entity__handle.html">entity_handle</a>&amp; replace(<span class="keyword">const</span> T&amp; t);</div>
@@ -368,7 +368,7 @@ $(function() {
 <div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;        T* try_get(const <a class="code" href="classryujin_1_1entity__handle.html">entity_handle</a>&lt;Type&gt;&amp; handle) const noexcept;</div>
 <div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160; </div>
 <div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;        template &lt;typename T&gt;</div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;        <span class="keywordtype">void</span> remove(<a class="code" href="classryujin_1_1entity__handle.html">entity_handle</a>&lt;Type&gt;&amp; handle);</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="namespaceryujin_1_1filesystem.html#aa52c2c8a714e5926f55865e374ba691b">remove</a>(<a class="code" href="classryujin_1_1entity__handle.html">entity_handle</a>&lt;Type&gt;&amp; handle);</div>
 <div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160; </div>
 <div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;        template &lt;typename T&gt;</div>
 <div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;        <span class="keywordtype">void</span> replace(<a class="code" href="classryujin_1_1entity__handle.html">entity_handle</a>&lt;Type&gt;&amp; handle, const T&amp; value);</div>
@@ -1071,6 +1071,7 @@ $(function() {
 <div class="ttc" id="astructryujin_1_1function__table_html"><div class="ttname"><a href="structryujin_1_1function__table.html">ryujin::function_table</a></div><div class="ttdef"><b>Definition:</b> function_table.hpp:9</div></div>
 <div class="ttc" id="agroup___algorithms_html_ga05550ae137b154dca913eea0f9aeb619"><div class="ttname"><a href="group___algorithms.html#ga05550ae137b154dca913eea0f9aeb619">ryujin::copy</a></div><div class="ttdeci">constexpr RYUJIN_API Output copy(Input first, Input last, Output out)</div><div class="ttdoc">Copies the values from one iterator to another.</div><div class="ttdef"><b>Definition:</b> algorithm.hpp:44</div></div>
 <div class="ttc" id="anamespaceryujin_html_a995328a95eb1db6485569473b5c30b98"><div class="ttname"><a href="namespaceryujin.html#a995328a95eb1db6485569473b5c30b98">ryujin::operator!=</a></div><div class="ttdeci">constexpr bool operator!=(const slot_map_key &amp;lhs, const slot_map_key &amp;rhs) noexcept</div><div class="ttdef"><b>Definition:</b> slot_map.hpp:25</div></div>
+<div class="ttc" id="anamespaceryujin_1_1filesystem_html_aa52c2c8a714e5926f55865e374ba691b"><div class="ttname"><a href="namespaceryujin_1_1filesystem.html#aa52c2c8a714e5926f55865e374ba691b">ryujin::filesystem::remove</a></div><div class="ttdeci">result&lt; bool, error_code &gt; remove(const path &amp;p)</div></div>
 <div class="ttc" id="astructryujin_1_1entity__relationship__component_html"><div class="ttname"><a href="structryujin_1_1entity__relationship__component.html">ryujin::entity_relationship_component</a></div><div class="ttdef"><b>Definition:</b> entity_relationship_component.hpp:9</div></div>
 <div class="ttc" id="aevents_8hpp_html"><div class="ttname"><a href="events_8hpp.html">events.hpp</a></div></div>
 <div class="ttc" id="afunction__table_8hpp_html"><div class="ttname"><a href="function__table_8hpp.html">function_table.hpp</a></div></div>
