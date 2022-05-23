@@ -58,7 +58,7 @@ project ('ryujin')
         -- linkgroups ('On')
 
     filter ({})
-    
+
     dataDirectory = path.join(binaries, "data")
     projectDataDirectory = path.join("%{root}", "projects", "ryujin", "data")
 

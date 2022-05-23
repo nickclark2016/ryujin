@@ -50,13 +50,14 @@ project ('Sandbox')
     filter ({ 'configurations:Release' })
         optimize ('Speed')
 
-
     filter ({ 'system:windows' })
         cppdialect ('C++20')
+        defines ({ '_RYUJIN_WINDOWS' })
 
     filter ({ 'system:linux' })
         cppdialect ('C++2a')
         linkgroups ('On')
+        defines ({ '_RYUJIN_LINUX' })
         links ({
             'dl',
             'X11',
