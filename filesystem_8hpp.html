@@ -69,7 +69,8 @@ $(function() {
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">filesystem.hpp File Reference</div>  </div>
 </div><!--header-->
@@ -98,6 +99,8 @@ Namespaces</h2></td></tr>
 <tr class="memitem:namespaceryujin"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html">ryujin</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespaceryujin_1_1filesystem"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin_1_1filesystem.html">ryujin::filesystem</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespaceryujin_1_1filesystem_1_1detail"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin_1_1filesystem_1_1detail.html">ryujin::filesystem::detail</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
@@ -144,8 +147,8 @@ Functions</h2></td></tr>
 <tr class="separator:a277ac910c0fcb5bc89a2104a3bb2582a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a04c0efe0ead6d508d8b4ac9b4680e6ba"><td class="memItemLeft" align="right" valign="top">error_code&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin_1_1filesystem.html#a04c0efe0ead6d508d8b4ac9b4680e6ba">ryujin::filesystem::create_directory</a> (const path &amp;p)</td></tr>
 <tr class="separator:a04c0efe0ead6d508d8b4ac9b4680e6ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afee5de50fc46a5d1d2f62752685c71c6"><td class="memItemLeft" align="right" valign="top">result&lt; path, error_code &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin_1_1filesystem.html#afee5de50fc46a5d1d2f62752685c71c6">ryujin::filesystem::current_path</a> ()</td></tr>
-<tr class="separator:afee5de50fc46a5d1d2f62752685c71c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62e4ab996703faaccd897653ec2cddbd"><td class="memItemLeft" align="right" valign="top">path&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin_1_1filesystem.html#a62e4ab996703faaccd897653ec2cddbd">ryujin::filesystem::current_path</a> ()</td></tr>
+<tr class="separator:a62e4ab996703faaccd897653ec2cddbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a992403e8446cd3a342caf1e1f56a8452"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin_1_1filesystem.html#a992403e8446cd3a342caf1e1f56a8452">ryujin::filesystem::exists</a> (const path &amp;p)</td></tr>
 <tr class="separator:a992403e8446cd3a342caf1e1f56a8452"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5bb9033885face4e1bd96d9a21a57b09"><td class="memItemLeft" align="right" valign="top">result&lt; sz, error_code &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin_1_1filesystem.html#a5bb9033885face4e1bd96d9a21a57b09">ryujin::filesystem::file_size</a> (const path &amp;p)</td></tr>
@@ -164,6 +167,18 @@ Functions</h2></td></tr>
 <tr class="separator:abdc24be0f83f27599c8ceb14a249e832"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abdc44a98480f9e120d6ca0f1182b3110"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin_1_1filesystem.html#abdc44a98480f9e120d6ca0f1182b3110">ryujin::filesystem::is_symlink</a> (const path &amp;p)</td></tr>
 <tr class="separator:abdc44a98480f9e120d6ca0f1182b3110"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a6061afd5ebc01cf13bc844e5edd7a8f3"><td class="memTemplParams" colspan="2">template&lt;typename T , typename  = void&gt; </td></tr>
+<tr class="memitem:a6061afd5ebc01cf13bc844e5edd7a8f3"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin_1_1filesystem_1_1detail.html#a6061afd5ebc01cf13bc844e5edd7a8f3">ryujin::filesystem::detail::is_source_impl</a> = false</td></tr>
+<tr class="separator:a6061afd5ebc01cf13bc844e5edd7a8f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a435365c58228177ec995f983935a7463"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a435365c58228177ec995f983935a7463"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin_1_1filesystem_1_1detail.html#a435365c58228177ec995f983935a7463">ryujin::filesystem::detail::is_source</a> = is_source_impl&lt;decay_t&lt;T&gt;&gt;</td></tr>
+<tr class="separator:a435365c58228177ec995f983935a7463"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85609abd8bc4a7916f9aab35a361e10f"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:a85609abd8bc4a7916f9aab35a361e10f"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin_1_1filesystem_1_1detail.html#a85609abd8bc4a7916f9aab35a361e10f">ryujin::filesystem::detail::is_source&lt; path &gt;</a> = false</td></tr>
+<tr class="separator:a85609abd8bc4a7916f9aab35a361e10f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
