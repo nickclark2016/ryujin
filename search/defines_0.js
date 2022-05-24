@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['ryujin_5fapi_3869',['RYUJIN_API',['../export_8hpp.html#a490bbffc5b83af6f250c2944162b7ec6',1,'export.hpp']]]
+  ['ryujin_5fapi_3875',['RYUJIN_API',['../export_8hpp.html#a490bbffc5b83af6f250c2944162b7ec6',1,'export.hpp']]]
 ];

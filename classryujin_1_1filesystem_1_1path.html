@@ -68,7 +68,6 @@ $(function() {
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="classryujin_1_1filesystem_1_1path-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">ryujin::filesystem::path Class Reference</div>  </div>
@@ -100,10 +99,11 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ada736ae451792df7c92003ce07ac9f26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3cbb497c29bfde4f63179cdf3c982c0a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classryujin_1_1filesystem_1_1path.html">path</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classryujin_1_1filesystem_1_1path.html#a3cbb497c29bfde4f63179cdf3c982c0a">operator=</a> (<a class="el" href="classryujin_1_1filesystem_1_1path.html">path</a> &amp;&amp;) noexcept=default</td></tr>
 <tr class="separator:a3cbb497c29bfde4f63179cdf3c982c0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad20b87cda530931957ca46840932b73e"><td class="memTemplParams" colspan="2">template&lt;typename SrcT , enable_if_t&lt; is_extended_char_v&lt; value_type &gt; &amp;&amp;!is_same_v&lt; value_type, SrcT &gt;, bool &gt;  = true&gt; </td></tr>
+<tr class="memitem:ad20b87cda530931957ca46840932b73e"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classryujin_1_1filesystem_1_1path.html#ad20b87cda530931957ca46840932b73e">path</a> (const SrcT source)</td></tr>
+<tr class="separator:ad20b87cda530931957ca46840932b73e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf248fd4b8aa35148ae56ac19c58c65b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classryujin_1_1filesystem_1_1path.html#adf248fd4b8aa35148ae56ac19c58c65b">path</a> (const <a class="el" href="classryujin_1_1filesystem_1_1path.html#a17e57afc4f76484e1ffb302554fd71e8">string_type</a> &amp;source)</td></tr>
 <tr class="separator:adf248fd4b8aa35148ae56ac19c58c65b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a19a8139c07f8554ef2cf54517df2e608"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classryujin_1_1filesystem_1_1path.html#a19a8139c07f8554ef2cf54517df2e608">path</a> (const value_type *source)</td></tr>
-<tr class="separator:a19a8139c07f8554ef2cf54517df2e608"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a973e9ae3861e112ac87d47f1571fbfaf"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classryujin_1_1filesystem_1_1path.html#a973e9ae3861e112ac87d47f1571fbfaf">path</a> (<a class="el" href="classryujin_1_1filesystem_1_1path.html#a17e57afc4f76484e1ffb302554fd71e8">string_type</a> &amp;&amp;source)</td></tr>
 <tr class="separator:a973e9ae3861e112ac87d47f1571fbfaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49a11c69a7ac7a47507bd3d8c9599744"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classryujin_1_1filesystem_1_1path.html">path</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classryujin_1_1filesystem_1_1path.html#a49a11c69a7ac7a47507bd3d8c9599744">operator/=</a> (const <a class="el" href="classryujin_1_1filesystem_1_1path.html">path</a> &amp;rhs)</td></tr>
@@ -178,11 +178,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a7c2f7e6ec4158e327625e689457788c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5f96998c2bfcf81499a7cac8cb66244c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classryujin_1_1filesystem_1_1path.html#afeb22cebd09a6aca73f72ae33c7fdbb3">const_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classryujin_1_1filesystem_1_1path.html#a5f96998c2bfcf81499a7cac8cb66244c">cend</a> () const noexcept</td></tr>
 <tr class="separator:a5f96998c2bfcf81499a7cac8cb66244c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
-Static Public Attributes</h2></td></tr>
-<tr class="memitem:a68a955023027c6c316edcfabbb6a4f08"><td class="memItemLeft" align="right" valign="top">static constexpr wchar_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classryujin_1_1filesystem_1_1path.html#a68a955023027c6c316edcfabbb6a4f08">preferred_separator</a> = L'\\'</td></tr>
-<tr class="separator:a68a955023027c6c316edcfabbb6a4f08"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="afeb22cebd09a6aca73f72ae33c7fdbb3"></a>
@@ -330,11 +325,13 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="adf248fd4b8aa35148ae56ac19c58c65b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adf248fd4b8aa35148ae56ac19c58c65b">&#9670;&nbsp;</a></span>path() <span class="overload">[4/6]</span></h2>
+<a id="ad20b87cda530931957ca46840932b73e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad20b87cda530931957ca46840932b73e">&#9670;&nbsp;</a></span>path() <span class="overload">[4/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename SrcT , enable_if_t&lt; is_extended_char_v&lt; value_type &gt; &amp;&amp;!is_same_v&lt; value_type, SrcT &gt;, bool &gt;  = true&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -342,7 +339,7 @@ Static Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">ryujin::filesystem::path::path </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classryujin_1_1filesystem_1_1path.html#a17e57afc4f76484e1ffb302554fd71e8">string_type</a> &amp;&#160;</td>
+          <td class="paramtype">const SrcT&#160;</td>
           <td class="paramname"><em>source</em></td><td>)</td>
           <td></td>
         </tr>
@@ -356,8 +353,8 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a19a8139c07f8554ef2cf54517df2e608"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a19a8139c07f8554ef2cf54517df2e608">&#9670;&nbsp;</a></span>path() <span class="overload">[5/6]</span></h2>
+<a id="adf248fd4b8aa35148ae56ac19c58c65b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf248fd4b8aa35148ae56ac19c58c65b">&#9670;&nbsp;</a></span>path() <span class="overload">[5/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -368,7 +365,7 @@ Static Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">ryujin::filesystem::path::path </td>
           <td>(</td>
-          <td class="paramtype">const value_type *&#160;</td>
+          <td class="paramtype">const <a class="el" href="classryujin_1_1filesystem_1_1path.html#a17e57afc4f76484e1ffb302554fd71e8">string_type</a> &amp;&#160;</td>
           <td class="paramname"><em>source</em></td><td>)</td>
           <td></td>
         </tr>
@@ -1244,29 +1241,6 @@ Static Public Attributes</h2></td></tr>
           <td> const</td>
         </tr>
       </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a id="a68a955023027c6c316edcfabbb6a4f08"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a68a955023027c6c316edcfabbb6a4f08">&#9670;&nbsp;</a></span>preferred_separator</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr wchar_t ryujin::filesystem::path::preferred_separator = L'\\'</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>

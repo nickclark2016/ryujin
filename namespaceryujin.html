@@ -366,6 +366,10 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1is__destructible_3_01void_01_4.html">is_destructible&lt; void &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1is__extended__char.html">is_extended_char</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1is__extended__char_3_01wchar__t_01_4.html">is_extended_char&lt; wchar_t &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1is__function.html">is_function</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1is__integral.html">is_integral</a></td></tr>
@@ -1500,6 +1504,10 @@ Functions</h2></td></tr>
 <tr class="memitem:a1491c41448a40c8289edc8862b65d65c"><td class="memTemplParams" colspan="2">template&lt;typename T , sz N&gt; </td></tr>
 <tr class="memitem:a1491c41448a40c8289edc8862b65d65c"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a1491c41448a40c8289edc8862b65d65c">span</a> (const T[N]) -&gt; <a class="el" href="classryujin_1_1span.html">span</a>&lt; T &gt;</td></tr>
 <tr class="separator:a1491c41448a40c8289edc8862b65d65c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6cdcb647321c76eeef09276d3720d13e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a6cdcb647321c76eeef09276d3720d13e">convert_string</a> (const char *source, wchar_t *dest, <a class="el" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a> length)</td></tr>
+<tr class="separator:a6cdcb647321c76eeef09276d3720d13e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a82daa11efda2b7ce050a2b3f29b739dd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a82daa11efda2b7ce050a2b3f29b739dd">convert_string</a> (const wchar_t *source, char *dest, <a class="el" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a> length)</td></tr>
+<tr class="separator:a82daa11efda2b7ce050a2b3f29b739dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a60225ae5da9d9abd1c182937585e3465"><td class="memTemplParams" colspan="2">template&lt;typename Type &gt; </td></tr>
 <tr class="memitem:a60225ae5da9d9abd1c182937585e3465"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a60225ae5da9d9abd1c182937585e3465">strlen</a> (const Type *data) noexcept</td></tr>
 <tr class="separator:a60225ae5da9d9abd1c182937585e3465"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -2109,6 +2117,9 @@ Variables</h2></td></tr>
 <tr class="memitem:a8744a11bc332248a09889b07bc996e33"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a8744a11bc332248a09889b07bc996e33"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a8744a11bc332248a09889b07bc996e33">is_trivially_copyable_v</a> = <a class="el" href="structryujin_1_1is__trivially__copyable.html">is_trivially_copyable</a>&lt;T&gt;::value</td></tr>
 <tr class="separator:a8744a11bc332248a09889b07bc996e33"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6aee8497ee1e52ba6155d8b6d6ccf520"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a6aee8497ee1e52ba6155d8b6d6ccf520"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a6aee8497ee1e52ba6155d8b6d6ccf520">is_extended_char_v</a> = <a class="el" href="structryujin_1_1is__extended__char.html">is_extended_char</a>&lt;T&gt;::value</td></tr>
+<tr class="separator:a6aee8497ee1e52ba6155d8b6d6ccf520"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a403de6db53396eab8621d5f5d9275494"><td class="memTemplParams" colspan="2">template&lt;typename ... Ts&gt; </td></tr>
 <tr class="memitem:a403de6db53396eab8621d5f5d9275494"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a403de6db53396eab8621d5f5d9275494">all_nothrow_copy_constructible_v</a> = <a class="el" href="structryujin_1_1all__nothrow__copy__constructible.html">all_nothrow_copy_constructible</a>&lt;Ts...&gt;::value</td></tr>
 <tr class="separator:a403de6db53396eab8621d5f5d9275494"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -4615,6 +4626,74 @@ template&lt;typename T &gt; </div>
 <span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
   </tr>
 </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6cdcb647321c76eeef09276d3720d13e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6cdcb647321c76eeef09276d3720d13e">&#9670;&nbsp;</a></span>convert_string() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ryujin::convert_string </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>source</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">wchar_t *&#160;</td>
+          <td class="paramname"><em>dest</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a>&#160;</td>
+          <td class="paramname"><em>length</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a82daa11efda2b7ce050a2b3f29b739dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a82daa11efda2b7ce050a2b3f29b739dd">&#9670;&nbsp;</a></span>convert_string() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ryujin::convert_string </td>
+          <td>(</td>
+          <td class="paramtype">const wchar_t *&#160;</td>
+          <td class="paramname"><em>source</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>dest</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a>&#160;</td>
+          <td class="paramname"><em>length</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
 </div><div class="memdoc">
 
 </div>
@@ -11365,6 +11444,30 @@ template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">constexpr bool ryujin::is_destructible_v = <a class="el" href="structryujin_1_1is__destructible.html">is_destructible</a>&lt;T&gt;::value</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6aee8497ee1e52ba6155d8b6d6ccf520"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6aee8497ee1e52ba6155d8b6d6ccf520">&#9670;&nbsp;</a></span>is_extended_char_v</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool ryujin::is_extended_char_v = <a class="el" href="structryujin_1_1is__extended__char.html">is_extended_char</a>&lt;T&gt;::value</td>
         </tr>
       </table>
   </td>
