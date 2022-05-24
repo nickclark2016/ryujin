@@ -17,6 +17,11 @@
 
 namespace ryujin
 {
+	void convert_string(const char* source, wchar_t* dest, sz length);
+	void convert_string(const wchar_t* source, char* dest, sz length);
+	void convert_string(const char* source, char* dest, sz length);
+	void convert_string(const wchar_t* source, wchar_t* dest, sz length);
+
 	template<typename Type, typename Allocator = allocator<Type>>
 	class basic_string
 	{
@@ -75,6 +80,9 @@ namespace ryujin
 
 		constexpr const Type* c_str() const noexcept;
 
+		constexpr Type* data() noexcept;
+		constexpr const Type* data() const noexcept;
+
 		constexpr static sz npos = (~(sz)0);
 
 		constexpr basic_string substr(sz pos = 0, sz len = npos);
@@ -117,7 +125,7 @@ namespace ryujin
 	inline constexpr sz strlen(const Type* data) noexcept
 	{
 		sz i = 0;
-		while (data[i] != 0) ++i;
+		while (data[i] != as<Type>(0)) ++i;
 		return i;
 	}
 
@@ -626,6 +634,18 @@ namespace ryujin
 
 	template<typename Type, typename Allocator>
 	constexpr const Type* basic_string<Type, Allocator>::c_str() const noexcept
+	{
+		return _data;
+	}
+
+	template<typename Type, typename Allocator>
+	constexpr Type* basic_string<Type, Allocator>::data() noexcept
+	{
+		return _data;
+	}
+
+	template<typename Type, typename Allocator>
+	constexpr const Type* basic_string<Type, Allocator>::data() const noexcept
 	{
 		return _data;
 	}

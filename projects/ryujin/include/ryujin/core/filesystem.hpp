@@ -7,6 +7,24 @@
 
 namespace ryujin::filesystem
 {
+	class path;
+
+	namespace detail
+	{
+		template <typename T, typename = void>
+		inline constexpr bool is_source_impl = false;
+
+		template <typename T>
+		inline constexpr bool is_source_impl<T, void_t<typename iterator_traits<T>::value_type>> =
+			is_extended_char_v<typename iterator_traits<T>::value_type>;
+
+		template <typename T>
+		inline constexpr bool is_source = is_source_impl<decay_t<T>>;
+
+		template <>
+		inline constexpr bool is_source<path> = false;
+	}
+
 	enum class error_code
 	{
 		none
@@ -45,12 +63,12 @@ namespace ryujin::filesystem
 	public:
 #if defined(_RYUJIN_WINDOWS)
 		using value_type = wchar_t;
+		static constexpr wchar_t preferred_separator = L'\\';
 #elif defined(_RYUJIN_LINUX)
 		using value_type = char;
+		static constexpr wchar_t preferred_separator = '/';
 #endif
 		using string_type = basic_string<value_type>;
-
-		static constexpr wchar_t preferred_separator = L'\\';
 
 		path() = default;
 		path(const path&) = default;
@@ -59,8 +77,12 @@ namespace ryujin::filesystem
 		path& operator=(const path&) = default;
 		path& operator=(path&&) noexcept = default;
 
-		path(const string_type& source) : _source(source) {}
-		path(const value_type* source) : _source(source) {}
+		template<typename SrcT, enable_if_t<detail::is_source<SrcT>, int> = 0>
+		path(const SrcT& source)
+		{
+			_source = string_type(strlen(source));
+			convert_string(source, _source.data(), _source.length());
+		}
 
 		path(string_type&& source) : _source(ryujin::move(source)) {}
 
@@ -115,6 +137,7 @@ namespace ryujin::filesystem
 
 	private:
 		string_type _source;
+
 	};
 
 	class directory_entry
@@ -141,7 +164,7 @@ namespace ryujin::filesystem
 	error_code copy(const path& from, const path& to, copy_options options = copy_options::none);
 	error_code create_directory(const path& p);
 
-	result<path, error_code> current_path();
+	path current_path();
 
 	bool exists(const path& p);
 	result<sz, error_code> file_size(const path& p);

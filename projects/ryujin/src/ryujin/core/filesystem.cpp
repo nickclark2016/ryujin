@@ -8,7 +8,7 @@ namespace ryujin::filesystem
 {
 	void path::clear() noexcept
 	{
-
+		_source.clear();
 	}
 
 	path& path::make_preferred() noexcept
@@ -197,16 +197,16 @@ namespace ryujin::filesystem
 		return as<error_code>(ec.value());
 	}
 
-	result<path, error_code> current_path()
+	path current_path()
 	{
 		std::error_code ec;
 		std::filesystem::path p = std::filesystem::current_path(ec);
 
-		if (ec.value() != 0)
+		/*if (ec.value() != 0)
 		{
 			return result<path, error_code>::from_error(as<error_code>(ec.value()));
-		}
-		return result<path, error_code>::from_success(p.c_str());
+		}*/
+		return path(p.c_str());
 	}
 
 	bool exists(const path& p)

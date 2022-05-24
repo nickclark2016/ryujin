@@ -52,6 +52,24 @@ namespace ryujin
     {
         return end(c);
     }
+
+    template <typename T>
+    struct iterator_traits
+    {
+        using difference_type = typename T::difference_type;
+        using value_type = typename T::value_type;
+        using pointer = typename T::pointer;
+        using reference = typename T::reference;
+    };
+
+    template <typename T>
+    struct iterator_traits<T*>
+    {
+        using difference_type = ptr_diff;
+        using value_type = remove_cv_t<T>;
+        using pointer = T*;
+        using reference = T&;
+    };
 }
 
 #endif // iterator_hpp__
