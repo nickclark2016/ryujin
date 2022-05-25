@@ -6,6 +6,11 @@
 
 namespace ryujin::filesystem
 {
+	namespace detail
+	{
+
+	}
+
 	void path::clear() noexcept
 	{
 		_source.clear();
@@ -13,11 +18,21 @@ namespace ryujin::filesystem
 
 	path& path::make_preferred() noexcept
 	{
+#if defined(_RYUJIN_WINDOWS)
+		std::replace(_source.begin(), _source.end(), L'/', preferred_separator);
+#elif defined(_RYUJIN_LINUX)
+		std::replace(_source.begin(), _source.end(), L'\\', preferred_separator);
+#endif
 		return *this;
 	}
 
 	path& path::remove_filename() noexcept
 	{
+		const auto first = _source.begin();
+		const auto filename = _source.last_index_of('.');
+
+		_source.erase(first + filename, _source.end());
+
 		return *this;
 	}
 

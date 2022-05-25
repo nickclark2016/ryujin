@@ -71,6 +71,20 @@ namespace ryujin
 		constexpr const_iterator end() const noexcept;
 		constexpr const_iterator cend() const noexcept;
 
+		constexpr basic_string& replace(sz pos, sz len, const Type c);
+		constexpr basic_string& replace(sz pos, sz len, const Type* str);
+		constexpr basic_string& replace(sz pos, sz len, const basic_string& str);
+		constexpr basic_string& replace(iterator start, iterator end, const Type c);
+		constexpr basic_string& replace(iterator start, iterator end, const Type* str);
+		constexpr basic_string& replace(iterator start, iterator end, const basic_string& str);
+
+		constexpr basic_string& insert(sz pos, const basic_string& str);
+		constexpr basic_string& insert(sz pos, const Type* s);
+		constexpr basic_string& insert(sz pos, const Type* s, sz n);
+		constexpr basic_string& insert(sz pos, sz n, Type c);
+		constexpr void insert(iterator p, sz n, Type c);
+		constexpr iterator insert(iterator p, Type c);
+
 		constexpr void clear();
 		constexpr iterator erase(iterator it);
 		constexpr iterator erase(iterator start, iterator stop);
@@ -98,6 +112,10 @@ namespace ryujin
 		constexpr sz find(const Type* str, sz pos = 0) const noexcept;
 		constexpr sz find(const Type* str, sz pos, sz n) const noexcept;
 
+		constexpr sz rfind(const basic_string& str, sz pos = npos) const noexcept;
+		constexpr sz rfind(const Type* str, sz pos = npos) const;
+		constexpr sz rfind(const Type* str, sz pos, sz n) const;
+
 		constexpr bool contains(const Type token) const noexcept;
 		constexpr bool contains(const Type* str) const noexcept;
 		constexpr bool contains(const basic_string& str) const noexcept;
@@ -121,9 +139,86 @@ namespace ryujin
 		constexpr void _set_empty() noexcept;
 	};
 
+	namespace detail
+	{
+		template<typename T>
+		inline T* CharTypeAssignN(T* pDestination, size_t n, T c)
+		{
+			T* pDest = pDestination;
+			const T* const pEnd = pDestination + n;
+			while (pDest < pEnd)
+				*pDest++ = c;
+			return pDestination;
+		}
+
+		template <typename Type, typename Allocator>
+		const typename basic_string<Type, Allocator>::value_type* CharTypeStringFindEnd(const typename basic_string<Type, Allocator>::value_type* pBegin, const typename basic_string<Type, Allocator>::value_type* pEnd, typename basic_string<Type, Allocator>::value_type c)
+		{
+			const typename basic_string<Type, Allocator>::value_type* pTemp = pEnd;
+			while (--pTemp >= pBegin)
+			{
+				if (*pTemp == c)
+					return pTemp;
+			}
+
+			return pEnd;
+		}
+
+		template <typename Type, typename Allocator>
+		const typename basic_string<Type, Allocator>::value_type*
+			CharTypeStringRSearch(const typename basic_string<Type, Allocator>::value_type* p1Begin, const typename basic_string<Type, Allocator>::value_type* p1End,
+				const typename basic_string<Type, Allocator>::value_type* p2Begin, const typename basic_string<Type, Allocator>::value_type* p2End)
+		{
+			// Test for zero length strings, in which case we have a match or a failure,
+			// but the return value is the same either way.
+			if ((p1Begin == p1End) || (p2Begin == p2End))
+				return p1Begin;
+
+			// Test for a pattern of length 1.
+			if ((p2Begin + 1) == p2End)
+				return CharTypeStringFindEnd(p1Begin, p1End, *p2Begin);
+
+			// Test for search string length being longer than string length.
+			if ((p2End - p2Begin) > (p1End - p1Begin))
+				return p1End;
+
+			// General case.
+			const typename basic_string<Type, Allocator>::value_type* pSearchEnd = (p1End - (p2End - p2Begin) + 1);
+			const typename basic_string<Type, Allocator>::value_type* pCurrent1;
+			const typename basic_string<Type, Allocator>::value_type* pCurrent2;
+
+			while (pSearchEnd != p1Begin)
+			{
+				// Search for the last occurrence of *p2Begin.
+				pCurrent1 = CharTypeStringFindEnd(p1Begin, pSearchEnd, *p2Begin);
+				if (pCurrent1 == pSearchEnd) // If the first char of p2 wasn't found,
+					return p1End;           // then we immediately have failure.
+
+				// In this case, *pTemp == *p2Begin. So compare the rest.
+				pCurrent2 = p2Begin;
+				while (*pCurrent1++ == *pCurrent2++)
+				{
+					if (pCurrent2 == p2End)
+						return (pCurrent1 - (p2End - p2Begin));
+				}
+
+				// A smarter algorithm might know to subtract more than just one,
+				// but in most cases it won't make much difference anyway.
+				--pSearchEnd;
+			}
+
+			return p1End;
+		}
+	}
+
 	template<typename Type>
 	inline constexpr sz strlen(const Type* data) noexcept
 	{
+		if (data == nullptr)
+		{
+			return 0;
+		}
+
 		sz i = 0;
 		while (data[i] != as<Type>(0)) ++i;
 		return i;
@@ -417,7 +512,7 @@ namespace ryujin
 		}
 
 		_size = ryujin::strlen(data);
-		
+
 		if (_size != 0)
 		{
 			_data = _alloc.allocate(_size + 1);
@@ -583,6 +678,108 @@ namespace ryujin
 	}
 
 	template<typename Type, typename Allocator>
+	inline constexpr basic_string<Type, Allocator>& basic_string<Type, Allocator>::replace(sz pos, sz len, const Type c)
+	{
+		assert(false && "Needs implementation");
+		return *this;
+	}
+
+	template<typename Type, typename Allocator>
+	inline constexpr basic_string<Type, Allocator>& basic_string<Type, Allocator>::replace(sz pos, sz len, const Type* str)
+	{
+		const sz length = ryujin::min(len, _size - pos);
+
+		assert(false && "Needs implementation");
+		return *this;
+	}
+
+	template<typename Type, typename Allocator>
+	inline constexpr basic_string<Type, Allocator>& basic_string<Type, Allocator>::replace(sz pos, sz len, const basic_string& str)
+	{
+		return replace(pos, len, str._size);
+	}
+
+	template<typename Type, typename Allocator>
+	inline constexpr basic_string<Type, Allocator>& basic_string<Type, Allocator>::replace(iterator start, iterator end, const Type c)
+	{
+		const sz size = as<sz>(end - start);
+		return replace(begin() - start, size, c);
+	}
+
+	template<typename Type, typename Allocator>
+	inline constexpr basic_string<Type, Allocator>& basic_string<Type, Allocator>::replace(iterator start, iterator end, const Type* str)
+	{
+		const sz size = as<sz>(end - start);
+		return replace(begin() - start, size, str);
+	}
+
+	template<typename Type, typename Allocator>
+	inline constexpr basic_string<Type, Allocator>& basic_string<Type, Allocator>::replace(iterator start, iterator end, const basic_string& str)
+	{
+		return replace(start, end, str._data);
+	}
+
+	template<typename Type, typename Allocator>
+	inline constexpr basic_string<Type, Allocator>& basic_string<Type, Allocator>::insert(sz pos, const basic_string& str)
+	{
+		return insert(pos, str._data, str._size);
+	}
+
+	template<typename Type, typename Allocator>
+	inline constexpr basic_string<Type, Allocator>& basic_string<Type, Allocator>::insert(sz pos, const Type* s)
+	{
+		return insert(pos, s, strlen(s));
+	}
+
+	template<typename Type, typename Allocator>
+	inline constexpr basic_string<Type, Allocator>& basic_string<Type, Allocator>::insert(sz pos, const Type* s, sz n)
+	{
+		if (s == nullptr || n == 0)
+		{
+			return *this;
+		}
+
+		if (empty())
+		{
+			return operator=(s);
+		}
+
+		const sz newSize = n + _size;
+		const Type* buffer = _alloc.allocate(newSize + 1);
+		ryujin::memcpy(buffer, _data, pos);
+		ryujin::memcpy(buffer, s, n);
+		ryujin::memcpy(buffer, _data + (pos - n), (_size - pos));
+		buffer[newSize] = as<Type>(0);
+
+		_alloc.deallocate(_data, _size + 1);
+		_size = newSize;
+
+		_data = buffer;
+
+		return *this;
+	}
+
+	template<typename Type, typename Allocator>
+	inline constexpr basic_string<Type, Allocator>& basic_string<Type, Allocator>::insert(sz pos, sz n, Type c)
+	{
+		assert(false && "Needs implementation");
+		return *this;
+	}
+
+	template<typename Type, typename Allocator>
+	inline constexpr void basic_string<Type, Allocator>::insert(iterator p, sz n, Type c)
+	{
+		assert(false && "Needs implementation");
+	}
+
+	template<typename Type, typename Allocator>
+	inline constexpr basic_string<Type, Allocator>::iterator basic_string<Type, Allocator>::insert(iterator p, Type c)
+	{
+		assert(false && "Needs implementation");
+		return _data;
+	}
+
+	template<typename Type, typename Allocator>
 	inline constexpr void basic_string<Type, Allocator>::clear()
 	{
 		erase(begin(), end());
@@ -591,7 +788,7 @@ namespace ryujin
 	template<typename Type, typename Allocator>
 	inline constexpr typename basic_string<Type, Allocator>::iterator basic_string<Type, Allocator>::erase(iterator it)
 	{
-		return erase(it, it+1);
+		return erase(it, it + 1);
 	}
 
 	template<typename Type, typename Allocator>
@@ -606,7 +803,7 @@ namespace ryujin
 		if (!empty())
 		{
 			sz size = _size - count;
-			
+
 			Type* buffer = _alloc.allocate(size);
 			ryujin::memcpy(buffer, _data, s);
 			ryujin::memcpy(buffer, _data + e, end() - stop);
@@ -678,7 +875,7 @@ namespace ryujin
 	inline constexpr sz basic_string<Type, Allocator>::first_index_of_any(vector<Type> tokens) const noexcept
 	{
 		sz lowestIndex = npos;
-		
+
 		for (Type token : tokens)
 		{
 			sz tokenIndex = first_index_of(token);
@@ -694,7 +891,7 @@ namespace ryujin
 		sz lowestIndex = npos;
 		sz tokensLen = ryujin::strlen(tokens);
 
-		for(sz i = 0; i < tokensLen; i++)
+		for (sz i = 0; i < tokensLen; i++)
 		{
 			sz tokenIndex = first_index_of(tokens[i]);
 			lowestIndex = ryujin::min(tokenIndex, lowestIndex);
@@ -781,6 +978,40 @@ namespace ryujin
 		else
 		{
 			return npos;
+		}
+	}
+
+	template<typename Type, typename Allocator>
+	inline constexpr sz basic_string<Type, Allocator>::rfind(const basic_string& str, sz pos) const noexcept
+	{
+		return rfind(str._data, pos, str._size);
+	}
+
+	template<typename Type, typename Allocator>
+	inline constexpr sz basic_string<Type, Allocator>::rfind(const Type* str, sz pos) const
+	{
+		return rfind(str, pos, strlen(str));
+	}
+
+	template<typename Type, typename Allocator>
+	inline constexpr sz basic_string<Type, Allocator>::rfind(const Type* str, sz pos, sz n) const
+	{
+		if (n <= _size)
+		{
+			if (n)
+			{
+				const const_iterator pEnd = _data + ryujin::min(_size - n, pos) + n;
+				const const_iterator pResult = detail::CharTypeStringRSearch(begin(), pEnd, str, str + n);
+
+				if (pResult != pEnd)
+				{
+					return as<sz>(pResult - begin());
+				}
+			}
+			else
+			{
+				return ryujin::min(_size, pos);
+			}
 		}
 	}
 
