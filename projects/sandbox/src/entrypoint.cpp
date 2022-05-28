@@ -56,7 +56,7 @@ public:
         auto& cubeTx = cubeEnt.get<transform_component>();
         set_position(cubeTx, vec3(0.0f, 0.0f, 0.0f));
 
-        for (size_t i = 1; i < 2048; ++i)
+        for (size_t i = 1; i < 4096; ++i)
         {
             auto e = renderables.load_to_entities(ctx.get_assets(), *cube); // actually get first child
             auto& hierarchy = e.get<entity_relationship_component<registry::entity_type>>();

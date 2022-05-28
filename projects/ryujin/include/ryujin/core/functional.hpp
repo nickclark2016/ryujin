@@ -1367,6 +1367,25 @@ namespace ryujin
             return lhs == rhs;
         }
     };
+
+    /// <summary>
+    /// Functor struct testing for if one value is less than another.
+    /// </summary>
+    /// <typeparam name="T">Type of value to evaluate</typeparam>
+    template <typename T = void>
+    struct less
+    {
+        /// <summary>
+        /// Tests if one value is less than another operator based on the less than operator.
+        /// </summary>
+        /// <param name="lhs">Left hand value</param>
+        /// <param name="rhs">Right hand value</param>
+        /// <returns>True if left is less than right, else false</returns>
+        inline constexpr bool operator()(const T& lhs, const T& rhs) const
+        {
+            return lhs < rhs;
+        }
+    };
 }
 
 #endif // functional_hpp__

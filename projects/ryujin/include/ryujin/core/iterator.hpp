@@ -53,6 +53,13 @@ namespace ryujin
         return end(c);
     }
 
+    struct input_iterator_tag {};
+    struct output_iterator_tag {};
+    struct forward_iterator_tag {};
+    struct bidirectional_iterator_tag : public forward_iterator_tag {};
+    struct random_access_iterator_tag : public bidirectional_iterator_tag {};
+    struct contiguous_iterator_tag : public random_access_iterator_tag {};
+
     template <typename T>
     struct iterator_traits
     {
@@ -69,6 +76,8 @@ namespace ryujin
         using value_type = remove_cv_t<T>;
         using pointer = T*;
         using reference = T&;
+        using iterator_category = random_access_iterator_tag;
+        using iterator_concept = contiguous_iterator_tag;
     };
 }
 
