@@ -625,6 +625,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1scissor__region.html">scissor_region</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classryujin_1_1set.html">set</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1shader__module__create__info.html">shader_module_create_info</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1shader__stage__info.html">shader_stage_info</a></td></tr>
@@ -1492,6 +1494,12 @@ Functions</h2></td></tr>
 <tr class="memitem:aee31e0c7d54f0db0591c59704ee5ac77"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:aee31e0c7d54f0db0591c59704ee5ac77"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#aee31e0c7d54f0db0591c59704ee5ac77">linear_allocator_lock</a> (T) -&gt; <a class="el" href="classryujin_1_1linear__allocator__lock.html">linear_allocator_lock</a>&lt; T &gt;</td></tr>
 <tr class="separator:aee31e0c7d54f0db0591c59704ee5ac77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92c492a0e9821272a2f8f469de984828"><td class="memTemplParams" colspan="2">template&lt;typename T , typename ... Args&gt; </td></tr>
+<tr class="memitem:a92c492a0e9821272a2f8f469de984828"><td class="memTemplItemLeft" align="right" valign="top">constexpr T *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a92c492a0e9821272a2f8f469de984828">construct_at</a> (T *p, Args &amp;&amp;... args) noexcept(noexcept(::new((void *) 0) T(<a class="el" href="namespaceryujin.html#a394f278b474d37298e0e0824fddd3335">declval</a>&lt; Args &gt;()...)))</td></tr>
+<tr class="separator:a92c492a0e9821272a2f8f469de984828"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c85f4e178f4c19429a76c6631dbfed4"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a9c85f4e178f4c19429a76c6631dbfed4"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a9c85f4e178f4c19429a76c6631dbfed4">destroy_at</a> (T *p)</td></tr>
+<tr class="separator:a9c85f4e178f4c19429a76c6631dbfed4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a18897e7da69323e15901e4fd4b9c21e0"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a18897e7da69323e15901e4fd4b9c21e0"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classryujin_1_1optional.html">optional</a>&lt; std::decay_t&lt; T &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a18897e7da69323e15901e4fd4b9c21e0">make_optional</a> (T &amp;&amp;value)</td></tr>
 <tr class="separator:a18897e7da69323e15901e4fd4b9c21e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -4657,6 +4665,44 @@ template&lt;numeric T&gt; </div>
 
 </div>
 </div>
+<a id="a92c492a0e9821272a2f8f469de984828"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a92c492a0e9821272a2f8f469de984828">&#9670;&nbsp;</a></span>construct_at()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , typename ... Args&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr T* ryujin::construct_at </td>
+          <td>(</td>
+          <td class="paramtype">T *&#160;</td>
+          <td class="paramname"><em>p</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Args &amp;&amp;...&#160;</td>
+          <td class="paramname"><em>args</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a765fef192f20b949d2645e584f35207a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a765fef192f20b949d2645e584f35207a">&#9670;&nbsp;</a></span>construct_fn_table()</h2>
 
@@ -4952,6 +4998,34 @@ template&lt;numeric T&gt; </div>
           <td></td>
           <td>)</td>
           <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9c85f4e178f4c19429a76c6631dbfed4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c85f4e178f4c19429a76c6631dbfed4">&#9670;&nbsp;</a></span>destroy_at()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr void ryujin::destroy_at </td>
+          <td>(</td>
+          <td class="paramtype">T *&#160;</td>
+          <td class="paramname"><em>p</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
   </td>
