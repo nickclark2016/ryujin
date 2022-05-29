@@ -4,9 +4,8 @@
 #include "allocator.hpp"
 #include "functional.hpp"
 #include "iterator.hpp"
+#include "memory.hpp"
 #include "primitives.hpp"
-
-#include <new>
 
 namespace ryujin
 {
@@ -76,6 +75,7 @@ namespace ryujin
 
         iterator erase(iterator it);
         iterator insert(const T& v);
+        iterator insert(T&& v);
 
         iterator begin() noexcept;
         const_iterator begin() const noexcept;
@@ -267,7 +267,70 @@ namespace ryujin
         }
 
         node* n = _nodeAllocator.allocate(1);
-        ::new(n) node(v);
+        ryujin::construct_at<node>(n, v);
+
+        n->parent = parent;
+        n->color = node_color::RED;
+
+        if (parent == nullptr)
+        {
+            _root = n;
+        }
+        else if (_less(v, parent->value))
+        {
+            parent->left = n;
+        }
+        else
+        {
+            parent->right = n;
+        }
+
+        ++_size;
+
+        if (n->parent == nullptr)
+        {
+            n->color = node_color::BLACK;
+            return in_order_iterator{ .n = n };
+        }
+
+        if (n->parent->parent == nullptr)
+        {
+            return in_order_iterator{ .n = n };
+        }
+
+        _rebalance_after_insert(n);
+
+        return in_order_iterator{ .n = n };
+    }
+
+    template <typename T, template <typename> typename Allocator, typename LessComparator, typename EqualityComparator, bool AllowDuplicates>
+    inline typename rb_tree<T, Allocator, LessComparator, EqualityComparator, AllowDuplicates>::iterator rb_tree<T, Allocator, LessComparator, EqualityComparator, AllowDuplicates>::insert(T&& v)
+    {
+        node* parent = nullptr;
+        node* x = _root;
+
+        while (x != nullptr)
+        {
+            parent = x;
+            if (_less(v, x->value))
+            {
+                x = x->left;
+            }
+            else
+            {
+                if constexpr (!AllowDuplicates)
+                {
+                    if (_equals(v, x->value))
+                    {
+                        return end();
+                    }
+                }
+                x = x->right;
+            }
+        }
+
+        node* n = _nodeAllocator.allocate(1);
+        ryujin::construct_at<node>(n, ryujin::forward<T>(v));
 
         n->parent = parent;
         n->color = node_color::RED;
@@ -441,7 +504,7 @@ namespace ryujin
 
         _delete_node(n->left);
         _delete_node(n->right);
-        n->~node();
+        ryujin::destroy_at(n);
         _nodeAllocator.deallocate(n, 1);
     }
     
@@ -645,6 +708,7 @@ namespace ryujin
             y->left->parent = y;
             y->color = toDelete->color;
         }
+        ryujin::destroy_at(toDelete);
         _nodeAllocator.deallocate(toDelete, 1);
         if (originalColor == node_color::BLACK)
         {
