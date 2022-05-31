@@ -17,11 +17,14 @@ namespace ryujin
         bool empty() const noexcept;
         sz size() const noexcept;
         
+        void clear();
         iterator erase(iterator it);
+
         iterator insert(const T& t);
         iterator insert(T&& t);
 
-        iterator find(const T& t) const noexcept;
+        iterator find(const T& t) noexcept;
+        const_iterator find(const T& t) const noexcept;
 
         iterator begin() noexcept;
         const_iterator begin() const noexcept;
@@ -46,6 +49,12 @@ namespace ryujin
     {
         return _storage.size();
     }
+
+    template<typename T, template <typename> typename Allocator, typename Less, typename Equals>
+    inline void set<T, Allocator, Less, Equals>::clear()
+    {
+        return _storage.clear();
+    }
     
     template<typename T, template <typename> typename Allocator, typename Less, typename Equals>
     inline set<T, Allocator, Less, Equals>::iterator set<T, Allocator, Less, Equals>::erase(iterator it)
@@ -66,7 +75,13 @@ namespace ryujin
     }
     
     template<typename T, template <typename> typename Allocator, typename Less, typename Equals>
-    inline set<T, Allocator, Less, Equals>::iterator set<T, Allocator, Less, Equals>::find(const T& t) const noexcept
+    inline set<T, Allocator, Less, Equals>::iterator set<T, Allocator, Less, Equals>::find(const T& t) noexcept
+    {
+        return _storage.find(t);
+    }
+
+    template<typename T, template <typename> typename Allocator, typename Less, typename Equals>
+    inline set<T, Allocator, Less, Equals>::const_iterator set<T, Allocator, Less, Equals>::find(const T& t) const noexcept
     {
         return _storage.find(t);
     }

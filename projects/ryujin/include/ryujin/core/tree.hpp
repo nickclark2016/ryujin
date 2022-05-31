@@ -71,8 +71,16 @@ namespace ryujin
         rb_tree& operator=(const rb_tree& rhs);
         rb_tree& operator=(rb_tree&& rhs) noexcept;
 
-        iterator find(const T& v) const noexcept;
+        iterator find(const T& v) noexcept;
+        const_iterator find(const T& v) const noexcept;
 
+        template <typename U>
+        iterator find(const U& v) noexcept;
+
+        template <typename U>
+        const_iterator find(const U& v) const noexcept;
+
+        void clear();
         iterator erase(iterator it);
         iterator insert(const T& v);
         iterator insert(T&& v);
@@ -204,7 +212,7 @@ namespace ryujin
     }
 
     template <typename T, template <typename> typename Allocator, typename LessComparator, typename EqualityComparator, bool AllowDuplicates>
-    inline typename rb_tree<T, Allocator, LessComparator, EqualityComparator, AllowDuplicates>::iterator rb_tree<T, Allocator, LessComparator, EqualityComparator, AllowDuplicates>::find(const T& v) const noexcept
+    inline typename rb_tree<T, Allocator, LessComparator, EqualityComparator, AllowDuplicates>::iterator rb_tree<T, Allocator, LessComparator, EqualityComparator, AllowDuplicates>::find(const T& v) noexcept
     {
         node* it = _root;
         while (it != nullptr)
@@ -223,6 +231,82 @@ namespace ryujin
             }
         }
         return end();
+    }
+
+    template <typename T, template <typename> typename Allocator, typename LessComparator, typename EqualityComparator, bool AllowDuplicates>
+    inline typename rb_tree<T, Allocator, LessComparator, EqualityComparator, AllowDuplicates>::const_iterator rb_tree<T, Allocator, LessComparator, EqualityComparator, AllowDuplicates>::find(const T& v) const noexcept
+    {
+        node* it = _root;
+        while (it != nullptr)
+        {
+            if (_less(v, it->value))
+            {
+                it = it->left;
+            }
+            else
+            {
+                if (_equals(v, it->value))
+                {
+                    return in_order_iterator{ .n = it };
+                }
+                it = it->right;
+            }
+        }
+        return cend();
+    }
+
+    template<typename T, template <typename> typename Allocator, typename LessComparator, typename EqualityComparator, bool AllowDuplicates>
+    template<typename U>
+    inline rb_tree<T, Allocator, LessComparator, EqualityComparator, AllowDuplicates>::iterator rb_tree<T, Allocator, LessComparator, EqualityComparator, AllowDuplicates>::find(const U& v) noexcept
+    {
+        node* it = _root;
+        while (it != nullptr)
+        {
+            if (_less(v, it->value))
+            {
+                it = it->left;
+            }
+            else
+            {
+                if (_equals(v, it->value))
+                {
+                    return in_order_iterator{ .n = it };
+                }
+                it = it->right;
+            }
+        }
+        return cend();
+    }
+
+    template<typename T, template <typename> typename Allocator, typename LessComparator, typename EqualityComparator, bool AllowDuplicates>
+    template<typename U>
+    inline rb_tree<T, Allocator, LessComparator, EqualityComparator, AllowDuplicates>::const_iterator rb_tree<T, Allocator, LessComparator, EqualityComparator, AllowDuplicates>::find(const U& v) const noexcept
+    {
+        node* it = _root;
+        while (it != nullptr)
+        {
+            if (_less(v, it->value))
+            {
+                it = it->left;
+            }
+            else
+            {
+                if (_equals(v, it->value))
+                {
+                    return in_order_iterator{ .n = it };
+                }
+                it = it->right;
+            }
+        }
+        return cend();
+    }
+
+    template <typename T, template <typename> typename Allocator, typename LessComparator, typename EqualityComparator, bool AllowDuplicates>
+    inline void rb_tree<T, Allocator, LessComparator, EqualityComparator, AllowDuplicates>::clear()
+    {
+        _delete_node(_root);
+        _root = nullptr;
+        _size = 0;
     }
 
     template <typename T, template <typename> typename Allocator, typename LessComparator, typename EqualityComparator, bool AllowDuplicates>
@@ -625,7 +709,7 @@ namespace ryujin
                 }
                 else
                 {
-                    if (s->left->color == 0)
+                    if (s->left->color == node_color::BLACK)
                     {
                         s->right->color = node_color::BLACK;
                         s->color = node_color::RED;
@@ -666,7 +750,8 @@ namespace ryujin
     template <typename T, template <typename> typename Allocator, typename LessComparator, typename EqualityComparator, bool AllowDuplicates>
     inline void rb_tree<T, Allocator, LessComparator, EqualityComparator, AllowDuplicates>::_erase_helper(iterator it)
     {
-        node* x = nullptr, y = nullptr;
+        node* x = nullptr;
+        node* y = nullptr;
         node* toDelete = it.n;
 
         if (it == end())
