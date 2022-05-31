@@ -1,14 +1,8 @@
 var searchData=
 [
-  ['reference_3300',['reference',['../classryujin_1_1allocator.html#ab41d022b4620c1630b869906dc4b6f40',1,'ryujin::allocator::reference()'],['../structryujin_1_1iterator__traits.html#a964e40fbece3e8591fe51d0ec71763a4',1,'ryujin::iterator_traits::reference()'],['../structryujin_1_1iterator__traits_3_01_t_01_5_01_4.html#a7a01dbe2c14dd1aa32f94fecc07b6050',1,'ryujin::iterator_traits&lt; T * &gt;::reference()'],['../classryujin_1_1static__vector.html#a1896bf9155e37fc49089e79fb9c69538',1,'ryujin::static_vector::reference()']]],
-  ['registry_3301',['registry',['../namespaceryujin.html#afe984a3fec394b915edd27c4a76aa31f',1,'ryujin']]],
-  ['remove_5fall_5fextents_5ft_3302',['remove_all_extents_t',['../namespaceryujin.html#a4a18e9f779a221b602e0c08f3c90d175',1,'ryujin']]],
-  ['remove_5fconst_5ft_3303',['remove_const_t',['../namespaceryujin.html#ad0b87c52e89ded1ba00368b03a8b511f',1,'ryujin']]],
-  ['remove_5fcv_5ft_3304',['remove_cv_t',['../namespaceryujin.html#aae4c2293350bde853e67bbd3e33d643a',1,'ryujin']]],
-  ['remove_5fcvref_5ft_3305',['remove_cvref_t',['../namespaceryujin.html#abfbaf270e90c5a2913dbc45efa8d7335',1,'ryujin']]],
-  ['remove_5fextent_5ft_3306',['remove_extent_t',['../namespaceryujin.html#a7207d61a2a6680a92f849bbcd48c182d',1,'ryujin']]],
-  ['remove_5fpointer_5ft_3307',['remove_pointer_t',['../namespaceryujin.html#ad2cc1b4afffd10961971a4475fcf2f92',1,'ryujin']]],
-  ['remove_5freference_5ft_3308',['remove_reference_t',['../namespaceryujin.html#a25c95ea4eb236111add2bfa9f67009c3',1,'ryujin']]],
-  ['remove_5fvolatile_5ft_3309',['remove_volatile_t',['../namespaceryujin.html#aada078ca34c96952960f0fbc9cc13f49',1,'ryujin']]],
-  ['render_5fpass_3310',['render_pass',['../namespaceryujin.html#a53318442f50a415ff8d043fffb38710b',1,'ryujin']]]
+  ['pair_5ftype_3308',['pair_type',['../classryujin_1_1map.html#a96df63ca73100931296a0f78832ab989',1,'ryujin::map']]],
+  ['pipeline_3309',['pipeline',['../namespaceryujin.html#ab3f615715473f5ede0e324cd51786354',1,'ryujin']]],
+  ['pipeline_5flayout_3310',['pipeline_layout',['../namespaceryujin.html#a31d4d6b84a91f4217c03db6444ca170a',1,'ryujin']]],
+  ['pointer_3311',['pointer',['../classryujin_1_1allocator.html#ad461432804fbfa6cd7968ea971d177f0',1,'ryujin::allocator::pointer()'],['../structryujin_1_1iterator__traits.html#ab072f2f709c050f2ccc80b4a41eb3aec',1,'ryujin::iterator_traits::pointer()'],['../structryujin_1_1iterator__traits_3_01_t_01_5_01_4.html#aae721b752f817138b1de17f4738b18d8',1,'ryujin::iterator_traits&lt; T * &gt;::pointer()'],['../classryujin_1_1unique__ptr.html#a99e0939d538bc2e5aea6fbc10bb77249',1,'ryujin::unique_ptr::pointer()'],['../classryujin_1_1unique__ptr_3_01_t_0f_0e_00_01_deleter_01_4.html#a51f5ca57a83eee1037e02f1fadff98e9',1,'ryujin::unique_ptr&lt; T[], Deleter &gt;::pointer()'],['../classryujin_1_1shared__ptr.html#aa6a79c30a92dee1e09b58d366f5d88d9',1,'ryujin::shared_ptr::pointer()'],['../classryujin_1_1static__vector.html#a75f34c02520de0ae7c1aad7c8b40a582',1,'ryujin::static_vector::pointer()']]],
+  ['ptr_5fdiff_3312',['ptr_diff',['../namespaceryujin.html#ad388e5d297b4feee974bcdee22fccb1f',1,'ryujin']]]
 ];
