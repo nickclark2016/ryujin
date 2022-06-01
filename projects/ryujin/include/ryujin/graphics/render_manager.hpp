@@ -7,6 +7,7 @@
 
 #include "pipelines/base_render_pipeline.hpp"
 
+#include "../core/export.hpp"
 #include "../core/linear_allocator.hpp"
 #include "../core/optional.hpp"
 #include "../core/primitives.hpp"
@@ -41,17 +42,17 @@ namespace ryujin
     class command_list
     {
     public:
-        command_list() = default;
-        void begin();
-        void end();
-        void submit(const submit_info& info, const fence f = nullptr);
+        RYUJIN_API command_list() = default;
+        RYUJIN_API void begin();
+        RYUJIN_API void end();
+        RYUJIN_API void submit(const submit_info& info, const fence f = nullptr);
 
-        void barrier(pipeline_stage src, pipeline_stage dst, const span<memory_barrier>& memBarriers, const span<buffer_memory_barrier>& bufMemBarriers, const span<image_memory_barrier>& imgMemBarriers);
-        void push_constants(const pipeline_layout& layout, const shader_stage stages, const u32 offset, const u32 size, const void* data);
+        RYUJIN_API void barrier(pipeline_stage src, pipeline_stage dst, const span<memory_barrier>& memBarriers, const span<buffer_memory_barrier>& bufMemBarriers, const span<image_memory_barrier>& imgMemBarriers);
+        RYUJIN_API void push_constants(const pipeline_layout& layout, const shader_stage stages, const u32 offset, const u32 size, const void* data);
 
-        operator bool() const noexcept;
+        RYUJIN_API operator bool() const noexcept;
 
-        u32 queue_index() const noexcept;
+        RYUJIN_API u32 queue_index() const noexcept;
     protected:
         command_list(VkCommandBuffer cmdBuffer, vkb::DispatchTable& fns, VkQueue target, u32 queueIndex);
 
@@ -66,21 +67,21 @@ namespace ryujin
     class graphics_command_list : public command_list
     {
     public:
-        ~graphics_command_list() = default;
+        RYUJIN_API ~graphics_command_list() = default;
 
-        void begin_render_pass(const render_pass_begin_info& begin);
-        void end_render_pass();
+        RYUJIN_API void begin_render_pass(const render_pass_begin_info& begin);
+        RYUJIN_API void end_render_pass();
 
-        void bind_graphics_pipeline(const pipeline& pipeline);
-        void bind_graphics_descriptor_sets(const pipeline_layout& layout, const span<descriptor_set>& sets, const u32 firstSet = 0, const span<u32>& offsets = {});
-        void bind_index_buffer(const buffer& buf, const sz offset = 0);
-        void bind_vertex_buffers(const sz first, const span<buffer>& buffers, const span<sz>& offsets = {});
+        RYUJIN_API void bind_graphics_pipeline(const pipeline& pipeline);
+        RYUJIN_API void bind_graphics_descriptor_sets(const pipeline_layout& layout, const span<descriptor_set>& sets, const u32 firstSet = 0, const span<u32>& offsets = {});
+        RYUJIN_API void bind_index_buffer(const buffer& buf, const sz offset = 0);
+        RYUJIN_API void bind_vertex_buffers(const sz first, const span<buffer>& buffers, const span<sz>& offsets = {});
 
-        void draw_arrays(const u32 count, const u32 instances = 1, const u32 firstVertex = 0, const u32 firstInstance = 0);
-        void draw_indexed_indirect(const buffer& indirect, const sz indirectOffset, const buffer& count, const sz countOffset, const sz maxDrawCount, const sz stride);
+        RYUJIN_API void draw_arrays(const u32 count, const u32 instances = 1, const u32 firstVertex = 0, const u32 firstInstance = 0);
+        RYUJIN_API void draw_indexed_indirect(const buffer& indirect, const sz indirectOffset, const buffer& count, const sz countOffset, const sz maxDrawCount, const sz stride);
 
-        void set_viewports(const span<viewport>& viewports);
-        void set_scissors(const span<scissor_region>& scissors);
+        RYUJIN_API void set_viewports(const span<viewport>& viewports);
+        RYUJIN_API void set_scissors(const span<scissor_region>& scissors);
 
     private:
         graphics_command_list(VkCommandBuffer cmdBuffer, vkb::DispatchTable& fns, VkQueue target, u32 queueIndex);
@@ -91,10 +92,10 @@ namespace ryujin
     class transfer_command_list : public command_list
     {
     public:
-        ~transfer_command_list() = default;
+        RYUJIN_API ~transfer_command_list() = default;
 
-        void copy(const buffer& src, const buffer& dst, const span<buffer_copy_regions>& regions);
-        void copy(const buffer& src, const image& dst, const image_layout layout, const span<buffer_image_copy_regions>& regions);
+        RYUJIN_API void copy(const buffer& src, const buffer& dst, const span<buffer_copy_regions>& regions);
+        RYUJIN_API void copy(const buffer& src, const image& dst, const image_layout layout, const span<buffer_image_copy_regions>& regions);
 
     private:
         transfer_command_list(VkCommandBuffer cmdBuffer, vkb::DispatchTable& fns, VkQueue target, u32 queueIndex);
@@ -112,12 +113,12 @@ namespace ryujin
             POOL_ALLOCATION_FAILURE
         };
 
-        descriptor_allocator() = default;
-        explicit descriptor_allocator(render_manager* manager);
+        RYUJIN_API descriptor_allocator() = default;
+        RYUJIN_API explicit descriptor_allocator(render_manager* manager);
 
-        void reset();
-        result<descriptor_set, error_code> allocate(descriptor_set_layout layout);
-        void clean_up();
+        RYUJIN_API void reset();
+        RYUJIN_API result<descriptor_set, error_code> allocate(descriptor_set_layout layout);
+        RYUJIN_API void clean_up();
 
     private:
         friend class render_manager;
@@ -140,11 +141,11 @@ namespace ryujin
             ALLOCATION_FAILURE
         };
 
-        explicit descriptor_layout_cache(render_manager& manager);
+        RYUJIN_API explicit descriptor_layout_cache(render_manager& manager);
 
-        result<descriptor_set_layout, error_code> allocate(const descriptor_set_layout_create_info& info);
+        RYUJIN_API result<descriptor_set_layout, error_code> allocate(const descriptor_set_layout_create_info& info);
 
-        void flush();
+        RYUJIN_API void flush();
 
         struct descriptor_layout_cache_entry
         {
@@ -201,20 +202,20 @@ namespace ryujin
     class descriptor_writer
     {
     public:
-        descriptor_writer(render_manager* manager);
+        RYUJIN_API descriptor_writer(render_manager* manager);
 
-        descriptor_writer() = default;
-        descriptor_writer(const descriptor_writer&) = delete;
-        descriptor_writer(descriptor_writer&& writer) noexcept;
-        ~descriptor_writer() = default;
+        RYUJIN_API descriptor_writer() = default;
+        RYUJIN_API descriptor_writer(const descriptor_writer&) = delete;
+        RYUJIN_API descriptor_writer(descriptor_writer&& writer) noexcept;
+        RYUJIN_API ~descriptor_writer() = default;
 
-        descriptor_writer& operator=(const descriptor_writer&) = delete;
-        descriptor_writer& operator=(descriptor_writer&& rhs) noexcept;
+        RYUJIN_API descriptor_writer& operator=(const descriptor_writer&) = delete;
+        RYUJIN_API descriptor_writer& operator=(descriptor_writer&& rhs) noexcept;
         
-        descriptor_writer& write_buffer(const descriptor_set set, const u32 binding, const descriptor_type type, const u32 element,
+        RYUJIN_API descriptor_writer& write_buffer(const descriptor_set set, const u32 binding, const descriptor_type type, const u32 element,
             const span<descriptor_buffer_info>& buffers);
 
-        descriptor_writer& write_image(const descriptor_set set, const u32 binding, const descriptor_type type, const u32 element,
+        RYUJIN_API descriptor_writer& write_image(const descriptor_set set, const u32 binding, const descriptor_type type, const u32 element,
             const span<descriptor_image_info>& images);
 
     private:
@@ -283,76 +284,76 @@ namespace ryujin
             ILLEGAL_ARGUMENT
         };
 
-        static result<unique_ptr<render_manager>, error_code> create(const unique_ptr<window>& win, vkb::Instance instance, vkb::Device device, VmaAllocator allocator, const bool nameObjects, registry& reg);
+        RYUJIN_API static result<unique_ptr<render_manager>, error_code> create(const unique_ptr<window>& win, vkb::Instance instance, vkb::Device device, VmaAllocator allocator, const bool nameObjects, registry& reg);
 
         render_manager(const render_manager&) = delete;
         render_manager(render_manager&&) noexcept = delete;
-        ~render_manager();
+        RYUJIN_API ~render_manager();
 
         render_manager& operator=(const render_manager&) = delete;
         render_manager& operator=(render_manager&&) noexcept = delete;
 
-        error_code pre_render();
+        RYUJIN_API error_code pre_render();
 
-        error_code start_frame();
-        error_code render();
-        error_code end_frame();
+        RYUJIN_API error_code start_frame();
+        RYUJIN_API error_code render();
+        RYUJIN_API error_code end_frame();
 
-        u32 get_swapchain_image_count() const noexcept;
-        result<image_view, error_code> get_swapchain_image(const u32 index) const noexcept;
-        image_view get_swapchain_image() const noexcept;
-        data_format get_swapchain_format() const noexcept;
-        u32 get_swapchain_width() const noexcept;
-        u32 get_swapchain_height() const noexcept;
-        u32 get_frame_in_flight() const noexcept;
-        u32 get_frames_in_flight() const noexcept;
+        RYUJIN_API u32 get_swapchain_image_count() const noexcept;
+        RYUJIN_API result<image_view, error_code> get_swapchain_image(const u32 index) const noexcept;
+        RYUJIN_API image_view get_swapchain_image() const noexcept;
+        RYUJIN_API data_format get_swapchain_format() const noexcept;
+        RYUJIN_API u32 get_swapchain_width() const noexcept;
+        RYUJIN_API u32 get_swapchain_height() const noexcept;
+        RYUJIN_API u32 get_frame_in_flight() const noexcept;
+        RYUJIN_API u32 get_frames_in_flight() const noexcept;
 
-        result<buffer, error_code> create(const buffer_create_info& bufferInfo, const allocation_create_info& allocInfo);
-        result<descriptor_pool, error_code> create(const descriptor_pool_create_info& info);
-        result<descriptor_set_layout, error_code> create(const descriptor_set_layout_create_info& info);
-        result<fence, error_code> create(const fence_create_info& info);
-        result<frame_buffer, error_code> create(const frame_buffer_create_info& framebufferInfo);
-        result<image, error_code> create(const image_create_info& imageInfo, const allocation_create_info& allocInfo);
-        result<image_view, error_code> create(const image_view_create_info& info);
-        result<pipeline, error_code> create(const graphics_pipeline_create_info& info);
-        result<pipeline_layout, error_code> create(const pipeline_layout_create_info& info);
-        result<render_pass, error_code> create(const render_pass_create_info& info);
-        result<image_sampler, error_code> create(const sampler_create_info& info);
-        result<shader_module, error_code> create(const shader_module_create_info& info);
+        RYUJIN_API result<buffer, error_code> create(const buffer_create_info& bufferInfo, const allocation_create_info& allocInfo);
+        RYUJIN_API result<descriptor_pool, error_code> create(const descriptor_pool_create_info& info);
+        RYUJIN_API result<descriptor_set_layout, error_code> create(const descriptor_set_layout_create_info& info);
+        RYUJIN_API result<fence, error_code> create(const fence_create_info& info);
+        RYUJIN_API result<frame_buffer, error_code> create(const frame_buffer_create_info& framebufferInfo);
+        RYUJIN_API result<image, error_code> create(const image_create_info& imageInfo, const allocation_create_info& allocInfo);
+        RYUJIN_API result<image_view, error_code> create(const image_view_create_info& info);
+        RYUJIN_API result<pipeline, error_code> create(const graphics_pipeline_create_info& info);
+        RYUJIN_API result<pipeline_layout, error_code> create(const pipeline_layout_create_info& info);
+        RYUJIN_API result<render_pass, error_code> create(const render_pass_create_info& info);
+        RYUJIN_API result<image_sampler, error_code> create(const sampler_create_info& info);
+        RYUJIN_API result<shader_module, error_code> create(const shader_module_create_info& info);
 
-        result<descriptor_set, error_code> allocate_transient(const descriptor_set_layout& layout);
+        RYUJIN_API result<descriptor_set, error_code> allocate_transient(const descriptor_set_layout& layout);
 
-        result<buffer_region, error_code> write_to_staging_buffer(const void* data, const sz bytes);
-        void reset_staging_buffer();
+        RYUJIN_API result<buffer_region, error_code> write_to_staging_buffer(const void* data, const sz bytes);
+        RYUJIN_API void reset_staging_buffer();
 
-        void write(const span<descriptor_write_info>& infos);
+        RYUJIN_API void write(const span<descriptor_write_info>& infos);
 
-        void release(const buffer buf, const bool immediate = false);
-        void release(const descriptor_pool pool, const bool immediate = false);
-        void release(const descriptor_set_layout layout, const bool immediate = false);
-        void release(const fence f, const bool immediate = false);
-        void release(const frame_buffer fbo, const bool immediate = false);
-        void release(const image img, const bool immediate = false);
-        void release(const image_view view, const bool immediate = false);
+        RYUJIN_API void release(const buffer buf, const bool immediate = false);
+        RYUJIN_API void release(const descriptor_pool pool, const bool immediate = false);
+        RYUJIN_API void release(const descriptor_set_layout layout, const bool immediate = false);
+        RYUJIN_API void release(const fence f, const bool immediate = false);
+        RYUJIN_API void release(const frame_buffer fbo, const bool immediate = false);
+        RYUJIN_API void release(const image img, const bool immediate = false);
+        RYUJIN_API void release(const image_view view, const bool immediate = false);
 
-        void reset(const descriptor_pool pool);
-        void reset(const fence f);
+        RYUJIN_API void reset(const descriptor_pool pool);
+        RYUJIN_API void reset(const fence f);
 
-        graphics_command_list next_graphics_command_list();
-        transfer_command_list next_transfer_command_list();
+        RYUJIN_API graphics_command_list next_graphics_command_list();
+        RYUJIN_API transfer_command_list next_transfer_command_list();
 
-        semaphore swapchain_image_ready_signal() const noexcept;
-        semaphore render_complete_signal() const noexcept;
-        fence flight_complete_fence() const noexcept;
+        RYUJIN_API semaphore swapchain_image_ready_signal() const noexcept;
+        RYUJIN_API semaphore render_complete_signal() const noexcept;
+        RYUJIN_API fence flight_complete_fence() const noexcept;
 
-        renderable_manager& renderables() noexcept;
+        RYUJIN_API renderable_manager& renderables() noexcept;
         
         template <render_pipeline_type T>
         void use_render_pipeline();
 
-        unique_ptr<base_render_pipeline>& get_render_pipeline() noexcept;
+        RYUJIN_API unique_ptr<base_render_pipeline>& get_render_pipeline() noexcept;
 
-        void wait(const fence& f);
+        RYUJIN_API void wait(const fence& f);
     private:
         render_manager(const unique_ptr<window>& win, vkb::Instance instance, vkb::Device device, VmaAllocator allocator, const bool nameObjects, registry* reg);
 

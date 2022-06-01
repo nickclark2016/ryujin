@@ -5,6 +5,7 @@
 #include "types.hpp"
 
 #include "../core/assets.hpp"
+#include "../core/export.hpp"
 #include "../core/optional.hpp"
 #include "../core/primitives.hpp"
 #include "../core/slot_map.hpp"
@@ -146,32 +147,32 @@ namespace ryujin
             sz drawCallCount;
         };
 
-        explicit renderable_manager(render_manager* manager, registry* reg);
-        slot_map_key load_texture(const string& name, const texture_asset& asset);
-        slot_map_key load_texture(const string& name, const image img, const image_view view);
-        optional<texture> try_fetch_texture(const string& name);
-        optional<texture> try_fetch_texture(const slot_map_key& key);
-        void unload_texture(const slot_map_key& key);
+        RYUJIN_API explicit renderable_manager(render_manager* manager, registry* reg);
+        RYUJIN_API slot_map_key load_texture(const string& name, const texture_asset& asset);
+        RYUJIN_API slot_map_key load_texture(const string& name, const image img, const image_view view);
+        RYUJIN_API optional<texture> try_fetch_texture(const string& name);
+        RYUJIN_API optional<texture> try_fetch_texture(const slot_map_key& key);
+        RYUJIN_API void unload_texture(const slot_map_key& key);
 
-        entity_handle<registry::entity_type> load_to_entities(const asset_manager& mgr, const model_asset& asset);
+        RYUJIN_API entity_handle<registry::entity_type> load_to_entities(const asset_manager& mgr, const model_asset& asset);
 
-        slot_map_key load_material(const string& name, const material_asset& asset);
+        RYUJIN_API slot_map_key load_material(const string& name, const material_asset& asset);
 
-        slot_map_key load_mesh(const string& name, const mesh& m);
-        void build_meshes();
+        RYUJIN_API slot_map_key load_mesh(const string& name, const mesh& m);
+        RYUJIN_API void build_meshes();
 
-        instance_write_info write_instances(buffer& buf, const sz offset);
-        sz write_materials(buffer& buf, const sz offset);
-        draw_call_write_info write_draw_calls(buffer& indirectBuffer, buffer& drawCountBuffer, const sz offset, const material_type type);
-        sz write_textures(texture* buf, sz offset);
+        RYUJIN_API instance_write_info write_instances(buffer& buf, const sz offset);
+        RYUJIN_API sz write_materials(buffer& buf, const sz offset);
+        RYUJIN_API draw_call_write_info write_draw_calls(buffer& indirectBuffer, buffer& drawCountBuffer, const sz offset, const material_type type);
+        RYUJIN_API sz write_textures(texture* buf, sz offset);
 
-        sz write_scene_data(buffer& buf, const sz offset);
+        RYUJIN_API sz write_scene_data(buffer& buf, const sz offset);
 
-        const buffer_group& get_buffer_group(const sz idx) const noexcept;
+        RYUJIN_API const buffer_group& get_buffer_group(const sz idx) const noexcept;
 
-        entity_handle<registry::entity_type> main_camera() noexcept;
+        RYUJIN_API entity_handle<registry::entity_type> main_camera() noexcept;
 
-        void get_active_cameras(vector<entity_handle<entity_type>>& entities);
+        RYUJIN_API void get_active_cameras(vector<entity_handle<entity_type>>& entities);
 
         // TODO: Reference count textures used in materials, unload texture on reference count decrement to zero
 
@@ -226,7 +227,7 @@ namespace ryujin
         image_sampler _defaultSampler = {};
 
         // mesh group id -> collection of meshes -> vector of entities with that mesh
-        vector<std::unordered_map<u32, std::unordered_map<slot_map_key, vector<entity_type>, slot_map_key_hash>>> _entities;
+        vector<unordered_map<u32, unordered_map<slot_map_key, vector<entity_type>, slot_map_key_hash>>> _entities;
         bool _entitiesDirty;
 
         vector<entity_type> _directionalLights;

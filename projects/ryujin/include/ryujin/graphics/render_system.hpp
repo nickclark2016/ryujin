@@ -4,6 +4,7 @@
 #include "render_manager.hpp"
 #include "window.hpp"
 
+#include "../core/export.hpp"
 #include "../core/primitives.hpp"
 #include "../core/smart_pointers.hpp"
 #include "../entities/registry.hpp"
@@ -20,18 +21,18 @@ namespace ryujin
     class render_system final
     {
     public:
-        render_system();
-        ~render_system();
+        RYUJIN_API render_system();
+        RYUJIN_API ~render_system();
 
-        void on_init(engine_context& ctx);
-        void render_prework(engine_context& ctx);
+        RYUJIN_API void on_init(engine_context& ctx);
+        RYUJIN_API void render_prework(engine_context& ctx);
 
-        void on_pre_render(engine_context& ctx);
-        void on_render(engine_context& ctx);
-        void on_post_render(engine_context& ctx);
+        RYUJIN_API void on_pre_render(engine_context& ctx);
+        RYUJIN_API void on_render(engine_context& ctx);
+        RYUJIN_API void on_post_render(engine_context& ctx);
 
-        unique_ptr<render_manager>& get_render_manager(sz idx) noexcept;
-        sz render_manager_count() const noexcept;
+        RYUJIN_API unique_ptr<render_manager>& get_render_manager(sz idx) noexcept;
+        RYUJIN_API sz render_manager_count() const noexcept;
     private:
         vector<unique_ptr<render_manager>> _managers;
 

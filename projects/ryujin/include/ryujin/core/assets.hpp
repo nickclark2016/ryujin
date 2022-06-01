@@ -52,7 +52,7 @@ namespace ryujin
         {
             u32 width;
             u32 height;
-            vector<std::byte> bytes;
+            vector<byte> bytes;
         };
 
         RYUJIN_API u32 width() const noexcept;

@@ -5,7 +5,6 @@
 #include <ryujin/core/as.hpp>
 #include <ryujin/core/linear_allocator.hpp>
 #include <ryujin/graphics/render_manager.hpp>
-#include <ryujin/graphics/pipelines/simple_render_pipeline.hpp>
 
 #undef APIENTRY
 #include <spdlog/spdlog.h>
@@ -18,7 +17,7 @@ namespace ryujin
 {
     namespace detail
     {
-        VkResult name_object(const vkb::DispatchTable& fns, const std::string& name, VkObjectType type, void* handle)
+        VkResult name_object(const vkb::DispatchTable& fns, const string& name, VkObjectType type, void* handle)
         {
             if (name.empty())
             {

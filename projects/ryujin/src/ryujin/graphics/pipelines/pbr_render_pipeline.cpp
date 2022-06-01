@@ -537,7 +537,7 @@ namespace ryujin
         }
     }
 
-    base_render_pipeline::render_target pbr_render_pipeline::build_render_target(const std::string& name, const base_render_pipeline::render_target_info& info)
+    base_render_pipeline::render_target pbr_render_pipeline::build_render_target(const string& name, const base_render_pipeline::render_target_info& info)
     {
         const image_create_info colorImageCi = {
             .type = image_type::TYPE_2D,

@@ -3,6 +3,7 @@
 
 #include "base_render_pipeline.hpp"
 
+#include "../../core/export.hpp"
 #include "../../core/primitives.hpp"
 #include "../../core/smart_pointers.hpp"
 #include "../../core/vector.hpp"
@@ -32,11 +33,11 @@ namespace ryujin
         static constexpr u32 _maxCameras = 32;
 
     public:
-        void pre_render() override;
-        void render() override;
+        RYUJIN_API void pre_render() override;
+        RYUJIN_API void render() override;
     protected:
-        void initialize() override;
-        base_render_pipeline::render_target build_render_target(const std::string& name, const base_render_pipeline::render_target_info& info) override;
+        RYUJIN_API void initialize() override;
+        RYUJIN_API base_render_pipeline::render_target build_render_target(const string& name, const base_render_pipeline::render_target_info& info) override;
     private:
         struct alignas(256) scene_camera
         {

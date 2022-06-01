@@ -5,6 +5,7 @@
 #include "../core/optional.hpp"
 #include "../core/primitives.hpp"
 #include "../core/span.hpp"
+#include "../core/string.hpp"
 #include "../core/variant.hpp"
 
 #include <VkBootstrap.h>
@@ -593,7 +594,7 @@ namespace ryujin
         span<attachment_description> attachments;
         span<subpass_description> subpasses;
         span<subpass_dependency> dependencies;
-        std::string name;
+        string name;
     };
 
     struct frame_buffer_attachment_image_info
@@ -614,7 +615,7 @@ namespace ryujin
         u32 width;
         u32 height;
         u32 layers;
-        std::string name;
+        string name;
     };
 
     struct shader_module_create_info
@@ -835,7 +836,7 @@ namespace ryujin
     {
         span<descriptor_set_layout> layouts;
         span<push_constant_range> pushConstants;
-        std::string name;
+        string name;
     };
 
     struct buffer_create_info
@@ -869,7 +870,7 @@ namespace ryujin
         float minLod;
         float maxLod;
         bool unnormalizedCoordinates;
-        std::string name;
+        string name;
     };
 
     struct descriptor_pool_size

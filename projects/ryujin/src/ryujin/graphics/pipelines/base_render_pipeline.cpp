@@ -11,8 +11,8 @@ namespace ryujin
     {
         auto tgt = build_render_target(info.name, info);
 
-        tgt.colorTex = get_render_manager()->renderables().load_texture(fmt::v8::format("{}_color", info.name).c_str(), tgt.color.img, tgt.color.view);
-        tgt.depthTex = get_render_manager()->renderables().load_texture(fmt::v8::format("{}_depth", info.name).c_str(), tgt.depth.img, tgt.depth.view);
+        tgt.colorTex = get_render_manager()->renderables().load_texture(fmt::v8::format("{}_color", info.name.c_str()).c_str(), tgt.color.img, tgt.color.view);
+        tgt.depthTex = get_render_manager()->renderables().load_texture(fmt::v8::format("{}_depth", info.name.c_str()).c_str(), tgt.depth.img, tgt.depth.view);
 
         auto key = _targets.insert(tgt);
         _renderTargets[info.name] = key;

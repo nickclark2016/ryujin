@@ -15,6 +15,8 @@ namespace ryujin
     using f64 = double;
     using sz = decltype(sizeof(void*));
     using ptr_diff = decltype((char*)(0) - (char*)(0));
+
+    enum class byte : unsigned char {};
 }
 
 #endif // primitives_hpp__

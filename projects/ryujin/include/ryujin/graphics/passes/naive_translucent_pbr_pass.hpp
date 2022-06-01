@@ -3,6 +3,7 @@
 
 #include "../types.hpp"
 
+#include "../../core/export.hpp"
 #include "../../core/primitives.hpp"
 
 namespace ryujin
@@ -13,9 +14,9 @@ namespace ryujin
     class naive_translucent_pbr_pass
     {
     public:
-        naive_translucent_pbr_pass(render_manager& manager, pipeline_layout layout, render_pass pass, u32 width, u32 height);
+        RYUJIN_API naive_translucent_pbr_pass(render_manager& manager, pipeline_layout layout, render_pass pass, u32 width, u32 height);
 
-        void render(graphics_command_list& cmd, buffer& indirect, buffer& count, sz indirectOffset, sz countOffset, sz numBufferGroups);
+        RYUJIN_API void render(graphics_command_list& cmd, buffer& indirect, buffer& count, sz indirectOffset, sz countOffset, sz numBufferGroups);
     private:
         void init_graphics_pipeline(u32 width, u32 height, render_pass pass);
 

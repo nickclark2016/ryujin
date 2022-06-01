@@ -3,6 +3,7 @@
 
 #include "../types.hpp"
 
+#include "../../core/export.hpp"
 #include "../../core/primitives.hpp"
 
 namespace ryujin
@@ -13,12 +14,12 @@ namespace ryujin
     class blit_pass
     {
     public:
-        blit_pass(render_manager& manager);
+        RYUJIN_API blit_pass(render_manager& manager);
 
-        void set_input_texture(image_view view);
-        void set_output_texture(image_view view, const u32 width, const u32 height);
+        RYUJIN_API void set_input_texture(image_view view);
+        RYUJIN_API void set_output_texture(image_view view, const u32 width, const u32 height);
 
-        void record(graphics_command_list& commands, const bool draw = true);
+        RYUJIN_API void record(graphics_command_list& commands, const bool draw = true);
 
     private:
         void build_render_pass();

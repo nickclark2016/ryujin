@@ -2,11 +2,12 @@
 #define base_render_pipeline_hpp__
 
 #include "../types.hpp"
+
+#include "../../core/export.hpp"
 #include "../../core/primitives.hpp"
 #include "../../core/slot_map.hpp"
-
-#include <unordered_map>
-#include <string>
+#include "../../core/string.hpp"
+#include "../../core/unordered_map.hpp"
 
 namespace ryujin
 {
@@ -20,7 +21,7 @@ namespace ryujin
         {
             u32 width;
             u32 height;
-            std::string name;
+            string name;
         };
 
         virtual ~base_render_pipeline() = default;
@@ -32,8 +33,8 @@ namespace ryujin
             _activeRenderTarget = _defaultRenderTarget;
         }
 
-        slot_map_key add_render_target(const render_target_info& info);
-        void remove_render_target(const slot_map_key& k);
+        RYUJIN_API slot_map_key add_render_target(const render_target_info& info);
+        RYUJIN_API void remove_render_target(const slot_map_key& k);
 
         inline frame_buffer get_render_target(const slot_map_key& k)
         {
@@ -84,7 +85,7 @@ namespace ryujin
             u32 height;
         };
 
-        virtual render_target build_render_target(const std::string& name, const render_target_info& info) = 0;
+        virtual render_target build_render_target(const string& name, const render_target_info& info) = 0;
         
         inline void set_active_render_target(const slot_map_key& k)
         {
@@ -100,7 +101,7 @@ namespace ryujin
         }
 
         render_target _defaultRenderTarget;
-        std::unordered_map<std::string, slot_map_key> _renderTargets;
+        unordered_map<string, slot_map_key> _renderTargets;
         slot_map<render_target> _targets;
 
         render_target _activeRenderTarget = {};
