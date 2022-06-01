@@ -1,14 +1,14 @@
 var searchData=
 [
-  ['wait_2895',['wait',['../classryujin_1_1render__manager.html#a8ecb90c97d8e7d04b415a8f032f830f8',1,'ryujin::render_manager']]],
-  ['width_2896',['width',['../classryujin_1_1texture__asset.html#acc27fcc11cf27b2229eb03cd48ca60c6',1,'ryujin::texture_asset']]],
-  ['write_2897',['write',['../classryujin_1_1render__manager.html#aa79f45036c191e5af35f92d81c8546a1',1,'ryujin::render_manager']]],
-  ['write_5fbuffer_2898',['write_buffer',['../classryujin_1_1descriptor__writer.html#aa3c6f81e5a4b364be2deb31442636d61',1,'ryujin::descriptor_writer']]],
-  ['write_5fdraw_5fcalls_2899',['write_draw_calls',['../classryujin_1_1renderable__manager.html#acdd3c62a53f7fd29385f945ad31564a1',1,'ryujin::renderable_manager']]],
-  ['write_5fimage_2900',['write_image',['../classryujin_1_1descriptor__writer.html#a74c856c677007092be49ca90e387920e',1,'ryujin::descriptor_writer']]],
-  ['write_5finstances_2901',['write_instances',['../classryujin_1_1renderable__manager.html#a337fe882b5badac718d1993e99c15397',1,'ryujin::renderable_manager']]],
-  ['write_5fmaterials_2902',['write_materials',['../classryujin_1_1renderable__manager.html#a3d5c649596e6d422bd2716751ac9c496',1,'ryujin::renderable_manager']]],
-  ['write_5fscene_5fdata_2903',['write_scene_data',['../classryujin_1_1renderable__manager.html#a4da5b45ca84509deda0a699abb7547ec',1,'ryujin::renderable_manager']]],
-  ['write_5ftextures_2904',['write_textures',['../classryujin_1_1renderable__manager.html#a71f15b0e30eb2bea7119bf9c649114c1',1,'ryujin::renderable_manager']]],
-  ['write_5fto_5fstaging_5fbuffer_2905',['write_to_staging_buffer',['../classryujin_1_1render__manager.html#a8aa751d7236bdc218d6a81a51a5108fc',1,'ryujin::render_manager']]]
+  ['wait_2893',['wait',['../classryujin_1_1render__manager.html#a580a7546d92c9ecb0295300271dbb79b',1,'ryujin::render_manager']]],
+  ['width_2894',['width',['../classryujin_1_1texture__asset.html#acc27fcc11cf27b2229eb03cd48ca60c6',1,'ryujin::texture_asset']]],
+  ['write_2895',['write',['../classryujin_1_1render__manager.html#a9f34d1830953fd0067d864b4311a8ab6',1,'ryujin::render_manager']]],
+  ['write_5fbuffer_2896',['write_buffer',['../classryujin_1_1descriptor__writer.html#a425b0829b753b0e4e17f9e5913aa5517',1,'ryujin::descriptor_writer']]],
+  ['write_5fdraw_5fcalls_2897',['write_draw_calls',['../classryujin_1_1renderable__manager.html#ad78e8fe47b0f54b49371184e11e84649',1,'ryujin::renderable_manager']]],
+  ['write_5fimage_2898',['write_image',['../classryujin_1_1descriptor__writer.html#a7ae6c1ffa908ce8d598d83c3c80d5dae',1,'ryujin::descriptor_writer']]],
+  ['write_5finstances_2899',['write_instances',['../classryujin_1_1renderable__manager.html#a807c850d7a30ee9f48fea20e2d1f006f',1,'ryujin::renderable_manager']]],
+  ['write_5fmaterials_2900',['write_materials',['../classryujin_1_1renderable__manager.html#aad4026a9712dad2bfcaefc8151033734',1,'ryujin::renderable_manager']]],
+  ['write_5fscene_5fdata_2901',['write_scene_data',['../classryujin_1_1renderable__manager.html#a93f40367d93264239ae4ab64c69564cc',1,'ryujin::renderable_manager']]],
+  ['write_5ftextures_2902',['write_textures',['../classryujin_1_1renderable__manager.html#a363644c32ff1ccec81d07ffcaaf627c6',1,'ryujin::renderable_manager']]],
+  ['write_5fto_5fstaging_5fbuffer_2903',['write_to_staging_buffer',['../classryujin_1_1render__manager.html#a2b73cd79cd544e9aef73846f48490f8c',1,'ryujin::render_manager']]]
 ];

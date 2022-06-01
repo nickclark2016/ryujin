@@ -17,5 +17,6 @@ var searchData=
   ['equal_5fto_2057',['equal_to',['../structryujin_1_1equal__to.html',1,'ryujin']]],
   ['equal_5fto_3c_20basic_5fstring_3c_20char_20_3e_20_3e_2058',['equal_to&lt; basic_string&lt; char &gt; &gt;',['../structryujin_1_1equal__to.html',1,'ryujin']]],
   ['equal_5fto_3c_20key_20_3e_2059',['equal_to&lt; Key &gt;',['../structryujin_1_1equal__to.html',1,'ryujin']]],
-  ['event_5fmanager_2060',['event_manager',['../classryujin_1_1event__manager.html',1,'ryujin']]]
+  ['equal_5fto_3c_20u32_20_3e_2060',['equal_to&lt; u32 &gt;',['../structryujin_1_1equal__to.html',1,'ryujin']]],
+  ['event_5fmanager_2061',['event_manager',['../classryujin_1_1event__manager.html',1,'ryujin']]]
 ];
