@@ -1,5 +1,7 @@
 #include <ryujin/core/string.hpp>
 
+#include <spdlog/fmt/bundled/format.h>
+
 #include <clocale>
 #include <cstdlib>
 

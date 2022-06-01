@@ -500,7 +500,7 @@ namespace ryujin
 
         if (res != VK_SUCCESS)
         {
-            spdlog::error("Failed to create VkFramebuffer: {}", framebufferInfo.name);
+            spdlog::error("Failed to create VkFramebuffer: {}", framebufferInfo.name.c_str());
             return result<frame_buffer, error_code>::from_error(error_code::RESOURCE_ALLOCATION_FAILURE);
         }
 
@@ -515,15 +515,15 @@ namespace ryujin
             }
             else if (res != VK_SUCCESS)
             {
-                spdlog::warn("Failed to name VkRenderPass: {}", framebufferInfo.name);
+                spdlog::warn("Failed to name VkRenderPass: {}", framebufferInfo.name.c_str());
             }
             else
             {
-                SPDLOG_TRACE("Successfully named VkRenderPass: {}", framebufferInfo.name);
+                SPDLOG_TRACE("Successfully named VkRenderPass: {}", framebufferInfo.name.c_str());
             }
         }
 
-        spdlog::info("Successfully created VkFramebuffer: {}", framebufferInfo.name);
+        spdlog::info("Successfully created VkFramebuffer: {}", framebufferInfo.name.c_str());
         return result<frame_buffer, error_code>::from_success(buffer);
     }
 
@@ -909,13 +909,13 @@ namespace ryujin
         const auto res = _funcs.createPipelineLayout(&cinfo, get_allocation_callbacks(), &layout);
         if (res != VK_SUCCESS)
         {
-            spdlog::error("Failed to create VkPipelineLayout: {}", info.name);
+            spdlog::error("Failed to create VkPipelineLayout: {}", info.name.c_str());
             return result<pipeline_layout, error_code>::from_error(error_code::RESOURCE_ALLOCATION_FAILURE);
         }
 
         _layouts.push_back(layout);
 
-        spdlog::info("Successfully created VkPipelineLayout: {}", info.name);
+        spdlog::info("Successfully created VkPipelineLayout: {}", info.name.c_str());
         if (_nameObjects)
         {
             const auto res = detail::name_object(_funcs, info.name, VK_OBJECT_TYPE_PIPELINE_LAYOUT, layout);
@@ -925,11 +925,11 @@ namespace ryujin
             }
             else if (res != VK_SUCCESS)
             {
-                spdlog::warn("Failed to name VkPipelineLayout: {}", info.name);
+                spdlog::warn("Failed to name VkPipelineLayout: {}", info.name.c_str());
             }
             else
             {
-                SPDLOG_TRACE("Successfully named VkPipelineLayout: {}", info.name);
+                SPDLOG_TRACE("Successfully named VkPipelineLayout: {}", info.name.c_str());
             }
         }
 
@@ -1040,13 +1040,13 @@ namespace ryujin
 
         if (res != VK_SUCCESS)
         {
-            spdlog::error("Failed to create VkRenderpass: {}", info.name);
+            spdlog::error("Failed to create VkRenderpass: {}", info.name.c_str());
             return result<render_pass, error_code>::from_error(error_code::RESOURCE_ALLOCATION_FAILURE);
         }
 
         _renderPasses.push_back(pass);
 
-        spdlog::info("Successfully created VkRenderpass: {}", info.name);
+        spdlog::info("Successfully created VkRenderpass: {}", info.name.c_str());
         if (_nameObjects)
         {
             const auto res = detail::name_object(_funcs, info.name, VK_OBJECT_TYPE_RENDER_PASS, pass);
@@ -1056,11 +1056,11 @@ namespace ryujin
             }
             else if (res != VK_SUCCESS)
             {
-                spdlog::warn("Failed to name VkRenderPass: {}", info.name);
+                spdlog::warn("Failed to name VkRenderPass: {}", info.name.c_str());
             }
             else
             {
-                SPDLOG_TRACE("Successfully named VkRenderPass: {}", info.name);
+                SPDLOG_TRACE("Successfully named VkRenderPass: {}", info.name.c_str());
             }
         }
 
@@ -1094,13 +1094,13 @@ namespace ryujin
         const auto res = _funcs.createSampler(&sinfo, get_allocation_callbacks(), &sam);
         if (res != VK_SUCCESS)
         {
-            spdlog::error("Failed to create VkSampler: {}", info.name);
+            spdlog::error("Failed to create VkSampler: {}", info.name.c_str());
             return result<image_sampler, error_code>::from_error(error_code::RESOURCE_ALLOCATION_FAILURE);
         }
 
         _samplers.push_back(sam);
 
-        spdlog::info("Successfully created VkSampler: {}", info.name);
+        spdlog::info("Successfully created VkSampler: {}", info.name.c_str());
         if (_nameObjects)
         {
             const auto res = detail::name_object(_funcs, info.name, VK_OBJECT_TYPE_SAMPLER, sam);
@@ -1110,11 +1110,11 @@ namespace ryujin
             }
             else if (res != VK_SUCCESS)
             {
-                spdlog::warn("Failed to name VkSampler: {}", info.name);
+                spdlog::warn("Failed to name VkSampler: {}", info.name.c_str());
             }
             else
             {
-                SPDLOG_TRACE("Successfully named VkSampler: {}", info.name);
+                SPDLOG_TRACE("Successfully named VkSampler: {}", info.name.c_str());
             }
         }
 
