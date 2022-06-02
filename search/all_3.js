@@ -83,6 +83,6 @@ var searchData=
   ['cull_354',['cull',['../structryujin_1_1rasterization__state__info.html#ae236212e82b5cac136b59672420c3610',1,'ryujin::rasterization_state_info']]],
   ['cull_5fmode_355',['cull_mode',['../namespaceryujin.html#ae40767da624e1b7fc1852c41ba24a594',1,'ryujin']]],
   ['current_5fpath_356',['current_path',['../namespaceryujin_1_1filesystem.html#a62e4ab996703faaccd897653ec2cddbd',1,'ryujin::filesystem']]],
-  ['cursor_5fposition_357',['cursor_position',['../classryujin_1_1mouse.html#a8a1cb0fbc95e5f2ce0e475ee8ccf6605',1,'ryujin::mouse']]],
-  ['cursor_5fposition_5fdelta_358',['cursor_position_delta',['../classryujin_1_1mouse.html#af4f1a21ee21519a6c8c4488cb93fe61c',1,'ryujin::mouse']]]
+  ['cursor_5fposition_357',['cursor_position',['../classryujin_1_1mouse.html#a3813f37040310b2ec817a1ca00056e7d',1,'ryujin::mouse']]],
+  ['cursor_5fposition_5fdelta_358',['cursor_position_delta',['../classryujin_1_1mouse.html#ab3bad3e7f23a0273c84d8837d12d0d2b',1,'ryujin::mouse']]]
 ];

@@ -1,8 +1,8 @@
 var searchData=
 [
   ['scale_2831',['scale',['../namespaceryujin.html#a64518faaee054bf63efd318dd3da97f2',1,'ryujin::scale(const mat4&lt; T &gt; &amp;m, const vec3&lt; T &gt; &amp;v)'],['../namespaceryujin.html#a464da7cc6d305fa1169b0e36185b1657',1,'ryujin::scale(const vec3&lt; T &gt; &amp;v)']]],
-  ['scroll_5foffset_2832',['scroll_offset',['../classryujin_1_1mouse.html#a6a65d9626246554585c2b07389df2457',1,'ryujin::mouse']]],
-  ['scroll_5foffset_5fdelta_2833',['scroll_offset_delta',['../classryujin_1_1mouse.html#a855f8e827ecfea894f690b6e4ac8a932',1,'ryujin::mouse']]],
+  ['scroll_5foffset_2832',['scroll_offset',['../classryujin_1_1mouse.html#a3dd101b863bc4981de6e0c0fc947d44d',1,'ryujin::mouse']]],
+  ['scroll_5foffset_5fdelta_2833',['scroll_offset_delta',['../classryujin_1_1mouse.html#aa84ca2d0bd2c5c1f495d341519ac1a33',1,'ryujin::mouse']]],
   ['set_5factive_5frender_5ftarget_2834',['set_active_render_target',['../classryujin_1_1base__render__pipeline.html#a3896aef0b5fc735bcbd7788cd338a53b',1,'ryujin::base_render_pipeline']]],
   ['set_5finput_5ftexture_2835',['set_input_texture',['../classryujin_1_1blit__pass.html#a97c26f1819f61b6b9aba905182ff77a5',1,'ryujin::blit_pass']]],
   ['set_5foutput_5ftexture_2836',['set_output_texture',['../classryujin_1_1blit__pass.html#a1a371f840711f01c12efa024566e1938',1,'ryujin::blit_pass']]],

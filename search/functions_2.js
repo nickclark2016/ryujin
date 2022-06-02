@@ -26,6 +26,6 @@ var searchData=
   ['cref_2585',['cref',['../group__reference__wrapper.html#ga35863a5911293e2d71af4be77f6ab3a0',1,'ryujin::cref(const T &amp;t) noexcept'],['../namespaceryujin.html#a57d0c190a9731ccc989e9a21b0ca1271',1,'ryujin::cref(const T &amp;&amp;)=delete']]],
   ['cross_2586',['cross',['../namespaceryujin.html#a048483f1a437767fc176906e2f0f4ada',1,'ryujin']]],
   ['current_5fpath_2587',['current_path',['../namespaceryujin_1_1filesystem.html#a62e4ab996703faaccd897653ec2cddbd',1,'ryujin::filesystem']]],
-  ['cursor_5fposition_2588',['cursor_position',['../classryujin_1_1mouse.html#a8a1cb0fbc95e5f2ce0e475ee8ccf6605',1,'ryujin::mouse']]],
-  ['cursor_5fposition_5fdelta_2589',['cursor_position_delta',['../classryujin_1_1mouse.html#af4f1a21ee21519a6c8c4488cb93fe61c',1,'ryujin::mouse']]]
+  ['cursor_5fposition_2588',['cursor_position',['../classryujin_1_1mouse.html#a3813f37040310b2ec817a1ca00056e7d',1,'ryujin::mouse']]],
+  ['cursor_5fposition_5fdelta_2589',['cursor_position_delta',['../classryujin_1_1mouse.html#ab3bad3e7f23a0273c84d8837d12d0d2b',1,'ryujin::mouse']]]
 ];

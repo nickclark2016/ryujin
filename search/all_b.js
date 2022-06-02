@@ -4,7 +4,7 @@ var searchData=
   ['keep_917',['KEEP',['../namespaceryujin.html#ad0745968dd61bb1b7122e776049dcb3fa60cba2874369bd3790e14ea5f8a7bc58',1,'ryujin']]],
   ['key_918',['key',['../classryujin_1_1keyboard.html#a658950f742aa62faacfe81f130b91012',1,'ryujin::keyboard']]],
   ['key_5ftype_919',['key_type',['../classryujin_1_1sparse__map.html#a60b96ac28f15936e53a8ffdfa29e78a4',1,'ryujin::sparse_map']]],
-  ['keyboard_920',['keyboard',['../classryujin_1_1keyboard.html',1,'ryujin::keyboard'],['../classryujin_1_1keyboard.html#a24e16d98783a22430e0d333001db609a',1,'ryujin::keyboard::keyboard()']]],
+  ['keyboard_920',['keyboard',['../classryujin_1_1keyboard.html',1,'ryujin::keyboard'],['../classryujin_1_1keyboard.html#a6656dcd3324d19df399828d1560cc484',1,'ryujin::keyboard::keyboard()']]],
   ['keyboard_2ehpp_921',['keyboard.hpp',['../keyboard_8hpp.html',1,'']]],
   ['kp_5f0_922',['KP_0',['../classryujin_1_1keyboard.html#a658950f742aa62faacfe81f130b91012affb2ce8868d49c78376bf7e76c88fd52',1,'ryujin::keyboard']]],
   ['kp_5f1_923',['KP_1',['../classryujin_1_1keyboard.html#a658950f742aa62faacfe81f130b91012afdcbdc22f7e22388bf5905c290bcfe4b',1,'ryujin::keyboard']]],
