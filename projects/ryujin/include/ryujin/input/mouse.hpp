@@ -1,6 +1,7 @@
 #ifndef mouse_hpp__
 #define mouse_hpp__
 
+#include "../core/export.hpp"
 #include "../core/primitives.hpp"
 #include "../math/vec2.hpp"
 
@@ -31,11 +32,11 @@ namespace ryujin
 
         mouse();
 
-		[[nodiscard]] vec2<f64> cursor_position() const noexcept;
-		[[nodiscard]] vec2<f64> cursor_position_delta() const noexcept;
-        [[nodiscard]] vec2<f64> scroll_offset() const noexcept;
-        [[nodiscard]] vec2<f64> scroll_offset_delta() const noexcept;
-        [[nodiscard]] state get_state(const button btn) const noexcept;
+		RYUJIN_API [[nodiscard]] vec2<f64> cursor_position() const noexcept;
+		RYUJIN_API [[nodiscard]] vec2<f64> cursor_position_delta() const noexcept;
+        RYUJIN_API [[nodiscard]] vec2<f64> scroll_offset() const noexcept;
+        RYUJIN_API [[nodiscard]] vec2<f64> scroll_offset_delta() const noexcept;
+        RYUJIN_API [[nodiscard]] state get_state(const button btn) const noexcept;
         
     private:
         friend class input;

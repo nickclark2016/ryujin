@@ -2,6 +2,7 @@
 #define keyboard_hpp__
 
 #include "../core/as.hpp"
+#include "../core/export.hpp"
 #include "../core/primitives.hpp"
 #include "../graphics/window.hpp"
 
@@ -144,9 +145,9 @@ namespace ryujin
             REPEATED = 2
         };
 
-        keyboard();
+        RYUJIN_API keyboard();
 
-        state get_state(const key k) const noexcept;
+        RYUJIN_API state get_state(const key k) const noexcept;
 
     private:
         friend class input;
