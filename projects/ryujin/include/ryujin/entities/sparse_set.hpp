@@ -3,8 +3,8 @@
 
 #include "entity.hpp"
 
+#include "../core/memory.hpp"
 #include "../core/primitives.hpp"
-#include "../core/smart_pointers.hpp"
 #include "../core/vector.hpp"
 
 #include <cstddef>

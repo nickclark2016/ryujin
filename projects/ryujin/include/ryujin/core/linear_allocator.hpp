@@ -1,8 +1,8 @@
 #ifndef linear_allocator_hpp__
 #define linear_allocator_hpp__
 
+#include "memory.hpp"
 #include "primitives.hpp"
-#include "smart_pointers.hpp"
 
 #include <memory>
 

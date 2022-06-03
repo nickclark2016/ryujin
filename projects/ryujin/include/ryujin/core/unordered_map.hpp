@@ -4,6 +4,7 @@
 #include "allocator.hpp"
 #include "as.hpp"
 #include "functional.hpp"
+#include "memory.hpp"
 #include "utility.hpp"
 #include "vector.hpp"
 
@@ -310,7 +311,7 @@ namespace ryujin
             }
         }
 
-        ::new (&(_pages[page].values[index])) pair<const Key, Value>(value);
+        ryujin::construct_at(&(_pages[page].values[index]), pair<const Key, Value>(value));
         detail::set_status(_pages[page].tags, 2 * index, detail::unordered_map_slot_status::OCCUPIED);
         ++_size;
 
@@ -345,7 +346,7 @@ namespace ryujin
             }
         }
 
-        ::new (&(_pages[page].values[index])) pair<const Key, Value>(ryujin::move(value));
+        ryujin::construct_at(&(_pages[page].values[index]), pair<const Key, Value>(ryujin::move(value)));
         detail::set_status(_pages[page].tags, 2 * index, detail::unordered_map_slot_status::OCCUPIED);
         ++_size;
 
@@ -362,7 +363,7 @@ namespace ryujin
                 const auto status = detail::get_status(_pages[pg].tags, el * 2);
                 if (status == detail::unordered_map_slot_status::OCCUPIED)
                 {
-                    _pages[pg].values[el].~pair<const Key, Value>();
+                    ryujin::destroy_at(&_pages[pg].values[el]);
                 }
             }
             _pages[pg].tags = 0;
@@ -389,7 +390,7 @@ namespace ryujin
                 if (_equality(_pages[page].values[index].first, k))
                 {
                     detail::set_status(_pages[page].tags, index * 2, detail::unordered_map_slot_status::EVICTED);
-                    _pages[page].values[index].~pair<const Key, Value>();
+                    ryujin::destroy_at(&_pages[page].values[index]);
                     --_size;
                     return;
                 }
@@ -448,7 +449,7 @@ namespace ryujin
                 }
             }
 
-            ::new (&(_pages[page].values[index])) pair<const Key, Value>(k, ryujin::move(Value()));
+            ryujin::construct_at(&(_pages[page].values[index]), pair<const Key, Value>(k, ryujin::move(Value())));
             detail::set_status(_pages[page].tags, 2 * index, detail::unordered_map_slot_status::OCCUPIED);
             ++_size;
             return _pages[page].values[index].second;
@@ -505,9 +506,9 @@ namespace ryujin
                         }
                     }
 
-                    ::new(&(allocation[newPage].values[newEl])) pair<const Key, Value>(ryujin::move(_pages[i].values[el]));
+                    ryujin::construct_at(&(allocation[newPage].values[newEl]), pair<const Key, Value>(ryujin::move(_pages[i].values[el])));
                     detail::set_status(allocation[newPage].tags, newEl * 2, detail::unordered_map_slot_status::OCCUPIED);
-                    _pages[i].values[el].~pair<const Key, Value>();
+                    ryujin::destroy_at(&_pages[i].values[el]);
                 }
             }
         }

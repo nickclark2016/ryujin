@@ -6,8 +6,8 @@
 
 #include "../core/export.hpp"
 #include "../core/functional.hpp"
+#include "../core/memory.hpp"
 #include "../core/optional.hpp"
-#include "../core/smart_pointers.hpp"
 #include "../graphics/window.hpp"
 
 #include <memory>

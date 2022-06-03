@@ -1,7 +1,7 @@
 #ifndef functional_hpp__
 #define functional_hpp__
 
-#include "smart_pointers.hpp"
+#include "memory.hpp"
 #include "type_traits.hpp"
 #include "utility.hpp"
 

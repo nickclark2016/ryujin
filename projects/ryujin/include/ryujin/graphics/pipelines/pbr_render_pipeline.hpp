@@ -4,8 +4,8 @@
 #include "base_render_pipeline.hpp"
 
 #include "../../core/export.hpp"
+#include "../../core/memory.hpp"
 #include "../../core/primitives.hpp"
-#include "../../core/smart_pointers.hpp"
 #include "../../core/vector.hpp"
 #include "../../entities/registry.hpp"
 #include "../../math/mat4.hpp"

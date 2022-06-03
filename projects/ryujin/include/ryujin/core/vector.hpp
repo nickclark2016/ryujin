@@ -4,6 +4,7 @@
 #include "allocator.hpp"
 #include "algorithm.hpp"
 #include "iterator.hpp"
+#include "memory.hpp"
 #include "primitives.hpp"
 #include "result.hpp"
 #include "utility.hpp"
@@ -179,7 +180,7 @@ namespace ryujin
 
         for (sz i = 0; i < _size; ++i)
         {
-            ::new (_data + i) Type(v[i]);
+            ryujin::construct_at(_data + i, v[i]);
         }
     }
 
@@ -199,7 +200,7 @@ namespace ryujin
         _resize_buffer(count);
         for (sz i = 0; i < _size; ++i)
         {
-            ::new (_data + i) Type(value);
+            ryujin::construct_at(_data + i, value);
         }
     }
 
@@ -244,14 +245,7 @@ namespace ryujin
             return *this;
         }
 
-        if (_data)
-        {
-            for (sz i = 0; i < _size; ++i)
-            {
-                _data[i].~Type();
-            }
-            _alloc.deallocate(_data, _capacity);
-        }
+        clear();
 
         _data = rhs._data;
         _size = rhs._size;
@@ -353,11 +347,12 @@ namespace ryujin
             if (i < _size - count)
             {
                 _data[i] = ryujin::move(_data[i + count]);
-                _data[i + count].~Type();
+
+                ryujin::destroy_at(_data + i + count);
             }
             else
             {
-                _data[i].~Type();
+                ryujin::destroy_at(_data + i);
             }
         }
 
@@ -382,7 +377,7 @@ namespace ryujin
         _resize_buffer(newSize);
         for (sz i = _size; i < newSize; ++i)
         {
-            ::new (_data + i) Type(value);
+            ryujin::construct_at(_data + i, value);
         }
         _size = newSize;
     }
@@ -406,7 +401,7 @@ namespace ryujin
             _resize_buffer();
         }
         _make_hole(idx, 1);
-        ::new(_data + idx) Type(value);
+        ryujin::construct_at(_data + idx, value);
         ++_size;
     }
 
@@ -419,7 +414,7 @@ namespace ryujin
             _resize_buffer();
         }
         _make_hole(idx, 1);
-        ::new(_data + idx) Type(ryujin::forward<Type>(value));
+        ryujin::construct_at(_data + idx, ryujin::forward<Type>(value));
         ++_size;
     }
 

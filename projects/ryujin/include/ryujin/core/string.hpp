@@ -4,9 +4,9 @@
 #include "algorithm.hpp"
 #include "allocator.hpp"
 #include "as.hpp"
+#include "memory.hpp"
 #include "primitives.hpp"
 #include "utility.hpp"
-#include "smart_pointers.hpp"
 #include "vector.hpp"
 
 #include <cassert>

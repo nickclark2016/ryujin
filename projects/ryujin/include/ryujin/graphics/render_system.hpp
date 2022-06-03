@@ -5,8 +5,8 @@
 #include "window.hpp"
 
 #include "../core/export.hpp"
+#include "../core/memory.hpp"
 #include "../core/primitives.hpp"
-#include "../core/smart_pointers.hpp"
 #include "../entities/registry.hpp"
 
 #include <VkBootstrap.h>

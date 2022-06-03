@@ -1,9 +1,9 @@
 #ifndef files_hpp__
 #define files_hpp__
 
+#include "memory.hpp"
 #include "primitives.hpp"
 #include "result.hpp"
-#include "smart_pointers.hpp"
 
 #include <string>
 

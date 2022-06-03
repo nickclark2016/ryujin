@@ -3,9 +3,9 @@
 
 #include "../core/export.hpp"
 #include "../core/functional.hpp"
+#include "../core/memory.hpp"
 #include "../core/primitives.hpp"
 #include "../core/result.hpp"
-#include "../core/smart_pointers.hpp"
 #include "../core/string.hpp"
 #include "../core/utility.hpp"
 #include "../core/vector.hpp"

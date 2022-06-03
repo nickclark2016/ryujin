@@ -2,7 +2,7 @@
 #define engine_hpp__
 
 #include "assets.hpp"
-#include "smart_pointers.hpp"
+#include "memory.hpp"
 #include "unordered_map.hpp"
 
 #include "../entities/registry.hpp"

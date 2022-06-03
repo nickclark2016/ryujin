@@ -2,9 +2,9 @@
 #define asset_hpp__
 
 #include "export.hpp"
+#include "memory.hpp"
 #include "primitives.hpp"
 #include "slot_map.hpp"
-#include "smart_pointers.hpp"
 #include "string.hpp"
 #include "unordered_map.hpp"
 #include "vector.hpp"
