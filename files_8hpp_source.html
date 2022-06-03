@@ -72,9 +72,9 @@ $(function() {
 <a href="files_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef files_hpp__</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define files_hpp__</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="primitives_8hpp.html">primitives.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="result_8hpp.html">result.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="smart__pointers_8hpp.html">smart_pointers.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="memory_8hpp.html">memory.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="primitives_8hpp.html">primitives.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="result_8hpp.html">result.hpp</a>&quot;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
@@ -116,6 +116,7 @@ $(function() {
 <div class="ttc" id="aclassryujin_1_1files_html_a026b13bb2d2157f6a19ed3cbfac26c38ad306b6fdee05fe87455110ddf6501e6c"><div class="ttname"><a href="classryujin_1_1files.html#a026b13bb2d2157f6a19ed3cbfac26c38ad306b6fdee05fe87455110ddf6501e6c">ryujin::files::error_code::NO_ERROR</a></div><div class="ttdeci">@ NO_ERROR</div></div>
 <div class="ttc" id="astructryujin_1_1binary__file_html"><div class="ttname"><a href="structryujin_1_1binary__file.html">ryujin::binary_file</a></div><div class="ttdef"><b>Definition:</b> files.hpp:12</div></div>
 <div class="ttc" id="aclassryujin_1_1files_html_a026b13bb2d2157f6a19ed3cbfac26c38aa12c954d610e0a4b2875938d8ae5a7c1"><div class="ttname"><a href="classryujin_1_1files.html#a026b13bb2d2157f6a19ed3cbfac26c38aa12c954d610e0a4b2875938d8ae5a7c1">ryujin::files::error_code::FILE_NOT_ACCESSIBLE</a></div><div class="ttdeci">@ FILE_NOT_ACCESSIBLE</div></div>
+<div class="ttc" id="amemory_8hpp_html"><div class="ttname"><a href="memory_8hpp.html">memory.hpp</a></div></div>
 <div class="ttc" id="astructryujin_1_1text__file_html_aa89849c3546d92d1a5818b5ff53300f3"><div class="ttname"><a href="structryujin_1_1text__file.html#aa89849c3546d92d1a5818b5ff53300f3">ryujin::text_file::path</a></div><div class="ttdeci">std::string path</div><div class="ttdef"><b>Definition:</b> files.hpp:21</div></div>
 <div class="ttc" id="astructryujin_1_1binary__file_html_a70b8ac3411d54417ee0ddb8af2211761"><div class="ttname"><a href="structryujin_1_1binary__file.html#a70b8ac3411d54417ee0ddb8af2211761">ryujin::binary_file::bytes</a></div><div class="ttdeci">unique_ptr&lt; char[]&gt; bytes</div><div class="ttdef"><b>Definition:</b> files.hpp:15</div></div>
 <div class="ttc" id="aclassryujin_1_1files_html"><div class="ttname"><a href="classryujin_1_1files.html">ryujin::files</a></div><div class="ttdef"><b>Definition:</b> files.hpp:25</div></div>
@@ -126,7 +127,6 @@ $(function() {
 <div class="ttc" id="aclassryujin_1_1unique__ptr_html"><div class="ttname"><a href="classryujin_1_1unique__ptr.html">ryujin::unique_ptr&lt; char[]&gt;</a></div></div>
 <div class="ttc" id="anamespaceryujin_html"><div class="ttname"><a href="namespaceryujin.html">ryujin</a></div><div class="ttdef"><b>Definition:</b> algorithm.hpp:7</div></div>
 <div class="ttc" id="aclassryujin_1_1files_html_a4d6c390f8e04430fa62ed517ebd81a25"><div class="ttname"><a href="classryujin_1_1files.html#a4d6c390f8e04430fa62ed517ebd81a25">ryujin::files::load_binary</a></div><div class="ttdeci">static result&lt; binary_file, error_code &gt; load_binary(const std::string &amp;path)</div></div>
-<div class="ttc" id="asmart__pointers_8hpp_html"><div class="ttname"><a href="smart__pointers_8hpp.html">smart_pointers.hpp</a></div></div>
 <div class="ttc" id="anamespaceryujin_html_a3230f2023555adb9ad578d3b489f2b64"><div class="ttname"><a href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">ryujin::sz</a></div><div class="ttdeci">decltype(sizeof(void *)) sz</div><div class="ttdef"><b>Definition:</b> primitives.hpp:16</div></div>
 <div class="ttc" id="aclassryujin_1_1files_html_a026b13bb2d2157f6a19ed3cbfac26c38"><div class="ttname"><a href="classryujin_1_1files.html#a026b13bb2d2157f6a19ed3cbfac26c38">ryujin::files::error_code</a></div><div class="ttdeci">error_code</div><div class="ttdef"><b>Definition:</b> files.hpp:28</div></div>
 <div class="ttc" id="aresult_8hpp_html"><div class="ttname"><a href="result_8hpp.html">result.hpp</a></div></div>

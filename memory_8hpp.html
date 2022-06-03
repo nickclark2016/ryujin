@@ -66,18 +66,38 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">memory.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="smart__pointers_8hpp_source.html">smart_pointers.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="nullptr_8hpp_source.html">nullptr.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="utility_8hpp_source.html">utility.hpp</a>&quot;</code><br />
 <code>#include &lt;new&gt;</code><br />
 </div>
 <p><a href="memory_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1default__delete.html">ryujin::default_delete&lt; T &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1default__delete_3_01_t_0f_0e_4.html">ryujin::default_delete&lt; T[]&gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classryujin_1_1unique__ptr.html">ryujin::unique_ptr&lt; T, Deleter &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classryujin_1_1unique__ptr_3_01_t_0f_0e_00_01_deleter_01_4.html">ryujin::unique_ptr&lt; T[], Deleter &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classryujin_1_1shared__ptr.html">ryujin::shared_ptr&lt; T, Deleter &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1hash_3_01unique__ptr_3_01_t_00_01_deleter_01_4_01_4.html">ryujin::hash&lt; unique_ptr&lt; T, Deleter &gt; &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of hash for a unique pointer.  <a href="structryujin_1_1hash_3_01unique__ptr_3_01_t_00_01_deleter_01_4_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structryujin_1_1hash_3_01shared__ptr_3_01_t_00_01_deleter_01_4_01_4.html">ryujin::hash&lt; shared_ptr&lt; T, Deleter &gt; &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of hash for a shared pointer.  <a href="structryujin_1_1hash_3_01shared__ptr_3_01_t_00_01_deleter_01_4_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespaceryujin"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceryujin.html">ryujin</a></td></tr>
@@ -91,6 +111,30 @@ Functions</h2></td></tr>
 <tr class="memitem:a9c85f4e178f4c19429a76c6631dbfed4"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a9c85f4e178f4c19429a76c6631dbfed4"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a9c85f4e178f4c19429a76c6631dbfed4">ryujin::destroy_at</a> (T *p)</td></tr>
 <tr class="separator:a9c85f4e178f4c19429a76c6631dbfed4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff027ff7d056ce4959f6293be7031716"><td class="memTemplParams" colspan="2">template&lt;typename T , typename ... Args, enable_if_t&lt;!is_array_v&lt; T &gt;, int &gt;  = 0&gt; </td></tr>
+<tr class="memitem:aff027ff7d056ce4959f6293be7031716"><td class="memTemplItemLeft" align="right" valign="top">constexpr unique_ptr&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#aff027ff7d056ce4959f6293be7031716">ryujin::make_unique</a> (Args &amp;&amp;... args)</td></tr>
+<tr class="separator:aff027ff7d056ce4959f6293be7031716"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38f611ee7c5cb3b4b9c7abe770a53482"><td class="memTemplParams" colspan="2">template&lt;typename T , typename Deleter &gt; </td></tr>
+<tr class="memitem:a38f611ee7c5cb3b4b9c7abe770a53482"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a38f611ee7c5cb3b4b9c7abe770a53482">ryujin::swap</a> (unique_ptr&lt; T, Deleter &gt; &amp;a, unique_ptr&lt; T, Deleter &gt; &amp;b)</td></tr>
+<tr class="separator:a38f611ee7c5cb3b4b9c7abe770a53482"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bbdc0e1aba98dc56ee85f7d13509802"><td class="memTemplParams" colspan="2">template&lt;typename T , typename Deleter &gt; </td></tr>
+<tr class="memitem:a2bbdc0e1aba98dc56ee85f7d13509802"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a2bbdc0e1aba98dc56ee85f7d13509802">ryujin::operator&lt;=&gt;</a> (const unique_ptr&lt; T, Deleter &gt; &amp;a, const unique_ptr&lt; T, Deleter &gt; &amp;b)</td></tr>
+<tr class="separator:a2bbdc0e1aba98dc56ee85f7d13509802"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41db09af5ff053e35c6a7cdd2504e344"><td class="memTemplParams" colspan="2">template&lt;typename T , enable_if_t&lt; is_array_v&lt; T &gt;, int &gt;  = 0&gt; </td></tr>
+<tr class="memitem:a41db09af5ff053e35c6a7cdd2504e344"><td class="memTemplItemLeft" align="right" valign="top">constexpr unique_ptr&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a41db09af5ff053e35c6a7cdd2504e344">ryujin::make_unique</a> (sz count)</td></tr>
+<tr class="separator:a41db09af5ff053e35c6a7cdd2504e344"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa62ab9b557e2463c3c3056a8b7ce296"><td class="memTemplParams" colspan="2">template&lt;typename T , typename Deleter &gt; </td></tr>
+<tr class="memitem:aaa62ab9b557e2463c3c3056a8b7ce296"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#aaa62ab9b557e2463c3c3056a8b7ce296">ryujin::swap</a> (unique_ptr&lt; T[], Deleter &gt; &amp;a, unique_ptr&lt; T[], Deleter &gt; &amp;b)</td></tr>
+<tr class="separator:aaa62ab9b557e2463c3c3056a8b7ce296"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a232336ddda2b09540ea911a946d73f24"><td class="memTemplParams" colspan="2">template&lt;typename T , typename Deleter &gt; </td></tr>
+<tr class="memitem:a232336ddda2b09540ea911a946d73f24"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a232336ddda2b09540ea911a946d73f24">ryujin::operator&lt;=&gt;</a> (const unique_ptr&lt; T[], Deleter &gt; &amp;a, const unique_ptr&lt; T[], Deleter &gt; &amp;b)</td></tr>
+<tr class="separator:a232336ddda2b09540ea911a946d73f24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a493e34bc0bdb12055563bf5478db9eb1"><td class="memTemplParams" colspan="2">template&lt;typename T , typename ... Args&gt; </td></tr>
+<tr class="memitem:a493e34bc0bdb12055563bf5478db9eb1"><td class="memTemplItemLeft" align="right" valign="top">shared_ptr&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a493e34bc0bdb12055563bf5478db9eb1">ryujin::make_shared</a> (Args &amp;&amp;... args)</td></tr>
+<tr class="separator:a493e34bc0bdb12055563bf5478db9eb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a54b02bfd8f2fe0368dd40ffb37b899b6"><td class="memTemplParams" colspan="2">template&lt;typename T , typename Deleter &gt; </td></tr>
+<tr class="memitem:a54b02bfd8f2fe0368dd40ffb37b899b6"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceryujin.html#a54b02bfd8f2fe0368dd40ffb37b899b6">ryujin::operator&lt;=&gt;</a> (const shared_ptr&lt; T, Deleter &gt; &amp;lhs, const shared_ptr&lt; T, Deleter &gt; &amp;rhs)</td></tr>
+<tr class="separator:a54b02bfd8f2fe0368dd40ffb37b899b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
