@@ -82,7 +82,7 @@ namespace ryujin
 		constexpr basic_string& insert(sz pos, const Type* s);
 		constexpr basic_string& insert(sz pos, const Type* s, sz n);
 		constexpr basic_string& insert(sz pos, sz n, Type c);
-		constexpr void insert(iterator p, sz n, Type c);
+		constexpr iterator insert(iterator p, sz n, Type c);
 		constexpr iterator insert(iterator p, Type c);
 
 		constexpr void clear();
@@ -789,8 +789,8 @@ namespace ryujin
 		const sz newSize = n + _size;
 		const Type* buffer = _alloc.allocate(newSize + 1);
 		ryujin::memcpy(buffer, _data, pos);
-		ryujin::memcpy(buffer, s, n);
-		ryujin::memcpy(buffer, _data + (pos - n), (_size - pos));
+		ryujin::memcpy(buffer + pos, s, n);
+		ryujin::memcpy(buffer + pos + n, _data + (pos - n), (_size - pos));
 		buffer[newSize] = as<Type>(0);
 
 		_alloc.deallocate(_data, _size + 1);
@@ -804,21 +804,61 @@ namespace ryujin
 	template<typename Type, typename Allocator>
 	inline constexpr basic_string<Type, Allocator>& basic_string<Type, Allocator>::insert(sz pos, sz n, Type c)
 	{
-		assert(false && "Needs implementation");
+		if (empty())
+		{
+			const Type data[2] = { c, as<Type>(0) };
+			return operator=(data);
+		}
+
+		const sz newSize = n + _size;
+		const Type* buffer = _alloc.allocate(newSize + 1);
+		ryujin::memcpy(buffer, _data, pos);
+		
+		for (sz i = pos; i < pos + n; ++i)
+		{
+			buffer[i] = c;
+		}
+
+		ryujin::memcpy(buffer + pos + n, _data + (pos - n), (_size - pos));
+		buffer[newSize] = as<Type>(0);
+
+		_alloc.deallocate(_data, _size + 1);
+		_size = newSize;
+
+		_data = buffer;
+
 		return *this;
 	}
 
 	template<typename Type, typename Allocator>
-	inline constexpr void basic_string<Type, Allocator>::insert(iterator p, sz n, Type c)
+	inline constexpr basic_string<Type, Allocator>::iterator basic_string<Type, Allocator>::insert(iterator p, sz n, Type c)
 	{
-		assert(false && "Needs implementation");
+		const sz pos = as<sz>(p - begin());
+
+		const sz newSize = n + _size;
+		const Type* buffer = _alloc.allocate(newSize + 1);
+		ryujin::memcpy(buffer, _data, pos);
+
+		for (sz i = pos; i < pos + n; ++i)
+		{
+			buffer[i] = c;
+		}
+
+		ryujin::memcpy(buffer + pos + n, _data + (pos - n), (_size - pos));
+		buffer[newSize] = as<Type>(0);
+
+		_alloc.deallocate(_data, _size + 1);
+		_size = newSize;
+
+		_data = buffer;
+
+		return begin() + pos + n;
 	}
 
 	template<typename Type, typename Allocator>
 	inline constexpr basic_string<Type, Allocator>::iterator basic_string<Type, Allocator>::insert(iterator p, Type c)
 	{
-		assert(false && "Needs implementation");
-		return _data;
+		return insert(p, 1, c);
 	}
 
 	template<typename Type, typename Allocator>
