@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <ryujin/core/string.hpp>
 
 #include <spdlog/fmt/bundled/format.h>

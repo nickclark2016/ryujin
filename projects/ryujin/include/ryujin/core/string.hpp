@@ -680,23 +680,65 @@ namespace ryujin
 	template<typename Type, typename Allocator>
 	inline constexpr basic_string<Type, Allocator>& basic_string<Type, Allocator>::replace(sz pos, sz len, const Type c)
 	{
-		assert(false && "Needs implementation");
+		if (len == 1)
+		{
+			_data[pos] = c;
+			return *this;
+		}
+
+		const sz newLen = _size - len + 1;
+		const Type* buffer = _alloc.allocate(newLen + 1);
+		ryujin::copy(_data, _data + pos, buffer);
+		buffer[pos] = c;
+		ryujin::copy(_data + pos + len, _data + _size, buffer + pos + 1);
+		buffer[newLen] = as<Type>(0);
+
+		_alloc.deallocate(_data, _size + 1);
+		
+		_data = buffer;
+		_size = newLen;
+
 		return *this;
 	}
 
 	template<typename Type, typename Allocator>
 	inline constexpr basic_string<Type, Allocator>& basic_string<Type, Allocator>::replace(sz pos, sz len, const Type* str)
 	{
-		const sz length = ryujin::min(len, _size - pos);
+		const sz strLen = ryujin::strlen(str);
 
-		assert(false && "Needs implementation");
+		const sz newLen = _size - len + strLen;
+		const Type* buffer = _alloc.allocate(newLen + 1);
+		ryujin::copy(_data, _data + pos, buffer);
+		ryujin::copy(str, str + strLen, buffer + pos);
+		ryujin::copy(_data + pos + len, _data + _size, buffer + pos + strLen);
+		_data[newLen] = as<Type>(0);
+
+		_alloc.deallocate(_data, _size + 1);
+		
+		_data = buffer;
+		_size = newLen;
+
 		return *this;
 	}
 
 	template<typename Type, typename Allocator>
 	inline constexpr basic_string<Type, Allocator>& basic_string<Type, Allocator>::replace(sz pos, sz len, const basic_string& str)
 	{
-		return replace(pos, len, str._size);
+		const sz strLen = str.length();
+
+		const sz newLen = _size - len + strLen;
+		const Type* buffer = _alloc.allocate(newLen + 1);
+		ryujin::copy(_data, _data + pos, buffer);
+		ryujin::copy(str.c_str(), str.c_str() + strLen, buffer + pos);
+		ryujin::copy(_data + pos + len, _data + _size, buffer + pos + strLen);
+		_data[newLen] = as<Type>(0);
+
+		_alloc.deallocate(_data, _size + 1);
+
+		_data = buffer;
+		_size = newLen;
+
+		return *this;
 	}
 
 	template<typename Type, typename Allocator>
