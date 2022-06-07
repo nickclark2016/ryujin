@@ -195,13 +195,13 @@ namespace ryujin
 
     template<typename Type, typename Allocator>
     inline constexpr vector<Type, Allocator>::vector(const sz count, const Type& value)
-        : _size(count)
     {
         _resize_buffer(count);
         for (sz i = 0; i < _size; ++i)
         {
             ryujin::construct_at(_data + i, value);
         }
+        _size = count;
     }
 
     template<typename Type, typename Allocator>
