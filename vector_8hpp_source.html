@@ -266,13 +266,13 @@ $(function() {
 <div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160; </div>
 <div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Type, <span class="keyword">typename</span> Allocator&gt;</div>
 <div class="line"><a name="l00197"></a><span class="lineno"><a class="line" href="classryujin_1_1vector.html#afac9b6c8a3bad117122a1362a53b6ffe">  197</a></span>&#160;    <span class="keyword">inline</span> constexpr <a class="code" href="classryujin_1_1vector.html">vector&lt;Type, Allocator&gt;::vector</a>(<span class="keyword">const</span> <a class="code" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a> count, <span class="keyword">const</span> Type&amp; value)</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;        : _size(count)</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;    {</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;        _resize_buffer(count);</div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;        <span class="keywordflow">for</span> (<a class="code" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a> i = 0; i &lt; _size; ++i)</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;        {</div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;            <a class="code" href="namespaceryujin.html#a92c492a0e9821272a2f8f469de984828">ryujin::construct_at</a>(_data + i, value);</div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;        }</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    {</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;        _resize_buffer(count);</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;        <span class="keywordflow">for</span> (<a class="code" href="namespaceryujin.html#a3230f2023555adb9ad578d3b489f2b64">sz</a> i = 0; i &lt; _size; ++i)</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;        {</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;            <a class="code" href="namespaceryujin.html#a92c492a0e9821272a2f8f469de984828">ryujin::construct_at</a>(_data + i, value);</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;        }</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;        _size = count;</div>
 <div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    }</div>
 <div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160; </div>
 <div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Type, <span class="keyword">typename</span> Allocator&gt;</div>
