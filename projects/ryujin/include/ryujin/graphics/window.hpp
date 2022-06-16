@@ -105,6 +105,7 @@ namespace ryujin
         friend void detail::scrollCallback(GLFWwindow*, f64, f64);
         friend void detail::mouseButtonCallback(GLFWwindow*, i32, i32, i32);
         
+        friend class render_graph;
         friend class render_manager;
     };
 }
