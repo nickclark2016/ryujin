@@ -14,29 +14,44 @@ project ('Sandbox')
 
     includedirs ({
         'include/',
-        "%{IncludeDir.glfw}",
-        "%{IncludeDir.ryujin}",
-        "%{IncludeDir.vkbootstrap}",
-        "%{IncludeDir.vulkan}",
-        "%{IncludeDir.vma}"
+        "%{IncludeDir.ryujin_assets}",
+        "%{IncludeDir.ryujin_core}",
+        "%{IncludeDir.ryujin_entities}",
+        "%{IncludeDir.ryujin_graphics}",
+        "%{IncludeDir.ryujin_input}",
+        "%{IncludeDir.ryujin_math}",
+        "%{IncludeDir.glfw}", -- work to hide this dep
+        "%{IncludeDir.vkbootstrap}", -- work to hide this dep
+        "%{IncludeDir.vma}", -- work to hide this dep
+        "%{IncludeDir.vulkan}", -- work to hide this dep
     })
 
     dependson ({
+        'assets',
+        'core',
+        'entities',
+        'graphics',
+        'input',
+        'math',
         'glfw',
         'vma',
         'stb',
-        'ryujin',
         'tinygltf',
         'vk-bootstrap'
     })
 
     links ({
+        'assets',
+        'core',
+        'entities',
+        'graphics',
+        'input',
+        'math',
         'glfw',
         'vma',
         'stb',
         'tinygltf',
         'vk-bootstrap',
-        'ryujin',
     })
 
     defines ({

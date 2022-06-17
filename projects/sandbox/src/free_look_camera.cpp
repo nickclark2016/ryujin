@@ -1,7 +1,7 @@
 #include <free_look_camera.hpp>
 
-#include <ryujin/graphics/camera_component.hpp>
-#include <ryujin/input/input.hpp>
+#include <ryujin/camera_component.hpp>
+#include <ryujin/input.hpp>
 
 free_look_camera::free_look_camera(const vec3<float> position, registry& reg)
 {

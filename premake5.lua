@@ -37,17 +37,25 @@ workspace ('ryujin')
     include ('dependencies/vulkanmemoryallocator')
     group ('')
 
-    group ('Engine')
-    include ('projects/ryujin')
-    include ('projects/ryujin-test')
-    group ('')
-
     group ('Sandbox')
     include ('projects/sandbox')
     group ('')
 
+    include ('projects/assets')
+    include ('projects/core')
+    include ('projects/entities')
+    include ('projects/graphics')
+    include ('projects/input')
+    include ('projects/math')
+
     IncludeDir = {}
     IncludeDir["ryujin"] = "%{root}/projects/ryujin/include"
+    IncludeDir["ryujin_assets"] = "%{root}/projects/assets/include"
+    IncludeDir["ryujin_core"] = "%{root}/projects/core/include"
+    IncludeDir["ryujin_entities"] = "%{root}/projects/entities/include"
+    IncludeDir["ryujin_graphics"] = "%{root}/projects/graphics/include"
+    IncludeDir["ryujin_input"] = "%{root}/projects/input/include"
+    IncludeDir["ryujin_math"] = "%{root}/projects/math/include"
 
     IncludeDir["gtest"] = "%{root}/dependencies/googletest/include"
     IncludeDir["glfw"] = "%{root}/dependencies/glfw/include"
