@@ -1,6 +1,8 @@
 #ifndef type_traits_hpp__
 #define type_traits_hpp__
 
+#include "primitives.hpp"
+
 namespace ryujin
 {
 	template <bool B, typename T = void>
@@ -564,80 +566,19 @@ namespace ryujin
 		{
 		};
 
-		template <typename T, sz v = is_array_fn_void<remove_reference_t<T>>::value>
-		struct is_convertible_check : public integral_constant<sz, 0>
-		{
-		};
+		template<class T>
+		auto test_returnable(int) -> decltype(
+			void(static_cast<T(*)()>(nullptr)), true_type{}
+		);
+		template<class>
+		auto test_returnable(...)->false_type;
 
-		template <typename T>
-		struct is_convertible_check<T, 0> : public integral_constant<sz, sizeof(T)>
-		{
-		};
-
-		template <typename From, typename To, sz FromArrayFnVoid = is_array_fn_void<From>::value, sz ToArrayFnVoid = is_array_fn_void<To>::value>
-		struct is_convertible_impl : public bool_constant<is_convertible_test<From, To>::value>
-		{
-		};
-
-		template <typename From, typename To>
-		struct is_convertible_impl<From, To, 0, 1> : public false_type
-		{
-		};
-
-		template <typename From, typename To>
-		struct is_convertible_impl<From, To, 1, 1> : public false_type
-		{
-		};
-
-		template <typename From, typename To>
-		struct is_convertible_impl<From, To, 2, 1> : public false_type
-		{
-		};
-
-		template <typename From, typename To>
-		struct is_convertible_impl<From, To, 3, 1> : public false_type
-		{
-		};
-
-		template <typename From, typename To>
-		struct is_convertible_impl<From, To, 0, 2> : public false_type
-		{
-		};
-
-		template <typename From, typename To>
-		struct is_convertible_impl<From, To, 1, 2> : public false_type
-		{
-		};
-
-		template <typename From, typename To>
-		struct is_convertible_impl<From, To, 2, 2> : public false_type
-		{
-		};
-
-		template <typename From, typename To>
-		struct is_convertible_impl<From, To, 3, 2> : public false_type
-		{
-		};
-
-		template <typename From, typename To>
-		struct is_convertible_impl<From, To, 0, 3> : public false_type
-		{
-		};
-
-		template <typename From, typename To>
-		struct is_convertible_impl<From, To, 1, 3> : public false_type
-		{
-		};
-
-		template <typename From, typename To>
-		struct is_convertible_impl<From, To, 2, 3> : public false_type
-		{
-		};
-
-		template <typename From, typename To>
-		struct is_convertible_impl<From, To, 3, 3> : public true_type
-		{
-		};
+		template<class From, class To>
+		auto test_implicitly_convertible(int) -> decltype(
+			void(ryujin::declval<void(&)(To)>()(ryujin::declval<From>())), true_type{}
+		);
+		template<class, class>
+		auto test_implicitly_convertible(...)->false_type;
 
 		template <typename T>
 		static void test_noexcept(T) noexcept;
@@ -805,11 +746,10 @@ namespace ryujin
 	inline constexpr bool is_nothrow_destructible_v = is_nothrow_destructible<T>::value;
 
 	template <typename From, typename To>
-	struct is_convertible : public is_constructible<From, To>
+	struct is_convertible : public bool_constant<(decltype(detail::test_returnable<To>(0))::value &&
+		decltype(detail::test_implicitly_convertible<From, To>(0))::value) ||
+		(is_void<From>::value && is_void<To>::value)>
 	{
-	private:
-		static constexpr sz checkFrom = detail::is_convertible_check<From>::value;
-		static constexpr sz checkTo = detail::is_convertible_check<To>::value;
 	};
 
 	template <typename From, typename To>
@@ -822,6 +762,8 @@ namespace ryujin
 
 	template <typename From, typename To>
 	inline constexpr bool is_nothrow_convertible_v = is_nothrow_convertible<From, To>::value;
+
+	// TODO: Is (nothrow) Swappable
 
 	template <typename T>
 	struct is_integral : public false_type

@@ -72,6 +72,8 @@ namespace ryujin
         constexpr unique_ptr& operator=(unique_ptr&& rhs) noexcept;
         constexpr unique_ptr& operator=(pointer p) noexcept;
 
+        // TODO: Type conversions.
+
         constexpr pointer release();
         constexpr void reset(pointer p = pointer());
         constexpr void swap(unique_ptr& other);

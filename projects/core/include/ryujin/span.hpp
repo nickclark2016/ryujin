@@ -28,10 +28,17 @@ namespace ryujin
         span& operator=(const span& rhs);
         span& operator=(span&& rhs) noexcept;
 
+        constexpr operator bool() const noexcept;
+
         constexpr const T* data() const noexcept;
         constexpr sz length() const noexcept;
 
         constexpr const T& operator[](const sz idx) const noexcept;
+
+        constexpr const T* begin() const noexcept;
+        constexpr const T* end() const noexcept;
+        constexpr const T* cbegin() const noexcept;
+        constexpr const T* cend() const noexcept;
     private:
 
         const T* _ptr;
@@ -113,6 +120,12 @@ namespace ryujin
     }
 
     template<typename T>
+    inline constexpr span<T>::operator bool() const noexcept
+    {
+        return _ptr != nullptr;
+    }
+
+    template<typename T>
     inline constexpr const T* span<T>::data() const noexcept
     {
         return _ptr;
@@ -135,6 +148,30 @@ namespace ryujin
     inline constexpr span<T>::span(const T(&d)[N])
         : _ptr(d), _length(N)
     {}
+
+    template<typename T>
+    inline constexpr const T* span<T>::begin() const noexcept
+    {
+        return _ptr;
+    }
+
+    template<typename T>
+    constexpr const T* span<T>::end() const noexcept
+    {
+        return _ptr + _length;
+    }
+
+    template<typename T>
+    inline constexpr const T* span<T>::cbegin() const noexcept
+    {
+        return _ptr;
+    }
+
+    template<typename T>
+    constexpr const T* span<T>::cend() const noexcept
+    {
+        return _ptr + _length;
+    }
 }
 
 #endif // span_hpp__

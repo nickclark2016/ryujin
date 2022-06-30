@@ -10,6 +10,7 @@ project ('graphics')
 
     files ({
         'include/**.hpp',
+        'src/**.hpp',
         'src/**.cpp'
     })
 

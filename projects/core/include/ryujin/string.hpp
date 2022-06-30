@@ -10,7 +10,6 @@
 #include "vector.hpp"
 
 #include <cassert>
-#include <memory>
 
 /// TODO: Capacity opt
 /// TODO: replace, reserve, rfind, split

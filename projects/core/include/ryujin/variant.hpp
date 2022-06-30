@@ -1,13 +1,11 @@
 #ifndef variant_hpp__
 #define variant_hpp__
 
+#include "memory.hpp"
 #include "primitives.hpp"
 #include "utility.hpp"
 
 #include <cassert>
-#include <cstring>
-#include <new>
-#include <type_traits>
 
 namespace ryujin
 {
@@ -53,7 +51,7 @@ namespace ryujin
             {
                 if (index == 0)
                 {
-                    reinterpret_cast<T*>(addr)->~T();
+                    ryujin::destroy_at(reinterpret_cast<T*>(addr));
                 }
                 else
                 {
@@ -65,7 +63,7 @@ namespace ryujin
             {
                 if (index == 0)
                 {
-                    ::new(newAddr) T(*reinterpret_cast<const T*>(oldAddr));
+                    ryujin::construct_at(reinterpret_cast<T*>(newAddr), *reinterpret_cast<const T*>(oldAddr));
                 }
                 else
                 {
@@ -91,7 +89,7 @@ namespace ryujin
             {
                 if (index == 0)
                 {
-                    ::new(newAddr) T(ryujin::move(*reinterpret_cast<T*>(oldAddr)));
+                    ryujin::construct_at(reinterpret_cast<T*>(newAddr), ryujin::move(*reinterpret_cast<T*>(oldAddr)));
                 }
                 else
                 {
@@ -235,7 +233,7 @@ namespace ryujin
     inline constexpr variant<Ts...>::variant() noexcept(ryujin::is_nothrow_default_constructible_v<variant_alternative_t<0, variant<Ts...>>>)
     {
         using first_type = variant_alternative_t<0, variant<Ts...>>;
-        ::new(_data) first_type();
+        ryujin::construct_at(reinterpret_cast<first_type*>(_data));
         _heldIndex = 0;
     }
     
@@ -261,7 +259,7 @@ namespace ryujin
         constexpr sz idx = detail::variant_index_helper_v<T, Ts...>;
         static_assert(idx < sizeof...(Ts), "Illegal type specified in variant construction.");
         _heldIndex = idx;
-        ::new(_data) type(t);
+        ryujin::construct_at(reinterpret_cast<type*>(_data), t);
     }
 
     template <typename ... Ts>
@@ -272,7 +270,7 @@ namespace ryujin
         constexpr sz idx = detail::variant_index_helper_v<type, Ts...>;
         static_assert(idx < sizeof...(Ts), "Illegal type specified in variant construction.");
         _heldIndex = idx;
-        ::new(_data) type(ryujin::forward<T>(t));
+        ryujin::construct_at(reinterpret_cast<type*>(_data), ryujin::forward<type>(t));
     }
 
     template <typename ... Ts>
@@ -283,7 +281,7 @@ namespace ryujin
         constexpr sz idx = detail::variant_index_helper_v<type, Ts...>;
         static_assert(idx < sizeof...(Ts), "Illegal index specified in variant construction.");
         _heldIndex = idx;
-        ::new(_data) type(ryujin::forward<Args>(args)...);
+        ryujin::construct_at(reinterpret_cast<T*>(_data), ryujin::forward<Args>(args)...);
     }
 
     template <typename ... Ts>
@@ -293,7 +291,7 @@ namespace ryujin
         static_assert(I < sizeof...(Ts), "Illegal index specified in variant construction.");
         using T = variant_alternative_t<I, variant<Ts...>>;
         _heldIndex = I;
-        ::new(_data) T(ryujin::forward<Args>(args)...);
+        ryujin::construct_at(reinterpret_cast<T*>(_data), ryujin::forward<Args>(args)...);
     }
 
     template <typename ... Ts>
@@ -363,7 +361,7 @@ namespace ryujin
         {
             detail::variant_assignment_helper<Ts...>::destroy(_heldIndex, _data);
             _heldIndex = idx;
-            ::new (_data) type(rhs);
+            ryujin::construct_at(reinterpret_cast<type*>(_data), rhs);
         }
 
         return *this;
@@ -384,7 +382,7 @@ namespace ryujin
         {
             detail::variant_assignment_helper<Ts...>::destroy(_heldIndex, _data);
             _heldIndex = idx;
-            ::new (_data) type(ryujin::forward<T>(rhs));
+            ryujin::construct_at(reinterpret_cast<type*>(_data), ryujin::forward<T>(rhs));
         }
 
         return *this;
@@ -403,7 +401,7 @@ namespace ryujin
         constexpr sz idx = detail::variant_index_helper_v<T, Ts...>;
         static_assert(idx < sizeof...(Ts), "Illegal type specified in variant emplace.");
         detail::variant_assignment_helper<Ts...>::destroy(_heldIndex, _data);
-        T* ptr = ::new(_data) T(ryujin::forward<Args>(args)...);
+        T* ptr = ryujin::construct_at(reinterpret_cast<T*>(_data), ryujin::forward<Args>(args)...);
         _heldIndex = idx;
         return *ptr;
     }
@@ -414,7 +412,8 @@ namespace ryujin
     {
         static_assert(I < sizeof...(Ts), "Illegal type specified in variant emplace.");
         detail::variant_assignment_helper<Ts...>::destroy(_heldIndex, _data);
-        variant_alternative_t<I, variant<Ts...>>* ptr = ::new(_data) variant_alternative_t<I, variant<Ts...>>(ryujin::forward<Args>(args)...);
+        using type = variant_alternative_t<I, variant<Ts...>>;
+        type* ptr = ryujin::construct_at(reinterpret_cast<type*>(_data), ryujin::forward<Args>(args)...);
         _heldIndex = I;
         return *ptr;
     }

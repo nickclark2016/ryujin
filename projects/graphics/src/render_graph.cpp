@@ -1,9 +1,10 @@
 #include <ryujin/render_graph.hpp>
 
-#include <ryujin/window.hpp>
+#include <ryujin/unordered_map.hpp>
 
 #include <VkBootstrap.h>
-#include <vma/vk_mem_alloc.h>
+#include <vulkan/vulkan.h>
+#include <GLFW/glfw3.h>
 
 #undef APIENTRY
 #include <spdlog/spdlog.h>
@@ -12,6 +13,24 @@ namespace ryujin
 {
     namespace detail
     {
+        static constexpr bool enable_vulkan_debug_apis_enable()
+        {
+#if defined(_DEBUG) || defined(RYUJIN_VULKAN_API_DEBUG)
+            return true;
+#else
+            return false;
+#endif
+        }
+
+        static constexpr bool enable_vulkan_api_dump()
+        {
+#if defined(RYUJIN_VULKAN_API_TRACE_ENABLE)
+            return true;
+#else
+            return false;
+#endif
+        }
+
         static VKAPI_ATTR VkBool32 VKAPI_CALL vulkan_debug_message_callback(
             VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
             VkDebugUtilsMessageTypeFlagsEXT messageType,
@@ -42,693 +61,634 @@ namespace ryujin
             return VK_FALSE;
         }
 
-        void set_vulkan_api_dump(vkb::InstanceBuilder& bldr)
-        {
-#if defined(RYUJIN_ENABLE_VULKAN_API_DUMP)
-            bldr.enable_layer("VK_LAYER_LUNARG_api_dump");
-#endif
-        }
-
-        bool set_vulkan_debug_extensions(vkb::InstanceBuilder& bldr)
-        {
-#if defined(_DEBUG) || defined(RYUJIN_ENABLE_VULKAN_DEBUG_UTILITIES)
-            bldr.request_validation_layers()
-                .set_debug_callback(vulkan_debug_message_callback)
-                .set_debug_messenger_severity(VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT)
-                .set_debug_messenger_type(VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT)
-                .add_validation_feature_enable(VK_VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT)
-                .add_validation_feature_enable(VK_VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT);
-
-            const auto sysInfoResult = vkb::SystemInfo::get_system_info();
-            if (sysInfoResult)
-            {
-                if (sysInfoResult->is_extension_available(VK_EXT_DEBUG_UTILS_EXTENSION_NAME))
-                {
-                    bldr.enable_extension(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
-                    spdlog::info("Vulkan extension {} requested.", VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
-                    return true;
-                }
-                else
-                {
-                    spdlog::warn("Vulkan extension {} required, but not available. Extension not requested.", VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
-                    return false;
-                }
-            }
-            else
-            {
-                spdlog::warn("Vulkan extension {} required, but failed to determine if it is available. Extension not requested.", VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
-                return false;
-            }
-#endif
-            return false;
-        }
-    }
-
-    struct vulkan_deletion_queue
-    {
-        vector<move_only_function<void()>> queue;
-
-        void flush()
-        {
-            for (auto& fn : queue)
-            {
-                fn();
-            }
-            queue.clear();
-        }
-    };
-
-    struct vulkan_sampler_cache
-    {
-
-    };
-
-    struct render_graph_frame_data
-    {
-        VkSemaphore renderComplete;
-        VkSemaphore imageReady;
-        VkFence renderFence;
-    };
-
-    struct vulkan_texture
-    {
-        VkImage image = VK_NULL_HANDLE;
-        VkImageView view = VK_NULL_HANDLE;
-        VkSampler sampler = VK_NULL_HANDLE; // non-owning. multiple textures can share the same sampler
-
-        VmaAllocation imageAllocation = {};
-        VmaAllocationInfo imageAllocationInfo = {};
-    };
-
-    struct render_target::impl
-    {
-        string name;
-        u32 width = 0;
-        u32 height = 0;
-        VkFormat fmt = VK_FORMAT_UNDEFINED;
-        VkImageUsageFlags usage = 0;
         
-        vulkan_texture tex = {};
-    };
-
-    enum class pass_type
-    {
-        UNDEFINED,
-        GRAPHICS,
-        COMPUTE
-    };
-
-    struct pass::impl
-    {
-        string name;
-        pass_type type = pass_type::UNDEFINED;
-
-        VkRenderPass renderPass = VK_NULL_HANDLE;
-        VkFramebuffer fbo = VK_NULL_HANDLE;
-
-        move_only_function<void(command_buffer&)> commands;
-        vector<render_resource_handle<pass>> src;
-        vector<render_resource_handle<pass>> dst;
-    };
-
-    struct render_graph::impl
-    {
-        vkb::Instance instance = {};
-        vkb::PhysicalDevice physical = {};
-        vkb::Device logical = {};
-        VkSurfaceKHR surface = VK_NULL_HANDLE;
-        vkb::Swapchain swap = {};
-        vkb::DispatchTable funcs = {};
-        bool objectNamingEnabled = false;
-
-        VmaAllocator allocator = {};
-
-        u32 swapchainImageIndex = 0;
-        u32 currentFrame = 0;
-        u32 framesInFlight = 0;
-
-        vector<render_graph_frame_data> frameData;
-
-        slot_map<render_target> targets;
-        slot_map<render_target> swapchainImages;
-        vector<slot_map_key> swapchainKeys;
-
-        slot_map<pass> passes;
-    };
-    
-    render_target_builder::render_target_builder(const string& name)
-        : _name(name)
-    {
-    }
-    
-    render_target_builder& render_target_builder::width(const u32 w)
-    {
-        _width = w;
-        return *this;
-    }
-    
-    render_target_builder& render_target_builder::height(const u32 h)
-    {
-        _height = h;
-        return *this;
-    }
-    
-    render_target_builder& render_target_builder::format(const data_format fmt)
-    {
-        _fmt = fmt;
-        return *this;
-    }
-    
-    render_target_builder& render_target_builder::use_as_color_attachment()
-    {
-        _color = true;
-        return *this;
-    }
-    
-    render_target_builder& render_target_builder::use_as_depth_attachment()
-    {
-        _depth = true;
-        return *this;
     }
 
-    render_target_builder& render_target_builder::use_as_input_attachment()
-    {
-        _input = true;
-        return *this;
-    }
-    
-    bool render_target_builder::validate() const noexcept
-    {
-        const bool dimensionsValid = _width != 0 && _height != 0;
-        const bool validFormat = _fmt != data_format::UNDEFINED;
-        const bool usageSet = _color || _depth;
-        return dimensionsValid && validFormat && usageSet;
-    }
+    class vulkan_render_graph;
 
-    render_graph::render_graph(const unique_ptr<window>& win, const u32 framesInFlight)
+    class vulkan_render_pass final : public render_pass
     {
-        _impl = new impl();
-
-        _impl->framesInFlight = framesInFlight;
-        
-        assert(load_instance() && "Failed to create Vulkan instance.");
-        assert(query_physical_device() && "Failed to find suitable physical device.");
-        assert(load_device() && "Failed to create Vulkan device.");
-        assert(build_swapchain(win) && "Failed to create Vulkan surface and swapchain.");
-        assert(build_frame_in_flight_data() && "Failed to create frame-specific data.");
-    }
-
-    render_graph::render_graph(render_graph&& other) noexcept
-        : _impl(other._impl)
-    {
-        other._impl = nullptr;
-    }
-
-    render_graph::~render_graph()
-    {
-        if (_impl)
+    public:
+        vulkan_render_pass(render_pass_create_info&& info, vkb::DispatchTable* fns)
+            : _fns(fns)
         {
-            release_resources();
-            delete _impl;
+            vector<VkAttachmentDescription> attachments;
+            vector<VkSubpassDescription> subpasses;
+            vector<VkSubpassDependency> dependencies;
+            vector<VkAttachmentReference> attachmentRefs;
+
+            attachments.reserve(info.attachments.length());
+            subpasses.reserve(info.subpasses.length());
+            dependencies.reserve(info.dependencies.length());
+
+            sz totalAttachmentRefCount = 0;
+            u32 attachmentCount = 0;
+
+            for (const auto& sub : info.subpasses)
+            {
+                totalAttachmentRefCount += sub.colors.length();
+                totalAttachmentRefCount += sub.inputs.length();
+                totalAttachmentRefCount += sub.depth.length();
+
+                assert(sub.depth.length() <= 1 && "Subpass may define at most one depth attachment reference.");
+
+                for (auto color : sub.colors)
+                {
+                    attachmentCount = ryujin::max(attachmentCount, color.index);
+                }
+
+                for (auto input : sub.inputs)
+                {
+                    attachmentCount = ryujin::max(attachmentCount, input.index);
+                }
+
+                for (auto depth : sub.depth)
+                {
+                    attachmentCount = ryujin::max(attachmentCount, depth.index);
+                }
+            }
+
+            // compute last usage of each attachment
+            vector<u32> lastUsage(attachmentCount, 0);
+
+            for (sz i = 0; i < info.subpasses.length(); ++i)
+            {
+                auto& sub = info.subpasses[i];
+                for (auto color : sub.colors)
+                {
+                    lastUsage[color.index] = ryujin::max(lastUsage[color.index], as<u32>(i));
+                }
+
+                for (auto input : sub.inputs)
+                {
+                    lastUsage[input.index] = ryujin::max(lastUsage[input.index], as<u32>(i));
+                }
+
+                for (auto depth : sub.depth)
+                {
+                    lastUsage[depth.index] = ryujin::max(lastUsage[depth.index], as<u32>(i));
+                }
+            }
+
+            const sz maxPreserveAttachmentCount = totalAttachmentRefCount - attachmentCount;
+
+            vector<u32> preserveIndices;
+            preserveIndices.reserve(maxPreserveAttachmentCount);
+
+            vector<u32> attachmentsUsed;
+            attachmentsUsed.reserve(attachmentCount);
+
+            for (sz i = 0; i < info.subpasses.length(); ++i)
+            {
+                const auto& subpass = info.subpasses[i];
+
+                const auto colorStartIndex = attachmentRefs.size();
+                for (const auto color : subpass.colors)
+                {
+                    attachmentRefs.push_back(VkAttachmentReference{
+                            .attachment = color.index,
+                            .layout = as<VkImageLayout>(color.layout)
+                        });
+
+                    attachmentsUsed.push_back(color.index);
+                }
+
+                const auto inputStartIndex = attachmentRefs.size();
+                for (const auto input : subpass.inputs)
+                {
+                    attachmentRefs.push_back(VkAttachmentReference{
+                            .attachment = input.index,
+                            .layout = as<VkImageLayout>(input.layout)
+                        });
+
+                    attachmentsUsed.push_back(input.index);
+                }
+
+                const auto depthIndex = attachmentRefs.size();
+                if (subpass.depth)
+                {
+                    attachmentRefs.push_back(VkAttachmentReference{
+                            .attachment = subpass.depth[0].index,
+                            .layout = as<VkImageLayout>(subpass.depth[0].layout)
+                        });
+
+                    attachmentsUsed.push_back(subpass.depth[0].index);
+                }
+
+                u32 unusedAttachmentCount = 0;
+                const auto preserveStartIndex = preserveIndices.size();
+
+                for (u32 attachment = 0; attachment < attachmentCount; ++attachment)
+                {
+                    for (const auto& usedAttachmentIndex : attachmentsUsed)
+                    {
+                        if (attachment == usedAttachmentIndex)
+                        {
+                            goto used;
+                        }
+                    }
+
+                    if (i <= lastUsage[attachment])
+                    {
+                        ++unusedAttachmentCount;
+                        preserveIndices.push_back(attachment);
+                    }
+                used:;
+                }
+
+                const VkSubpassDescription desc = {
+                    .flags = 0,
+                    .pipelineBindPoint = as<VkPipelineBindPoint>(subpass.type),
+                    .inputAttachmentCount = as<u32>(subpass.inputs.length()),
+                    .pInputAttachments = subpass.inputs ? attachmentRefs.data() + inputStartIndex : VK_NULL_HANDLE,
+                    .colorAttachmentCount = as<u32>(subpass.colors.length()),
+                    .pColorAttachments = subpass.colors ? attachmentRefs.data() + colorStartIndex : VK_NULL_HANDLE,
+                    .pResolveAttachments = VK_NULL_HANDLE,
+                    .pDepthStencilAttachment = subpass.depth ? attachmentRefs.data() + depthIndex : VK_NULL_HANDLE,
+                    .preserveAttachmentCount = unusedAttachmentCount,
+                    .pPreserveAttachments = unusedAttachmentCount > 0 ? preserveIndices.data() + preserveStartIndex : VK_NULL_HANDLE
+                };
+
+                subpasses.push_back(desc);
+
+                attachmentsUsed.clear();
+            }
+
+            for (const auto& attachment : info.attachments)
+            {
+                const VkAttachmentDescription desc = {
+                    .flags = 0,
+                    .format = as<VkFormat>(attachment.fmt),
+                    .samples = as<VkSampleCountFlagBits>(attachment.samples),
+                    .loadOp = as<VkAttachmentLoadOp>(attachment.load),
+                    .storeOp = as<VkAttachmentStoreOp>(attachment.store),
+                    .stencilLoadOp = as<VkAttachmentLoadOp>(attachment.stencilLoad),
+                    .stencilStoreOp = as<VkAttachmentStoreOp>(attachment.stencilStore),
+                    .initialLayout = as<VkImageLayout>(attachment.input),
+                    .finalLayout = as<VkImageLayout>(attachment.output)
+                };
+
+                attachments.push_back(desc);
+            }
+
+            const auto stageMaskMerger = [](const span<pipeline_stage>& stages) {
+                VkPipelineStageFlags flags = 0;
+                for (const auto& stage : stages)
+                    flags |= as<VkPipelineStageFlags>(stage);
+                return flags;
+            };
+
+            const auto accessMaskMerger = [](const span<memory_access>& accesses) {
+                VkAccessFlags flags = 0;
+                for (const auto& access : accesses)
+                    flags |= as<VkAccessFlags>(access);
+                return flags;
+            };
+
+            for (const auto& dependency : info.dependencies)
+            {
+
+
+                const VkSubpassDependency dep = {
+                    .srcSubpass = dependency.srcSubpassIndex,
+                    .dstSubpass = dependency.dstSubpassIndex,
+                    .srcStageMask = stageMaskMerger(dependency.srcStageMask),
+                    .dstStageMask = stageMaskMerger(dependency.dstStageMask),
+                    .srcAccessMask = accessMaskMerger(dependency.srcAccessMask),
+                    .dstAccessMask = accessMaskMerger(dependency.dstAccessMask),
+                    .dependencyFlags = 0 // investigate dependency by region
+                };
+
+                dependencies.push_back(dep);
+            }
+
+            const VkRenderPassCreateInfo create = {
+                .sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO,
+                .pNext = VK_NULL_HANDLE,
+                .flags = 0,
+                .attachmentCount = as<u32>(attachments.size()),
+                .pAttachments = attachments.data(),
+                .subpassCount = as<u32>(subpasses.size()),
+                .pSubpasses = subpasses.data(),
+                .dependencyCount = as<u32>(dependencies.size()),
+                .pDependencies = dependencies.data()
+            };
+
+            const auto result = fns->createRenderPass(&create, VK_NULL_HANDLE, &_pass);
+            if (result != VK_SUCCESS)
+            {
+                spdlog::error("Failed to create VkRenderPass instance.");
+                return;
+            }
+            spdlog::info("Successfully created VkRenderPass instance.");
         }
-        _impl = nullptr;
-    }
 
-    render_graph& render_graph::operator=(render_graph&& rhs) noexcept
-    {
-        if (&rhs == this)
+        ~vulkan_render_pass()
         {
+            _fns->destroyRenderPass(_pass, VK_NULL_HANDLE);
+        }
+
+        vulkan_render_pass(vulkan_render_pass&& rhs) noexcept
+            : _pass(rhs._pass), _fns(rhs._fns), _cmds(ryujin::move(_cmds)), _handle(rhs._handle)
+        {
+            rhs._pass = VK_NULL_HANDLE;
+        }
+
+        vulkan_render_pass& operator=(vulkan_render_pass&& rhs) noexcept
+        {
+            if (&rhs == this)
+            {
+                return *this;
+            }
+
+            _fns->destroyRenderPass(_pass, VK_NULL_HANDLE);
+
+            _pass = rhs._pass;
+            _fns = rhs._fns;
+            _cmds = ryujin::move(rhs._cmds);
+            _handle = rhs._handle;
+
+            rhs._pass = VK_NULL_HANDLE;
+
             return *this;
         }
 
-        delete _impl;
-        _impl = rhs._impl;
-        rhs._impl = nullptr;
-
-        return *this;
-    }
-
-    render_resource_handle<pass> render_graph::add_pass(const pass_builder& bldr)
-    {
-        return render_resource_handle<pass>();
-    }
-
-    render_resource_handle<render_target> render_graph::add_render_target(const render_target_builder& bldr)
-    {
-        const auto valid = bldr.validate();
-        assert(valid && "Render target builder was not valid.");
-
-        render_target tgt;
-        tgt._impl->width = bldr._width;
-        tgt._impl->height = bldr._height;
-        tgt._impl->name = bldr._name;
-        tgt._impl->fmt = as<VkFormat>(bldr._fmt);
-
-        VkImageUsageFlags usage = 0;
-        usage |= bldr._color ? VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT : 0;
-        usage |= bldr._depth ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT : 0;
-        usage |= bldr._input ? VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT : 0;
-
-        tgt._impl->usage = usage;
-
-        build_render_target(tgt);
-        
-        auto key = _impl->targets.insert(ryujin::move(tgt));
-
-        render_resource_handle<render_target> handle;
-        handle._graph = this;
-        handle._key = key;
-
-        return handle;
-    }
-
-    render_resource_handle<render_target> render_graph::get_back_buffer() const noexcept
-    {
-        render_resource_handle<render_target> tgt;
-        tgt._graph = this;
-        tgt._key = _impl->swapchainKeys[_impl->swapchainImageIndex];
-        return tgt;
-    }
-
-    bool render_graph::execute()
-    {
-        return false;
-    }
-
-    bool render_graph::load_instance()
-    {
-        vkb::InstanceBuilder instanceBldr;
-        instanceBldr.set_app_name("Ryujin Application")
-            .set_app_version(VK_MAKE_VERSION(0, 0, 1))
-            .set_engine_name("Ryujin Engine")
-            .set_engine_version(VK_MAKE_VERSION(0, 0, 1))
-            .require_api_version(VK_MAKE_VERSION(1, 2, 0));
-
-        detail::set_vulkan_api_dump(instanceBldr);
-        _impl->objectNamingEnabled = detail::set_vulkan_debug_extensions(instanceBldr);
-
-        const auto result = instanceBldr.build();
-        if (result)
+        void execute(commands& cmds) override
         {
-            spdlog::info("Successfully created VkInstance.");
-            _impl->instance = *result;
-            return true;
+            _cmds(cmds);
         }
 
-        spdlog::critical("Failed to create VkInstance.");
-        return false;
-    }
+    private:
+        friend class vulkan_render_graph;
 
-    bool render_graph::query_physical_device()
+        vkb::DispatchTable* _fns;
+
+        move_only_function<void(commands&)> _cmds;
+
+        VkRenderPass _pass = {};
+        render_graph::handle _handle = invalid_slot_map_key;
+    };
+
+    class vulkan_render_graph final : public render_graph
     {
-        VkPhysicalDeviceFeatures feats = {};
-        feats.independentBlend = true;
-        feats.logicOp = true;
-        feats.alphaToOne = true;
-        feats.depthBounds = true;
-        feats.depthClamp = true;
-        feats.depthBiasClamp = true;
-        feats.fillModeNonSolid = true;
-
-        VkPhysicalDeviceVulkan12Features feats12 = {};
-        feats12.imagelessFramebuffer = VK_TRUE; // needed for framebuffers without images created ahead of time
-        feats12.separateDepthStencilLayouts = VK_TRUE; // needed for depth only buffers
-        feats12.drawIndirectCount = VK_TRUE; // needed to make frames go brrrt
-
-        vkb::PhysicalDeviceSelector deviceSelector{ _impl->instance };
-        deviceSelector.prefer_gpu_device_type(vkb::PreferredDeviceType::discrete)
-            .set_required_features(feats)
-            .set_required_features_12(feats12)
-            .require_present()
-            .defer_surface_initialization();
-
-        const auto result = deviceSelector.select();
-        if (result)
+    public:
+        vulkan_render_graph(const window& win)
         {
-            spdlog::info("Succesfully found a suitable VkPhysicalDevice: {}", result->properties.deviceName);
-            _impl->physical = *result;
-            return true;
+            assert(build_vulkan_instance());
+            assert(select_vulkan_physical_device());
+            assert(build_logical_device());
+            assert(fetch_surface(win));
+            assert(build_swapchain());
+            assert(fetch_swapchain_images());
         }
 
-        spdlog::critical("Failed to find a suitable VkPhysicalDevice.");
-        return false;
-    }
-
-    bool render_graph::load_device()
-    {
-        vkb::DeviceBuilder deviceBuilder{ _impl->physical };
-        const auto result = deviceBuilder.build();
-
-        if (result)
+        ~vulkan_render_graph() override
         {
-            spdlog::info("Succesfully created a VkDevice from the VkPhysicalDevice - {}", _impl->physical.properties.deviceName);
-            _impl->logical = *result;
-            _impl->funcs = _impl->logical.make_table();
+            _passes.clear();
 
-            const VmaVulkanFunctions fns = {
-                .vkGetInstanceProcAddr = _impl->instance.fp_vkGetInstanceProcAddr,
-                .vkGetDeviceProcAddr = _impl->logical.fp_vkGetDeviceProcAddr,
-                .vkGetPhysicalDeviceProperties = reinterpret_cast<PFN_vkGetPhysicalDeviceProperties>(_impl->instance.fp_vkGetInstanceProcAddr(_impl->instance.instance, "vkGetPhysicalDeviceProperties")),
-                .vkGetPhysicalDeviceMemoryProperties = reinterpret_cast<PFN_vkGetPhysicalDeviceMemoryProperties>(_impl->instance.fp_vkGetInstanceProcAddr(_impl->instance.instance, "vkGetPhysicalDeviceMemoryProperties")),
-                .vkAllocateMemory = reinterpret_cast<PFN_vkAllocateMemory>(_impl->logical.fp_vkGetDeviceProcAddr(_impl->logical.device, "vkAllocateMemory")),
-                .vkFreeMemory = reinterpret_cast<PFN_vkFreeMemory>(_impl->logical.fp_vkGetDeviceProcAddr(_impl->logical.device, "vkFreeMemory")),
-                .vkMapMemory = reinterpret_cast<PFN_vkMapMemory>(_impl->logical.fp_vkGetDeviceProcAddr(_impl->logical.device, "vkMapMemory")),
-                .vkUnmapMemory = reinterpret_cast<PFN_vkUnmapMemory>(_impl->logical.fp_vkGetDeviceProcAddr(_impl->logical.device, "vkUnmapMemory")),
-                .vkFlushMappedMemoryRanges = reinterpret_cast<PFN_vkFlushMappedMemoryRanges>(_impl->logical.fp_vkGetDeviceProcAddr(_impl->logical.device, "vkFlushMappedMemoryRanges")),
-                .vkInvalidateMappedMemoryRanges = reinterpret_cast<PFN_vkInvalidateMappedMemoryRanges>(_impl->logical.fp_vkGetDeviceProcAddr(_impl->logical.device, "vkInvalidateMappedMemoryRanges")),
-                .vkBindBufferMemory = reinterpret_cast<PFN_vkBindBufferMemory>(_impl->logical.fp_vkGetDeviceProcAddr(_impl->logical.device, "vkBindBufferMemory")),
-                .vkBindImageMemory = reinterpret_cast<PFN_vkBindImageMemory>(_impl->logical.fp_vkGetDeviceProcAddr(_impl->logical.device, "vkBindImageMemory")),
-                .vkGetBufferMemoryRequirements = reinterpret_cast<PFN_vkGetBufferMemoryRequirements>(_impl->logical.fp_vkGetDeviceProcAddr(_impl->logical.device, "vkGetBufferMemoryRequirements")),
-                .vkGetImageMemoryRequirements = reinterpret_cast<PFN_vkGetImageMemoryRequirements>(_impl->logical.fp_vkGetDeviceProcAddr(_impl->logical.device, "vkGetImageMemoryRequirements")),
-                .vkCreateBuffer = reinterpret_cast<PFN_vkCreateBuffer>(_impl->logical.fp_vkGetDeviceProcAddr(_impl->logical.device, "vkCreateBuffer")),
-                .vkDestroyBuffer = reinterpret_cast<PFN_vkDestroyBuffer>(_impl->logical.fp_vkGetDeviceProcAddr(_impl->logical.device, "vkDestroyBuffer")),
-                .vkCreateImage = reinterpret_cast<PFN_vkCreateImage>(_impl->logical.fp_vkGetDeviceProcAddr(_impl->logical.device, "vkCreateImage")),
-                .vkDestroyImage = reinterpret_cast<PFN_vkDestroyImage>(_impl->logical.fp_vkGetDeviceProcAddr(_impl->logical.device, "vkDestroyImage")),
-                .vkCmdCopyBuffer = reinterpret_cast<PFN_vkCmdCopyBuffer>(_impl->logical.fp_vkGetDeviceProcAddr(_impl->logical.device, "vkCmdCopyBuffer")),
-                .vkGetBufferMemoryRequirements2KHR = reinterpret_cast<PFN_vkGetBufferMemoryRequirements2KHR>(_impl->logical.fp_vkGetDeviceProcAddr(_impl->logical.device, "vkGetBufferMemoryRequirements2")),
-                .vkGetImageMemoryRequirements2KHR = reinterpret_cast<PFN_vkGetImageMemoryRequirements2KHR>(_impl->logical.fp_vkGetDeviceProcAddr(_impl->logical.device, "vkGetImageMemoryRequirements2")),
-                .vkBindBufferMemory2KHR = reinterpret_cast<PFN_vkBindBufferMemory2KHR>(_impl->logical.fp_vkGetDeviceProcAddr(_impl->logical.device, "vkBindBufferMemory2")),
-                .vkBindImageMemory2KHR = reinterpret_cast<PFN_vkBindImageMemory2KHR>(_impl->logical.fp_vkGetDeviceProcAddr(_impl->logical.device, "vkBindImageMemory2")),
-                .vkGetPhysicalDeviceMemoryProperties2KHR = reinterpret_cast<PFN_vkGetPhysicalDeviceMemoryProperties2KHR>(_impl->instance.fp_vkGetInstanceProcAddr(_impl->instance.instance, "vkGetPhysicalDeviceMemoryProperties2")),
-            };
-
-            const VmaAllocatorCreateInfo allocatorInfo = {
-                .physicalDevice = _impl->physical.physical_device,
-                .device = _impl->logical.device,
-                .pVulkanFunctions = &fns,
-                .instance = _impl->instance.instance
-            };
-
-            const auto allocatorResult = vmaCreateAllocator(&allocatorInfo, &_impl->allocator);
-            if (allocatorResult == VK_SUCCESS)
+            for (auto view : _swapchainImageViews)
             {
-                spdlog::info("Successfully created VmaAllocator for the VkDevice.");
+                _funcs.destroyImageView(view, VK_NULL_HANDLE);
+            }
+            _swapchainImageViews.clear();
+
+            vkb::destroy_swapchain(_swapchain);
+            vkb::destroy_surface(_instance, _surface);
+            vkb::destroy_device(_device);
+            vkb::destroy_instance(_instance);
+        }
+
+        handle create_render_pass(render_pass_create_info&& info) override
+        {
+            _graphDirty = true;
+            vulkan_render_pass p(ryujin::move(info), &_funcs);
+            auto key = _passes.insert(ryujin::move(p));
+            _passes.try_get(key)->_handle = key;
+            return key;
+        }
+
+        void on_render_pass_execute(handle h, move_only_function<void(commands&)>&& cmds) override
+        {
+            auto pass = _passes.try_get(h);
+            if (pass)
+            {
+                pass->_cmds = ryujin::move(cmds);
+            }
+        }
+
+        void add_render_pass_dependency(const render_pass_dependency_info& info)
+        {
+            _deps.push_back(info);
+            _graphDirty = true;
+        }
+
+        void execute() override
+        {
+            if (_graphDirty)
+            {
+                spdlog::info("Detected change in render dependency graph, rebuilding.");
+                build_graph();
+            }
+        }
+
+        render_target_format swapchain_image_format() const noexcept override
+        {
+            return as<render_target_format>(_swapchain.image_format);
+        }
+
+    private:
+        slot_map<vulkan_render_pass> _passes;
+        vector<render_pass_dependency_info> _deps;
+
+        vkb::Instance _instance;
+        vkb::PhysicalDevice _physical;
+        vkb::Device _device;
+        vkb::DispatchTable _funcs;
+        VkSurfaceKHR _surface;
+        vkb::Swapchain _swapchain = {};
+
+        vector<VkImageView> _swapchainImageViews = {};
+
+        bool _graphDirty = true;
+
+        bool build_vulkan_instance()
+        {
+            vkb::InstanceBuilder bldr = vkb::InstanceBuilder()
+                .require_api_version(VK_API_VERSION_1_2)
+                .set_app_name("Ryujin Application")
+                .set_engine_name("Ryujin Engine")
+                .set_app_version(VK_MAKE_VERSION(0, 1, 0))
+                .set_engine_version(VK_MAKE_VERSION(0, 1, 0));
+
+            apply_debug_messenger(bldr);
+            apply_api_dump(bldr);
+
+            auto result = bldr.build();
+            if (result)
+            {
+                _instance = *result;
+                spdlog::info("Successfully created vkb::Instance.");
+                return true;
+            }
+            
+            spdlog::critical("Failed to create vkb::Instance.");
+            return false;
+        }
+
+        bool select_vulkan_physical_device()
+        {
+            const VkPhysicalDeviceFeatures feats = {
+                .independentBlend = VK_TRUE,
+                .logicOp = VK_TRUE,
+                .depthClamp = VK_TRUE,
+                .depthBiasClamp = VK_TRUE,
+                .fillModeNonSolid = VK_TRUE,
+                .depthBounds = VK_TRUE,
+                .alphaToOne = VK_TRUE,
+            };
+
+            const VkPhysicalDeviceVulkan12Features feats12 = {
+                .drawIndirectCount = VK_TRUE,
+                .imagelessFramebuffer = VK_TRUE,
+                .separateDepthStencilLayouts = VK_TRUE,
+            };
+
+            vkb::PhysicalDeviceSelector selector = vkb::PhysicalDeviceSelector(_instance)
+                .prefer_gpu_device_type(vkb::PreferredDeviceType::discrete)
+                .defer_surface_initialization()
+                .set_required_features(feats)
+                .set_required_features_12(feats12)
+                .require_present();
+
+            auto result = selector.select();
+            if (result)
+            {
+                _physical = *result;
+                spdlog::info("Successfully selected vkb::PhysicalDevice {}.", _physical.properties.deviceName);
                 return true;
             }
 
-            spdlog::critical("Failed to create VmaAllocator.");
+            spdlog::critical("Failed to detect a suitable vkb::PhysicalDevice.");
             return false;
         }
 
-        spdlog::critical("Failed to create VkDevice.");
-        return false;
-    }
-
-    bool render_graph::build_swapchain(const unique_ptr<window>& win)
-    {
-        GLFWwindow* native = win->_native;
-        VkSurfaceKHR surface;
-        const auto surfaceResult = glfwCreateWindowSurface(_impl->instance.instance, native, _impl->instance.allocation_callbacks, &surface);
-        if (surfaceResult != VK_SUCCESS)
+        bool build_logical_device()
         {
-            spdlog::critical("Failed to create VkSurfaceKHR from the window.");
-            return false;
-        }
+            vkb::DeviceBuilder bldr = vkb::DeviceBuilder(_physical);
 
-        _impl->logical.surface = surface;
-
-        auto swapchainResult = vkb::SwapchainBuilder(_impl->logical, surface)
-            .set_desired_present_mode(VK_PRESENT_MODE_IMMEDIATE_KHR)
-            .build();
-
-        if (!swapchainResult)
-        {
-            spdlog::critical("Failed to create VkSwapchainKHR from the surface.");
-            vkb::destroy_surface(_impl->instance, surface);
-            return false;
-        }
-
-        spdlog::info("Successfully created VkSurfaceKHR and VkSwapchainKHR.");
-        _impl->surface = surface;
-        _impl->swap = *swapchainResult;
-
-        auto imagesResult = _impl->swap.get_images();
-        
-        if (!imagesResult)
-        {
-            spdlog::critical("Failed to get swapchain images.");
-            vkb::destroy_swapchain(_impl->swap);
-            vkb::destroy_surface(_impl->instance, _impl->surface);
-            return false;
-        }
-
-        auto swapchainImages = *imagesResult;
-        
-        const VkImageViewUsageCreateInfo usageInfo = {
-            .sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO,
-            .pNext = VK_NULL_HANDLE,
-            .usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT
-        };
-
-        VkImageViewCreateInfo viewInfo = {
-            .sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
-            .pNext = &usageInfo,
-            .flags = 0,
-            .viewType = VK_IMAGE_VIEW_TYPE_2D,
-            .format = _impl->swap.image_format,
-            .components = {
-                .r = VK_COMPONENT_SWIZZLE_R,
-                .g = VK_COMPONENT_SWIZZLE_G,
-                .b = VK_COMPONENT_SWIZZLE_B,
-                .a = VK_COMPONENT_SWIZZLE_A
-            },
-            .subresourceRange = {
-                .aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
-                .baseMipLevel = 0,
-                .levelCount = 1,
-                .baseArrayLayer = 0,
-                .layerCount = 1
-            }
-        };
-
-        for (auto& img : swapchainImages)
-        {
-            viewInfo.image = img;
-
-            VkImageView view;
-            const auto viewResult = _impl->funcs.createImageView(&viewInfo, _impl->logical.allocation_callbacks, &view);
-            if (viewResult != VK_SUCCESS)
+            auto result = bldr.build();
+            if (result)
             {
-                spdlog::critical("Failed to create VkImageView from swapchain image.");
-                return false;
+                spdlog::info("Successfully created vkb::Device.");
+                _device = *result;
+                _funcs = _device.make_table();
+                return true;
             }
 
-            render_target tgt;
-            *tgt._impl = render_target::impl{
-                .name = "",
-                .width = _impl->swap.extent.width,
-                .height = _impl->swap.extent.height,
-                .fmt = _impl->swap.image_format,
-                .usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-                .tex = {
-                    .image = img,
-                    .view = view,
-                    .sampler = VK_NULL_HANDLE,
-                    .imageAllocation = nullptr,
-                    .imageAllocationInfo = {},
+            spdlog::critical("Failed to create vkb::Device.");
+            return false;
+        }
+
+        bool fetch_surface(const window& win)
+        {
+            const auto result = glfwCreateWindowSurface(_instance.instance, win._native, nullptr, &_surface);
+            if (result == VK_SUCCESS)
+            {
+                spdlog::info("Successfully created VkSurfaceKHR.");
+                return true;
+            }
+            spdlog::critical("Failed to create VkSurfaceKHR.");
+            return false;
+        }
+
+        bool build_swapchain()
+        {
+            _device.surface = _surface;
+            auto result = vkb::SwapchainBuilder(_device, _surface)
+                .set_desired_present_mode(VK_PRESENT_MODE_IMMEDIATE_KHR)
+                .build();
+            
+            if (result)
+            {
+                spdlog::info("Successfully created vkb::Swapchain.");
+                _swapchain = *result;
+                return true;
+            }
+
+            spdlog::critical("Failed to create vkb::Swapchain.");
+            return false;
+        }
+
+        bool fetch_swapchain_images()
+        {
+            auto result = _swapchain.get_images();
+            if (result)
+            {
+                spdlog::info("Successfully fetched VkImage instances from vkb::Swapchain.");
+
+                for (const VkImage img : *result)
+                {
+                    const VkImageViewUsageCreateInfo uinfo = {
+                        .sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO,
+                        .pNext = VK_NULL_HANDLE,
+                        .usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT
+                    };
+
+                    const VkImageViewCreateInfo cinfo = {
+                        .sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
+                        .pNext = &uinfo,
+                        .flags = 0,
+                        .image = img,
+                        .viewType = VK_IMAGE_VIEW_TYPE_2D,
+                        .format = _swapchain.image_format,
+                        .components = {
+                            .r = VK_COMPONENT_SWIZZLE_R,
+                            .g = VK_COMPONENT_SWIZZLE_G,
+                            .b = VK_COMPONENT_SWIZZLE_B,
+                            .a = VK_COMPONENT_SWIZZLE_A
+                        },
+                        .subresourceRange = {
+                            .aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
+                            .baseMipLevel = 0,
+                            .levelCount = 1,
+                            .baseArrayLayer = 0,
+                            .layerCount = 1
+                        }
+                    };
+
+                    VkImageView view = VK_NULL_HANDLE;
+                    const auto viewRes = _funcs.createImageView(&cinfo, VK_NULL_HANDLE, &view);
+                    if (viewRes != VK_SUCCESS)
+                    {
+                        spdlog::critical("Failed to create VkImageView from VkImage fetched from vkb::Swapchain.");
+                        return false;
+                    }
+                    _swapchainImageViews.push_back(view);
                 }
-            };
+                spdlog::info("Successfully created {} VkImageView instances from VkImage instances fetched from vkb::Swapchain.", _swapchain.image_count);
+                return true;
+            }
 
-            auto key = _impl->swapchainImages.insert(ryujin::move(tgt));
-            _impl->swapchainKeys.push_back(key);
+            spdlog::critical("Failed to fetch VkImage instances from vkb::Swapchain.");
+            return false;
         }
 
-        return true;
-    }
-
-    bool render_graph::build_frame_in_flight_data()
-    {
-        for (sz i = 0; i < _impl->framesInFlight; ++i)
+        void apply_debug_messenger(vkb::InstanceBuilder& bldr)
         {
-            render_graph_frame_data data = {};
-
-            const VkSemaphoreCreateInfo sem = {
-                .sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
-                .pNext = VK_NULL_HANDLE,
-                .flags = 0
-            };
-
-            const VkFenceCreateInfo fence = {
-                .sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
-                .pNext = VK_NULL_HANDLE,
-                .flags = VK_FENCE_CREATE_SIGNALED_BIT
-            };
-
-            const auto renderComplete = _impl->funcs.createSemaphore(&sem, _impl->logical.allocation_callbacks, &data.renderComplete);
-            const auto imageReady = _impl->funcs.createSemaphore(&sem, _impl->logical.allocation_callbacks, &data.imageReady);
-            const auto renderFence = _impl->funcs.createFence(&fence, _impl->logical.allocation_callbacks, &data.renderFence);
-
-            if (renderComplete != VK_SUCCESS || imageReady != VK_SUCCESS || renderFence != VK_SUCCESS)
+            if (detail::enable_vulkan_debug_apis_enable())
             {
-                spdlog::critical("Failed to initialize vulkan synchronization primitives");
-                return false;
+                bldr.request_validation_layers()
+                    .set_debug_callback(detail::vulkan_debug_message_callback)
+                    .set_debug_messenger_severity(VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT)
+                    .set_debug_messenger_type(VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT)
+                    .add_validation_feature_enable(VK_VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT)
+                    .add_validation_feature_enable(VK_VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT);
+
+                const auto sysInfoResult = vkb::SystemInfo::get_system_info();
+                if (sysInfoResult)
+                {
+                    if (sysInfoResult->is_extension_available(VK_EXT_DEBUG_UTILS_EXTENSION_NAME))
+                    {
+                        bldr.enable_extension(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+                        spdlog::info("Vulkan extension {} requested.", VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+                    }
+                    else
+                    {
+                        spdlog::warn("Vulkan extension {} required, but not available. Extension not requested.", VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+                    }
+                }
+                else
+                {
+                    spdlog::warn("Vulkan extension {} required, but failed to determine if it is available. Extension not requested.", VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+                }
+            }
+        }
+
+        void apply_api_dump(vkb::InstanceBuilder& bldr)
+        {
+            if (detail::enable_vulkan_api_dump())
+            {
+                bldr.enable_layer("VK_LAYER_LUNARG_api_dump");
+            }
+        }
+
+        void build_graph()
+        {
+            /*
+             * Precondtions:
+             * - There are no cylces in the graph (TODO: Perform check in debug build for cycles)
+             * Step 1: Build the graph structure
+             * Step 2: Perform a topological sort on the graph structure
+             * Step 3: Store the output to a vector that can be executed over
+             */
+
+            // store vertices in an adjacency list
+            unordered_map<render_graph::handle, vector<render_graph::handle>, slot_map_key_hash> graph;
+            for (const auto& pass : _passes)
+            {
+                graph[pass._handle] = {};
             }
 
-            _impl->frameData.push_back(data);
-        }
+            // store edges in an adjacency list
+            for (const auto& dep : _deps)
+            {
+                const auto srcContained = graph.find(dep.src);
+                const auto dstContained = graph.find(dep.dst);
 
-        spdlog::info("Successfully built frame data for {} frames in flight.", _impl->framesInFlight);
+                if (srcContained == graph.end() || dstContained == graph.end())
+                {
+                    spdlog::error("Failed to build graph. A dependency has been defined such that the source or the destination is not in the graph.");
+                    return;
+                }
 
-        return true;
-    }
-
-    shader* render_graph::get_shader(slot_map_key k) const noexcept
-    {
-        return nullptr;
-    }
-
-    pass* render_graph::get_pass(slot_map_key k) const noexcept
-    {
-        return nullptr;
-    }
-
-    render_target* render_graph::get_render_target(slot_map_key k) const noexcept
-    {
-        return _impl->targets.try_get(k);
-    }
-
-    void render_graph::build_render_target(render_target& tgt)
-    {
-        const VkImageCreateInfo imgInfo = {
-            .sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
-            .pNext = VK_NULL_HANDLE,
-            .flags = 0,
-            .imageType = VK_IMAGE_TYPE_2D,
-            .format = tgt._impl->fmt,
-            .extent = {
-                .width = tgt._impl->width,
-                .height = tgt._impl->height,
-                .depth = 1
-            },
-            .mipLevels = 1,
-            .arrayLayers = 1,
-            .samples = VK_SAMPLE_COUNT_1_BIT,
-            .usage = tgt._impl->usage,
-            .sharingMode = VK_SHARING_MODE_EXCLUSIVE,
-            .queueFamilyIndexCount = 0,
-            .pQueueFamilyIndices = VK_NULL_HANDLE,
-            .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED
-        };
-        
-        const VmaAllocationCreateInfo allocInfo = {
-            .flags = VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT,
-            .usage = VMA_MEMORY_USAGE_AUTO_PREFER_DEVICE,
-            .requiredFlags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-            .preferredFlags = 0,
-            .memoryTypeBits = 0,
-            .pool = nullptr,
-            .pUserData = nullptr,
-            .priority = 1.0f
-        };
-
-        const auto imageAllocationResult = vmaCreateImage(_impl->allocator, &imgInfo, &allocInfo, &(tgt._impl->tex.image), &(tgt._impl->tex.imageAllocation), &(tgt._impl->tex.imageAllocationInfo));
-        assert(imageAllocationResult == VK_SUCCESS && "Image allocation for render target failed.");
-
-        const VkImageViewCreateInfo viewInfo = {
-            .sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
-            .pNext = VK_NULL_HANDLE,
-            .flags = 0,
-            .image = tgt._impl->tex.image,
-            .viewType = VK_IMAGE_VIEW_TYPE_2D,
-            .format = tgt._impl->fmt,
-            .components = {
-                .r = VK_COMPONENT_SWIZZLE_R,
-                .g = VK_COMPONENT_SWIZZLE_G,
-                .b = VK_COMPONENT_SWIZZLE_B,
-                .a = VK_COMPONENT_SWIZZLE_A
-            },
-            .subresourceRange = {
-                .aspectMask = as<VkImageAspectFlags>((tgt._impl->usage & VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT) ? VK_IMAGE_ASPECT_COLOR_BIT : VK_IMAGE_ASPECT_DEPTH_BIT),
-                .baseMipLevel = 0,
-                .levelCount = 1,
-                .baseArrayLayer = 0,
-                .layerCount = 1
+                graph[dep.src].push_back(dep.dst);
             }
-        };
 
-        const auto viewAllocationResult = _impl->funcs.createImageView(&viewInfo, _impl->logical.allocation_callbacks, &(tgt._impl->tex.view));
-        assert(viewAllocationResult == VK_SUCCESS && "Image view allocation for render target failed.");
-    }
+            // Perform topological sorting algorithm on graph to determine the order of execution
+            unordered_map<render_graph::handle, bool, slot_map_key_hash> visited;
+            vector<render_graph::handle> reverse;
 
-    void render_graph::release_resources()
-    {
-        for (const auto& frameSync : _impl->frameData)
-        {
-            _impl->funcs.destroySemaphore(frameSync.imageReady, _impl->logical.allocation_callbacks);
-            _impl->funcs.destroySemaphore(frameSync.renderComplete, _impl->logical.allocation_callbacks);
-            _impl->funcs.destroyFence(frameSync.renderFence, _impl->logical.allocation_callbacks);
+            for (auto& [node, adj] : graph)
+            {
+                if (!visited[node])
+                {
+                    build_graph_utility(node, graph, visited, reverse);
+                }
+            }
+
+            vector<render_graph::handle> sortedPasses;
+            sortedPasses.reserve(reverse.size());
+
+            while (!reverse.empty())
+            {
+                sortedPasses.push_back(reverse.back());
+                reverse.pop_back();
+            }
+
+            _graphDirty = false;
         }
 
-        for (const auto& img : _impl->swapchainImages)
+        void build_graph_utility(render_graph::handle curr, unordered_map<render_graph::handle, vector<render_graph::handle>, slot_map_key_hash> graph, unordered_map<render_graph::handle, bool, slot_map_key_hash>& visited, vector<render_graph::handle>& sorted)
         {
-            auto& tex = img._impl->tex;
-            _impl->funcs.destroyImageView(tex.view, _impl->logical.allocation_callbacks);
+            visited[curr] = true;
+
+            const auto& adjacencies = graph[curr];
+
+            for (auto& adj : adjacencies)
+            {
+                if (!visited[adj])
+                {
+                    build_graph_utility(adj, graph, visited, sorted);
+                }
+            }
+
+            sorted.push_back(curr);
         }
+    };
 
-        for (const auto& rt : _impl->targets)
-        {
-            auto& tex = rt._impl->tex;
-            _impl->funcs.destroyImageView(tex.view, _impl->logical.allocation_callbacks);
-            vmaDestroyImage(_impl->allocator, tex.image, tex.imageAllocation);
-        }
-
-        vkb::destroy_swapchain(_impl->swap);
-        vkb::destroy_surface(_impl->instance, _impl->surface);
-        vmaDestroyAllocator(_impl->allocator);
-        vkb::destroy_device(_impl->logical);
-        vkb::destroy_instance(_impl->instance);
-    }
-
-    render_target::render_target()
+    unique_ptr<render_graph> render_graph::create_render_graph(const window& win)
     {
-        _impl = new impl();
-    }
-    
-    const string& render_target::name() const noexcept
-    {
-        return _impl->name;
-    }
-    
-    u32 render_target::width() const noexcept
-    {
-        return _impl->width;
-    }
-    
-    u32 render_target::height() const noexcept
-    {
-        return _impl->height;
-    }
-    
-    data_format render_target::format() const noexcept
-    {
-        return as<data_format>(_impl->fmt);
-    }
-
-    pass_builder::pass_builder(const string& name)
-        : _name(name)
-    {
-    }
-
-    pass_builder& pass_builder::add_color_target(const render_target_usage& usage)
-    {
-        _colors.push_back(usage);
-        return *this;
-    }
-    pass_builder& pass_builder::set_depth_target(const render_target_usage& usage)
-    {
-        _depth = usage;
-        return *this;
-    }
-
-    pass_builder& pass_builder::depends_on(const render_resource_handle<pass>& p)
-    {
-        _dependsOn.push_back(p);
-        return *this;
-    }
-
-    pass_builder& pass_builder::on_pass_execute(move_only_function<void(command_buffer&)>&& commands)
-    {
-        _commands = ryujin::move(commands);
-        return *this;
+        auto graph = make_unique<vulkan_render_graph>(win);
+        return unique_ptr<render_graph>(graph.release());
     }
 }

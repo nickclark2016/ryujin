@@ -45,6 +45,7 @@ namespace ryujin
     {
     public:
         slot_map_key insert(const T& value);
+        slot_map_key insert(T&& value);
 
         T* try_get(const slot_map_key& k) noexcept;
         const T* try_get(const slot_map_key& k) const noexcept;
@@ -76,8 +77,8 @@ namespace ryujin
         sz _size = 0;
         sz _capacity = 0;
 
-        u32 _freeListHead = 0;
-        u32 _freeListTail = 0;
+        sz _freeListHead = 0;
+        sz _freeListTail = 0;
     };
 
     template<typename T, typename KeyAllocator, typename ValueAllocator, typename IndexAllocator>
@@ -99,12 +100,41 @@ namespace ryujin
         _values.push_back(value);
 
         // point erasure lookup to trampoline index
-        _erase[trampoline.index] = head;
+        _erase[trampoline.index] = as<u32>(head);
 
         ++_size;
 
         return slot_map_key{
-            .index = head,
+            .index = as<u32>(head),
+            .generation = trampoline.generation
+        };
+    }
+
+    template<typename T, typename KeyAllocator, typename ValueAllocator, typename IndexAllocator>
+    inline slot_map_key slot_map<T, KeyAllocator, ValueAllocator, IndexAllocator>::insert(T&& value)
+    {
+        if (_size == _capacity)
+        {
+            _increase_capacity(_capacity == 0 ? 8 : _capacity * 2);
+        }
+
+        // pop head of free list
+        const auto head = _freeListHead;
+        const auto next = _keys[head].index;
+        _freeListHead = next;
+
+        // point trampoline to inserted value
+        slot_map_key& trampoline = _keys[head];
+        trampoline.index = as<u32>(_values.size());
+        _values.push_back(ryujin::move(value));
+
+        // point erasure lookup to trampoline index
+        _erase[trampoline.index] = as<u32>(head);
+
+        ++_size;
+
+        return slot_map_key{
+            .index = as<u32>(head),
             .generation = trampoline.generation
         };
     }
@@ -172,7 +202,7 @@ namespace ryujin
 
             // add the opened trampoline slot to the front of the free list and icrement the generation
             auto next = _freeListHead;
-            _keys[k.index].index = next;
+            _keys[k.index].index = as<u32>(next);
             ++_keys[k.index].generation;
             _freeListHead = k.index;
 
@@ -192,7 +222,7 @@ namespace ryujin
 
         for (size_t i = 0; i < _capacity; ++i)
         {
-            _keys[i].index = i + 1;
+            _keys[i].index = as<u32>(i) + 1;
             ++_keys[i].generation;
         }
         _size = 0;

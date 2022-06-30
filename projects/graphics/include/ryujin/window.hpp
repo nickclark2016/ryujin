@@ -10,10 +10,11 @@
 #include <ryujin/utility.hpp>
 #include <ryujin/vector.hpp>
 
-#include <GLFW/glfw3.h>
+struct GLFWwindow;
 
 namespace ryujin
 {
+
     namespace detail
     {
         void focusCallback(GLFWwindow*, i32);
@@ -26,8 +27,6 @@ namespace ryujin
         void scrollCallback(GLFWwindow*, f64, f64);
         void mouseButtonCallback(GLFWwindow*, i32, i32, i32);
     } // namespace detail
-
-    class render_manager;
 
     class window
     {
@@ -105,8 +104,8 @@ namespace ryujin
         friend void detail::scrollCallback(GLFWwindow*, f64, f64);
         friend void detail::mouseButtonCallback(GLFWwindow*, i32, i32, i32);
         
-        friend class render_graph;
         friend class render_manager;
+        friend class vulkan_render_graph;
     };
 }
 
